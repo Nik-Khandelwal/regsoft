@@ -1,0 +1,84 @@
+.cnfrm_bttn{
+    padding: 10px;
+    background-color: #4982ba;
+    color:white;
+    position: absolute;
+    right:0;
+}
+.cnfrmd{
+    background-color: #26A69A;
+  height:100vh;
+  width: 100vw;
+  overflow-x:hidden;
+  color:white;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.cnfrmd_grps{
+    width:60%;
+    margin-left: 20%;
+    padding: 10px;
+    margin-top: 5px;
+    color: #26A69A;
+    background-color: white;
+    cursor: pointer;
+    text-align: center;
+}
+.input_cnfrm{
+    background-color: #26A69A;!important
+   text-align: center;
+    
+}
+.inp{
+    padding:5px;
+    text-align: center;
+}
+.cnfrmd_details{
+    width: 100%;
+    height: 0;
+    
+    top: 0;
+    left: 0;
+    overflow-x:hidden;
+    transition: 0.8s;
+    position: fixed;
+    z-index: 5;
+    background-color:darkslategray;
+}
+.uncnfrm{
+     width:60%;
+    margin-left: 20%;
+    padding: 10px;
+    margin-top: 5px;
+    color: #26A69A;
+    background-color: white;
+   
+    text-align: center;
+}
+.idd{
+    display: none;
+}
+.input-field label, input[type=text]:not(.browser-default):focus:not([readonly])+label {
+    color: white;
+}
+input[type=text]:not(.browser-default), input[type=text]:not(.browser-default):focus:not([readonly]) {
+    border-bottom: 1px solid white;
+}
+input[type=text] {
+    color: white;
+}
+.unconfirm_icon {
+    width: 15px;
+    height: 20px;
+}
+.ham{position: absolute;;top: 0;left: 0;}
+.ham1{position: absolute;right: 0;top: 0;}
+.stats{position: fixed;z-index: 1;width: 100vw;top: 0;left: 0;transition: 0.5s;}
+#close{;z-index: 5;display: none;}
+#stat_data{;z-index: 5;display: none;height:80vh;overflow-y: auto;}
+#csv{width:20vw;display: none;z-index: 5;position: fixed; bottom: 0;left: 0;background-color: white;color:teal;}
+#excel{width:20vw;display: none;z-index: 5;position: fixed; bottom: 0;left: 40vw;background-color: white;color:teal;}
+#pdf{width:20vw;display: none;z-index: 5;position: fixed; bottom: 0;left: 80vw;background-color: white;color:teal;}
+#close{cursor: pointer;}

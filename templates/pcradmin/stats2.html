@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+/*@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700");*/
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+body {
+  padding-top: 24px;
+  font-family: sans-serif;
+  margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+
+.container {
+  max-width: 90vw;
+  margin-right: auto;
+  margin-left: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.table {
+  width: 100%;
+  border: 1px solid #EEEEEE;
+}
+
+.table-header {
+  display: flex;
+  width: 100%;
+  background: #000;
+  padding: 18px 0;
+}
+
+.table-row {
+  display: flex;
+  width: 100%;
+  padding: 18px 0;
+}
+.table-row:nth-of-type(odd) {
+  background: #EEEEEE;
+}
+
+.table-data, .header__item {
+  flex: 1 1 16.66666%;
+  text-align: center;
+}
+
+.header__item {
+  text-transform: uppercase;
+  color: white;
+}
+</style>
+</head>
+<body>
+
+<div style="width: 100vw; text-align: center;"><h2>Controls Stats</h2></div>
+
+<table class="centered">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>College</th>
+      <th>Phone</th>
+      <th>Email</th>
+      <th>Sport</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for obj in mylist %}
+    <tr>
+      <td>{{ obj.name }}</td>
+      <td>{{ obj.college }}</td>
+      <td>{{ obj.mobile_no }}</td>
+      <td>{{ obj.email_id }}</td>
+      <td>{{ obj.sport }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table> -->
+<!-- <div class="container" style="max-width: 90vw; margin-right: auto; margin-left: auto; display: flex;justify-content: center; align-items: center; min-height: 100vh;">
+  
+  <div class="table" style="width: 100%; border: 1px solid #EEEEEE;">
+    <div class="table-header" style="display: flex; width: 100%; background: #000; padding: 18px 0;">
+      <div class="header__item" style="text-transform: uppercase; color: white; flex: 1 1 16.66666%; text-align: center;"><a id="total">ID No.</a></div>
+      <div class="header__item" style="text-transform: uppercase; color: white; flex: 1 1 16.66666%; text-align: center;"><a id="name">Name</a></div>
+      
+      <div class="header__item" style="text-transform: uppercase; color: white; flex: 1 1 16.66666%; text-align: center;"><a id="draws">Phone</a></div>
+      <div class="header__item" style="text-transform: uppercase; color: white; flex: 1 1 16.66666%; text-align: center;"><a id="losses">Email</a></div>
+      <div class="header__item" style="text-transform: uppercase; color: white; flex: 1 1 16.66666%; text-align: center;"><a id="total">Sport</a></div>
+      <div class="header__item" style="text-transform: uppercase; color: white; flex: 1 1 16.66666%; text-align: center;"><a id="total">No of players</a></div>
+    </div>
+    <div class="table-content"> 
+    {% for obj in mylist %}
+      <div class="table-row" style="display: flex; width: 100%; padding: 18px 0;">  
+        <div class="table-data" style="flex: 1 1 16.66666%; text-align: center;">{{ obj.pk }}</div> 
+        <div class="table-data" style="flex: 1 1 16.66666%; text-align: center;">{{ obj.name }}</div>
+        <div class="table-data" style="flex: 1 1 16.66666%; text-align: center;">{{ obj.mobile_no }}</div>
+        <div class="table-data" style="flex: 1 1 16.66666%; text-align: center;">{{ obj.email_id }}</div>
+        <div class="table-data" style="flex: 1 1 16.66666%; text-align: center;">{{ obj.sport }}</div>
+        <div class="table-data" style="flex: 1 1 16.66666%; text-align: center;">{{ obj.count }}</div>
+      </div>
+    {% endfor %}
+    </div>  
+  </div>
+</div> -->
+
+</body>
+</html>

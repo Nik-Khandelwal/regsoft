@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+
+<html lang="en-us"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Regsoft Login</title>
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'main/base.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'main/login.css' %}">
+
+
+
+
+<meta name="robots" content="NONE,NOARCHIVE">
+</head>
+
+
+<body class=" login" data-admin-utc-offset="0">
+
+<!-- Container -->
+<div id="container">
+
+    
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+        
+<h1 id="site-name">Regsoft Admin</h1>
+
+        </div>
+        
+        
+    </div>
+    <!-- END Header -->
+    
+    
+
+    
+        
+    
+
+    <!-- Content -->
+    <div id="content" class="colM">
+        
+        
+        
+
+
+
+
+<div id="content-main">
+
+
+
+<form action="/regsoft/regloginuser/" method="post" id="login-form">
+{%  csrf_token %}
+  <div class="form-row">
+    
+    <label class="required" for="username">Username:</label> <input type="text" name="username" id="username" required="" maxlength="254" autofocus="">
+  </div>
+  <div class="form-row">
+    
+    <label class="required" for="password">Password:</label> <input type="password" name="password" id="password" required="">
+
+  </div>
+  
+  
+  <div class="submit-row">
+    <label>&nbsp;</label><input type="submit" value="Log in">
+  </div>
+</form>
+
+</div>
+
+        
+        <br class="clear">
+    </div>
+    <!-- END Content -->
+
+    <div id="footer"></div>
+</div>
+<!-- END Container -->
+
+
+
+</body></html>

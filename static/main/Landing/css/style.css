@@ -1,0 +1,10 @@
+.btn1{position: absolute;top: 40vh; width:15vw;left:17.5vw}
+.btn2{position: absolute;top: 50vh; width:15vw;left:17.5vw}
+.btn3{position: absolute;top: 60vh; width:15vw;left:17.5vw}
+.btn4{position: absolute;top: 70vh; width:15vw;left:17.5vw}
+.btn5{position: absolute;top: 80vh; width:15vw;left:17.5vw}
+body{overflow: hidden;}
+img{height:90vh;position:absolute;left:50vw;top:5vh; }
+.btn{background-color: blueviolet;}
+.btn:hover{background-color: white;color:blueviolet}
+h2{margin: 0;padding: 5px; position: absolute; top:15vh;width:30vw; text-align: center;left: 10vw;font-size: 75px}

@@ -1,0 +1,69 @@
+i{cursor: pointer;}
+/* left-one */
+.left-one{position: fixed; height: 60vh; width: 45vw; top: 16vh;left: 5vw; overflow-y: auto;}
+.collhead{padding-left: 1vw; padding-right: 0vw; justify-content: space-between;}
+.collbody{display: flex; justify-content: space-between; padding: 1vmin;}
+#coll-head{padding-left: 1vw; padding-right: 0vw; justify-content: space-between;}
+#coll-body{display: flex; justify-content: space-between; padding: 1vmin;}
+.name,.group-id,.coll-name{text-align: center;}
+.name{flex-basis: 30%;}
+.group-id{flex-basis: 20%;}
+.coll-name{flex-basis: 30%;}
+.collapsible-body>i,.group>i{text-align: center;}
+/* buttons */
+.select_all-btn{position: fixed; top: 79vh; left:7vw; width: 15vw; padding: 0 1vmin; justify-content: space-between;}
+.deselect_all-btn{position: fixed; top: 79vh; left:28vw; width: 15vw; padding: 0 1vmin; justify-content: space-around;}
+.add_all-btn{position: fixed; top: 18vh; left: 1vw;}
+.no_of_part{position: fixed; top: 17vh; right: 0.5vw;}
+.gen_bill-btn{position: fixed; top: 79vh; left: 67.5vw; width: 15vw; padding: 0 1vmin; justify-content: space-around;}
+#tools-info_outline{position: fixed; top: 79vh; right: 2vw;}
+@media only screen and (max-width: 800px) {.select_all-btn{width: 17vw;} .deselect_all-btn{width: 17vw; left: 26vw;}}
+@media only screen and (max-width: 700px) {.select_all-btn>i,.deselect_all-btn>i{float: none!important; margin-right: 0!important;}.select_all-btn>span,.deselect_all-btn>span{display: none;}.select_all-btn{width: 10vw; left: 10vw;}.deselect_all-btn{width: 10vw; left: 30vw;}}
+/* right-one */
+.right-one{position: fixed; height: 60vh; width: 40vw; top: 17vh; left: 55vw;}
+.right-one {border: 0; border-collapse: collapse;}    
+.right-one tr {display: flex;}    
+.right-one>tbody>tr>td{ padding: 1vmin; }
+.right-one td {flex: 1;}    
+.right-one thead tr {overflow-y: auto;}    
+.right-one thead th {flex: 1; display: block; height: 8vh;}  
+.right-one tbody {display: block; overflow-y: auto; height: 52vh;}
+/* modal */
+.pay{z-index: 1;  margin: auto; top: 25vh; text-align: center;}
+.foot{text-align: center!important;}
+/*#input_field{width: 120px; margin: auto;}*/
+.lab{text-align: center;}
+#denom_head,#denom_para{display: none;}
+#btn-conf_done{display: none;}
+.deno_field{position: relative;top: 30px;}
+.total{position: fixed; top: 86vh; left: 67.5vw; width: 15vw; padding: 0 1vmin; justify-content: space-around;}
+body::-webkit-scrollbar-track, #left-table-ul::-webkit-scrollbar-track, #right-body::-webkit-scrollbar-track, #modalpay::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  background-color: #F5F5F5;
+}
+body::-webkit-scrollbar, #left-table-ul::-webkit-scrollbar, #right-body::-webkit-scrollbar, #modalpay::-webkit-scrollbar {
+  width: 8px;
+  height: 7px;
+  background-color: #F5F5F5;
+}
+body::-webkit-scrollbar-thumb, #left-table-ul::-webkit-scrollbar-thumb, #right-body::-webkit-scrollbar-thumb, #modalpay::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #888;
+}
+#wrap_searches {
+  position: fixed;
+  width: 45vw;
+  left: 5vw;
+  top: 7vh;
+}
+.stats{position: fixed;z-index: 1;width: 100vw;top: 0;left: 0;transition: 0.5s;}
+#close{;z-index: 5;display: none;}
+#stat_data{;z-index: 5;display: none;height:80vh;overflow-y: auto;}
+#csv{width:20vw;display: none;z-index: 5;position: fixed; bottom: 0;left: 0;background-color: white;color:teal;}
+#excel{width:20vw;display: none;z-index: 5;position: fixed; bottom: 0;left: 40vw;background-color: white;color:teal;}
+#pdf{width:20vw;display: none;z-index: 5;position: fixed; bottom: 0;left: 80vw;background-color: white;color:teal;}
+.ham1{position: absolute;right: 0;top: 0;}
+#modalpay{height:80vh;}
+.change_cursor{cursor: pointer;}

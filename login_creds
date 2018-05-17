@@ -1,0 +1,15 @@
+PCRADMIN :-
+	pcr
+	cc99bosm18
+
+FIREWALLZ
+	firewalls
+	cc29bosm18
+
+CONTROLS
+	controls
+	cc84bosm18
+
+RECNACC
+	recnacc
+	cc90bosm18

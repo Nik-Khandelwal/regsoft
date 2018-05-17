@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      {% load staticfiles %}
+      <!--Import Google Icon Font-->
+      <title>BOSM Registrations</title>
+      <link href="{% static 'register/css/font.css' %}" rel="stylesheet">
+      <!--Import materialize.css-->
+      <link type="text/css" rel="stylesheet" href="{% static 'register/css/materialize.min.css' %}"  media="screen,projection"/>
+      <!--Import the css-->
+      <link href="{% static 'register/css/style1.css' %}" rel="stylesheet">
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <!--Import jQuery before materialize.js-->
+      <script type="text/javascript" src="{% static 'register/js/jquery.js' %}"></script>
+      <script type="text/javascript" src="{% static 'register/js/script1.js' %}"></script>
+      <script type="text/javascript" src="{% static 'register/js/materialize.min.js' %}"></script>
+    </head>
+
+    <body class="green lighten-1">
+        
+        <div class="container">
+            <div class="row valign-wrapper center-align" style="height: 70vh;">
+                <div class="col s12">
+                    <h3 class="white-text" style="font-family: Cinzel">BOSM Registrations</h3>
+                </div>
+            </div>
+            <div class="row button_row valign-wrapper">
+                <div class="col m3 offset-m2 s12">
+                    <a class="teal btn-large z-depth-4" style="width: 100%" onclick="login()">LOGIN</a>
+                </div>
+                <div class="col m3 offset-m2 s12">
+                    <a class="teal btn-large z-depth-4" style="width: 100%" onclick="signup()">REGISTER</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="login teal lighten-1" style="" id="login">
+            <a class="white-text close" onclick="closelogin()"> <i class="material-icons medium">close</i></a>
+            <h1 class="center-align white-text" style="font-family: Cinzel">LOGIN</h1>
+            <div class="container">
+            <form action="login/" method="POST">
+              {% csrf_token %}
+                <div class="row">
+                <div class="col m6 offset-m3 s12">
+                    <div class="card white darken-1">
+                        <div class="input-field">
+                            <i class="material-icons prefix">person</i>
+                            <input id="username" name="Username" type="text" class="validate" required="required">
+                            <label for="username">Username</label>
+                        </div>
+                        <div class="input-field">
+                            <i class="material-icons prefix">ac_unit</i>
+                            <input id="password" name="Password" type="password" class="validate" required="required">
+                            <label for="password">Password</label>
+                        </div>
+                        <div class="row center">
+                          <button class="btn green waves-effect waves-light" id="submit-form-btn" type="submit" name="action">Submit
+                            <i class="material-icons right large">send</i>
+                          </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </form>
+        </div>
+      </div>
+      <div class="signup teal lighten-1" style="" id="signup">
+          <a class="white-text close" onclick="closesignup()"> <i class="material-icons medium">close</i></a>
+           <h1 class="center-align white-text" style="font-family: Cinzel">REGISTER</h1>
+          <div class="container">
+    <div class="row card white darken-1">
+      <form class="col s12" onsubmit="return false;" id="register-form" method="POST">
+      {% csrf_token %}
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">person</i>
+            <input type="text" name="Name" id="name_field" class="validate" required="required">
+            <label for="name_field" data-error="Enter your Name">Name</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">email</i>
+            <input type="email" name="Email" id="email_field" class="validate" required="required">
+            <label for="email_field" data-error="Enter a Valid Email">E-Mail</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col m6 s12">
+            <i class="material-icons prefix">create</i>
+            <input type="text" name="Username" id="username_field" class="validate" required="required">
+            <label for="username_field" data-error="Enter your Username">Username</label>
+          </div>
+          <div class="input-field col m6 s12">
+            <i class="material-icons prefix">lock_outline</i>
+            <input type="password" name="Password" id="password_field" class="validate" required="required">
+            <label for="password_field" data-error="Enter a Valid Password">Password</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">people</i>
+            <select id="participant_coach_select" name="register_as">
+              <option value="" disabled="disabled" selected="selected"></option>
+              <option value="P">Participant</option>
+              <option value="C">Coach</option>
+            </select>
+            <label for="participant_coach_select" data-error="Register As Participant/Coach">Register As</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">local_phone</i>
+            <input type="text" name="Phone" id="phone_field" class="validate" required="required" maxlength="10" data-length="10">
+            <label for="phone_field" data-error="Enter your Phone Number">Phone Number</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">business</i>
+            <select id="college_field" name="College">
+              <option value="" disabled="disabled" selected="selected"></option>
+            </select>
+            <label for="college_field" data-error="Enter your College Name">College</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">directions_run</i>
+            <select id="sport_select" multiple="multiple" required="required" name="sport_select">
+              <option value="" disabled="disabled" selected="selected"></option>
+            </select>
+            <label for="sport_select" data-error="Enter Sport">Sport</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s4 center">
+            Gender
+          </div>
+          <div class="col s4 center">
+            <input type="radio" name="gender" id="indi_male" value="male" required="required">
+            <label for="indi_male">Male</label>
+          </div>
+          <div class="col s4 center">
+            <input type="radio" name="gender" id="indi_female" value="female" required="required">
+            <label for="indi_female">Female</label>
+          </div>
+        </div>
+        <div class="row center">
+          <button class="btn green waves-effect waves-light" id="submit-form-btn" type="submit" name="action" onclick="submitRegisterForm()">Submit
+            <i class="material-icons right large">send</i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+      </div>
+      <div id="sent-email-modal" class="modal modal-fixed-footer">
+        <div class="modal-content center">
+          <h5>Verify Email</h5>
+          <p>Thank you for registering for BOSM 2018. Please check your Email for Verification.</p>
+        </div>
+        <div class="modal-footer">
+          <a class="modal-action modal-close waves-effect waves-green btn-flat ">Close</a>
+        </div>
+      </div>
+      <div id="error-modal" class="modal modal-fixed-footer">
+        <div class="modal-content">
+          <h4>Error</h4>
+          <p id="error-msg">Error Message</p>
+        </div>
+        <div class="modal-footer">
+          <a class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+        </div>
+      </div>
+    </body>
+  </html>

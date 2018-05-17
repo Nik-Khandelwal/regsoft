@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>BILLS</title>
+        {% load staticfiles %}
+        <style>
+	.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+a {
+  color: #5D6975;
+  text-decoration: underline;
+}
+
+body {
+  position: relative;
+  width: 10cm;  
+  height: 0cm; 
+  margin: 0 auto; 
+  color: #001028;
+  background: #FFFFFF; 
+  font-family: Arial, sans-serif; 
+  font-size: 12px; 
+  font-family: Arial;
+}
+
+header {
+  padding: 10px 0;
+  margin-bottom: 30px;
+}
+
+#logo {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+#logo img {
+  width: 90px;
+}
+
+h1 {
+  border-top: 1px solid  #5D6975;
+  border-bottom: 1px solid  #5D6975;
+  color: #5D6975;
+  font-size: 2.4em;
+  line-height: 1.4em;
+  font-weight: normal;
+  text-align: center;
+  margin: 0 0 20px 0;
+  /*background: url('/static/controls/bill/dimension.png');*/
+}
+
+#project {
+  
+}
+
+#project span {
+  color: #5D6975;
+  
+  display: inline-block;
+  font-size: 1.0em;
+}
+
+#company {
+  float: right;
+  text-align: right;
+}
+
+#project div,
+#company div {
+  white-space: nowrap;        
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-bottom: 20px;
+}
+
+table tr:nth-child(2n-1) td {
+  background: #F5F5F5;
+}
+
+table th,
+table td {
+  text-align: center;
+}
+
+table th {
+  padding: 5px 20px;
+  color: #5D6975;
+  border-bottom: 1px solid #C1CED9;
+  white-space: nowrap;        
+  font-weight: normal;
+}
+
+table .service,
+table .desc {
+  text-align: left;
+}
+
+table td {
+  padding: 20px;
+  text-align: right;
+}
+
+table td.service,
+table td.desc {
+  vertical-align: top;
+}
+
+table td.unit,
+table td.qty,
+table td.total {
+  font-size: 1.2em;
+}
+
+table td.grand {
+  border-top: 1px solid #5D6975;;
+}
+
+#notices .notice {
+  color: #5D6975;
+  font-size: 1.2em;
+}
+
+footer {
+  color: #5D6975;
+  width: 100%;
+  height: 30px;
+  position: absolute;
+  bottom: 0;
+  border-top: 1px solid #C1CED9;
+  padding: 8px 0;
+  text-align: center;
+}
+
+	</style>
+  </head>
+  <body onload="loaded()">
+    <header class="clearfix">
+      <div id="logo">
+        <img src="{% static 'controls/bill/bosm.svg' %}">
+      </div>
+      <h1>BOSM 2018</h1>
+      
+      <div id="project" style="text-align: center">
+        <div><span>College</span> <br/>{{ college }}</div>
+        <div><span>Group Leader</span><br/>{{ name }}</div>
+        <div><span>Contact No.</span><br/> {{ mobile }}</div>
+        <div><span>Time</span><br/>{{ time }} </div>
+        
+      </div>
+    </header>
+    <main>
+      <table>
+        <thead>
+          <tr>
+            <th class="service">ID</th>
+            <th class="desc">NAME</th>
+            <th></th>
+            <th></th>
+            <th>UNBILLED AMOUNT</th>
+          </tr>
+        </thead>
+        <tbody>
+
+        {% for obj in mylist %}
+          <tr>
+            <td class="service">{{ obj.pk }}</td>
+            <td class="desc">{{ obj.name }}</td>
+            <td class="unit"></td>
+            <td class="qty"></td>
+            <td class="total">{{ obj.unbilled_amt }}</td>
+          </tr>          
+          
+          {% endfor %}
+          <tr>
+            <td colspan="4" class="grand total">GRAND TOTAL</td>
+            <td class="grand total">{{ grand_total }}</td>
+          </tr>
+            <tr>
+            <td colspan="4">AMOUNT PAID</td>
+            <td class="total">{{ amt_paid }}</td>
+          </tr>
+            <tr>
+            <td colspan="4">AMOUNT RETURNED</td>
+            <td class="total">{{ amt_returned }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div id="notices">
+              </div>
+    </main>
+    
+  </body>
+  <script type="text/javascript">
+    function loaded() {
+      window.print();
+    }
+  </script>
+</html>
+
+
+<!--  <html>
+ <head>
+   {% load staticfiles %}
+ </head>
+ <body>
+   {% for obj in mylist %}
+   {{ obj.name }}
+   {% endfor %}
+ </body>
+ </html> -->

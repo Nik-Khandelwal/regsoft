@@ -1,0 +1,29 @@
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+    {% load staticfiles %}
+      <title>BOSM Controls</title>
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <link type="text/css" rel="stylesheet" href="{% static 'main/Landing/css/materialize.min.css' %}"  media="screen,projection"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      <link type="text/css" rel="stylesheet" href="{% static 'main/Landing/css/style.css' %}"/>
+      <script type="text/javascript" src="{% static 'main/Landing/js/action.js' %}"></script>
+    </head>
+
+    <body onload="loaded()" class="black ">
+      <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+      <script type="text/javascript" src="{% static 'main/Landing/js/materialize.min.js' %}"></script>
+        <h2 class="white-text">BOSM 2018</h2>
+        <div class="container">
+            <button class="btn btn1" onclick="location.href='/register/';">Registration Site</button>
+            <button class="btn btn2" onclick="location.href='/pcradmin/';">PCR Admin</button>
+            <button class="btn btn3" onclick="location.href='/firewallz/';">Firewallz Admin</button>
+            <button class="btn btn4" onclick="location.href='/controls/';">Controls Admin</button>
+            <button class="btn btn5" onclick="location.href='/recnacc/';">Rec N Acc Admin</button>
+        
+        </div>
+        <div>
+            <img src="{% static 'main/Landing/icons/bosm.svg' %}">
+        </div>
+    </body>
+  </html>

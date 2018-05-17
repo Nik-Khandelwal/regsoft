@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html>
+<head>
+{% load staticfiles %}
+  <title>PCR Admin</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'pcradmin/css/font.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'pcradmin/css/materialize.min.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'pcradmin/css/pcrhome.css' %}">
+  <script type="text/javascript" src="{% static 'pcradmin/js/jquery.js' %}"></script>
+  <script type="text/javascript" src="{% static 'pcradmin/js/materialize.min.js' %}"></script>
+  <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
+  <script type="text/javascript" src="{% static 'pcradmin/js/pcrhome.js' %}"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body class="grey lighten-2">
+  <nav>
+    <div class="nav-wrapper">
+      <a class="brand-logo center">PCRAdmin</a>
+      <ul class="right">
+        <li><a href="logout/" class="nav-link-hover"><i class="material-icons left">exit_to_app</i>Logout</a></li>
+      </ul>
+      <ul class="left">
+        <li><a data-activates="slide-out" class="button-collapse show-on-large hover-side-btn nav-link-hover" id="side-btn"><i class="material-icons">menu</i></a></li>
+      </ul>
+    </div>
+  </nav>
+  <ul id="slide-out" class="side-nav black">
+    <li>
+      <div class="user-view center">
+        <div class="background black"></div>
+        <a><span class="white-text name" style="font-size: 20px; padding-bottom: 10px;">PCR Admin Panel</span></a>
+      </div>
+    </li>
+    <li><div class="divider"></div></li>
+    <li><a onclick="showDashboard()" class="waves-effect waves-light"><i class="material-icons">dashboard</i>Dashboard</a></li>
+    <li><div class="divider"></div></li>
+    <li>
+      <ul class="collapsible collapsible-accordion">
+        <li>
+          <a class="collapsible-header"><i class="material-icons">group</i>Users</a>
+          <div class="collapsible-body">
+            <ul>
+              <li><a onclick="fetchSwitchStatus()">Switch User Status</a></li>
+              <li><a onclick="fetchChangeGroupleader()">Change Group Leader</a></li>
+              <!-- <li><a>Change Payment Status</a></li> -->
+              <li><a onclick="fetchConfirmGroupleaders()">Confirm Teams</a></li>
+              <li><a onclick="fetchEditLeaders()">Edit Details</a></li>
+              <li><a onclick="fetchVerifyDocsLeaders()">Verify Documents</a></li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </li>
+    <li><div class="divider"></div></li>
+    <li>
+      <ul class="collapsible collapsible-accordion">
+        <li>
+          <a class="collapsible-header"><i class="material-icons">mail</i>Send Mails</a>
+          <div class="collapsible-body">
+            <ul>
+              <li><a onclick="fetchMail()">Send Mail</a></li>
+              <li><a onclick="fetchResendCredentialsMail()">Resend Credentials</a></li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </li>
+    <li><div class="divider"></div></li>
+    <li>
+      <ul class="collapsible collapsible-accordion">
+        <li>
+          <a class="collapsible-header"><i class="material-icons">directions_run</i>Sports</a>
+          <div class="collapsible-body">
+            <ul>
+              <li><a onclick="addSport()">Add Sports</a></li>
+              <li><a onclick="editLimits()">Sport Limits</a></li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </li>
+    <li><div class="divider"></div></li>
+    <li><a onclick="addCollege()" class="waves-effect waves-light"><i class="material-icons">business</i>Add College</a></li>
+    <li><a onclick="fetchStats()" class="waves-effect waves-light"><i class="material-icons">assessment</i>View Stats</a></li>
+    <li><a onclick="fetchExcel()" class="waves-effect waves-light"><i class="material-icons">assignment</i>View Excel</a></li>
+  </ul>
+  <div id="main-content-loading">
+    <div class="loader">Loading...</div>
+  </div>
+  <div class="main-content" id="dashboard">
+    <div class="row">
+      <div class="col l3 m6 s12 center">
+        <section class="card-container">
+          <div class="custom-card" onclick="flip(0)">
+            <div class="front purple darken-2">
+              <div class="front-left purple darken-4">
+                <i class="material-icons left-icon">person</i>
+              </div>
+              <div class="front-right">
+                <span class="right-text">No. of Registered</span>
+              </div>
+            </div>
+            <div class="back purple darken-2">
+              <table class="centered">
+                <thead>
+                  <tr>
+                    <th>Male</th>
+                    <th>Female</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody id="no-registered-body">
+                  <tr>
+                    <td>12</td>
+                    <td>13</td>
+                    <td>25</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="col l3 m6 s12 center">
+        <section class="card-container">
+          <div class="custom-card" onclick="flip(1)">
+            <div class="front blue darken-2">
+              <div class="front-left blue darken-4">
+                <i class="material-icons left-icon">person_add</i>
+              </div>
+              <div class="front-right">
+                <span class="right-text">No. of Confirmed</span>
+              </div>
+            </div>
+            <div class="back blue darken-2">
+              <table class="centered">
+                <thead>
+                  <tr>
+                    <th>Male</th>
+                    <th>Female</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody id="no-confirmed-body">
+                  <tr>
+                    <td>12</td>
+                    <td>13</td>
+                    <td>25</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="col l3 m6 s12 center">
+        <section class="card-container">
+          <div class="custom-card" onclick="flip(2)">
+            <div class="front green darken-2">
+              <div class="front-left green darken-4">
+                <i class="material-icons left-icon">attachment</i>
+              </div>
+              <div class="front-right">
+                <span class="right-text">No. of Documents</span>
+              </div>
+            </div>
+            <div class="back green darken-2">
+              <table class="centered">
+                <thead>
+                  <tr>
+                    <th>Male</th>
+                    <th>Female</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody id="no-documents-body">
+                  <tr>
+                    <td>12</td>
+                    <td>13</td>
+                    <td>25</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div class="col l3 m6 s12 center">
+        <section class="card-container">
+          <div class="custom-card" onclick="flip(3)">
+            <div class="front grey darken-2">
+              <div class="front-left grey darken-4">
+                <i class="material-icons left-icon">attach_money</i>
+              </div>
+              <div class="front-right">
+                <span class="right-text">Payment</span>
+              </div>
+            </div>
+            <div class="back grey darken-2">
+              <table class="centered">
+                <thead class="change_cursor" onclick="openExtraPaymentDetails()">
+                  <tr>
+                    <th>Pre-Reg</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody id="payment-body">
+                  <tr>
+                    <td>1000</td>
+                    <td>2000</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+  <div class="main-content" id="switchstatus">
+    <div class="row grey lighten-2">
+      <div class="col s6 grey lighten-2">
+        <div class="row center">
+          <h5>Colleges Without Active Group Leader</h5>
+        </div>
+        <table class="centered table">
+          <thead>
+            <tr>
+              <th style="display: none">College ID</th>
+              <th style="flex-basis: 40%">College</th>
+              <th style="flex-basis: 30%">City</th>
+              <th style="flex-basis: 30%">State</th>
+            </tr>
+          </thead>
+          <tbody id="switch-status-left-list-clg">
+            <tr onclick="openCollegeLeaders(this, 1)" class="switch-status-college-row">
+              <td style="display: none">College ID</td>
+              <td style="flex-basis: 40%">College</td>
+              <td style="flex-basis: 30%">City</td>
+              <td style="flex-basis: 30%">State</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col s6 grey lighten-2">
+        <div class="row center">
+          <h5>Colleges With Active Group Leader</h5>
+        </div>
+        <table class="centered table">
+          <thead>
+            <tr>
+              <th style="display: none">College ID</th>
+              <th style="flex-basis: 40%">College</th>
+              <th style="flex-basis: 30%">City</th>
+              <th style="flex-basis: 30%">State</th>
+            </tr>
+          </thead>
+          <tbody id="switch-status-right-list-clg">
+            <tr onclick="openCollegeLeaders(this, 2)" class="switch-status-college-row">
+              <td style="display: none">College ID</td>
+              <td style="flex-basis: 40%">College</td>
+              <td style="flex-basis: 30%">City</td>
+              <td style="flex-basis: 30%">State</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="main-content" id="stats-page">
+    <div class="container" id="switch_tabs">
+      <div class="row">
+        <div class="col s12">
+          <ul class="tabs">
+            <li class="tab col s6"><a class="active" href="#college_wise">College Wise</a></li>
+            <li class="tab col s6"><a href="#sports_wise">Sports Wise</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!--Template Div-->
+    <div class="card-panel grey lighten-2 template row" style="padding-top: 2vh;">
+      <!-- College Wise -->
+      <div class="row">
+      <div id="college_wise" class="col s12">
+      <table class="centered grey lighten-2 table col s12">
+        <thead class="grey lighten-2">
+          <tr>
+            <th style="flex-basis: 40%;">College (College Wise)</th>
+            <th style="flex-basis: 15%;">Male</th>
+            <th style="flex-basis: 15%;">Female</th>
+            <th style="flex-basis: 15%;">Total</th>
+            <th style="flex-basis: 15%;">Coach</th>
+          </tr>
+        </thead>
+        <tbody class="grey lighten-2" id="college-wise-stats">
+          <tr class="stats-row" onclick="openStats(1, 1, this)">
+            <td style="flex-basis: 40%;"><a class="black-text">Birla Institute Of Technology and Science</td>
+            <td style="flex-basis: 15%;">5 | 6</td>
+            <td style="flex-basis: 15%;">1 | 6</td>
+            <td style="flex-basis: 15%;">6 | 6</td>
+            <td style="flex-basis: 15%;">1 | 2</td>
+          </tr>
+        </tbody>
+        <tfoot class="grey lighten-2" id="college-wise-stats-foot">
+          <tr>
+            <td class="center" style="flex-basis: 40%;">Total</td>
+            <td class="center" style="flex-basis: 15%;">1000 | 1000</td>
+            <td class="center" style="flex-basis: 15%;">1000 | 1000</td>
+            <td class="center" style="flex-basis: 15%;">2000 | 2000</td>
+            <td class="center" style="flex-basis: 15%;">250 | 500</td>
+          </tr>
+        </tfoot>
+      </table>
+      </div>
+      <!--Sports Wise -->
+      <div id="sports_wise" class="col s12">
+      <table class="centered grey lighten-2 table col s12">
+        <thead class="grey lighten-2">
+          <tr>
+            <th style="flex-basis: 40%;">Sports (Sports Wise)</th>
+            <th style="flex-basis: 15%;">Male</th>
+            <th style="flex-basis: 15%;">Female</th>
+            <th style="flex-basis: 15%;">Total</th>
+            <th style="flex-basis: 15%;">Coach</th>
+          </tr>
+        </thead>
+        <tbody class="grey lighten-2" id="sport-wise-stats">
+          <tr class="stats-row" onclick="openStats(1, 2, this)">
+            <td style="flex-basis: 40%;"><a class="black-text">Basketball (Boys)</td>
+            <td style="flex-basis: 15%;">5 | 6</td>
+            <td style="flex-basis: 15%;">1 | 6</td>
+            <td style="flex-basis: 15%;">6 | 6</td>
+            <td style="flex-basis: 15%;">1 | 2</td>
+          </tr>
+        </tbody>
+        <tfoot class="grey lighten-2" id="sports-wise-stats-foot">
+          <tr>
+            <td class="center" style="flex-basis: 40%;">Total</td>
+            <td class="center" style="flex-basis: 15%;">1000 | 1000</td>
+            <td class="center" style="flex-basis: 15%;">1000 | 1000</td>
+            <td class="center" style="flex-basis: 15%;">2000 | 2000</td>
+            <td class="center" style="flex-basis: 15%;">250 | 500</td>
+          </tr>
+        </tfoot>
+       </table>
+       </div>
+       </div>
+    </div>
+  </div>
+  <div class="main-content" id="sport-limits">
+    <div class="card-panel limits grey lighten-2" style="padding-top: 3vh;">
+      <table class="centered grey lighten-2 table">
+        <thead class="grey lighten-2">
+          <tr>
+            <th style="display: none;">ID No</th>
+            <th style="flex-basis: 25%;">Sports</th>
+            <th style="flex-basis: 25%;">Minimum Participants</th>
+            <th style="flex-basis: 30%;">Maximium Participants</th>
+            <th style="flex-basis: 20%;">Change</th>
+          </tr>
+        </thead>
+        <tbody class="grey lighten-2" id="sport-limit-body">
+          <tr>
+            <td style="display: none;">1</td>
+            <td style="flex-basis: 25%;">Sport Name</td>
+            <td style="flex-basis: 25%;">1</td>
+            <td style="flex-basis: 30%;">5</td>
+            <td class="hover-effect" style="flex-basis: 20%;" onclick="editSportLimit(this);"><i class="material-icons">build</i></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="main-content" id="send-mails-div">
+    <div class="card-panel mails grey lighten-2" style="padding-top: 3vh;">
+      <table class="centered grey lighten-2 table">
+        <thead class="grey lighten-2">
+          <tr>
+              <th style="flex-basis: 25%;">Name</th>
+              <th style="flex-basis: 30%;">College</th>
+              <th style="flex-basis: 30%;">Email Address</th>
+              <th style="flex-basis: 15%;">Compose</th>
+              <th style="display: none;">ID No.</th>
+              <th style="display: none;">College ID</th>
+          </tr>
+        </thead>
+        <tbody class="grey lighten-2" id="mail-groupleader-body">
+          <tr class="mail-groupleader-row" onclick="openMailSports(this)">
+            <td style="flex-basis: 25%;">Arpit Anshuman</td>
+            <td style="flex-basis: 30%;">BITS Pilani</td>
+            <td style="flex-basis: 30%;">f2016250@pilani.bits-pilani.ac.in</td>
+            <td style="flex-basis: 15%;" onclick="composeMailGroupLeader(this)"><i class="material-icons">email</i></td>
+            <td style="display: none;" class="mail-groupleader-id">ID</td>
+            <td style="display: none;" class="mail-college-groupleader-id">College_ID</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="main-content" id="edit-details-div">
+    <div class="card-panel edit grey lighten-2" style="padding-top: 3vh;">
+      <table class="centered grey lighten-2 table">
+        <thead class="grey lighten-2">
+          <tr>
+            <th style="flex-basis: 20%;">Name</th>
+            <th style="flex-basis: 25%;">College</th>
+            <th style="flex-basis: 15%;">Phone</th>
+            <th style="flex-basis: 25%;">Email</th>
+            <th style="flex-basis: 15%;">Edit</th>
+            <th style="display: none;">ID No.</th>
+            <th style="display: none;">College ID</th>
+          </tr>
+        </thead>
+        <tbody class="grey lighten-2" id="edit-groupleader-body">
+          <tr class="edit-groupleader-row" onclick="openEditSports(this)">
+            <td style="flex-basis: 20%;">Arpit Anshuman</td>
+            <td style="flex-basis: 25%;">BITS Pilani</td>
+            <td style="flex-basis: 15%;">9829775537</td>
+            <td style="flex-basis: 25%;">f2016250@pilani.bits-pilani.ac.in</td>
+            <td style="flex-basis: 15%;" onclick="editGroupLeader(this)"><i class="material-icons">edit</i></td>
+            <td style="display: none;" class="edit-groupleader-id">ID</td>
+            <td style="display: none;" class="edit-college-groupleader-id">College_ID</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="main-content" id="view-excel-div">
+    <div class="card-panel edit grey lighten-2" style="padding-top: 3vh;">
+      <div class="row">
+        <div class="col s4 center"><a class="waves-effect waves-light btn grey lighten-3 excel tooltipped black-text" data-position="bottom" data-delay="30" data-tooltip="Download Group Leaders Excel Sheet" href="excel/leaderexcel/" target="_blank" id="group_leaders_excel_text"><i class="material-icons right">file_download</i>Group Leaders Excel Sheet</a></div>
+        <div class="col s4 center"><a class="waves-effect waves-light btn grey lighten-3 excel tooltipped black-text" data-position="bottom" data-delay="30" data-tooltip="Download Group Leaders CSV" href="excel/leadercsv/" target="_blank" id="group_leaders_csv_text"><i class="material-icons right">file_download</i>Group Leaders CSV</a></div>
+        <div class="col s4 center"><a class="waves-effect waves-light btn grey lighten-3 excel tooltipped black-text" data-position="bottom" data-delay="30" data-tooltip="Download Group Leaders PDF" href="excel/leaderpdf/" target="_blank" id="group_leaders_json_text"><i class="material-icons right">file_download</i>Group Leaders PDF</a></div>
+      </div>
+      <table class="centered grey lighten-2 table">
+        <thead class="grey lighten-2">
+          <tr>
+            <th style="flex-basis: 25%;">Name</th>
+            <th style="flex-basis: 30%;">College</th>
+            <th style="flex-basis: 15%;">Excel</th>
+            <th style="flex-basis: 15%;">CSV</th>
+            <th style="flex-basis: 15%;">PDF</th>
+            <th style="display: none;">ID No.</th>
+          </tr>
+        </thead>
+        <tbody class="grey lighten-2" id="download-excel-body">
+          <tr>
+            <td style="flex-basis: 25%;">Arpit Anshuman</td>
+            <td style="flex-basis: 30%;">BITS Pilani</td>
+            <td style="flex-basis: 15%;"><a href=""><i class="material-icons black-text">file_download</i></a></td>
+            <td style="flex-basis: 15%;"><a href=""><i class="material-icons black-text">file_download</i></a></td>
+            <td style="flex-basis: 15%;"><a href=""><i class="material-icons black-text">file_download</i></a></td>
+            <td style="display: none;" class="download-excel-groupleader-id">ID</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="main-content" id="resend-credentials-mails-div">
+    <div class="card-panel mails grey lighten-2" style="padding-top: 3vh;">
+      <table class="centered grey lighten-2 table">
+        <thead class="grey lighten-2">
+          <tr>
+              <th style="flex-basis: 25%;">Name</th>
+              <th style="flex-basis: 30%;">College</th>
+              <th style="flex-basis: 30%;">Email Address</th>
+              <th style="flex-basis: 15%;">Compose</th>
+              <th style="display: none;">ID No.</th>
+              <th style="display: none;">College ID</th>
+          </tr>
+        </thead>
+        <tbody class="grey lighten-2" id="resend-credentials-mail-groupleader-body">
+          <tr class="resend-credentials-mail-groupleader-row" onclick="openResendCredentialsMailSports(this)">
+            <td style="flex-basis: 25%;">Arpit Anshuman</td>
+            <td style="flex-basis: 30%;">BITS Pilani</td>
+            <td style="flex-basis: 30%;">f2016250@pilani.bits-pilani.ac.in</td>
+            <td style="flex-basis: 15%;" onclick="composeResendCredentialsMailGroupLeader(this)"><i class="material-icons">email</i></td>
+            <td style="display: none;" class="resend-credentials-mail-groupleader-id">ID</td>
+            <td style="display: none;" class="resend-credentials-mail-college-groupleader-id">College_ID</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="main-content" id="change-groupleader-div">
+    <div class="card-panel mails grey lighten-2" style="padding-top: 3vh;">
+      <table class="centered grey lighten-2 table">
+        <thead class="grey lighten-2">
+          <tr>
+              <th style="flex-basis: 30%;">Name</th>
+              <th style="flex-basis: 35%;">College</th>
+              <th style="flex-basis: 35%;">Email Address</th>
+              <th style="display: none;">ID No.</th>
+              <th style="display: none;">College ID</th>
+          </tr>
+        </thead>
+        <tbody class="grey lighten-2" id="change-groupleader-body">
+          <tr class="change-groupleader-row" onclick="openChangeGroupleader(this)">
+            <td style="flex-basis: 30%;">Arpit Anshuman</td>
+            <td style="flex-basis: 35%;">BITS Pilani</td>
+            <td style="flex-basis: 35%;">f2016250@pilani.bits-pilani.ac.in</td>
+            <td style="display: none;" class="change-groupleader-id">ID</td>
+            <td style="display: none;" class="change-groupleader-college-id">College_ID</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="main-content" id="confirm-groupleader-div">
+    <div class="card-panel mails grey lighten-2" style="padding-top: 3vh;">
+      <table class="centered grey lighten-2 table">
+        <thead class="grey lighten-2">
+          <tr>
+              <th style="flex-basis: 35%;">Name</th>
+              <th style="flex-basis: 40%;">College</th>
+              <th style="flex-basis: 25%;">Phone Number</th>
+              <th style="display: none;">ID No.</th>
+              <th style="display: none;">College ID</th>
+          </tr>
+        </thead>
+        <tbody class="grey lighten-2" id="confirm-groupleader-body">
+          <tr class="confirm-groupleader-row" onclick="openConfirmGroupleader(this)">
+            <td style="flex-basis: 35%;">Arpit Anshuman</td>
+            <td style="flex-basis: 40%;">BITS Pilani</td>
+            <td style="flex-basis: 25%;">f2016250@pilani.bits-pilani.ac.in</td>
+            <td style="display: none;" class="confirm-groupleader-id">ID</td>
+            <td style="display: none;" class="confirm-groupleader-college-id">College_ID</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="main-content" id="verify-docs-groupleader-div">
+    <div class="card-panel mails grey lighten-2" style="padding-top: 3vh;">
+      <table class="centered grey lighten-2 table">
+        <thead class="grey lighten-2">
+          <tr>
+              <th style="flex-basis: 30%;">Name</th>
+              <th style="flex-basis: 35%;">College</th>
+              <th style="flex-basis: 35%;">Email Address</th>
+              <th style="display: none;">ID No.</th>
+              <th style="display: none;">College ID</th>
+          </tr>
+        </thead>
+        <tbody class="grey lighten-2" id="verify-docs-groupleader-body">
+          <tr class="verify-docs-groupleader-row" onclick="openVerifyDocsGroupleader(this)">
+            <td style="flex-basis: 30%;">Arpit Anshuman</td>
+            <td style="flex-basis: 35%;">BITS Pilani</td>
+            <td style="flex-basis: 35%;">f2016250@pilani.bits-pilani.ac.in</td>
+            <td style="display: none;" class="verify-docs-groupleader-id">ID</td>
+            <td style="display: none;" class="verify-docs-groupleader-college-id">College_ID</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- Modals Below -->
+  <div class="modal modal-fixed-footer grey lighten-3 custom-modals">
+    <div class="modal-content">
+      <h5 style="text-align: center;">Group Leaders</h5>
+      <table class="centered table modal-table grey lighten-2">
+        <thead class="grey lighten-2">
+          <tr>
+            <th style="display: none;">ID No</th>
+            <th style="flex-basis: 20%;">Name</th>
+            <th style="flex-basis: 14%">Phone</th>
+            <th style="flex-basis: 25%;">Email Address</th>
+            <th style="flex-basis: 20%;">Sport</th>
+            <th style="flex-basis: 8%;">Gender</th>
+            <th style="flex-basis: 8%;">Coach</th>
+            <th style="flex-basis: 5%;">Active</th>
+          </tr>
+        </thead>
+        <tbody class="grey lighten-2" id="switch-status-list-body">
+          <tr class="status-selection">
+            <td style="display: none;">ID No</td>
+            <td style="flex-basis: 20%;">Name</td>
+            <td style="flex-basis: 14%">Phone</td>
+            <td style="flex-basis: 25%;">Email Address</td>
+            <td style="flex-basis: 20%;">Sport</td>
+            <td style="flex-basis: 8%;">Gender</td>
+            <td style="flex-basis: 8%;">Coach</td>
+            <td style="flex-basis: 5%;"><i class="material-icons change-cursor" onclick="toggleSelection(this);">check_box_outline_blank</i></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="modal-footer grey lighten-2 center">
+      <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="confirmChangeUserStatus();" id="switch-status-btn">Switch Status</btn>
+      <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="back(0);">Back</btn>
+    </div>
+  </div>
+  <div class="modal modal-fixed-footer grey lighten-3 custom-modals">
+    <div class="modal-content">
+      <table class="centered table modal-table grey lighten-2">
+        <thead class="grey lighten-2" id="specific-col-sport">
+          <tr>
+            <th style="flex-basis: 40%;">Sports (Specific College)</th>
+            <th style="flex-basis: 15%;">Male</th>
+            <th style="flex-basis: 15%;">Female</th>
+            <th style="flex-basis: 15%;">Total</th>
+            <th style="flex-basis: 15%;">Coach</th>
+          </tr>
+        </thead>
+        <tbody class="grey lighten-2" id="specific-col-sport-body">
+          <tr class="specific-col-sport-row" onclick="openSpecificStats(1, pk_col, pk_sport)">
+            <td style="flex-basis: 40%;"><a class="black-text">Basketball (Boys)</td>
+            <td style="flex-basis: 15%;">5 | 6</td>
+            <td style="flex-basis: 15%;">1 | 6</td>
+            <td style="flex-basis: 15%;">6 | 6</td>
+            <td style="flex-basis: 15%;">1 | 2</td>
+          </tr>
+        </tbody>
+        <tfoot class="grey lighten-2" id="specific-col-sport-foot">
+          <tr>
+            <td class="center" style="flex-basis: 40%;">Total</td>
+            <td class="center" style="flex-basis: 15%;">1000 | 1000</td>
+            <td class="center" style="flex-basis: 15%;">1000 | 1000</td>
+            <td class="center" style="flex-basis: 15%;">2000 | 2000</td>
+            <td class="center" style="flex-basis: 15%;">250 | 500</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="modal-footer grey lighten-2 center">
+      <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="back(1);">Back</btn>
+    </div>
+  </div>
+  <div class="modal modal-fixed-footer grey lighten-3 custom-modals">
+    <div class="modal-content">
+      <table class="centered table modal-table grey lighten-2">
+        <thead class="grey lighten-2" id="specific-stats-header">
+          <th style="flex-basis: 50%;">Sport</th>
+          <th style="flex-basis: 50%;">College</th>
+        </thead>
+        <thead class="grey lighten-2" id="specific-stats-head">
+          <tr>
+            <th style="flex-basis: 20%;">Name</th>
+            <th style="flex-basis: 15%;">Phone</th>
+            <th style="flex-basis: 25%;">EMail</th>
+            <th style="flex-basis: 10%;">Gender</th>
+            <th style="flex-basis: 10%;">Participant</th>
+            <th style="flex-basis: 10%;">Confirmation</th>
+            <th style="flex-basis: 10%;">Payment</th>
+          </tr>
+        </thead>
+        <tbody class="grey lighten-2" id="specific-stats-body">
+          <tr class="specific-stats-row">
+            <td style="flex-basis: 20%;">Name</td>
+            <td style="flex-basis: 15%;">Phone</td>
+            <td style="flex-basis: 25%;">EMail</td>
+            <td style="flex-basis: 10%;">Gender</td>
+            <td style="flex-basis: 10%;">Participant</td>
+            <td style="flex-basis: 10%;">Confirmation</td>
+            <td style="flex-basis: 10%;">Payment</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="modal-footer grey lighten-2 center">
+      <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="back(2);">Back</btn>
+    </div>
+  </div>
+  <div class="modal modal-fixed-footer grey lighten-3 custom-modals">
+    <div class="modal-content">
+      <form id="add-sport-form">
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">directions_run</i>
+            <input type="text" name="sport_name_field" id="sport_name_field" class="validate" required="required">
+            <label for="sport_name_field" data-error="Enter Sport Name">Sport Name</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col m6 s12">
+            <i class="material-icons prefix">compare_arrows</i>
+            <input type="text" name="lower_limit" id="lower_limit" class="validate" required="required">
+            <label for="lower_limit" data-error="Enter Lower Limit">Lower Limit</label>
+          </div>
+          <div class="input-field col m6 s12">
+            <i class="material-icons prefix">compare_arrows</i>
+            <input type="text" name="upper_limit" id="upper_limit" class="validate" required="required">
+            <label for="upper_limit" data-error="Enter Upper Limit">Upper Limit</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s4 center">
+            Gender
+          </div>
+          <div class="col s4 center">
+            <input type="radio" name="indi_gender" id="indi_male" value="male">
+            <label for="indi_male">Male</label>
+          </div>
+          <div class="col s4 center">
+            <input type="radio" name="indi_gender" id="indi_female" value="female">
+            <label for="indi_female">Female</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s12 center">
+            <a class="waves-effect waves-light btn btn-large" onclick="addSportSubmit()"><i class="material-icons right">send</i>Submit</a>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer grey lighten-2 center">
+      <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="back(3);">Back</btn>
+    </div>
+  </div>
+  <div class="modal modal-fixed-footer grey lighten-3 custom-modals">
+    <div class="modal-content">
+      <form id="add-college-form">
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">business</i>
+            <input type="text" name="college_name_field" id="college_name_field" class="validate" required="required">
+            <label for="college_name_field" data-error="Enter College Name">College Name</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col m6 s12">
+            <i class="material-icons prefix">location_city</i>
+            <input type="text" name="city" id="city" class="validate" required="required">
+            <label for="city" data-error="Enter City">City</label>
+          </div>
+          <div class="input-field col m6 s12">
+            <i class="material-icons prefix">location_on</i>
+            <input type="text" name="state" id="state" class="validate" required="required">
+            <label for="state" data-error="Enter State">State</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s12 center">
+            <a class="waves-effect waves-light btn btn-large" onclick="addCollegeSubmit()"><i class="material-icons right">send</i>Submit</a>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer grey lighten-2 center">
+      <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="back(4);">Back</btn>
+    </div>
+  </div>
+  <div class="modal modal-fixed-footer grey lighten-3 custom-modals">
+    <div class="modal-content">
+      <h4 style="text-align: center;">Change Limits</h4>
+      <form id="edit-limits-form">
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">compare_arrows</i>
+            <input type="text" name="min_limit" id="min_limit" class="validate" required="required">
+            <label for="min_limit" data-error="Enter Minimum Limit">Minimum Limit</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">compare_arrows</i>
+            <input type="text" name="max_limit" id="max_limit" class="validate" required="required">
+            <label for="max_limit" data-error="Enter Minimum Limit">Maximum Limit</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s12 center">
+            <a class="waves-effect waves-light btn btn-large" onclick="editSportLimitSubmit(idno)"><i class="material-icons right">send</i>Submit</a>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer grey lighten-2 center">
+      <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="back(5);">Back</btn>
+    </div>
+  </div>
+  <div class="modal modal-fixed-footer grey lighten-3 custom-modals">
+    <div class="modal-content">
+      <table class="centered table modal-table grey lighten-2">
+        <thead class="grey lighten-2">
+          <tr>
+            <th style="flex-basis: 100%">Sports and Participants List</th>
+          </tr>
+        </thead>
+        <tbody class="grey lighten-2" id="send-mail-sport-body">
+          <tr>
+            <td style="flex-basis: 10%;"><i style="flex-basis: 10%;" class="material-icons tooltipped change_cursor" data-position="right" data-delay="50" data-tooltip="Select/Deselect this Sport" onclick="toggleSportMailSelection(this);">check_box_outline_blank</i></td>
+            <td style="flex-basis: 90%;">Sport</td>
+            <td style="display: none;">ID</td>
+          </tr>
+          <tr class="send-mail-sport-row">
+            <td style="flex-basis: 10%;"><i style="flex-basis: 10%;" class="material-icons tooltipped change_cursor" data-position="right" data-delay="50" data-tooltip="Select/Deselect this Participant" onclick="toggleParticipantMailSelection(this);">check_box_outline_blank</i></td>
+            <td style="flex-basis: 35%;">Name</td>
+            <td style="flex-basis: 20%;">Phone</td>
+            <td style="flex-basis: 35%;">EMail</td>
+            <td style="display: none;">ID</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td style="flex-basis: 100%;" class="center">
+              <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" id="open-mail-compose-button" onclick="openMailCompose()">Send Mail</btn>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="modal-footer grey lighten-2 center">
+      <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="back(6);">Back</btn>
+    </div>
+  </div>
+  <div class="modal modal-fixed-footer grey lighten-3 custom-modals" id="mail_modal">
+    <div class="modal-content">
+      <h4 style="text-align: center;">Send Mail</h4>
+      <form id="send-mail-compose-form">
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">create</i>
+            <input type="text" name="email_subject" id="email_subject" class="validate" required="required">
+            <label for="email_subject" data-error="Enter Email Subject">Email Subject</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">create</i>
+            <textarea id="email_body" name="email_body" class="materialize-textarea" class="validate" required="required"></textarea>
+            <label for="email_body" data-error="Enter Email Body">Email Body</label>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer grey lighten-2 center">
+      <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="sendMail();">Send</btn>
+      <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="back(7);">Back</btn>
+    </div>
+  </div>
+  <div class="modal modal-fixed-footer grey lighten-3 custom-modals">
+    <div class="modal-content">
+      <table class="centered table modal-table grey lighten-2">
+        <thead class="grey lighten-2">
+          <tr>
+            <th style="flex-basis: 100%">Participants List</th>
+          </tr>
+        </thead>
+        <tbody class="grey lighten-2" id="edit-part-sport-body">
+          <tr class="edit-part-sport-row">
+            <td style="flex-basis: 20%;">Name</td>
+            <td style="flex-basis: 20%;">Sport</td>
+            <td style="flex-basis: 15%;">Phone</td>
+            <td style="flex-basis: 30%;">EMail</td>
+            <td style="flex-basis: 7%;" class="change_cursor" onclick="editSportPart(this)"><i class="material-icons">edit</i></td>
+            <td style="display: none;">ID</td>
+            <td style="flex-basis: 8%;" class="change_cursor" onclick="deleteSportPart(this)"><i class="material-icons">delete</i></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="modal-footer grey lighten-2 center">
+      <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="back(8);">Back</btn>
+    </div>
+  </div>
+  <div class="modal modal-fixed-footer grey lighten-3 custom-modals">
+    <div class="modal-content">
+      <h4 style="text-align: center;">Edit User</h4>
+      <form id="edit-part-form">
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">create</i>
+            <input type="text" name="part_name" id="part_name" class="validate" required="required">
+            <label for="part_name" data-error="Enter Name">Name</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">create</i>
+            <input type="text" name="part_phone" id="part_phone" class="validate" required="required" maxlength="10" data-length="10">
+            <label for="part_phone" data-error="Enter Phone">Phone</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">create</i>
+            <input type="email" name="part_email" id="part_email" class="validate" required="required">
+            <label for="part_email" data-error="Enter Email">Email</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s4 center">
+            Gender
+          </div>
+          <div class="col s4 center">
+            <input type="radio" name="gender" id="part_male" value="male" required="required">
+            <label for="part_male">Male</label>
+          </div>
+          <div class="col s4 center">
+            <input type="radio" name="gender" id="part_female" value="female" required="required">
+            <label for="part_female">Female</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">directions_run</i>
+            <select id="part_sport" multiple="multiple" required="required" name="part_sport"></select>
+            <label for="part_sport" data-error="Enter Sport">Sport</label>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer grey lighten-2 center">
+      <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="sendEdit();">Send</btn>
+      <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="back(9);">Back</btn>
+    </div>
+  </div>
+  <div class="modal modal-fixed-footer grey lighten-3 custom-modals">
+    <div class="modal-content">
+      <table class="centered table modal-table grey lighten-2">
+        <thead class="grey lighten-2">
+          <tr>
+            <th style="flex-basis: 100%">Sports and Participants List</th>
+          </tr>
+        </thead>
+        <tbody class="grey lighten-2" id="resend-credentials-send-mail-sport-body">
+          <tr>
+            <td style="flex-basis: 10%;"><i style="flex-basis: 10%;" class="material-icons tooltipped change_cursor" data-position="right" data-delay="50" data-tooltip="Select/Deselect this Sport" onclick="toggleResendCredentialsSportMailSelection(this);">check_box_outline_blank</i></td>
+            <td style="flex-basis: 90%;">Sport</td>
+            <td style="display: none;">ID</td>
+          </tr>
+          <tr class="resend-credentials-send-mail-sport-row">
+            <td style="flex-basis: 10%;"><i style="flex-basis: 10%;" class="material-icons tooltipped change_cursor" data-position="right" data-delay="50" data-tooltip="Select/Deselect this Participant" onclick="toggleResendCredentialsParticipantMailSelection(this);">check_box_outline_blank</i></td>
+            <td style="flex-basis: 35%;">Name</td>
+            <td style="flex-basis: 20%;">Phone</td>
+            <td style="flex-basis: 35%;">EMail</td>
+            <td style="display: none;">ID</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td style="flex-basis: 100%;" class="center">
+              <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" id="resend-credentials-open-mail-compose-button" onclick="openResendCredentialsMailCompose()">Send Mail</btn>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="modal-footer grey lighten-2 center">
+      <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="back(10);">Back</btn>
+    </div>
+  </div>
+  <div class="modal modal-fixed-footer grey lighten-3 custom-modals">
+    <div class="modal-content">
+      <h4 style="text-align: center;">Resend Credentials to the selected participants?</h4>
+    </div>
+    <div class="modal-footer grey lighten-2 center">
+      <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="sendResendCredentialsMail();">Send</btn>
+      <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="back(11);">Back</btn>
+    </div>
+  </div>
+  <div class="modal modal-fixed-footer grey lighten-3 custom-modals">
+    <div class="modal-content">
+      <h5 style="text-align: center;">Group Leaders</h5>
+      <table class="centered table modal-table grey lighten-2">
+        <thead class="grey lighten-2">
+          <tr>
+            <th style="display: none;">ID No</th>
+            <th style="flex-basis: 20%;">Name</th>
+            <th style="flex-basis: 14%">Phone</th>
+            <th style="flex-basis: 25%;">Email Address</th>
+            <th style="flex-basis: 20%;">Sport</th>
+            <th style="flex-basis: 8%;">Gender</th>
+            <th style="flex-basis: 8%;">Coach</th>
+            <th style="flex-basis: 5%;">Active</th>
+          </tr>
+        </thead>
+        <tbody class="grey lighten-2" id="group-leader-switch-status-list-body">
+          <tr class="group-leader-status-selection">
+            <td style="display: none;">ID No</td>
+            <td style="flex-basis: 20%;">Name</td>
+            <td style="flex-basis: 14%">Phone</td>
+            <td style="flex-basis: 25%;">Email Address</td>
+            <td style="flex-basis: 20%;">Sport</td>
+            <td style="flex-basis: 8%;">Gender</td>
+            <td style="flex-basis: 8%;">Participant</td>
+            <td style="flex-basis: 5%;"><i class="material-icons change-cursor" onclick="toggleGroupLeaaderSelection(this);">check_box_outline_blank</i></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="modal-footer grey lighten-2 center">
+      <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="confirmChangeUserStatus2();" id="switch-status-btn">Switch Status</btn>
+      <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="back(12);">Back</btn>
+    </div>
+  </div>
+  <div class="modal modal-fixed-footer grey lighten-3 custom-modals">
+    <div class="modal-content row">
+      <div class="col s6">
+        <h5 style="text-align: center;">Unconfirmed Teams</h5>
+        <table class="centered table modal-table grey lighten-2">
+          <thead class="grey lighten-2">
+            <tr>
+              <th style="display: none;">ID No</th>
+              <th style="flex-basis: 35%;">Name</th>
+              <th style="flex-basis: 20%">Participants</th>
+              <th style="flex-basis: 35%;">Sport</th>
+              <th style="flex-basis: 10%;">Select</th>
+              <th style="display: none;">College ID</th>
+            </tr>
+          </thead>
+          <tbody class="grey lighten-2" id="unconfirmed-teams-switch-status-list-body" style="max-height: 42vh;">
+            <tr class="unconfirmed-teams-status-selection">
+              <td style="display: none;">ID No</td>
+              <td style="flex-basis: 35%;">Name</td>
+              <td style="flex-basis: 20%">Participants</td>
+              <td style="flex-basis: 35%;">Sport</td>
+              <td style="flex-basis: 10%;"><i class="material-icons change-cursor" onclick="toggleUnconfirmedTeamsSelection(this);">check_box_outline_blank</i></td>
+              <td style="display: none;">College ID</td>
+            </tr>
+          </tbody>
+        </table>
+        <a class="waves-effect waves-light btn grey lighten-3 confirm1 tooltipped col s8 offset-s2 black-text" data-position="bottom" data-delay="30" data-tooltip="Confirm selected Groups" onclick="confirmTeams();" style="margin-top: 8px;">Confirm</a>
+      </div>
+      <div class="col s6">
+        <h5 style="text-align: center;">Confirmed Teams</h5>
+        <table class="centered table modal-table grey lighten-2">
+          <thead class="grey lighten-2">
+            <tr>
+              <th style="display: none;">ID No</th>
+              <th style="flex-basis: 35%;">Name</th>
+              <th style="flex-basis: 20%">Participants</th>
+              <th style="flex-basis: 35%;">Sport</th>
+              <th style="flex-basis: 10%;">Select</th>
+              <th style="display: none;">College ID</th>
+            </tr>
+          </thead>
+          <tbody class="grey lighten-2" id="confirmed-teams-switch-status-list-body" style="max-height: 42vh;">
+            <tr class="confirmed-teams-status-selection">
+              <td style="display: none;">ID No</td>
+              <td style="flex-basis: 35%;">Name</td>
+              <td style="flex-basis: 20%">Participants</td>
+              <td style="flex-basis: 35%;">Sport</td>
+              <td style="flex-basis: 10%;"><i class="material-icons change-cursor" onclick="toggleConfirmedTeamsSelection(this);">check_box_outline_blank</i></td>
+              <td style="display: none;">College ID</td>
+            </tr>
+          </tbody>
+        </table>
+        <a class="waves-effect waves-light btn grey lighten-3 confirm1 tooltipped col s8 offset-s2 black-text" data-position="bottom" data-delay="30" data-tooltip="Unconfirm selected Groups" onclick="unconfirmTeams();" style="margin-top: 8px;">Unconfirm</a>
+      </div>
+    </div>
+    <div class="modal-footer grey lighten-2 center">
+      <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="back(13);">Back</btn>
+    </div>
+  </div>
+  <div class="modal modal-fixed-footer grey lighten-3 custom-modals">
+    <div class="modal-content row">
+      <div class="col s6">
+        <h5 style="text-align: center;">View unconfirmed documents</h5>
+        <table class="centered table modal-table grey lighten-2">
+          <thead class="grey lighten-2">
+            <tr>
+              <th style="display: none;">ID No</th>
+              <th style="flex-basis: 40%;">Name</th>
+              <th style="flex-basis: 40%">Sport</th>
+              <th style="flex-basis: 10%;">View</th>
+              <th style="flex-basis: 10%">Select</th>
+            </tr>
+          </thead>
+          <tbody class="grey lighten-2" id="unconfirmed-parts-view-docs-list-body" style="max-height: 42vh;">
+            <tr class="unconfirmed-parts-status-selection">
+              <td style="display: none;">ID No</td>
+              <td style="flex-basis: 40%;">Name</td>
+              <td style="flex-basis: 40%">Sport</td>
+              <td style="flex-basis: 10%;"><a href="view_docs/1/" target="_blank"><i class="material-icons black-text">file_download</i></a></td>
+              <td style="flex-basis: 10%"><i class="material-icons black-text" onclick="toggleUnconfirmedPartDocsSelection(this)">check_box_outline_blank</i></td>
+            </tr>
+          </tbody>
+        </table>
+        <a class="waves-effect waves-light btn grey lighten-3 confirm1 tooltipped col s8 offset-s2 black-text" data-position="bottom" data-delay="30" data-tooltip="Confirm Selected Participants" onclick="confirmPartDocs();" style="margin-top: 8px;">Confirm</a>
+      </div>
+      <div class="col s6">
+        <h5 style="text-align: center;">View confirmed documents</h5>
+        <table class="centered table modal-table grey lighten-2">
+          <thead class="grey lighten-2">
+            <tr>
+              <th style="display: none;">ID No</th>
+              <th style="flex-basis: 40%;">Name</th>
+              <th style="flex-basis: 50%">Sport</th>
+              <th style="flex-basis: 10%;">View</th>
+            </tr>
+          </thead>
+          <tbody class="grey lighten-2" id="confirmed-parts-view-docs-list-body">
+            <tr class="confirmed-parts-status-selection">
+              <td style="display: none;">ID No</td>
+              <td style="flex-basis: 40%;">Name</td>
+              <td style="flex-basis: 50%">Sport</td>
+              <td style="flex-basis: 10%;"><a href="view_docs/1/" target="_blank"><i class="material-icons black-text">file_download</i></a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="modal-footer grey lighten-2 center">
+      <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="back(14);">Back</btn>
+    </div>
+  </div>
+  <!-- Modals End -->
+  <!-- Dashboard Payment Modal -->
+  <div id="payment-modal" class="modal bottom-sheet">
+    <div class="modal-content row">
+      <div class="col s6 center">
+        <h5 style="text-align: center;">Pre-Reg</h5>
+        <table class="centered">
+          <thead>
+            <tr>
+              <th>Male</th>
+              <th>Female</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="pre-reg-body">
+            <tr>
+              <td>12</td>
+              <td>13</td>
+              <td>25</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col s6 center">
+        <h5 style="text-align: center;">Total</h5>
+        <table class="centered">
+          <thead>
+            <tr>
+              <th>Male</th>
+              <th>Female</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="tot-payment-body">
+            <tr>
+              <td>12</td>
+              <td>13</td>
+              <td>25</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="modal-footer center">
+      <a class="modal-action modal-close waves-effect waves-green btn-flat change_cursor">Close</a>
+    </div>
+  </div>
+  <div class="modal modal-fixed-footer grey lighten-3 custom-modals">
+    <div class="modal-content">
+      <h4 style="text-align: center;">Delete selected participant?</h4>
+    </div>
+    <div class="modal-footer grey lighten-2 center">
+      <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="deleteSportParticipant();">Send</btn>
+      <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="back(15);">Back</btn>
+    </div>
+  </div>
+</body>
+</html>

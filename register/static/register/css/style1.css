@@ -1,0 +1,69 @@
+@media only screen and (min-width:768px){
+    .white-text{
+    font-size: 800%;
+}
+    
+}
+@media only screen and (max-width:768px){
+    
+})
+.btn-large{
+    width: 100%;
+    height: 100%;   
+}
+
+i:hover{
+    cursor: pointer;
+}
+.card{
+    padding: 2vh;
+}
+.login{
+    height:100vh;
+    width: 0;
+    
+    overflow-x:hidden;
+    transition: 0.8s;
+     position: fixed;
+    z-index: 5;
+    top: 0;
+    left: 0;
+}
+.signup{
+    height:100vh;
+    width: 0;
+    
+    overflow-x:hidden;
+    transition: 0.8s;
+     position: fixed;
+    z-index: 5;
+    top: 0;
+    right: 0;
+}
+#closelogin{
+    position: fixed;
+    display: none;
+}
+#closesignup{
+    position: fixed;
+    display: none;
+}
+@font-face {
+  font-family: 'Cinzel';  
+  src: url(../fonts/Cinzel-Regular.ttf) format('truetype');
+}
+body::-webkit-scrollbar-track, #login::-webkit-scrollbar-track, #signup::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  background-color: #F5F5F5;
+}
+body::-webkit-scrollbar, #login::-webkit-scrollbar, #signup::-webkit-scrollbar {
+  width: 7px;
+  height: 1px;
+  background-color: #F5F5F5;
+}
+body::-webkit-scrollbar-thumb, #login::-webkit-scrollbar-thumb, #signup::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #888;
+}

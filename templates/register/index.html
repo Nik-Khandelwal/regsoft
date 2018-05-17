@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>BOSM 2018 Registrations</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'register/css/font.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'register/css/materialize.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'register/css/cap-style.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/javascript" src="{% static 'register/js/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'register/js/materialize.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'register/js/cap-script.js' %}"></script>
+  </head>
+  <body class="light-green darken-2">
+    <nav>
+      <div class="nav-wrapper">
+        <a class="brand-logo center">BOSM 2018</a>
+        <ul class="right">
+          <li><a href="logout/"><i class="material-icons left">exit_to_app</i>Logout</a></li>
+        </ul>
+        <ul class="left">
+          <li><a class="waves-effect waves-light btn-floating btn-large cyan modal-trigger" href="#instructions-modal" id="tap_info"><i class="large material-icons">info_outline</i></a>
+          <div class="tap-target cyan" data-activates="tap_info">
+            <div class="tap-target-content">
+              <h5>Instructions</h5>
+              <span>Please read the instructions</span>
+            </div>
+          </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container center-align">
+      <h4 class="white-text">Sports :</h4>
+      <h4 class="detail_tag white-text">Click on Sport Name for details</h4>
+      <ul class="collapsible center-align" data-collapsible="accordion" id="sports">
+        <li>
+          <div class='collapsible-header'><i class='material-icons'>whatshot</i>{{SportName}}<span class='sport_id'>{{sportid}}</span>&nbsp;<span class='badge reg' onclick='reg("{{SportName}}", {{sportid}}, {{coach}}, "{{gender}}", {{lowerlimit}}, {{upperlimit})'>Register</span></div>
+          <div class='collapsible-body blue-grey white-text'>
+            <span>
+              <h5>No. of Registered Students : </h5>
+              <span id='reg_no'>
+                <h5 id="reg_no_count">{{count}}</h5>
+              </span>
+            </span>
+            <br/><button class='btn truncate regbtn' onclick='getlist(this)'>Refresh Registered</button> <button class='btn truncate addbtn' onclick='addTeamParticipants(this, "{{gender}}")' id="add_team_part_disp">Add Team Participants</button>
+            <ol id= 'list'></ol>
+          </div>
+        </li> 
+      </ul>
+      <button class="btn center-align" onclick="window.location.href='/register/register/player'"><i class="material-icons left">attach_file</i>Documents Upload</button>
+    </div>
+    <div class="register purple accent-2 center-align" id="reg">
+      <a class="close white-text" onclick="closereg()"><i class="material-icons medium">close</i></a>
+      <div id="team-form-wrapper">
+        <div class="container purple accent-2" id="head-msgs">
+          <h4 id="team-registration-head">Team Registrations for <span id="team-sport-name">Team Sport Name</span></h4>
+          <h5 id="team-registration-msg">This is a team event. Total no. of participants must be between <span id="team-sport-lower-limit">Lower Limit</span> and <span id="team-sport-upper-limit">Upper Limit</span></h5>
+          <span id="team-sport-id">Team Sport ID</span><span id="team-sport-gender">Team Sport Gender</span>
+        </div>
+        <div class="container purple accent-2">
+          <div class="row">
+            <form class="col s12" id="sport-team-form">
+              <div class="row">
+                <div class="input-field col s12">
+                  <i class="material-icons prefix">record_voice_over</i>
+                  <input type="text" name="Coach_Name" id="coach_name_field" class="validate">
+                  <label for="coach_name_field" data-error="Enter Coach Name">Coach Name (Optional)</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s12">
+                  <i class="material-icons prefix">email</i>
+                  <input type="email" name="Coach_Email" id="coach_email_field" class="validate" required="required">
+                  <label for="coach_email_field" data-error="Enter a Valid Email">E-Mail of Coach (Optional)</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col s4">
+                  Coach Gender (Optional)
+                </div>
+                <div class="col s4">
+                  <input type="radio" name="coach_gender" id="coach_male" value="male">
+                  <label for="coach_male">Male</label>
+                </div>
+                <div class="col s4">
+                  <input type="radio" name="coach_gender" id="coach_female" value="female">
+                  <label for="coach_female">Female</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col s12">
+                  <div class="divider"></div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col s12 center">
+                  <a class="waves-effect waves-light btn" onclick="addNewParticipant()"><i class="material-icons left">group_add</i>Add Participant</a>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col s12">
+                  <div class="divider"></div>
+                </div>
+              </div>
+              <div class="row" id="submit-team-btn">
+                <div class="col s12 center">
+                  <a class="waves-effect waves-light btn btn-large" onclick="team_submit()"><i class="material-icons right">send</i>Submit</a>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="modal1" class="modal bottom-sheet">
+      <div class="modal-content blue lighten-1 white-text">
+        <ol id="modal-names">
+          <!-- Edit Names Here -->
+        </ol>
+      </div>
+      <div class="modal-footer">
+        <a class="modal-action modal-close waves-effect waves-green btn" onclick="sendEdit()">Confirm Edit</a>
+      </div>
+    </div>
+    <div id="instructions-modal" class="modal modal-fixed-footer">
+      <div class="modal-content">
+        <h4>Instructions</h4>
+        <p>Write Instuctions about everything that they should know, example, only one team from each college, you can only edit name of participants who are not team captains.</p>
+        <p>Even More Instructions</p>
+        <p>Likhte raho</p>
+      </div>
+      <div class="modal-footer">
+        <a class="modal-action modal-close waves-effect waves-green btn-flat">Done</a>
+      </div>
+    </div>
+    <div id="error-modal" class="modal modal-fixed-footer">
+      <div class="modal-content">
+        <h4>Error</h4>
+        <p id="error-msg">Error Message</p>
+      </div>
+      <div class="modal-footer">
+        <a class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+      </div>
+    </div>
+    <div id="add-team-participants-modal" class="modal modal-fixed-footer orange">
+      <div class="modal-content center">
+        <h5 class="white-text">Add Team Participants</h5>
+        <div id="add_team_participants_div">
+          <div class="row">
+            <form class="col s12" id="sport-extra-form">
+              <div class="row" id="submit-add-team-part-btn">
+                <div class="col s12 center">
+                  <a class="waves-effect waves-light btn btn-large" onclick="addTeamPartSubmit('Male/Female')" id="add_team_parts_btn"><i class="material-icons right">send</i>Submit</a>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer orange">
+        <a class="modal-action modal-close waves-effect waves-green btn-flat white-text">Close</a>
+      </div>
+    </div>
+  </body>
+</html>

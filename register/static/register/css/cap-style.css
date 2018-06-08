@@ -65,17 +65,17 @@ input[type="radio"]:checked+label:after, input[type="radio"].with-gap:checked+la
 #head-msgs {
   text-align: center;
 }
-body::-webkit-scrollbar-track, #reg::-webkit-scrollbar-track, #add_sport::-webkit-scrollbar-track, .modal-content::-webkit-scrollbar-track {
+*::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
   background-color: #F5F5F5;
 }
-body::-webkit-scrollbar, #reg::-webkit-scrollbar, #add_sport::-webkit-scrollbar, .modal-content::-webkit-scrollbar {
+*::-webkit-scrollbar {
   width: 3px;
   height: 1px;
   background-color: #F5F5F5;
 }
-body::-webkit-scrollbar-thumb, #reg::-webkit-scrollbar-thumb, #add_sport::-webkit-scrollbar-thumb, .modal-content::-webkit-scrollbar-thumb {
+*::-webkit-scrollbar-thumb {
   border-radius: 10px;
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   background-color: #888;
@@ -120,11 +120,36 @@ input[type=email], input[type=text] {
   z-index: -1;
   width: 100vw;
   height: 100vh;
-  background-image: url('../images/banner.jpg');
+  background-image: url('../images/final-banner.svg');
   background-size: 100% 100%;
 }
 #backdrop-overlay {
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.6);
+}
+#rotate-div {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2000000000000;
+  background-color: #D24D57;
+}
+#rotate-img {
+  width: 60vw;
+  height: 40vw;
+  position: fixed;
+  top: 30vh;
+  left: 20vw;
+}
+@media screen and (orientation:landscape) {
+  #rotate-div {
+    display: none;
+  }
+}
+#instructions-modal {
+  width: 80%;
+  height: 80%;
+  max-height: 80%;
+  font-family: 'Montserrat';
 }

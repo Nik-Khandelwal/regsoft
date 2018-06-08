@@ -90,3 +90,22 @@ footer {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   background-color: #888;
 }
+#rotate-div {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2000000000000;
+  background-color: #D24D57;
+}
+#rotate-img {
+  width: 60vw;
+  height: 40vw;
+  position: fixed;
+  top: 30vh;
+  left: 20vw;
+}
+@media screen and (orientation:landscape) {
+  #rotate-div {
+    display: none;
+  }
+}

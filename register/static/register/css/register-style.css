@@ -127,11 +127,36 @@ input[type=email], input[type=text] {
   z-index: -1;
   width: 100vw;
   height: 100vh;
-  background-image: url('../images/banner.jpg');
+  background-image: url('../images/final-banner.svg');
   background-size: 100% 100%;
 }
 #backdrop-overlay {
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.6);
+}
+#rotate-div {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2000000000000;
+  background-color: #D24D57;
+}
+#rotate-img {
+  width: 60vw;
+  height: 40vw;
+  position: fixed;
+  top: 30vh;
+  left: 20vw;
+}
+@media screen and (orientation:landscape) {
+  #rotate-div {
+    display: none;
+  }
+}
+#instructions-modal {
+  width: 80%;
+  height: 80%;
+  max-height: 80%;
+  font-family: 'Montserrat';
 }

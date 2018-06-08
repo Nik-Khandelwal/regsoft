@@ -15,8 +15,19 @@
     <script type="text/javascript" src="{% static 'register/js/jquery.js' %}"></script>
     <script type="text/javascript" src="{% static 'register/js/materialize.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'register/js/playerview.js' %}"></script>
+    <link rel="icon" href="{% static 'main/favicon/favicon.ico' %}" type="image/x-icon"/>
+    <link rel="shortcut icon" href="{% static 'main/favicon/favicon.ico' %}" type="image/x-icon"/>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120495963-6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-120495963-6');
+    </script>
   </head>
   <body>
+    <div id="rotate-div"> <img src="{% static 'register/images/rotate.png' %}" id="rotate-img"> </div>
       <nav>
           <div class="nav-wrapper">
             <a href="#!" class="brand-logo center" style="font-family: 'Montserrat'">BOSM 2018</a>

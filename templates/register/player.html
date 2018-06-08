@@ -15,6 +15,16 @@
     <script type="text/javascript" src="{% static 'register/js/jquery.js' %}"></script>
     <script type="text/javascript" src="{% static 'register/js/register-script.js' %}"></script>
     <script type="text/javascript" src="{% static 'register/js/materialize.min.js' %}"></script>
+    <link rel="icon" href="{% static 'main/favicon/favicon.ico' %}" type="image/x-icon"/>
+    <link rel="shortcut icon" href="{% static 'main/favicon/favicon.ico' %}" type="image/x-icon"/>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120495963-5"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-120495963-5');
+    </script>
     <!-- <link href="register/css/font.css" rel="stylesheet"> -->
     <!--Import materialize.css-->
     <!-- <link type="text/css" rel="stylesheet" href="register/css/materialize.min.css"  media="screen,projection"/> -->
@@ -46,6 +56,7 @@
         </ul>
       </div>
     </nav>
+    <div id="rotate-div"> <img src="{% static 'register/images/rotate.png' %}" id="rotate-img"> </div>
     <div id="backdrop-container">
       <!-- Backdrop Image used as Background Image in CSS and add tint in sub-div here -->
       <div id="backdrop-overlay"></div>
@@ -83,11 +94,22 @@
       <div class="center-align footer"><button class="btn large center-align white teal-text" onclick="addsports()">Add</button></div>
     </div>
   <div id="instructions-modal" class="modal modal-fixed-footer">
-    <div class="modal-content">
-      <h4>Instructions</h4>
-      <p>Write Instuctions about everything that they should know, example, only one team from each college, you can only edit name of participants who are not team captains.</p>
-      <p>Even More Instructions</p>
-      <p>Likhte raho</p>
+    <div class="modal-content center">
+      <h4>INSTRUCTIONS</h4>
+      <p>
+        <ul class="collection">
+          <li class="collection-item">Instruction 1 : Write Long Long Instructions Here, Very very very very very very very very very very very very very very very very longgggg longgggg longggg</li>
+          <li class="collection-item">Instruction 2 : Write Long Long Instructions Here, Very very very very very very very very very very very very very very very very longgggg longgggg longggg</li>
+          <li class="collection-item">Instruction 3 : Write Long Long Instructions Here, Very very very very very very very very very very very very very very very very longgggg longgggg longggg</li>
+          <li class="collection-item">Instruction 4 : Write Long Long Instructions Here, Very very very very very very very very very very very very very very very very longgggg longgggg longggg</li>
+          <li class="collection-item">Instruction 5 : Write Long Long Instructions Here, Very very very very very very very very very very very very very very very very longgggg longgggg longggg</li>
+          <li class="collection-item">Instruction 1 : Write Long Long Instructions Here, Very very very very very very very very very very very very very very very very longgggg longgggg longggg</li>
+          <li class="collection-item">Instruction 2 : Write Long Long Instructions Here, Very very very very very very very very very very very very very very very very longgggg longgggg longggg</li>
+          <li class="collection-item">Instruction 3 : Write Long Long Instructions Here, Very very very very very very very very very very very very very very very very longgggg longgggg longggg</li>
+          <li class="collection-item">Instruction 4 : Write Long Long Instructions Here, Very very very very very very very very very very very very very very very very longgggg longgggg longggg</li>
+          <li class="collection-item">Instruction 5 : Write Long Long Instructions Here, Very very very very very very very very very very very very very very very very longgggg longgggg longggg</li>
+        </ul>
+      </p>
     </div>
     <div class="modal-footer">
       <a class="modal-action modal-close waves-effect waves-green btn-flat">Done</a>

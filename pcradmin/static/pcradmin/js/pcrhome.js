@@ -1742,6 +1742,11 @@ channel8.bind('my-event8', function(data) {
   console.log(data);
   updateSwitchStatus();
 });
+var dashboardUpdate = pusher.subscribe('dashboard-update');
+dashboardUpdate.bind('dashboard-update-event', function(data) {
+  console.log(data);
+  updateDashboardData();
+});
 function fetchUpdateStats() {
   csrf_token = getCookie('csrftoken');
   var ourRequest = new XMLHttpRequest();
@@ -1794,6 +1799,33 @@ function updateSwitchStatus() {
       for (var i = 0; i < rightData.length; i++) {
         document.getElementById('switch-status-right-list-clg').innerHTML += '<tr onclick="openCollegeLeaders(this, 2)" class="switch-status-college-row"> <td style="display: none">'+rightData[i][3]+'</td><td style="flex-basis: 40%">'+rightData[i][0]+'</td><td style="flex-basis: 30%">'+rightData[i][1]+'</td><td style="flex-basis: 30%">'+rightData[i][2]+'</td></tr>';
       }
+    } else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
+      Materialize.toast('There was some error connecting to the server!', 3000);
+    }
+  };
+  ourRequest.send('');
+}
+function updateDashboardData() {
+  csrf_token = getCookie('csrftoken');
+  var ourRequest = new XMLHttpRequest();
+  var url = 'dashboard/';
+  ourRequest.open("POST", url, true);
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onreadystatechange = function() {
+    if (ourRequest.readyState === 4 && ourRequest.status === 200) {
+      var jsonResponse = JSON.parse(ourRequest.responseText);
+      var data1 = jsonResponse.data1;
+      var data2 = jsonResponse.data2;
+      var data3 = jsonResponse.data3;
+      var data4 = jsonResponse.data4;
+      document.getElementById('no-registered-body').innerHTML = '<tr> <td>'+data1[0]+'</td><td>'+data1[1]+'</td><td>'+data1[2]+'</td></tr>';
+      document.getElementById('no-confirmed-body').innerHTML = '<tr> <td>'+data2[0]+'</td><td>'+data2[1]+'</td><td>'+data2[2]+'</td></tr>';
+      document.getElementById('no-documents-body').innerHTML = '<tr> <td>'+data3[0]+'</td><td>'+data3[1]+'</td><td>'+data3[2]+'</td></tr>';
+      document.getElementById('payment-body').innerHTML = '<tr> <td>'+data4[0][0]+'</td><td>'+data4[1][0]+'</td></tr>';
+      document.getElementById('pre-reg-body').innerHTML = '<tr> <td>'+data4[0][1]+'</td><td>'+data4[0][2]+'</td><td>'+data4[0][3]+'</td></tr>';
+      document.getElementById('tot-payment-body').innerHTML = '<tr> <td>'+data4[1][1]+'</td><td>'+data4[1][2]+'</td><td>'+data4[1][3]+'</td></tr>';
+      closeAllModals();
     } else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
       Materialize.toast('There was some error connecting to the server!', 3000);
     }

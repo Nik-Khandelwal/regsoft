@@ -10,8 +10,18 @@
     <script type="text/javascript" src="{% static 'register/js/jquery.js' %}"></script>
     <script type="text/javascript" src="{% static 'register/js/materialize.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'register/js/cap-script.js' %}"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120495963-3"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-120495963-3');
+    </script>
+    <link rel="icon" href="{% static 'main/favicon/favicon.ico' %}" type="image/x-icon"/>
+    <link rel="shortcut icon" href="{% static 'main/favicon/favicon.ico' %}" type="image/x-icon"/>
   </head>
-  <body class="light-green darken-2">
+  <body>
     <nav>
       <div class="nav-wrapper">
         <a class="brand-logo center" style="font-family: 'Montserrat'">BOSM 2018</a>
@@ -30,6 +40,7 @@
         </ul>
       </div>
     </nav>
+    <div id="rotate-div"> <img src="{% static 'register/images/rotate.png' %}" id="rotate-img"> </div>
     <div id="backdrop-container">
       <!-- Backdrop Image used as Background Image in CSS and add tint in sub-div here -->
       <div id="backdrop-overlay"></div>
@@ -55,11 +66,22 @@
       <button class="btn center-align" onclick="window.location.href='/register/register/player'"><i class="material-icons left">attach_file</i>Documents Upload</button>
     </div>
     <div id="instructions-modal" class="modal modal-fixed-footer">
-      <div class="modal-content">
-        <h4>Instructions</h4>
-        <p>Write Instuctions about everything that they should know, example, only one team from each college, you can only edit name of participants who are not team captains.</p>
-        <p>Even More Instructions</p>
-        <p>Likhte raho</p>
+      <div class="modal-content center">
+        <h4>INSTRUCTIONS</h4>
+        <p>
+          <ul class="collection">
+            <li class="collection-item">Instruction 1 : Write Long Long Instructions Here, Very very very very very very very very very very very very very very very very longgggg longgggg longggg</li>
+            <li class="collection-item">Instruction 2 : Write Long Long Instructions Here, Very very very very very very very very very very very very very very very very longgggg longgggg longggg</li>
+            <li class="collection-item">Instruction 3 : Write Long Long Instructions Here, Very very very very very very very very very very very very very very very very longgggg longgggg longggg</li>
+            <li class="collection-item">Instruction 4 : Write Long Long Instructions Here, Very very very very very very very very very very very very very very very very longgggg longgggg longggg</li>
+            <li class="collection-item">Instruction 5 : Write Long Long Instructions Here, Very very very very very very very very very very very very very very very very longgggg longgggg longggg</li>
+            <li class="collection-item">Instruction 1 : Write Long Long Instructions Here, Very very very very very very very very very very very very very very very very longgggg longgggg longggg</li>
+            <li class="collection-item">Instruction 2 : Write Long Long Instructions Here, Very very very very very very very very very very very very very very very very longgggg longgggg longggg</li>
+            <li class="collection-item">Instruction 3 : Write Long Long Instructions Here, Very very very very very very very very very very very very very very very very longgggg longgggg longggg</li>
+            <li class="collection-item">Instruction 4 : Write Long Long Instructions Here, Very very very very very very very very very very very very very very very very longgggg longgggg longggg</li>
+            <li class="collection-item">Instruction 5 : Write Long Long Instructions Here, Very very very very very very very very very very very very very very very very longgggg longgggg longggg</li>
+          </ul>
+        </p>
       </div>
       <div class="modal-footer">
         <a class="modal-action modal-close waves-effect waves-green btn-flat">Done</a>

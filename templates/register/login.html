@@ -24,6 +24,8 @@
       gtag('js', new Date());
       gtag('config', 'UA-120495963-1');
     </script>
+    <link rel="icon" href="{% static 'main/favicon/favicon.ico' %}" type="image/x-icon"/>
+    <link rel="shortcut icon" href="{% static 'main/favicon/favicon.ico' %}" type="image/x-icon"/>
   </head>
   <nav>
     <div class="nav-wrapper">
@@ -47,6 +49,7 @@
     <li><a class="hover-effect modal-trigger" href="#instructions-modal"><i class="material-icons">info_outline</i>INSTRUCTIONS</a></li>
   </ul>
   <body>
+    <div id="rotate-div"> <img src="{% static 'register/images/rotate.png' %}" id="rotate-img"> </div>
     <div id="cover-overlay"></div>
     <div id="loader">
       <h1 id="working-text">

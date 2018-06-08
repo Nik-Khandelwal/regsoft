@@ -4,7 +4,7 @@ import re
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404,HttpResponseRedirect, JsonResponse
-from main.models import CustomUser, Team, Sport,Pcradmin_user
+from register.models import CustomUser, Team, Sport
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import auth
 from django.views.generic import View, ListView, FormView
@@ -46,8 +46,6 @@ class PcradminTestCase(object):
 	def setUp(self):
 		self.user = User.objects.create_user(username='foo', password='foobar',
                                              email='user@test.com')
-		self.Pcradmin_user = Pcradmin_user.objects.create(user=self.user)
-
 		for i in range(5):
 			sp=Sport.objects.create(sport='sport'+str(i+1),gender='female',lower=1,upper=10)
 

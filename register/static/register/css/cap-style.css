@@ -1,3 +1,8 @@
+/*Fonts*/
+@font-face {
+  font-family: 'Montserrat';  
+  src: url(../fonts/Montserrat-Regular.woff2) format('woff2');
+}
 body, html {
   padding: 0;
   margin: 0;
@@ -36,31 +41,14 @@ body, html {
 .regbtn, .addbtn {
   margin-bottom: 20px !important;
 }
-.edit-name-icon {
-  cursor: pointer;
-}
 .container {
   padding: 2vh 3vw;
-}
-.register{
-  height:100vh;
-  width: 0;
-  overflow-x:hidden;
-  transition: 0.8s;
-  position: fixed;
-  z-index: 5;
-  top: 0;
-  left: 0;
-  display: none;
 }
 #team-form-wrapper {
   color: white;
 }
 .container {
   padding: 2vh 3vw;
-}
-#register-head {
-  color: white;
 }
 input[type=email]:not(.invalid), input[type=text]:not(.invalid), input[type=password]:not(.invalid) {
   border-bottom: 1px solid white !important;
@@ -124,4 +112,19 @@ input[type=email], input[type=text] {
 .people {
   margin-top: 5px;
   margin-bottom: 5px;
+}
+#backdrop-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('../images/banner.jpg');
+  background-size: 100% 100%;
+}
+#backdrop-overlay {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
 }

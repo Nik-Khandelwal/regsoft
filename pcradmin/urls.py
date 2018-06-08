@@ -29,7 +29,8 @@ urlpatterns = [
     url(r'^credential/display/send/$',sendcred),
     url(r'^delete/$',delete),
     url(r'^logout/$',logoutView),
-    # url(r'^finalmail/modify/$',modify_pcrfinal),
+
+    url(r'^confirmationmail/$',finalmail),
     # url(r'^finalmail/sendcaptain/modify/$',modify_pcrfinal),
 
     url(r'^changeleader/$',credleader),

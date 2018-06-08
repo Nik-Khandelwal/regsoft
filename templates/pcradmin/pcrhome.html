@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-{% load staticfiles %}
+  {% load staticfiles %}
   <title>PCR Admin</title>
   <link rel="stylesheet" type="text/css" href="{% static 'pcradmin/css/font.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'pcradmin/css/materialize.min.css' %}">
@@ -12,7 +12,7 @@
   <script type="text/javascript" src="{% static 'pcradmin/js/pcrhome.js' %}"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
-<body class="grey lighten-2">
+<body>
   <nav>
     <div class="nav-wrapper">
       <a class="brand-logo center">PCRAdmin</a>
@@ -60,6 +60,7 @@
             <ul>
               <li><a onclick="fetchMail()">Send Mail</a></li>
               <li><a onclick="fetchResendCredentialsMail()">Resend Credentials</a></li>
+              <li><a onclick="fetchFinalConfirmationMail()">Final Confirmation</a></li>
             </ul>
           </div>
         </li>
@@ -86,6 +87,10 @@
   </ul>
   <div id="main-content-loading">
     <div class="loader">Loading...</div>
+  </div>
+  <div id="bosm-splash-background">
+    <img src="pcradmin/images/bosm-logo.svg" id="bosm-splash-background-logo">
+    <span id="bosm-splash-background-text">BOSM 2018</span>
   </div>
   <div class="main-content" id="dashboard">
     <div class="row">
@@ -555,6 +560,30 @@
       </table>
     </div>
   </div>
+  <div class="main-content" id="final-confirmation-mail-div">
+    <div class="card-panel mails grey lighten-2" style="padding-top: 3vh;">
+      <table class="centered grey lighten-2 table">
+        <thead class="grey lighten-2">
+          <tr>
+              <th style="flex-basis: 30%;">Name</th>
+              <th style="flex-basis: 35%;">College</th>
+              <th style="flex-basis: 35%;">Email Address</th>
+              <th style="display: none;">ID No.</th>
+              <th style="display: none;">College ID</th>
+          </tr>
+        </thead>
+        <tbody class="grey lighten-2" id="final-confirmation-mail-groupleader-body">
+          <tr class="final-confirmation-mail-row" onclick="openFinalConfirmationMailSports(this)">
+            <td style="flex-basis: 30%;">Arpit Anshuman</td>
+            <td style="flex-basis: 35%;">BITS Pilani</td>
+            <td style="flex-basis: 35%;">f2016250@pilani.bits-pilani.ac.in</td>
+            <td style="display: none;" class="final-confirmation-mail-groupleader-id">ID</td>
+            <td style="display: none;" class="final-confirmation-mail-college-groupleader-id">College_ID</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
   <!-- Modals Below -->
   <div class="modal modal-fixed-footer grey lighten-3 custom-modals">
     <div class="modal-content">
@@ -636,26 +665,56 @@
         </thead>
         <thead class="grey lighten-2" id="specific-stats-head">
           <tr>
-            <th style="flex-basis: 20%;">Name</th>
-            <th style="flex-basis: 15%;">Phone</th>
-            <th style="flex-basis: 25%;">EMail</th>
+            <th style="flex-basis: 18%;">Name</th>
+            <th style="flex-basis: 10%;">Phone</th>
+            <th style="flex-basis: 22%;">EMail</th>
             <th style="flex-basis: 10%;">Gender</th>
             <th style="flex-basis: 10%;">Participant</th>
             <th style="flex-basis: 10%;">Confirmation</th>
             <th style="flex-basis: 10%;">Payment</th>
+            <th style="flex-basis: 10%;">Docs</th>
           </tr>
         </thead>
         <tbody class="grey lighten-2" id="specific-stats-body">
           <tr class="specific-stats-row">
-            <td style="flex-basis: 20%;">Name</td>
-            <td style="flex-basis: 15%;">Phone</td>
-            <td style="flex-basis: 25%;">EMail</td>
+            <td style="flex-basis: 18%;">Name</td>
+            <td style="flex-basis: 10%;">Phone</td>
+            <td style="flex-basis: 22%;">EMail</td>
             <td style="flex-basis: 10%;">Gender</td>
             <td style="flex-basis: 10%;">Participant</td>
             <td style="flex-basis: 10%;">Confirmation</td>
             <td style="flex-basis: 10%;">Payment</td>
+            <td style="flex-basis: 10%;">Docs</td>
           </tr>
         </tbody>
+        <tfoot class="grey lighten-2" id="specific-stats-foot">
+          <tr>
+            <td class="center" style="flex-basis: 30%;">
+              <b>Confirmation Status</b>
+            </td>
+            <td class="center" style="flex-basis: 40%;">
+              <b>Payment Status</b>
+            </td>
+            <td class="center" style="flex-basis: 30%;">
+              <b>Documents Status</b>
+            </td>
+          </tr>
+          <tr>
+            <td class="center" style="flex-basis: 30%;">
+              <span class="shift-top-align">Not Confirmed : </span><div class="tiny-status-div grey darken-1"></div>
+              <span class="shift-top-align">Confirmed : </span><div class="tiny-status-div green darken-1"></div>
+            </td>
+            <td class="center" style="flex-basis: 40%;">
+              <span class="shift-top-align">Not Paid : </span><div class="tiny-status-div red darken-1"></div>
+              <span class="shift-top-align">Pre-Reg : </span><div class="tiny-status-div yellow darken-1"></div>
+              <span class="shift-top-align">Full Paid : </span><div class="tiny-status-div green darken-1"></div>
+            </td>
+            <td class="center" style="flex-basis: 30%;">
+              <span class="shift-top-align">Not Verified : </span><div class="tiny-status-div grey darken-1"></div>
+              <span class="shift-top-align">Verified : </span><div class="tiny-status-div green darken-1"></div>
+            </td>
+          </tr>
+        </tfoot>
       </table>
     </div>
     <div class="modal-footer grey lighten-2 center">
@@ -1048,7 +1107,7 @@
   <div class="modal modal-fixed-footer grey lighten-3 custom-modals">
     <div class="modal-content row">
       <div class="col s6">
-        <h5 style="text-align: center;">View unconfirmed documents</h5>
+        <h5 style="text-align: center;">View Unconfirmed Documents</h5>
         <table class="centered table modal-table grey lighten-2">
           <thead class="grey lighten-2">
             <tr>
@@ -1072,7 +1131,7 @@
         <a class="waves-effect waves-light btn grey lighten-3 confirm1 tooltipped col s8 offset-s2 black-text" data-position="bottom" data-delay="30" data-tooltip="Confirm Selected Participants" onclick="confirmPartDocs();" style="margin-top: 8px;">Confirm</a>
       </div>
       <div class="col s6">
-        <h5 style="text-align: center;">View confirmed documents</h5>
+        <h5 style="text-align: center;">View Confirmed Documents</h5>
         <table class="centered table modal-table grey lighten-2">
           <thead class="grey lighten-2">
             <tr>
@@ -1095,6 +1154,40 @@
     </div>
     <div class="modal-footer grey lighten-2 center">
       <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="back(14);">Back</btn>
+    </div>
+  </div>
+  <div class="modal modal-fixed-footer grey lighten-3 custom-modals">
+    <div class="modal-content">
+      <table class="centered table modal-table grey lighten-2">
+        <thead class="grey lighten-2">
+          <tr>
+            <th style="flex-basis: 100%">Sports and Participants List</th>
+          </tr>
+        </thead>
+        <tbody class="grey lighten-2" id="final-confirmation-mail-sport-body">
+          <tr class="final-confirmation-mail-sport-selection">
+            <td style="flex-basis: 10%;"><i style="flex-basis: 10%;" class="material-icons tooltipped change_cursor" data-position="right" data-delay="50" data-tooltip="Select/Deselect this Sport" onclick="toggleFinalConfirmationMailSportSelection(this);">check_box_outline_blank</i></td>
+            <td style="flex-basis: 90%;">Sport</td>
+            <td style="display: none;">ID</td>
+          </tr>
+          <tr class="final-confirmation-mail-sport-row">
+            <td style="flex-basis: 35%;">Name</td>
+            <td style="flex-basis: 25%;">Phone</td>
+            <td style="flex-basis: 40%;">EMail</td>
+            <td style="display: none;">ID</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td style="flex-basis: 100%;" class="center">
+              <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" id="send-final-confirmation-mail-button" onclick="sendFinalConfirmationMail()">Send Mail</btn>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="modal-footer grey lighten-2 center">
+      <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="back(15);">Back</btn>
     </div>
   </div>
   <!-- Modals End -->
@@ -1149,8 +1242,8 @@
       <h4 style="text-align: center;">Delete selected participant?</h4>
     </div>
     <div class="modal-footer grey lighten-2 center">
-      <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="deleteSportParticipant();">Send</btn>
-      <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="back(15);">Back</btn>
+      <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="deleteSportParticipant();">Delete</btn>
+      <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="back(16);">Back</btn>
     </div>
   </div>
 </body>

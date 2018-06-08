@@ -1,0 +1,95 @@
+/*Fonts*/
+@font-face {
+  font-family: 'Montserrat';  
+  src: url(../fonts/Montserrat-Regular.woff2) format('woff2');
+}
+html {
+  margin:0;
+  padding:0;
+}
+body { 
+  background-color:#395D6D;
+  margin:auto;
+}
+.container {
+  margin:auto;
+  width:80vw;
+  text-align: center;
+  position:relative;
+  height:100vh;
+}
+.text {
+  width:60vw;
+  max-height: 55vh;
+  text-align: center;
+  z-index: 0;
+  position:absolute;
+  background-color:white;
+  padding-bottom:3rem;
+  padding-top:3rem;
+  padding-left:3rem;
+  padding-right:3rem;
+  left:0;
+  right:0;
+  margin-right:auto;
+  margin-left:auto;
+  top:15vh;
+  box-shadow: 7px 7px 10px #27414C;
+  justify-content: space-around;
+  align-items:center;
+  flex-wrap:wrap;
+  overflow: auto;
+}
+h1 {
+  font-family: 'Lato', sans-serif;
+  font-weight: 900;
+  font-size:2rem;
+  text-align:center;
+  margin:auto;
+  color:#395D6D;
+  letter-spacing: .10rem;
+  padding-bottom:.5rem;
+}
+h2 {
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  font-size:1rem;
+  text-align:center;
+  margin:auto;
+  color:#395D6D;
+  letter-spacing: .10rem;
+  padding-bottom: 2rem;
+  margin-top: 10px;
+}
+h3 {
+  font-family: 'Lato', sans-serif;
+  font-weight: 900;
+  font-size:.8rem;
+  text-align:center;
+  margin:auto;
+  letter-spacing: .10rem;
+  cursor: pointer;
+}
+.button {
+  width:6rem;
+  border:3px solid #FCA671;
+  margin:auto;
+  text-align:center;
+  padding:.5rem;
+  color:#FCA671;
+}
+#home:hover {
+  background-color:#FCA671;
+  color:white;
+}
+#bosm-header {
+  font-size: 6vh;
+  font-family: 'Montserrat';
+  margin-bottom: 20px;
+}
+#bosm-logo {
+  position: relative;
+  top: 2vh;
+  width: 8vh;
+  height: 8vh;
+}

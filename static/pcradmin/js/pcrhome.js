@@ -1,5 +1,7 @@
 $('document').ready(function() {
-  $(".button-collapse").sideNav();
+  $(".button-collapse").sideNav({
+    closeOnClick: true
+  });
   $('.collapsible').collapsible();
   $('.tap-target').tapTarget('open');
   $('ul.tabs').tabs();
@@ -21,6 +23,7 @@ function hideLoader() {
 }
 function showDashboard() {
   closeAllModals();
+  hideLoader();
   showDiv(0);
 }
 function flip(num) {
@@ -49,7 +52,6 @@ function openCollegeLeaders(college, num) {
             }
           }
           document.getElementById('switch-status-list-body').innerHTML += '<tr class="status-selection"> <td style="display: none;">'+leftData[i][4][k][0]+'</td><td style="flex-basis: 20%;">'+leftData[i][4][k][1]+'</td><td style="flex-basis: 14%">'+leftData[i][4][k][2]+'</td><td style="flex-basis: 25%;">'+leftData[i][4][k][3]+'</td><td style="flex-basis: 20%;">'+sportsList+'</td><td style="flex-basis: 8%;">'+leftData[i][4][k][6]+'</td><td style="flex-basis: 8%;">'+leftData[i][4][k][5]+'</td><td style="flex-basis: 5%;"><i class="material-icons change-cursor" onclick="toggleSelection(this);">check_box_outline_blank</i></td></tr>';
-          break;
         }
       }
     }
@@ -65,7 +67,6 @@ function openCollegeLeaders(college, num) {
             }
           }
           document.getElementById('switch-status-list-body').innerHTML += '<tr class="status-selection"> <td style="display: none;">'+rightData[i][4][k][0]+'</td><td style="flex-basis: 20%;">'+rightData[i][4][k][1]+'</td><td style="flex-basis: 14%">'+rightData[i][4][k][2]+'</td><td style="flex-basis: 25%;">'+rightData[i][4][k][3]+'</td><td style="flex-basis: 20%;">'+sportsList+'</td><td style="flex-basis: 8%;">'+rightData[i][4][k][6]+'</td><td style="flex-basis: 8%;">'+rightData[i][4][k][5]+'</td><td style="flex-basis: 5%;"><i class="material-icons change-cursor" onclick="toggleSelection(this);">check_box_outline_blank</i></td></tr>';
-          break;
         }
       }
     }
@@ -389,6 +390,15 @@ function toggleConfirmedPartDocsSelection(elem) {
     elem.parentElement.parentElement.setAttribute('class', 'confirmed-parts-status-selection confirmed-parts-status-selected');
   }
 }
+function toggleFinalConfirmationMailSportSelection(elem) {
+  if (elem.innerHTML == "check_box") {
+    elem.innerHTML = "check_box_outline_blank";
+    elem.parentElement.parentElement.setAttribute('class', 'final-confirmation-mail-sport-selection');
+  } else {
+    elem.innerHTML = "check_box";
+    elem.parentElement.parentElement.setAttribute('class', 'final-confirmation-mail-sport-selection final-confirmation-mail-sport-selected');
+  }
+}
 // AJAX Functions
 var leftData;
 var rightData;
@@ -588,7 +598,7 @@ function openSpecificStats(num, id_col, id_sport, name, option) {
   } else {
     document.getElementById('specific-stats-header').innerHTML = '<th style="flex-basis: 50%;">'+name+'</th> <th style="flex-basis: 50%;">'+name2+'</th>';
   }
-  document.getElementById('specific-stats-head').innerHTML = '<tr> <th style="flex-basis: 20%;">Name</th> <th style="flex-basis: 15%;">Phone</th> <th style="flex-basis: 25%;">EMail</th> <th style="flex-basis: 10%;">Gender</th> <th style="flex-basis: 10%;">Participant</th> <th style="flex-basis: 10%;">Confirmation</th> <th style="flex-basis: 10%;">Payment</th> </tr>';
+  document.getElementById('specific-stats-head').innerHTML = '<tr> <th style="flex-basis: 18%;">Name</th> <th style="flex-basis: 10%;">Phone</th> <th style="flex-basis: 22%;">EMail</th> <th style="flex-basis: 10%;">Gender</th> <th style="flex-basis: 10%;">Participant</th> <th style="flex-basis: 10%;">Confirmation</th> <th style="flex-basis: 10%;">Payment</th> <th style="flex-basis: 10%;">Docs</th> </tr>';
   document.getElementById('specific-stats-body').innerHTML = '';
   modal_open(2);
   csrf_token = getCookie('csrftoken');
@@ -609,6 +619,7 @@ function openSpecificStats(num, id_col, id_sport, name, option) {
       for (var i = 0; i < participants.length; i++) {
         var confirmation = '';
         var payment = '';
+        var documents = '';
         if (participants[i][5] == 0) {
           confirmation = '<div class="tiny-status-div grey darken-1"></div>';
         } else {
@@ -621,7 +632,12 @@ function openSpecificStats(num, id_col, id_sport, name, option) {
         } else {
           payment = '<div class="tiny-status-div green darken-1"></div>';
         }
-        document.getElementById('specific-stats-body').innerHTML += '<tr class="specific-stats-row"> <td style="flex-basis: 20%;">'+participants[i][0]+'</td><td style="flex-basis: 15%;">'+participants[i][1]+'</td><td style="flex-basis: 25%;">'+participants[i][2]+'</td><td style="flex-basis: 10%;">'+participants[i][3]+'</td><td style="flex-basis: 10%;">'+participants[i][4]+'</td><td style="flex-basis: 10%;">'+confirmation+'</td><td style="flex-basis: 10%;">'+payment+'</td></tr>';
+        if (participants[i][7] < 2) {
+          documents = '<div class="tiny-status-div grey darken-1"></div>';
+        } else {
+          documents = '<div class="tiny-status-div green darken-1"></div>';
+        }
+        document.getElementById('specific-stats-body').innerHTML += '<tr class="specific-stats-row"> <td style="flex-basis: 18%;">'+participants[i][0]+'</td><td style="flex-basis: 10%;">'+participants[i][1]+'</td><td style="flex-basis: 22%;">'+participants[i][2]+'</td><td style="flex-basis: 10%;">'+participants[i][3]+'</td><td style="flex-basis: 10%;">'+participants[i][4]+'</td><td style="flex-basis: 10%;">'+confirmation+'</td><td style="flex-basis: 10%;">'+payment+'</td><td style="flex-basis: 10%;">'+documents+'</td></tr>';
       }
       Materialize.toast('Updated List', 3000);
     } else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
@@ -993,7 +1009,7 @@ function sendEdit() {
 var del_id;
 function deleteSportPart(option) {
   del_id = parseInt(option.previousElementSibling.innerHTML);
-  modal_open(15);
+  modal_open(16);
 }
 function deleteSportParticipant() {
   Materialize.toast('Deleting Participant!', 3000);
@@ -1236,6 +1252,7 @@ function makeGroupLeader(id) {
     } else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
       Materialize.toast('There was some error connecting to the server!', 3000);
       closeAllModals();
+      fetchChangeGroupleader();
     }
   };
   ourRequest.send(sendData);
@@ -1255,7 +1272,6 @@ function fetchConfirmGroupleaders() {
     if (ourRequest.readyState === 4 && ourRequest.status === 200) {
       Materialize.toast('Updated List!', 3000);
       var jsonResponse = JSON.parse(ourRequest.responseText);
-
       var leaders = jsonResponse.groupleaders;
       for (var i = 0; i < leaders.length; i++) {
         document.getElementById('confirm-groupleader-body').innerHTML += '<tr class="confirm-groupleader-row" onclick="openConfirmGroupleader(this)"> <td style="flex-basis: 35%;">'+leaders[i][0]+'</td><td style="flex-basis: 40%;">'+leaders[i][1]+', '+leaders[i][2]+', '+leaders[i][3]+'</td><td style="flex-basis: 25%;">'+leaders[i][4]+'</td><td style="display: none;" class="confirm-groupleader-id">'+leaders[i][5]+'</td><td style="display: none;" class="confirm-groupleader-college-id">'+leaders[i][6]+'</td></tr>';
@@ -1309,12 +1325,11 @@ function confirmTeams() {
   Materialize.toast('Confirming Teams!', 3000);
   csrf_token = getCookie('csrftoken');
   var idnos = [];
-  var clg_id;
   for (var i = 0; i < document.getElementsByClassName('unconfirmed-teams-status-selected').length; i++) {
     var id = parseInt(document.getElementsByClassName('unconfirmed-teams-status-selected')[i].children[0].innerHTML);
     idnos.push(id);
-    clg_id = parseInt(document.getElementsByClassName('unconfirmed-teams-status-selected')[i].children[5].innerHTML);
   }
+  var clg_id = parseInt(document.getElementsByClassName('unconfirmed-teams-status-selected')[0].children[5].innerHTML);
   var jsonData = {
     "id_arr": idnos,
     "clg_id": clg_id
@@ -1346,12 +1361,11 @@ function unconfirmTeams() {
   Materialize.toast('Unconfirming Teams!', 3000);
   csrf_token = getCookie('csrftoken');
   var idnos = [];
-  var clg_id;
   for (var i = 0; i < document.getElementsByClassName('confirmed-teams-status-selected').length; i++) {
     var id = parseInt(document.getElementsByClassName('confirmed-teams-status-selected')[i].children[0].innerHTML);
     idnos.push(id);
-    clg_id = parseInt(document.getElementsByClassName('confirmed-teams-status-selected')[i].children[5].innerHTML);
   }
+  var clg_id = parseInt(document.getElementsByClassName('confirmed-teams-status-selected')[0].children[5].innerHTML);
   var jsonData = {
     "id_arr": idnos,
     "clg_id": clg_id
@@ -1452,7 +1466,7 @@ function openVerifyDocsGroupleader(option) {
       }
     } else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
       Materialize.toast('There was some error connecting to the server!', 3000);
-      // var jsonResponse = {"participants": [[1, "Arpit Anshuman", ["Basketball (Boys)", "Badminton (Boys)", "Cricket (Boys)"], "url"], [2, "Nikhil Khandelwal", ["Cricket (Boys)", "Badminton (Boys)"], "url"], [3, "Piyali Manna", ["Badminton (Girls)"], "url"], [5, "Srivatsa", ["Basketball (Boys)"], "url"]]};
+      // var jsonResponse = {"unconfirmed": [[1, "Arpit Anshuman", ["Basketball (Boys)", "Badminton (Boys)", "Cricket (Boys)"], "url"], [2, "Nikhil Khandelwal", ["Cricket (Boys)", "Badminton (Boys)"], "url"], [3, "Piyali Manna", ["Badminton (Girls)"], "url"], [5, "Srivatsa", ["Basketball (Boys)"], "url"]], "confirmed": [[1, "Arpit Anshuman", ["Basketball (Boys)", "Badminton (Boys)", "Cricket (Boys)"], "url"], [2, "Nikhil Khandelwal", ["Cricket (Boys)", "Badminton (Boys)"], "url"], [3, "Piyali Manna", ["Badminton (Girls)"], "url"], [5, "Srivatsa", ["Basketball (Boys)"], "url"]]};
     }
   };
   ourRequest.send(sendData);
@@ -1565,6 +1579,121 @@ function fetchDashboardData(num) {
   };
   ourRequest.send('');
 }
+function fetchFinalConfirmationMail() {
+  showLoader();
+  closeAllModals();
+  Materialize.toast('Updating Mailing List!', 3000);
+  document.getElementById('final-confirmation-mail-groupleader-body').innerHTML = '';
+  csrf_token = getCookie('csrftoken');
+  var ourRequest = new XMLHttpRequest();
+  var url = "mail/";
+  ourRequest.open("POST", url, true);
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onreadystatechange = function() {
+    if (ourRequest.readyState === 4 && ourRequest.status === 200) {
+      Materialize.toast('Updated List!', 3000);
+      var jsonResponse = JSON.parse(ourRequest.responseText);
+      var leaders = jsonResponse.groupleaders;
+      for (var i = 0; i < leaders.length; i++) {
+        document.getElementById('final-confirmation-mail-groupleader-body').innerHTML += '<tr class="final-confirmation-mail-row" onclick="openFinalConfirmationMailSports(this)"> <td style="flex-basis: 30%;">'+leaders[i][0]+'</td><td style="flex-basis: 35%;">'+leaders[i][1]+', '+leaders[i][2]+', '+leaders[i][3]+'</td><td style="flex-basis: 35%;">'+leaders[i][4]+'</td><td style="display: none;" class="final-confirmation-mail-groupleader-id">'+leaders[i][5]+'</td><td style="display: none;" class="final-confirmation-mail-college-groupleader-id">'+leaders[i][6]+'</td></tr>';
+      }
+      hideLoader();
+      closeAllModals();
+      showDiv(11);
+    } else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
+      Materialize.toast('There was some error connecting to the server!', 3000);
+      // var jsonResponse = {"groupleaders": [["Arpit Anshuman", "BITS Pilani", "Pilani", "Rajasthan", "f2016250@pilani.bits-pilani.ac.in", 1, 2],["Arpit Anshuman", "BITS Pilani", "Hyderabad", "Hyderabad", "f2016226@pilani.bits-pilani.ac.in", 2, 3],["Arpit Anshuman", "BITS Pilani", "Goa", "Goa", "f2016192@pilani.bits-pilani.ac.in", 3, 9],["Arpit Anshuman", "BITS Pilani", "Pilani", "Rajasthan", "f2016196@pilani.bits-pilani.ac.in", 4, 96],["Arpit Anshuman", "BITS Pilani", "Pilani", "Rajasthan", "f2016189@pilani.bits-pilani.ac.in", 5, 89]]};
+      // var leaders = jsonResponse.groupleaders;
+      // for (var i = 0; i < leaders.length; i++) {
+      //   document.getElementById('final-confirmation-mail-groupleader-body').innerHTML += '<tr class="final-confirmation-mail-row" onclick="openFinalConfirmationMailSports(this)"> <td style="flex-basis: 30%;">'+leaders[i][0]+'</td><td style="flex-basis: 35%;">'+leaders[i][1]+', '+leaders[i][2]+', '+leaders[i][3]+'</td><td style="flex-basis: 35%;">'+leaders[i][4]+'</td><td style="display: none;" class="final-confirmation-mail-groupleader-id">'+leaders[i][5]+'</td><td style="display: none;" class="final-confirmation-mail-college-groupleader-id">'+leaders[i][6]+'</td></tr>';
+      // }
+      // hideLoader();
+      // closeAllModals();
+      // showDiv(11);
+    }
+  };
+  ourRequest.send('');
+}
+var final_conf_clg_id;
+function openFinalConfirmationMailSports(option) {
+  Materialize.toast('Updating Mailing List!', 3000);
+  csrf_token = getCookie('csrftoken');
+  var clg_id = parseInt(option.children[4].innerHTML);
+  var jsonData = {
+    "clg_id": clg_id
+  }
+  final_conf_clg_id = clg_id;
+  console.log(jsonData);
+  var sendData = JSON.stringify(jsonData);
+  document.getElementById('final-confirmation-mail-sport-body').innerHTML = '';
+  modal_open(15);
+  var ourRequest = new XMLHttpRequest();
+  var url = "mail/send/";
+  ourRequest.open("POST", url, true);
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onreadystatechange = function() {
+    if (ourRequest.readyState === 4 && ourRequest.status === 200) {
+      Materialize.toast('Updated List!', 3000);
+      var jsonResponse = JSON.parse(ourRequest.responseText);
+      var data = jsonResponse.data;
+      for (var i = 0; i < data.length; i++) {
+        document.getElementById('final-confirmation-mail-sport-body').innerHTML += '<tr class="final-confirmation-mail-sport-selection"> <td style="flex-basis: 10%;"><i style="flex-basis: 10%;" class="material-icons tooltipped change_cursor" data-position="right" data-delay="50" data-tooltip="Select/Deselect this Sport" onclick="toggleFinalConfirmationMailSportSelection(this);">check_box_outline_blank</i></td><td style="flex-basis: 90%;">'+data[i][0]+'</td><td style="display: none;">'+data[i][1]+'</td></tr>';
+        for (var j = 0; j < data[i][2].length; j++) {
+          document.getElementById('final-confirmation-mail-sport-body').innerHTML += '<tr class="final-confirmation-mail-sport-row"> <td style="flex-basis: 35%;">'+data[i][2][j][0]+'</td><td style="flex-basis: 25%;">'+data[i][2][j][1]+'</td><td style="flex-basis: 40%;">'+data[i][2][j][2]+'</td><td style="display: none;">'+data[i][2][j][3]+'</td></tr>';
+        }
+      }
+    } else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
+      Materialize.toast('There was some error connecting to the server!', 3000);
+      // var jsonResponse = {"data": [["Basketball (Boys)", 1, [["Arpit Anshuman", 9091901901, "f2016250@pilani.bits-pilani.ac.in", 1],["Nikhil Khandelwal", 9091901901, "f2016192@pilani.bits-pilani.ac.in", 4]]],["Basketball (Girls)", 2, [["Piyali Manna", 9091901901, "f2016226@pilani.bits-pilani.ac.in", 2],["Mansi Jain", 9091901901, "f2016226@pilani.bits-pilani.ac.in", 5]]],["Badminton (Boys)", 3, [["Srivatsa Rampalli", 9829777634, "f2016290@pilani.bits-pilani.ac.in", 3]]],["Cricket (Boys)", 1, [["Nikhil Khandelwal", 9091901901, "f2016192@pilani.bits-pilani.ac.in", 4],["Nikhil Khandelwal", 9091901901, "f2016192@pilani.bits-pilani.ac.in", 4],["Nikhil Khandelwal", 9091901901, "f2016192@pilani.bits-pilani.ac.in", 4],["Nikhil Khandelwal", 9091901901, "f2016192@pilani.bits-pilani.ac.in", 4]]]]};
+      // var data = jsonResponse.data;
+      // for (var i = 0; i < data.length; i++) {
+      //   document.getElementById('final-confirmation-mail-sport-body').innerHTML += '<tr class="final-confirmation-mail-sport-selection"> <td style="flex-basis: 10%;"><i style="flex-basis: 10%;" class="material-icons tooltipped change_cursor" data-position="right" data-delay="50" data-tooltip="Select/Deselect this Sport" onclick="toggleFinalConfirmationMailSportSelection(this);">check_box_outline_blank</i></td><td style="flex-basis: 90%;">'+data[i][0]+'</td><td style="display: none;">'+data[i][1]+'</td></tr>';
+      //   for (var j = 0; j < data[i][2].length; j++) {
+      //     document.getElementById('final-confirmation-mail-sport-body').innerHTML += '<tr class="final-confirmation-mail-sport-row"> <td style="flex-basis: 35%;">'+data[i][2][j][0]+'</td><td style="flex-basis: 25%;">'+data[i][2][j][1]+'</td><td style="flex-basis: 40%;">'+data[i][2][j][2]+'</td><td style="display: none;">'+data[i][2][j][3]+'</td></tr>';
+      //   }
+      // }
+    }
+  };
+  ourRequest.send(sendData);
+}
+function sendFinalConfirmationMail() {
+  Materialize.toast('Sending Mail!', 3000);
+  closeAllModals();
+  csrf_token = getCookie('csrftoken');
+  var final_conf_id_arr = [];
+  for (var i = 0; i < document.getElementsByClassName('final-confirmation-mail-sport-selected').length; i++) {
+    var idno = parseInt(document.getElementsByClassName('final-confirmation-mail-sport-selected')[i].children[2].innerHTML);
+    final_conf_id_arr.push(idno);
+  }
+  var jsonData = {
+    "sport_id_arr": final_conf_id_arr,
+    "clg_id": final_conf_clg_id
+  }
+  console.log(jsonData);
+  var sendData = JSON.stringify(jsonData);
+  var ourRequest = new XMLHttpRequest();
+  var url = "confirmationmail/";
+  ourRequest.open("POST", url, true);
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onreadystatechange = function() {
+    if (ourRequest.readyState === 4 && ourRequest.status === 200) {
+      var jsonResponse = JSON.parse(ourRequest.responseText);
+      if (jsonResponse.success == 1) {
+        Materialize.toast('Mails Sent!', 3000);
+      } else {
+        Materialize.toast('Some mails could not be sent!', 3000);
+      }
+      closeAllModals();
+    } else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
+      Materialize.toast('There was some error connecting to the server!', 3000);
+      closeAllModals();
+    }
+  };
+  ourRequest.send(sendData);
+}
 // AJAX Functions End
 function getCookie(name) {
   var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
@@ -1596,4 +1725,78 @@ function serializeArray(form) {
     }
   }
   return s;
+}
+// Pusher Code
+Pusher.logToConsole = false;
+var pusher = new Pusher('9b825df805e0b694cccc', {
+  cluster: 'ap2',
+  encrypted: true
+});
+var channel7 = pusher.subscribe('my-channel7');
+channel7.bind('my-event7', function(data) {
+  console.log(data);
+  fetchUpdateStats();
+});
+var channel8 = pusher.subscribe('my-channel8');
+channel8.bind('my-event8', function(data) {
+  console.log(data);
+  updateSwitchStatus();
+});
+function fetchUpdateStats() {
+  csrf_token = getCookie('csrftoken');
+  var ourRequest = new XMLHttpRequest();
+  var url = "stats/";
+  ourRequest.open("POST", url, true);
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onreadystatechange = function() {
+    if (ourRequest.readyState === 4 && ourRequest.status === 200) {
+      var jsonResponse = JSON.parse(ourRequest.responseText);
+      clgData = jsonResponse.college;
+      sportData = jsonResponse.sport;
+      totData = jsonResponse.total;
+      document.getElementById('college-wise-stats').innerHTML = '';
+      document.getElementById('sport-wise-stats').innerHTML = '';
+      document.getElementById('college-wise-stats-foot').innerHTML = '';
+      document.getElementById('sports-wise-stats-foot').innerHTML = '';
+      for (var i = 0; i < clgData.length; i++) {
+        document.getElementById('college-wise-stats').innerHTML += '<tr class="stats-row" onclick="openStats('+clgData[i][0]+', 1, this)"> <td style="flex-basis: 40%;"><a class="black-text">'+clgData[i][1]+', '+clgData[i][2]+', '+clgData[i][3]+'</td><td style="flex-basis: 15%;">'+clgData[i][4]+' | '+clgData[i][5]+'</td><td style="flex-basis: 15%;">'+clgData[i][6]+' | '+clgData[i][7]+'</td><td style="flex-basis: 15%;">'+clgData[i][8]+' | '+clgData[i][9]+'</td><td style="flex-basis: 15%;">'+clgData[i][10]+' | '+clgData[i][11]+'</td></tr>';
+      }
+      for (var i = 0; i < sportData.length; i++) {
+        document.getElementById('sport-wise-stats').innerHTML += '<tr class="stats-row" onclick="openStats('+sportData[i][0]+', 2, this)"> <td style="flex-basis: 40%;"><a class="black-text">'+sportData[i][1]+'</td><td style="flex-basis: 15%;">'+sportData[i][2]+' | '+sportData[i][3]+'</td><td style="flex-basis: 15%;">'+sportData[i][4]+' | '+sportData[i][5]+'</td><td style="flex-basis: 15%;">'+sportData[i][6]+' | '+sportData[i][7]+'</td><td style="flex-basis: 15%;">'+sportData[i][8]+' | '+sportData[i][9]+'</td></tr>';
+      }
+      document.getElementById('college-wise-stats-foot').innerHTML = '<tr> <td class="center" style="flex-basis: 40%;">Total</td><td class="center" style="flex-basis: 15%;">'+totData[0]+' | '+totData[1]+'</td><td class="center" style="flex-basis: 15%;">'+totData[2]+' | '+totData[3]+'</td><td class="center" style="flex-basis: 15%;">'+totData[4]+' | '+totData[5]+'</td><td class="center" style="flex-basis: 15%;">'+totData[6]+' | '+totData[7]+'</td></tr>';
+      document.getElementById('sports-wise-stats-foot').innerHTML = '<tr> <td class="center" style="flex-basis: 40%;">Total</td><td class="center" style="flex-basis: 15%;">'+totData[0]+' | '+totData[1]+'</td><td class="center" style="flex-basis: 15%;">'+totData[2]+' | '+totData[3]+'</td><td class="center" style="flex-basis: 15%;">'+totData[4]+' | '+totData[5]+'</td><td class="center" style="flex-basis: 15%;">'+totData[6]+' | '+totData[7]+'</td></tr>';
+    } else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
+      Materialize.toast('There was some error connecting to the server!', 3000);
+      // var jsonResponse = {"college": [[1, "BITS Pilani", "Pilani", "Rajasthan", 1, 2, 3, 4, 4, 6, 1, 2],[2, "BITS Pilani", "Hyderabad", "Hyderabad", 1, 2, 3, 4, 4, 6, 1, 2],[3, "BITS Pilani", "Goa", "Goa", 1, 2, 3, 4, 4, 6, 1, 2]], "sport": [[1, "Basketball (Boys)", 1, 2, 3, 4, 4, 6, 1, 2],[2, "Basketball (Girls)", 1, 2, 3, 4, 4, 6, 1, 2],[3, "Badminton (Boys)", 1, 2, 3, 4, 4, 6, 1, 2],[4, "Badminton (Girls)", 1, 2, 3, 4, 4, 6, 1, 2],[5, "Cricket (Boys)", 1, 2, 3, 4, 4, 6, 1, 2]], "total": [100, 200, 300, 400, 400, 600, 100, 200]};
+    }
+  };
+  ourRequest.send('');
+}
+function updateSwitchStatus() {
+  csrf_token = getCookie('csrftoken');
+  var ourRequest = new XMLHttpRequest();
+  var url = "activate/";
+  ourRequest.open("POST", url, true);
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onreadystatechange = function() {
+    if (ourRequest.readyState === 4 && ourRequest.status === 200) {
+      var jsonResponse = JSON.parse(ourRequest.responseText);
+      leftData = jsonResponse.data;
+      rightData = jsonResponse.data2;
+      document.getElementById('switch-status-left-list-clg').innerHTML = '';
+      document.getElementById('switch-status-right-list-clg').innerHTML = '';
+      for (var i = 0; i < leftData.length; i++) {
+        document.getElementById('switch-status-left-list-clg').innerHTML += '<tr onclick="openCollegeLeaders(this, 1)" class="switch-status-college-row"> <td style="display: none">'+leftData[i][3]+'</td><td style="flex-basis: 40%">'+leftData[i][0]+'</td><td style="flex-basis: 30%">'+leftData[i][1]+'</td><td style="flex-basis: 30%">'+leftData[i][2]+'</td></tr>';
+      }
+      for (var i = 0; i < rightData.length; i++) {
+        document.getElementById('switch-status-right-list-clg').innerHTML += '<tr onclick="openCollegeLeaders(this, 2)" class="switch-status-college-row"> <td style="display: none">'+rightData[i][3]+'</td><td style="flex-basis: 40%">'+rightData[i][0]+'</td><td style="flex-basis: 30%">'+rightData[i][1]+'</td><td style="flex-basis: 30%">'+rightData[i][2]+'</td></tr>';
+      }
+    } else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
+      Materialize.toast('There was some error connecting to the server!', 3000);
+    }
+  };
+  ourRequest.send('');
 }

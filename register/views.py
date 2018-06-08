@@ -1,5 +1,40 @@
 #from __future__ import unicode_literals
 import re
+import os
+
+import urllib
+import urllib2 #### uncomment for python 2 #####
+from django.conf import settings
+from django.contrib import messages
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse, Http404,HttpResponseRedirect, JsonResponse
+#from .models import CustomUser, Team, Sport
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import auth
+from django.views.generic import View, ListView, FormView
+from django.views import generic
+from register.forms import LoginForm, TeamForm, PlayerForm
+from django.db import IntegrityError
+from django.db.models.functions import Lower
+from django.contrib.auth.models import User
+import json
+from django.core import serializers, mail
+from django.contrib.auth.decorators import login_required
+from django.dispatch import receiver
+
+from random import choice
+from string import ascii_uppercase
+
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
+from register.tokens import account_activation_token
+from django.core.mail import EmailMessage
+from django.core import serializers
+#from __future__ import unicode_literals
+import re
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404,HttpResponseRedirect, JsonResponse
@@ -99,6 +134,8 @@ from django.contrib.auth import get_user_model
 User=get_user_model()
 from django.contrib.auth import get_user_model
 User=get_user_model()
+from django.contrib.auth import get_user_model
+User=get_user_model()
 
 pusher_client = pusher.Pusher(
   app_id='499153',
@@ -116,10 +153,8 @@ def is_not_admin(user):
 			return False
 	return True
 
-
 def test(request):
 	return HttpResponse("Working!!!")
-
 
 def index(request):
 	if request.user.is_authenticated():
@@ -186,7 +221,7 @@ def activate(request,uidb64,token):
 	else:
 		return HttpResponse('Activation link is invalid!')
 	if user.is_authenticated():
-		return HttpResponseRedirect('/register/')
+		return render(request,'register/emailverify.html/')
 	else:
 		return HttpResponseRedirect('/register/')
 
@@ -215,24 +250,45 @@ def loginuser(request):
 				else:
 					state = "Your account is not active, please wait for further correspondence"
 					#return render(request,'register/register.html', {'state':state })
-					return JsonResponse({'error':state})
+					return render(request,'register/error.html',{'error':state})
 				
 			else:
 				state = "Your username and/or password were incorrect or your account is not activated"
 				#return render(request,'register/register.html', {'state':state})
-				return JsonResponse({'error':state})
+				return render(request,'register/error.html',{'error':state})
 
 def register(request):
 	if request.user.is_authenticated():
 		return HttpResponseRedirect('/register/')
 	if request.method=='POST': 
 		data=json.loads( request.body.decode('utf-8') )
+		print(data['college'])
+		recaptcha_response = data['captcha']
+		url = 'https://www.google.com/recaptcha/api/siteverify'
+		values = {
+			'secret': '6LcNq10UAAAAAJVLztulO5FzlWynQ6p93k1rLnuk',
+			'response': recaptcha_response
+		}
+
+		#### uncomment for python 2 #####
+		data2 = urllib.urlencode(values)
+		req = urllib2.Request(url, data2)
+		response = urllib.urlopen(req)
+		result = json.load(response)
+		#################################
+		#### comment for python 2 #######
+		#data2 = urllib.parse.urlencode(values).encode()
+		#req =  urllib.request.Request(url, data=data2)
+		#response = urllib.request.urlopen(req)
+		#result = json.loads(response.read().decode())
+		#################################	
+
+		if result['success']:
+			pass
+		else:
+			return JsonResponse({'error': "Invalid CAPTCHA. Please try again."})
 
 		team = Team.objects.get(pk=data['college'])
-		# team.college=data['college']
-		# team.city=data['city']
-		# team.state=data['state']
-		# team.save()
 		up=User()
 		up.username=data['username']
 		up.name=data['name']
@@ -241,17 +297,24 @@ def register(request):
 			up.save()
 		except IntegrityError:
 			state="Duplicacy in Username"
-			#return render(request,'register.html',{'state':state})
 			return JsonResponse({'error':state})
 		if data['register_as']=='C' :
 			if len(data['sport_id'])>1:
-				team.delete
 				return JsonResponse({'error':"coach cannot register in more than 1 sport"})
 			else:
 				for idno in data['sport_id']:
 					sp=Sport.objects.get(pk=idno)
 					up.sport.add(sp)
 					up.coach=idno
+					up.sportid=replaceindex(up.sportid,idno,'1')
+		elif data['register_as']=='L' :
+			if len(data['sport_id'])>1:
+				return JsonResponse({'error':"captain cannot initially register in more than 1 sport"})
+			else:
+				for idno in data['sport_id']:
+					sp=Sport.objects.get(pk=idno)
+					up.sport.add(sp)
+					up.captain=idno
 					up.sportid=replaceindex(up.sportid,idno,'1')
 		else:
 			for idno in data['sport_id']:
@@ -331,9 +394,23 @@ def regPlayer(request):
 		return HttpResponseRedirect('/register/')
 	data = json.loads( request.body.decode('utf-8') )
 	for dt in data['users']:
+		if dt['captain']:
+			try:
+				us=User.objects.get(team= request.user.team,captain=dt['captain'],deleted=0)
+			except:
+				pass
+			else:
+				return JsonResponse({'error':"captain is already registered in this sport"})
+		if dt['coach']:	
+			try:
+				us=User.objects.get(team= request.user.team,coach=dt['coach'],deleted=0)
+			except:
+				pass
+			else:
+				return JsonResponse({'error':"coach is already registered in this sport"})
 		try:
-			print(dt['gender'])
-			u=User.objects.get(team= request.user.team,name=dt['name'], phone=dt['phone'],gender=dt['gender'],deleted=0)
+			# u=User.objects.get(team= request.user.team,name=dt['name'], phone=dt['phone'],gender=dt['gender'],deleted=0)
+			u=User.objects.get(team= request.user.team,phone=dt['phone'],gender=dt['gender'],deleted=0)
 
 		except:
 			pass
@@ -346,7 +423,8 @@ def regPlayer(request):
 		#return render(request,'register.html',{'state':int(dt['captain'])})
 		#to check any data
 		try:
-			up=User.objects.get(team= request.user.team,name=dt['name'], phone=dt['phone'],coach=0,gender=dt['gender'],deleted=0)
+			up=User.objects.get(team= request.user.team, phone=dt['phone'],coach=0,gender=dt['gender'],deleted=0)
+			# up=User.objects.get(team= request.user.team,name=dt['name'], phone=dt['phone'],coach=0,gender=dt['gender'],deleted=0)
 			
 		except:
 			up = User.objects.create(username=(''.join(choice(ascii_uppercase) for i in range(5))),password=request.user.password,deleted=0)
@@ -384,7 +462,19 @@ def regPlayer(request):
 		up.email= dt['email']
 		up.gender=(dt['gender']).lower()
 		sports=dt['sport_id']
-		#for i in range(40):
+		up.save()
+		uplist=User.objects.filter(team=request.user.team,coach=0,deleted=0)
+
+		for i in sports:#check sport limits
+			sp=Sport.objects.get(pk=i)
+			
+			count=0
+			for u in uplist:
+				if u.sportid[sp.idno]>='1':
+					count+=1
+			if count>=sp.upper:
+				return JsonResponse({'error':"sport limit exceeded in one or more sports"})	
+
 		for i in sports:
 			#if sports[i] =='1':
 			sp=Sport.objects.get(pk=i)
@@ -393,7 +483,7 @@ def regPlayer(request):
 			up.sport.add(sp)
 		up.team = request.user.team
 		up.team.activate=1#the participants can login
-		up.save()
+		up.save()	
 
 		#pusher starts
 	update_data = [7,3]
@@ -414,20 +504,20 @@ def playerlist(request):
 	data = json.loads(request.body.decode('utf-8'))
 	idno=int(data['sport_id'])
 	sp=Sport.objects.get(pk=idno)
-	user=User.objects.filter(team=request.user.team,sport=sp,deleted=0)
+	user=User.objects.filter(team=request.user.team,deleted=0)
 	d=[]
 	for u in user:
-		s=[]
-		s.append(u.name)
-		s.append(u.captain)
-		s.append(u.pk)
-		s.append(u.coach)
-		d.append(s)
+		if u.sportid[sp.idno]>='1':
+			s=[]
+			s.append(u.name)
+			s.append(u.captain)
+			s.append(u.pk)
+			s.append(u.coach)
+			d.append(s)
 	data2={'data':d}
 	return JsonResponse(data2)
 	#data2 = serializers.serialize("json", user)
 	#return HttpResponse(data2,content_type='application/json')
-
 def editPlayer(request):
 	if request.user.is_authenticated():
 		if is_not_admin(request.user):
@@ -437,64 +527,7 @@ def editPlayer(request):
 			return HttpResponseRedirect('/register/')
 	else:
 		return HttpResponseRedirect('/register/')
-	data = json.loads(request.body.decode('utf-8'))
-
-	# if request.user.username == data['newname']+request.user.team.code:
-	# 	state="name of participant cannot be changed to that of logged in User"
-	# 	return JsonResponse({'error':state})
-	up1=User.objects.get(pk=int(data['pk']),deleted=0)
-	if up1.captain or up1.coach or up1.grp_leader:
-		state="name of captain, coach or group leader cannot be edited"
-		return JsonResponse({'error':state})
-	try:
-		up2=User.objects.get(team=request.user.team,name=data['newname'],phone=up1.phone,deleted=0)
-		#if there exists another player with same name as the newname 
-		#then the person cud be same person or cud be different person
-		#if same person then phn no will be same then we merge the details 
-		#else we donot merge the details we just change the details
-	except:
-		up1.name = data['newname']
-		up1.save()
-
-	else:
-		if up2==request.user or up2.grp_leader or up2.captain or up.coach:
-			return JsonResponse({'error':'you cannot change user to logged in user or grpleader or captain or coach'})
-		up1.name = up2.name
-		for i in up2.sport.all():
-			#if up2.sportid[i] =='1':
-				up1.sportid=replaceindex(up1.sportid,i.idno,'1')
-				sp=Sport.objects.get(pk=i.idno)
-				up1.sport.add(sp)
-		up1.captain=up2.captain
-		up1.coach=up2.coach
-		up1.grp_leader=up2.grp_leader
-
-		
-		try:
-			up1.save()
-		except:
-			state="Duplicacy in details"
-			#return HttpResponseRedirect('3/error/')
-			return JsonResponse({'error':state})
-		else:
-			up2.delete()
-			to_email = up1.email
-			#current_site = get_current_site(request)
-			passworduser=(''.join(choice(ascii_uppercase) for i in range(12)))+str(up1.pk)
-			up1.set_password(passworduser)
-			message = render_to_string('register/msg2.html', {
-											'user':up1.name, 
-											'username':up1.username,
-											'password':passworduser,
-											
-											})
-			mail_subject = 'Your new account details.'
-			#mail.send_mail(mail_subject, message,'f2016226@pilani.bits-pilani.ac.in',[to_email])
-			email = EmailMessage(mail_subject, message, to=[to_email])
-			email.send()
-	#up1.save()
-
-	return JsonResponse({})
+	pass
 
 def playerview(request):
 	if request.user.is_authenticated:
@@ -505,34 +538,51 @@ def playerview(request):
 			return HttpResponseRedirect('/register/')
 		if request.method=='POST':
 			request.user.docs=request.FILES['filename']
-			try:
-				request.user.save()
-			except:
-				pass
+			extension = os.path.splitext(str(request.FILES['filename']))[-1]
+			print((request.FILES['filename']).size)
+			if (extension == '.pdf' or extension=='.jpg'or extension=='.png') :
+				if (request.FILES['filename']).size< 5242880:
+					try:
+						request.user.save()
+					except:
+						pass
+					else:
+						request.user.confirm1=2#documents uploaded
+						request.user.save()
+						request.user.confirm1=2#documents uploaded
+						request.user.save()
+						# rp = Regplayer()
+						# rp.name = request.user.name
+						# rp.gender = request.user.gender
+						# rp.college = request.user.team.college
+						# rp.city = request.user.team.city
+						# rp.mobile_no = request.user.phone
+						# rp.email_id = request.user.email
+						# rp.sport=''
+						# for s in Sport.objects.all():
+						# 	if request.user.sportid[s.idno]=='2':
+						# 		rp.sport=rp.sport+s.sport+','
+						# try:
+						# 	rp.save()
+						# except:
+						# 	pass
+				else:
+					return render(request,'register/error.html',{'error':'File size has exceeded limit'})
 			else:
-				request.user.confirm1=2#documents uploaded
-				request.user.save()
-				request.user.confirm1=2#documents uploaded
-				request.user.save()
-				u12 = User.objects.get(pk=request.user.pk)
-				rp = Regplayer()
-				rp.name = u12
-				rp.gender = request.user.gender
-				rp.college = request.user.team.college
-				rp.city = request.user.team.city
-				rp.mobile_no = request.user.phone
-				rp.email_id = request.user.email
-				rp.sport=''
-				for s in Sport.objects.all():
-					if request.user.sportid[s.idno]=='2':
-						rp.sport=rp.sport+s.sport+','
-				try:
-					rp.save()
-				except:
-					pass
+				return render(request,'register/error.html',{'error':'Incorrect file extension'})
+
 			return HttpResponseRedirect('/register/register/player/')
 		else:
-			return render(request,'register/playerview.html',{'status':request.user.confirm1-1,'name':request.user.name})
+			if request.user.confirm1>=1:
+				sprt=[]
+				splist=Sport.objects.all().order_by('sport')
+				for sp in splist:
+					if request.user.sportid[sp.idno]>='1':
+						sprt.append(sp.sport)
+				cl=request.user.team.college+", "+request.user.team.city+", "+request.user.team.state
+				return render(request,'register/playerview.html',{'status':request.user.confirm1-1,'username':request.user.username,'name':request.user.name,'college':cl,'sport':sprt,'phone':request.user.phone,'email':request.user.email,'gender':request.user.gender})
+			else:
+				return render(request,'register/error.html',{"error":"you have not been confirmed yet"})
 	else:
 		return HttpResponseRedirect('/register/')
 
@@ -545,7 +595,7 @@ def leadersport(request):
 	return JsonResponse({'data':s})
 
 def replaceindex(text,index=0,replacement=''):
-	return '%s%s%s'%(text[:index],replacement,text[index+1:])
+    return '%s%s%s'%(text[:index],replacement,text[index+1:])
 
-def himesh(request):
-	return render(request,'register/index.html')
+# def himesh(request):
+# 	return render(request,'register/index.html')

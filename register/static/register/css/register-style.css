@@ -1,0 +1,137 @@
+/*Fonts*/
+@font-face {
+  font-family: 'Montserrat';  
+  src: url(../fonts/Montserrat-Regular.woff2) format('woff2');
+}
+@media only screen and (min-width:768px){
+  .collapsible{
+    width: 70%; margin-left: 15%;
+  }  
+}
+@media only screen and (max-width:768px){
+    
+})
+.reg{
+  padding: 5px;
+  background-color: black;
+}
+.detail_tag{
+  font-size: 90%;
+}
+.add{
+  height:0;
+  width: 100vw;
+  overflow-x:hidden;
+  transition: 0.8s;
+  position: fixed;
+  z-index: 5;
+  top: 0;
+  left: 0;
+}
+.sport_id{
+  display: none;
+}
+.close:hover{
+  cursor: pointer;
+}
+.footer{
+  margin:20px; 
+}
+body, html {
+  padding: 0;
+  margin: 0;
+}
+#team-form-wrapper, #indi-form-wrapper {
+  color: white;
+}
+.container {
+  padding: 2vh 3vw;
+}
+.prefix, label {
+  color: white !important;
+}
+input[type=email]:not(.invalid), input[type=text]:not(.invalid), input[type=password]:not(.invalid) {
+  border-bottom: 1px solid white !important;
+  color: white;
+}
+input[type=text].valid:not(.browser-default), input[type=text].valid:not(.browser-default):focus, input[type=email].valid:not(.browser-default), input[type=email].valid:not(.browser-default):focus, input[type=password].valid:not(.browser-default), input[type=password].valid:not(.browser-default):focus {
+  border-bottom: 1px solid #197C17 !important;
+  -webkit-box-shadow: 0 1px 0 0 #197C17 !important;
+  box-shadow: 0 1px 0 0 #197C17 !important;
+}
+input[type="radio"]:checked+label:after, input[type="radio"].with-gap:checked+label:after {
+  background-color: #ffffff;
+}
+*::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  background-color: #F5F5F5;
+}
+*::-webkit-scrollbar {
+  width: 3px;
+  height: 1px;
+  background-color: #F5F5F5;
+}
+*::-webkit-scrollbar-thumb{
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #888;
+}
+.collapsible-body{
+    
+}
+#team-add-more-sports, .select-wrapper>.caret {
+  color: white !important;
+}
+.indi-add-extra-name {
+  position: relative;
+  top: 2vh;
+}
+#team-sport-id, #team-sport-gender, #individual-sport-id, #individual-sport-gender {
+  display: none;
+}
+.tap-target-origin {
+  transform: translate(-77%, -46%);
+}
+.truncate {
+  white-space: normal;
+}
+.regbtn, .addbtn {
+  margin-bottom: 20px !important;
+}
+.people {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+#add_sport {
+  display: none;
+}
+.input-field .prefix {
+  left: 10px;
+}
+#add-team-participants-modal {
+  width: 85vw;
+  height: 80vh;
+  max-height: 80vh;
+}
+.character-counter {
+  color: white;
+}
+input[type=email], input[type=text] {
+  color: white;
+}
+#backdrop-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('../images/banner.jpg');
+  background-size: 100% 100%;
+}
+#backdrop-overlay {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+}

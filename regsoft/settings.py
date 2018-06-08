@@ -181,3 +181,5 @@ EMAIL_HOST_PASSWORD = 'cc@bosmoasis'
 EMAIL_PORT = 587
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+GOOGLE_RECAPTCHA_SECRET_KEY = '6LcNq10UAAAAAJVLztulO5FzlWynQ6p93k1rLnuk'

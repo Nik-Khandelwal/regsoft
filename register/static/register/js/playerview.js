@@ -30,6 +30,3 @@ $( document ).ready(function(){
 });
 //var status=0;
 //var name="Srivatsa";
-
-
-    

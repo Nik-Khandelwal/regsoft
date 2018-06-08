@@ -1,5 +1,39 @@
 #from __future__ import unicode_literals
 import re
+	
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse, Http404,HttpResponseRedirect, JsonResponse
+#from register.models import CustomUser, Team, Sport
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import auth
+from django.views.generic import View, ListView, FormView
+from django.views import generic
+from register.forms import LoginForm, TeamForm, PlayerForm
+from django.db import IntegrityError
+from django.db.models.functions import Lower
+from django.contrib.auth.models import User
+import json
+from django.core import serializers, mail
+from django.contrib.auth.decorators import login_required
+from django.dispatch import receiver
+
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.template.loader import render_to_string
+
+from register.tokens import account_activation_token
+from django.core.mail import EmailMessage
+from django.core import serializers
+
+from random import choice
+from string import ascii_uppercase
+
+from io import StringIO
+from xhtml2pdf import pisa
+from django.template.loader import get_template
+from django.template import Context
+import re
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404,HttpResponseRedirect, JsonResponse
@@ -113,14 +147,11 @@ User=get_user_model()
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
-
 def is_pcradmin_admin(user):
 	if user:
 		if Pcradmin_user.objects.get(pk=1).user == user:
 			return True
 	return False
-
-
 
 @cache_page(CACHE_TTL)
 @login_required(login_url='/regsoft/')
@@ -149,7 +180,7 @@ def render_pcrmail(request):
 	else:
 		return HttpResponseRedirect('/regsoft/')
 	if request.method=='POST':
-		playerlist = User.objects.filter(grp_leader=1,is_active=True,deleted=0)
+		playerlist = User.objects.filter(grp_leader=1,is_active=True,deleted=0).order_by(Lower('name'))
 		#playerlist=User.objects.all()
 		data=[]
 		for dt in playerlist:
@@ -180,6 +211,7 @@ def modify_pcrmail(request):
 	else:
 		return HttpResponseRedirect('/regsoft/')
 	if request.method=='POST':
+		resp={'success':1}
 		data = json.loads( request.body.decode('utf-8') )
 		mail_subject = data['sub']
 		message = data['body']
@@ -190,40 +222,7 @@ def modify_pcrmail(request):
 				email.send()
 			except:
 				resp={'success':0}
-		resp={'success':1}
 		return JsonResponse(resp)
-
-#def render_pcrfinal(request):
-	playerlist = User.objects.filter(grp_leader=1,is_active=True,deleted=0)
-	data=[]
-	for dt in playerlist:
-		s=[]
-		s.append(dt.name)
-		s.append(dt.team.college)
-		s.append(dt.email)
-		s.append(dt.pk)
-		if dt.team.activate==1:
-			for i in range(40):
-				if dt.team.confirmedsp1[i]=='1':
-					data.append(s)
-					break
-	return render(request,'pcrfinal.html',{'playerlist':data})
-
-#def modify_pcrfinal(request):
-	data = json.loads( request.body.decode('utf-8') )
-	to_email = data['mail_to']
-	mail_subject = "ncjdcn"
-	message = "kcndnc"
-	email = EmailMessage(mail_subject, message, to=[to_email])
-
-	try:
-		email.send()
-	except:
-		resp={'success':0}
-	else:
-		resp={'success':1}
-	return JsonResponse(resp)
-
 
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_pcradmin_admin, login_url='/regsoft/')
@@ -240,8 +239,8 @@ def send(request):
 		data=json.loads(request.body.decode('utf-8'))
 		team=Team.objects.get(pk=data['clg_id'])
 		#team=Team.objects.get(activate=1)
-		splist=Sport.objects.all()
-		players=User.objects.filter(team=team,deleted=0)
+		splist=Sport.objects.all().order_by(Lower('sport'))
+		players=User.objects.filter(team=team,deleted=0).order_by(Lower('name'))
 		d=[]
 		for sp in splist:
 				s=[]
@@ -260,6 +259,77 @@ def send(request):
 				s.append(p2)
 				d.append(s)
 		return JsonResponse({'data':d})
+
+@login_required(login_url='/regsoft/')
+@user_passes_test(is_pcradmin_admin, login_url='/regsoft/')
+def finalmail(request):
+	if request.user.is_authenticated():
+		if is_pcradmin_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	if request.method=='POST':
+		data=json.loads(request.body.decode('utf-8'))
+		team=Team.objects.get(pk=data['clg_id'])
+		ld=User.objects.get(team=team,grp_leader=1,deleted=0)
+		ulist=User.objects.filter(team=team,deleted=0)
+		success=1
+		for sp in data['sport_id_arr']:
+			sprt=Sport.objects.get(pk=sp)
+			nm=[]
+			mailid=[]
+			for up in ulist:
+				if up.sportid[sprt.idno]>='2':
+					nm.append(up.name)
+					mailid.append(up.email)
+			message = render_to_string('pcradmin/msg1.html', {
+													'college':team.college, 
+													'sport':sprt.sport,
+													'nmlist':nm,
+													
+													})
+			mail_subject = 'Confirmation mail'
+			email = EmailMessage(mail_subject, message, to=[ld.email])
+			try:
+				email.send()
+			except:
+				success=0
+
+
+			try:
+				cap=User.objects.get(team=team,captain=sp,deleted=0)
+			except:
+				#for toemail in mailid:
+					message = render_to_string('pcradmin/msg1.html', {
+															'college':team.college, 
+															'sport':sprt.sport,
+															'nmlist':nm,
+															
+															})
+					mail_subject = 'Confirmation mail'
+					email = EmailMessage(mail_subject, message, to=[mailid])
+					try:
+						email.send()
+					except:
+						success=0
+			else:
+				message = render_to_string('pcradmin/msg1.html', {
+														'college':team.college, 
+														'sport':sprt.sport,
+														'nmlist':nm,
+														
+														})
+				mail_subject = 'Confirmation mail'
+				email = EmailMessage(mail_subject, message, to=[cap.email])
+				try:
+					email.send()
+				except:
+					success=0
+		resp={'success':success}
+		return JsonResponse(resp)
 
 
 
@@ -306,6 +376,14 @@ def activateGrp(request):
 			resp={'success':0}
 		else:
 			resp={'success':1}
+			message = render_to_string('pcradmin/msg2.html', {
+															'username':up.username, 
+															'user':up.name,
+															
+															})
+			mail_subject = 'Activation mail'
+			email = EmailMessage(mail_subject, message, to=[up.email])
+			email.send()
 		return JsonResponse(resp)
 
 @login_required(login_url='/regsoft/')
@@ -353,22 +431,6 @@ def deactivateGrp(request):
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_pcradmin_admin, login_url='/regsoft/')
 def viewGrpLeaders(request):
-	# up=User.objects.filter(grp_leader=1,is_active=True)
-	# activated=[]
-	# deactivated=[]
-	# for u in up:
-	# 	s=[]
-	# 	s.append(u.name)
-	# 	s.append(u.team.college)
-	# 	s.append(u.phone)
-	# 	s.append(u.pk)
-	# 	if u.team.activate:
-	# 		activated.append(s)
-	# 	else:
-	# 		deactivated.append(s)
-	# resp=({'activated':activated,'deactivated':deactivated})
-	# #return HttpResponse(json.dumps(resp), content_type='application/json')
-	# return render(request,'pcruserst.html',{'playerlist':resp})
 	if request.user.is_authenticated():
 		if is_pcradmin_admin(request.user):
 			pass
@@ -377,72 +439,72 @@ def viewGrpLeaders(request):
 			return HttpResponseRedirect('/regsoft/')
 	else:
 		return HttpResponseRedirect('/regsoft/')
-	if request.method=='POST':
+ 	if request.method=='POST':
 
-		list1=Team.objects.filter(activate=0)
-		list2=Team.objects.filter(activate=1)
-		d=[]
-		for i in list1:
-			s=[]
-			s.append(i.college)
-			s.append(i.city)
-			s.append(i.state)
-			s.append(i.pk)
-			grpld=User.objects.filter(grp_leader=1,deleted=0,team=i)
-			l=[]
-			for j in grpld:
-				l2=[]
-				l2.append(j.pk)
-				l2.append(j.name)
-				l2.append(j.phone)
-				l2.append(j.email)
-				sprt=Sport.objects.all()
-				sp=[]
-				for k in sprt:
-					if j.sportid[k.idno]>='1':
-						sp.append(k.sport)
-				l2.append(sp)
-				if (j.coach):
-						l2.append("YES")
-				else:
-						l2.append("NO")
-				l2.append(j.gender)
-				l.append(l2)
-			s.append(l)
-			d.append(s)
+	 	list1=Team.objects.filter(activate=0).order_by(Lower('college'))
+	 	list2=Team.objects.filter(activate=1).order_by(Lower('college'))
+	 	d=[]
+	 	for i in list1:
+	 		grpld=User.objects.filter(grp_leader=1,deleted=0,team=i)
+	 		if grpld.count():#display only if someone has registered in the college
+		 		s=[]
+		 		s.append(i.college)
+		 		s.append(i.city)
+		 		s.append(i.state)
+		 		s.append(i.pk)
+		 		
+		 		l=[]
+		 		for j in grpld:
+		 			l2=[]
+		 			l2.append(j.pk)
+		 			l2.append(j.name)
+		 			l2.append(j.phone)
+		 			l2.append(j.email)
+		 			sprt=Sport.objects.all()
+		 			sp=[]
+		 			for k in sprt:
+		 				if j.sportid[k.idno]>='1':
+		 					sp.append(k.sport)
+		 			l2.append(sp)
+		 			if (j.coach):
+		 					l2.append("YES")
+		 			else:
+		 					l2.append("NO")
+		 			l2.append(j.gender)
+		 			l.append(l2)
+		 		s.append(l)
+	 			d.append(s)
 
-		d2=[]
-		for i in list2:
-				s=[]
-				s.append(i.college)
-				s.append(i.city)
-				s.append(i.state)
-				s.append(i.pk)
-				grpld=User.objects.filter(grp_leader=1,deleted=0,team=i)
-				l=[]
-				for j in grpld:
-					l2=[]
-					l2.append(j.pk)
-					l2.append(j.name)
-					l2.append(j.phone)
-					l2.append(j.email)
-					sprt=Sport.objects.all()
-					sp=[]
-					for k in sprt:
-						if j.sportid[k.idno]>='1':
-							sp.append(k.sport)
-					l2.append(sp)
-					if (j.coach):
-						l2.append("YES")
-					else:
-						l2.append("NO")
-					l2.append(j.gender)
-					l.append(l2)
-				s.append(l)
-				d2.append(s)
-		print(d)
-		print(d2)
-		return JsonResponse({'data':d,'data2':d2})
+	 	d2=[]
+	 	for i in list2:
+	 			s=[]
+	 			s.append(i.college)
+	 			s.append(i.city)
+	 			s.append(i.state)
+	 			s.append(i.pk)
+	 			grpld=User.objects.filter(grp_leader=1,deleted=0,team=i)
+	 			l=[]
+	 			for j in grpld:
+	 				l2=[]
+	 				l2.append(j.pk)
+	 				l2.append(j.name)
+	 				l2.append(j.phone)
+	 				l2.append(j.email)
+	 				sprt=Sport.objects.all()
+	 				sp=[]
+	 				for k in sprt:
+	 					if j.sportid[k.idno]>='1':
+	 						sp.append(k.sport)
+	 				l2.append(sp)
+	 				if (j.coach):
+	 					l2.append("YES")
+	 				else:
+	 					l2.append("NO")
+	 				l2.append(j.gender)
+	 				l.append(l2)
+	 			s.append(l)
+	 			d2.append(s)
+	 	return JsonResponse({'data':d,'data2':d2})
 
 
 
@@ -460,7 +522,7 @@ def displaySp(request):
 	else:
 		return HttpResponseRedirect('/regsoft/')
 	if request.method=='POST':
-		sports=Sport.objects.all()
+		sports=Sport.objects.all().order_by(Lower('sport'))
 		data=[]
 		for sp in sports:
 			s=[]
@@ -564,7 +626,7 @@ def statssport(request):
 	if request.method=='POST':
 		d=json.loads(request.body.decode('utf-8'))
 		sprt=Sport.objects.get(pk=d['idno'])
-		tm=Team.objects.filter(activate=1)
+		tm=Team.objects.filter(activate=1).order_by(Lower('college'))
 		data=[]
 		mt=0
 		ft=0
@@ -572,10 +634,13 @@ def statssport(request):
 		mc=0
 		fc=0
 		cc=0
+		tt=0
+		tc=0
 		for t in tm:
 			up=User.objects.filter(team=t,deleted=0)
-			maleTotal=up.filter(gender='male',coach=0).count()
-			femaleTotal=up.filter(gender='female',coach=0).count()
+			print(up)
+			maleTotal=0
+			femaleTotal=0
 			coachTotal=0
 			maleconfirmed=0
 			femaleconfirmed=0
@@ -591,6 +656,10 @@ def statssport(request):
 						if u.confirm1:
 							coachconfirmed+=1
 					else:
+						if u.gender=='male':
+							maleTotal+=1;
+						elif u.gender=='female':
+							femaleTotal+=1
 						if u.sportid[sprt.idno]>='2':
 							if u.gender=='male':
 								maleconfirmed+=1;
@@ -652,7 +721,7 @@ def statscollege(request):
 	if request.method=='POST':
 		d=json.loads(request.body.decode('utf-8'))
 		tm=Team.objects.get(pk=d['idno'])
-		sp=Sport.objects.all()
+		sp=Sport.objects.all().order_by(Lower('sport'))
 		data=[]
 		mt=0
 		ft=0
@@ -661,36 +730,47 @@ def statscollege(request):
 		fc=0
 		cc=0
 		for t in sp:
-			up=User.objects.filter(sport=t,team=tm,deleted=0)
-			maleTotal=up.filter(gender='male',coach=0).count()
-			femaleTotal=up.filter(gender='female',coach=0).count()
+			up=User.objects.filter(team=tm,deleted=0)
+			maleTotal=0
+			femaleTotal=0
 			coachTotal=0
 			maleconfirmed=0
 			femaleconfirmed=0
-			#maleconfirmed=up.filter(gender='male',coach=0,confirm1=1).count()
-			#femaleconfirmed=up.filter(gender='female',coach=0,confirm1=1).count()
+			
 			coachconfirmed=0
 			s=[]
 
-			
+			mt=up.filter(gender='male',coach=0).count()
+			mc=up.filter(gender='male',coach=0).exclude(confirm1=0).count()
+			ft=up.filter(gender='female',coach=0).count()
+			fc=up.filter(gender='female',coach=0).exclude(confirm1=0).count()
+			tt=up.filter(coach=0).count()
+			tc=up.filter(coach=0).exclude(confirm1=0).count()
+
 			for u in up:
 				if u.coach:
 					coachTotal+=1
 					if u.confirm1:
 						coachconfirmed+=1
-
 				else:
+					if u.sportid[t.idno]>='1':
+						if u.gender=='male':
+							maleTotal+=1;
+						elif u.gender=='female':
+							femaleTotal+=1
 					if u.sportid[t.idno]>='2':
 						if u.gender=='male':
 							maleconfirmed+=1;
 						elif u.gender=='female':
 							femaleconfirmed+=1
-			mt+=maleTotal
-			mc+=maleconfirmed
-			ft+=femaleTotal
-			fc+=femaleconfirmed
+			# mt+=maleTotal
+			# mc+=maleconfirmed
+			# ft+=femaleTotal
+			# fc+=femaleconfirmed
 			ct+=coachTotal
 			cc+=coachconfirmed
+
+
 
 			s.append(t.pk)
 			s.append(t.sport)
@@ -715,8 +795,8 @@ def statscollege(request):
 		total.append(mt)
 		total.append(fc)
 		total.append(ft)
-		total.append(mc+fc)
-		total.append(mt+ft)
+		total.append(tc)
+		total.append(tt)
 		total.append(cc)
 		total.append(ct)
 
@@ -735,7 +815,7 @@ def stats(request):
 	else:
 		return HttpResponseRedirect('/regsoft/')
 	if request.method=='POST':
-		tm=Team.objects.filter(activate=1)
+		tm=Team.objects.filter(activate=1).order_by(Lower('college'))
 		data=[]
 		mt=0
 		ft=0
@@ -748,8 +828,8 @@ def stats(request):
 			maleTotal=up.filter(gender='male',coach=0).count()
 			femaleTotal=up.filter(gender='female',coach=0).count()
 			coachTotal=0
-			maleconfirmed=up.filter(gender='male',coach=0,confirm1=1).count()
-			femaleconfirmed=up.filter(gender='female',coach=0,confirm1=1).count()
+			maleconfirmed=up.filter(gender='male',coach=0).exclude(confirm1=0).count()
+			femaleconfirmed=up.filter(gender='female',coach=0).exclude(confirm1=0).count()
 			coachconfirmed=0
 
 
@@ -798,11 +878,11 @@ def stats(request):
 			total.append(cc)
 			total.append(ct)
 
-		sp=Sport.objects.all()
+		sp=Sport.objects.all().order_by(Lower('sport'))
 		data2=[]
 		for t in sp:
-			up=User.objects.filter(deleted=0).filter(confirm1=0)
-			print(up)
+			up=User.objects.filter(deleted=0)
+			
 
 			maleTotal=0
 			femaleTotal=0
@@ -854,6 +934,7 @@ def stats(request):
 
 		return JsonResponse(resp)
 
+
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_pcradmin_admin, login_url='/regsoft/')
 def statscollegesport(request):
@@ -869,11 +950,11 @@ def statscollegesport(request):
 		d=json.loads(request.body.decode('utf-8'))
 		team=Team.objects.get(pk=d['col_id'])
 		sport=Sport.objects.get(pk=d['sport_id'])
-		user=User.objects.filter(team=team,deleted=0)
+		user=User.objects.filter(team=team,deleted=0).order_by(Lower('name'))
 		data=[]
 		for u in user:
 			p=[]
-			if u.sportid[sport.idno]>='1':
+			if u.sportid[sport.idno]=='1':
 				p.append(u.name)
 				p.append(u.phone)
 				p.append(u.email)
@@ -888,10 +969,11 @@ def statscollegesport(request):
 					p.append("undefined")
 				p.append(0)
 				p.append(1)#payment status
+				p.append(u.confirm1)
 				data.append(p)
 
 
-			elif u.sportid[sport.idno]>='2':
+			if u.sportid[sport.idno]>='2':
 				p.append(u.name)
 				p.append(u.phone)
 				p.append(u.email)
@@ -906,6 +988,7 @@ def statscollegesport(request):
 					p.append("undefined")
 				p.append(1)
 				p.append(1)#payment status
+				p.append(u.confirm1)
 				data.append(p)
 		resp={'participants':data}
 		return JsonResponse(resp)
@@ -926,8 +1009,8 @@ def editDisplay(request):
 	else:
 		return HttpResponseRedirect('/regsoft/')
 	if request.method=='POST':
-		tm=Team.objects.all()
-		slist=Sport.objects.all()
+		tm=Team.objects.all().order_by(Lower('college'))
+		slist=Sport.objects.all().order_by(Lower('sport'))
 		data=[]
 		for t in tm:
 			s=[]
@@ -955,8 +1038,7 @@ def editDisplay(request):
 					
 					data.append(s)
 		d=[]
-		splist=Sport.objects.all()
-		for sp in splist:
+		for sp in slist:
 			d.append(sp.pk)
 			d.append(sp.sport)
 		resp={'groupleaders':data,'sports':d}
@@ -977,8 +1059,8 @@ def editDetails(request):
 	if request.method=='POST':
 		data=json.loads(request.body.decode('utf-8'))
 		tm=Team.objects.get(pk=data['clg_id'])
-		up=User.objects.filter(team=tm,deleted=0,grp_leader=0)
-		slist=Sport.objects.all()
+		up=User.objects.filter(team=tm,deleted=0,grp_leader=0).order_by(Lower('name'))
+		slist=Sport.objects.all().order_by(Lower('sport'))
 		#sending only participants name and sports
 		#(not captains name of the sports he is in as its of no use, 
 		#participant can be more than 1 sport therefore showing more than 1 captain name 
@@ -1030,6 +1112,10 @@ def editName(request):
 					up.sportid=replaceindex(up.sportid,sp.idno,'1')
 			else:
 				up.sportid=replaceindex(up.sportid,sp.idno,'0')
+				if up.captain==sp.pk:
+					up.captain=0
+				if up.coach==sp.pk:
+					up.coach=0
 		up.email=data['email']
 		up.gender=data['gender']
 		up.name=data['name']
@@ -1059,7 +1145,7 @@ def confirmTeamDetails(request):#show all available grps
 	else:
 		return HttpResponseRedirect('/regsoft/')
 	if request.method=='POST':
-		up=User.objects.filter(grp_leader=1,is_active=True,deleted=0)
+		up=User.objects.filter(grp_leader=1,is_active=True,deleted=0).order_by(Lower('name'))
 		activated=[]
 		for u in up:
 			if u.team.activate:
@@ -1074,6 +1160,7 @@ def confirmTeamDetails(request):#show all available grps
 				activated.append(s)
 		resp=({'groupleaders':activated})
 		return JsonResponse(resp)
+
 
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_pcradmin_admin, login_url='/regsoft/')
@@ -1090,19 +1177,22 @@ def confirmTeamDisplay(request):#show details of grp
 	if request.method=='POST':
 		data=json.loads(request.body.decode('utf-8'))
 		tm=Team.objects.get(pk=data['clg_id'])
-		user = User.objects.filter(team=tm,deleted=0)
+		user = User.objects.filter(team=tm,deleted=0).order_by(Lower('name'))
 		confirmedList=[]
 		notconfirmedList=[]
-		sports=Sport.objects.all()
+		sports=Sport.objects.all().order_by(Lower('sport'))
 		for sp in sports:
 			s=[]
-			upCount=user.filter(sport=sp).count()
-			coachCount=user.filter(sport=sp,coach=sp.idno).count()
+			upCount=0
+			for u in user:
+				if u.sportid[sp.idno]>='1':
+					upCount+=1
+			coachCount=user.filter(coach=sp.pk).count()
 			ttCount= upCount - coachCount
 			if ttCount>0:
 				s.append(sp.pk)
 				try:
-					up=user.get(captain=sp.idno)
+					up=user.get(captain=sp.pk)
 				except:
 					s.append(' ')
 				else:
@@ -1121,7 +1211,6 @@ def confirmTeamDisplay(request):#show details of grp
 					notconfirmedList.append(s)
 		resp={'confirmed':confirmedList,'unconfirmed':notconfirmedList}
 		return JsonResponse(resp)
-
 
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_pcradmin_admin, login_url='/regsoft/')
@@ -1143,14 +1232,16 @@ def confirmTeam(request):
 		for dt in data['id_arr']:
 
 			sp=Sport.objects.get(pk=dt)
-			
 			#up.team.confirmedsp1[sp.idno]=1
 			#up.team.save()
 			for u in user:
 				#u.confirmed1[sp.idno]=1
-				if u.sportid[sp.idno]>='1':
+				if u.sportid[sp.idno]=='1':
 					u.sportid=replaceindex(u.sportid,sp.idno,'2')
-					if u.confirm1==0 and u.docs!=None:
+					print(u.name)
+					
+					if u.confirm1==0 and u.docs:#when u.docs is empty it will go to else
+						print(u.docs)
 						u.confirm1=2
 					elif u.confirm1==0:
 						u.confirm1=1
@@ -1163,7 +1254,6 @@ def confirmTeam(request):
 					success=0
 
 		return JsonResponse({'success':success})
-
 
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_pcradmin_admin, login_url='/regsoft/')
@@ -1190,8 +1280,8 @@ def unconfirmTeam(request):
 			for u in user:
 				if u.sportid[sp.idno]>='2':
 					u.sportid=replaceindex(u.sportid,sp.idno,'1')
+					c=0
 					for i in range(40):
-						c=0
 						if u.sportid[i]<'2':
 							c+=1
 						if c==40:
@@ -1221,7 +1311,7 @@ def excelDisplay(request):
 	else:
 		return HttpResponseRedirect('/regsoft/')
 	if request.method=='POST':
-		up=User.objects.filter(grp_leader=1,deleted=0)
+		up=User.objects.filter(grp_leader=1,deleted=0).order_by(Lower('name'))
 		data=[]
 		for u in up:
 			s=[]
@@ -1250,7 +1340,7 @@ def createExcel(request,pk):
 	from openpyxl.utils import get_column_letter
 	leader = User.objects.get(pk=pk)
 	#leader=User.objects.get(grp_leader=1)
-	queryset=User.objects.filter(team=leader.team,deleted=0)#select queryset
+	queryset=User.objects.filter(team=leader.team,deleted=0).order_by(Lower('name'))#select queryset
 	response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 	response['Content-Disposition'] = 'attachment; filename=database.xlsx'
 	wb = openpyxl.Workbook()
@@ -1318,7 +1408,7 @@ def leaderExcel(request):
 	from openpyxl.utils import get_column_letter
 	#leader = User.objects.get(pk=pk)
 	#leader=User.objects.get(grp_leader=1)
-	queryset=User.objects.filter(grp_leader=1,deleted=0)#select queryset
+	queryset=User.objects.filter(grp_leader=1,deleted=0).order_by(Lower('name'))#select queryset
 	response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 	response['Content-Disposition'] = 'attachment; filename=leaderdatabase.xlsx'
 	wb = openpyxl.Workbook()
@@ -1387,7 +1477,7 @@ def leaderCsv(request):
 		return HttpResponseRedirect('/regsoft/')
 	import csv
 	from django.utils.encoding import smart_str
-	queryset=User.objects.filter(grp_leader=1,deleted=0)#select queryset
+	queryset=User.objects.filter(grp_leader=1,deleted=0).order_by(Lower('name'))#select queryset
 	response = HttpResponse(content_type='text/csv')
 	response['Content-Disposition'] = 'attachment; filename=groupleader.csv'
 	writer = csv.writer(response, csv.excel)
@@ -1418,10 +1508,10 @@ def leaderCsv(request):
 		])
 	return response
 
-
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_pcradmin_admin, login_url='/regsoft/')
 def createCsv(request,pk):
+	#data=json.loads(request.body.decode('utf-8'))
 	if request.user.is_authenticated():
 		if is_pcradmin_admin(request.user):
 			pass
@@ -1430,11 +1520,10 @@ def createCsv(request,pk):
 			return HttpResponseRedirect('/regsoft/')
 	else:
 		return HttpResponseRedirect('/regsoft/')
-	#data=json.loads(request.body.decode('utf-8'))
 	import csv
 	from django.utils.encoding import smart_str
 	leader = User.objects.get(pk=pk)
-	queryset=User.objects.filter(team=leader.team,deleted=0)
+	queryset=User.objects.filter(team=leader.team,deleted=0).order_by(Lower('name'))
 	response = HttpResponse(content_type='text/csv')
 	response['Content-Disposition'] = 'attachment; filename=mymodel.csv'
 	writer = csv.writer(response, csv.excel)
@@ -1468,7 +1557,6 @@ def createCsv(request,pk):
 
 	return response
 
-
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_pcradmin_admin, login_url='/regsoft/')
 def leaderPdf(request):
@@ -1482,7 +1570,7 @@ def leaderPdf(request):
 		return HttpResponseRedirect('/regsoft/')
 	template = get_template('pcradmin/stats.html')
 	data = []
-	queryset=User.objects.filter(grp_leader=1,deleted=0)
+	queryset=User.objects.filter(grp_leader=1,deleted=0).order_by(Lower('name'))
 	for obj in queryset:
 			count=User.objects.filter(team=obj.team, confirm1=1,coach=0,deleted=0).count()
 			sportcount=0
@@ -1496,7 +1584,7 @@ def leaderPdf(request):
 
 	pdf = pisa.pisaDocument(StringIO.StringIO(html.encode("ISO-8859-1")), result)
 	if not pdf.err:
-		return HttpResponse(result.getvalue(), content_type='application/pdf')
+	    return HttpResponse(result.getvalue(), content_type='application/pdf')
 	return HttpResponse('We had some errors<pre>%s</pre>' % escape(html))
 
 @login_required(login_url='/regsoft/')
@@ -1513,7 +1601,7 @@ def createPdf(request,pk):
 	template = get_template('pcradmin/stats2.html')
 	data = []
 	leader = User.objects.get(pk=pk)
-	queryset=User.objects.filter(team=leader.team,deleted=0)
+	queryset=User.objects.filter(team=leader.team,deleted=0).order_by(Lower('name'))
 	for obj in queryset:
 		if obj.captain:
 			sp=Sport.objects.get(idno=obj.captain)
@@ -1528,7 +1616,7 @@ def createPdf(request,pk):
 
 	pdf = pisa.pisaDocument(StringIO.StringIO(html.encode("ISO-8859-1")), result)
 	if not pdf.err:
-		return HttpResponse(result.getvalue(), content_type='application/pdf')
+	    return HttpResponse(result.getvalue(), content_type='application/pdf')
 	return HttpResponse('We had some errors<pre>%s</pre>' % escape(html))
 
 
@@ -1545,7 +1633,7 @@ def credleader(request):
 	else:
 		return HttpResponseRedirect('/regsoft/')
 	if request.method=='POST':
-		tmlist=Team.objects.filter(activate=1)
+		tmlist=Team.objects.filter(activate=1).order_by(Lower('college'))
 		d=[]
 		for t in tmlist:
 			try:
@@ -1579,8 +1667,8 @@ def credplayers(request):
 	if request.method=='POST':
 		data=json.loads(request.body.decode('utf-8'))
 		t=Team.objects.get(pk=data['clg_id'])
-		splist=Sport.objects.all()
-		players=User.objects.filter(team=t,deleted=0)
+		splist=Sport.objects.all().order_by(Lower('college'))
+		players=User.objects.filter(team=t,deleted=0).order_by(Lower('name'))
 		d=[]
 		for sp in splist:
 				s=[]
@@ -1621,11 +1709,11 @@ def sendcred(request):
 			up.set_password(passworduser)
 			try:
 				up.save()
-				print('Hellos')
+				#print('Hellos')
 			except:
 				resp={'success':0}
 			else:
-				print(up.username)
+				#print(up.username)
 				message = render_to_string('pcradmin/msg3.html', {
 														'user':up.name, 
 														'username':up.username,
@@ -1658,8 +1746,8 @@ def changeleader(request):
 	if request.method=='POST':
 		data=json.loads(request.body.decode('utf-8'))
 		tm=Team.objects.get(pk=data['clg_id'])
-		uplist=User.objects.filter(team=tm,deleted=0,grp_leader=0)
-		splist=Sport.objects.all()
+		uplist=User.objects.filter(team=tm,deleted=0,grp_leader=0).order_by(Lower('name'))
+		splist=Sport.objects.all().order_by(Lower('sport'))
 		d2=[]
 		for u in uplist:
 			s=[]
@@ -1684,7 +1772,6 @@ def changeleader(request):
 			d2.append(s)
 		return JsonResponse({'data':d2})
 
-
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_pcradmin_admin, login_url='/regsoft/')
 def changegl(request):
@@ -1708,7 +1795,7 @@ def changegl(request):
 			old.save()
 		except:
 			success=0
-		print(success)
+		#print(success)
 		return JsonResponse({'success':success})
 
 
@@ -1730,8 +1817,8 @@ def docurl(request):
 	if request.method=='POST':
 		data=json.loads(request.body.decode('utf-8'))
 		tm=Team.objects.filter(pk=data['clg_id'])
-		uplist=User.objects.filter(team=tm, deleted=0)
-		splist=Sport.objects.all()
+		uplist=User.objects.filter(team=tm, deleted=0).order_by(Lower('name'))
+		splist=Sport.objects.all().order_by(Lower('sport'))
 		d2=[]
 		d3=[]
 		for u in uplist:
@@ -1804,16 +1891,18 @@ def dashboard(request):
 		d1.append(upmale.count())
 		d1.append(upfemale.count())
 		d1.append(upmale.count()+upfemale.count())
-		maledoc=upmale.filter(confirm1=2).count()
-		femaledoc=upfemale.filter(confirm1=2).count()
+		maledoc1=upmale.filter(confirm1=2).count()
+		femaledoc1=upfemale.filter(confirm1=2).count()
+		maledoc2=upmale.filter(confirm1=3).count()
+		femaledoc2=upfemale.filter(confirm1=3).count()
 		maleconfirm=upmale.filter(confirm1=1).count()
 		femaleconfirm=upfemale.filter(confirm1=1).count()
-		d2.append(maledoc+maleconfirm)
-		d2.append(femaledoc+femaleconfirm)
-		d2.append(maledoc+maleconfirm+femaledoc+femaleconfirm)
-		d3.append(maledoc)
-		d3.append(femaledoc)
-		d3.append(maledoc+femaledoc)
+		d2.append(maledoc1+maleconfirm+maledoc2)
+		d2.append(femaledoc1+femaleconfirm+femaledoc2)
+		d2.append(maledoc1+maleconfirm+femaledoc1+femaleconfirm+maledoc2+femaledoc2)
+		d3.append(maledoc1+maledoc2)
+		d3.append(femaledoc1+femaledoc2)
+		d3.append(maledoc1+femaledoc1+maledoc2+femaledoc2)
 		return JsonResponse({'data1':d1,'data2':d2,'data3':d3,'data4':d4})
 
 
@@ -1858,4 +1947,4 @@ def logoutView(request):
 
 #utilities
 def replaceindex(text,index=0,replacement=''):
-	return '%s%s%s'%(text[:index],replacement,text[index+1:])
+    return '%s%s%s'%(text[:index],replacement,text[index+1:])

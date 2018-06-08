@@ -1,0 +1,6 @@
+{% autoescape off %}
+The following people have been selected from {{college}} to parcipate in {{sport}}:
+{% for nm in nmlist %}
+{{nm}}
+{% endfor %}
+{% endautoescape %}

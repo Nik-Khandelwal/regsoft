@@ -1,68 +1,3 @@
-function reg(sport_name, sport_id, coach, gender, count, lower, upper) {
-  document.getElementById('team-sport-lower-limit').innerHTML = lower;
-  document.getElementById('team-sport-upper-limit').innerHTML = upper;
-  document.getElementById('team-sport-name').innerHTML = sport_name;
-  document.getElementById('team-sport-id').innerHTML = sport_id;
-  document.getElementById('team-sport-gender').innerHTML = gender;
-  if (parseInt(count) > 0) {
-    Materialize.toast('You can only Register one team per College.', 4000);
-  } else {
-    if (sportsJSON == undefined) {
-      Materialize.toast('Please Wait for the Sports Data to get Updated!', 2000);
-    } else {
-      openReg(coach);
-    }
-  }
-}
-var team_extra_participant_count = 0;
-function openReg(coach) {
-  team_extra_participant_count = 0;
-  if (coach == true) {
-    document.getElementById('sport-team-form').innerHTML = '<div class="row"> <div class="col s12 center"> <a class="waves-effect waves-light btn" onclick="addNewParticipant()"><i class="material-icons left">group_add</i>Add Participant</a> </div></div><div class="row"> <div class="col s12"> <div class="divider"></div></div></div><div class="row" id="submit-team-btn"> <div class="col s12 center"> <a class="waves-effect waves-light btn btn-large" onclick="team_submit()"><i class="material-icons right">send</i>Submit</a> </div></div>';
-  } else {
-    document.getElementById('sport-team-form').innerHTML = '<div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">record_voice_over</i> <input type="text" name="Coach_Name" id="coach_name_field" class="validate"> <label for="coach_name_field" data-error="Enter Coach Name">Coach Name (Optional)</label> </div></div><div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">email</i> <input type="email" name="Coach_Email" id="coach_email_field" class="validate" required="required"> <label for="coach_email_field" data-error="Enter a Valid Email">E-Mail of Coach (Optional)</label> </div></div><div class="row"> <div class="col s4"> Coach Gender (Optional) </div><div class="col s4"> <input type="radio" name="coach_gender" id="coach_male" value="male"> <label for="coach_male">Male</label> </div><div class="col s4"> <input type="radio" name="coach_gender" id="coach_female" value="female"> <label for="coach_female">Female</label> </div></div><div class="row"> <div class="col s12"> <div class="divider"></div></div></div><div class="row"> <div class="col s12 center"> <a class="waves-effect waves-light btn" onclick="addNewParticipant()"><i class="material-icons left">group_add</i>Add Participant</a> </div></div><div class="row"> <div class="col s12"> <div class="divider"></div></div></div><div class="row" id="submit-team-btn"> <div class="col s12 center"> <a class="waves-effect waves-light btn btn-large" onclick="team_submit()"><i class="material-icons right">send</i>Submit</a> </div></div>';
-  }
-  document.getElementById('reg').style.display="block";
-  setTimeout(function() {
-    document.getElementById('reg').style.width="100%";
-  }, 10);
-}
-function closereg(){
-  document.getElementById('reg').style.width="0";
-  setTimeout(function() {
-    document.getElementById('reg').style.display="none";
-  }, 800);
-}
-function addNewParticipant() {
-  var sport_id = parseInt(document.getElementById('team-sport-id').innerHTML);
-  var gender = document.getElementById('team-sport-gender').innerHTML;
-  team_extra_participant_count++;
-  var newParticipant = document.createElement('div');
-  newParticipant.setAttribute('class', 'row extra_team_participant');
-  var template = '<div class="input-field col m6 s12"> <i class="material-icons prefix">person_add</i> <input type="text" name="Participant_Name_' + team_extra_participant_count + '" id="participant_name_field_' + team_extra_participant_count + '" class="validate" required="required"> <label for="participant_name_field_' + team_extra_participant_count + '" data-error="Enter Name of Team Member">Name of Team Member</label> </div><div class="input-field col m6 s12"> <i class="material-icons prefix">local_phone</i> <input type="text" name="Participant_Phone_' + team_extra_participant_count + '" id="participant_phone_field_' + team_extra_participant_count + '" class="validate" required="required" maxlength="10" data-length="10"> <label for="participant_phone_field_' + team_extra_participant_count + '" data-error="Enter Phone Number">Phone Number</label> </div><div class="input-field col m6 s12"> <i class="material-icons prefix">email</i> <input type="email" name="Participant_Email_' + team_extra_participant_count + '" id="participant_email_field_' + team_extra_participant_count + '" class="validate" required="required"> <label for="participant_email_field_' + team_extra_participant_count + '" data-error="Enter Email ID">Email ID</label> </div><div class="input-field col m6 s12"> <i class="material-icons prefix">directions_run</i> <select id="participant_add_sport_select_'+team_extra_participant_count+'" multiple="multiple" name="participant_add_sport_select_'+team_extra_participant_count+'"> <option value="" disabled="disabled" selected="selected"></option> </select> <label for="participant_add_sport_select_'+team_extra_participant_count+'">Add More Sports</label> </div>';
-  newParticipant.innerHTML = template;
-  document.getElementById('sport-team-form').insertBefore(newParticipant, document.getElementById('submit-team-btn'));
-  var avail_sport =[];
-  var avail_sport_id = [];
-  var j = 0;
-  for (var i = 0; i < sportsJSON.length; i++) {
-    if (sportsJSON[i].fields.idno != sport_id) {
-      if (gender == sportsJSON[i].fields.gender) {
-        if (sportsJSON[i].fields.upper == sportsJSON[i].fields.lower == 1) {
-          avail_sport[j] = sportsJSON[i].fields.sport;
-          avail_sport_id[j++] = sportsJSON[i].fields.idno;
-        }
-      }
-    }
-  }
-  document.getElementById('participant_add_sport_select_'+team_extra_participant_count+'').innerHTML = '<option value="" disabled="disabled" selected="selected"></option>';
-  for (var i = 0; i < avail_sport.length; i++) {
-    document.getElementById('participant_add_sport_select_'+team_extra_participant_count+'').innerHTML += '<option value="'+avail_sport_id[i]+'">'+avail_sport[i]+'</option>';
-  }
-  $('select').material_select();
-  Materialize.updateTextFields();
-  $("input#participant_phone_field_"+team_extra_participant_count+"").characterCounter();
-}
 $(document).ready(function() {
   $('.collapsible').collapsible();
   $('select').material_select();
@@ -70,196 +5,39 @@ $(document).ready(function() {
   $('.modal').modal();
   getSports();
 });
-function team_submit() {
-  // Extract All Details
-  var sport_name = document.getElementById('team-sport-name').innerHTML;
-  var sport_id = parseInt(document.getElementById('team-sport-id').innerHTML);
-  var gender = document.getElementById('team-sport-gender').innerHTML;
-  // Check if all reequired fields are filled
-  var team_formData = serializeArray(document.getElementById('sport-team-form'));
-  var team_coach_name = '';
-  var team_coach_email = '';
-  var team_coach_gender = '';
-  var j = 0;
-  if (team_formData[0].name == 'Coach_Name') {
-    team_coach_name = team_formData[0].value;
-    team_coach_email = team_formData[1].value;
-    if (team_formData[2] != undefined && team_formData[2].name == 'coach_gender') {
-      team_coach_gender = team_formData[2].value;
-      j=3;
-    } else {
-      j=2;
-    }
-  }
-  var k = j;
-  var num_extra_participants = document.getElementsByClassName('extra_team_participant').length;
-  if (team_formData.length > j) {
-    while(team_formData[j].name != "participant_add_sport_select_"+team_extra_participant_count+"") {
-      j++;
-    }
-    while(team_formData[j].name == "participant_add_sport_select_"+team_extra_participant_count+"") {
-      j++;
-      if (team_formData[j] == undefined) {
-        break;
-      }
-    }
-  }
-  var extra_participants_details = [];
-  console.log(team_formData);
-  for (var i = 1; i < team_extra_participant_count+1; i++) {
-    var extra_name = team_formData[k++].value;
-    var extra_phone = team_formData[k++].value;
-    var extra_email = team_formData[k++].value;
-    var extra_sports = [];
-    var l = 0;
-    while((team_formData[k].name == "participant_add_sport_select_"+i+"")) {
-      k++;
-      if (l == 0) {
-        extra_sports.push(sport_id);
-        l++;
-      } else {
-        extra_sports.push(parseInt(team_formData[k-1].value));
-      }
-      if (team_formData[k] == undefined) {
-        break;
-      }
-    }
-    extra_participants_details.push({
-      "name": extra_name,
-      "phone": extra_phone,
-      "email": extra_email,
-      "sports": extra_sports
-    });
-  }
-  var check_extra_details = true;
-  var check_extra_participants_phone = true;
-  var check_extra_participants_email = true;
-  for (var i = 0; i < num_extra_participants; i++) {
-    if (!validatePhoneNumber(extra_participants_details[i].phone)) {
-      check_extra_participants_phone = false;
-      break;
-    }
-    if (!validateEmail(extra_participants_details[i].email)) {
-      check_extra_participants_email = false;
-      break;
-    }
-    if (extra_participants_details[i].name=='' || extra_participants_details[i].phone=='' || extra_participants_details[i].email=='') {
-      check_extra_details = false;
-      break;
-    }
-  }
-  if ((team_coach_name != '' || team_coach_email != '') && team_coach_gender == '') {
-    Materialize.toast('Must fill all Coach Fields!', 4000);
-  } else if((team_coach_name == '' || team_coach_email == '') && team_coach_gender != '') {
-    Materialize.toast('Must fill all Coach Fields!', 4000);
-  } else if (team_coach_name != '' && !validateEmail(team_coach_email)) {
-    Materialize.toast('Coach Email is Wrong!',4000);
-  } else if (!check_extra_participants_phone || !check_extra_participants_email) {
-    Materialize.toast('One or more Email/Phone Number(s) are Wrong', 4000);
-  } else if (check_extra_details) {
-    // Proceed With Upper and Lower Limit Checks Further
-    var lower_limit = parseInt(document.getElementById('team-sport-lower-limit').innerHTML) - 1;
-    var upper_limit = parseInt(document.getElementById('team-sport-upper-limit').innerHTML) - 1;
-    var total_participants = num_extra_participants;
-    if (total_participants < lower_limit || total_participants > upper_limit) {
-      Materialize.toast('Total Number of Additional Participants should be between '+lower_limit+' and '+upper_limit, 4000);
-    } else {
-      // Create User Model
-      closereg();
-      data = {
-        "sport_name": sport_name,
-        "sport_id": sport_id,
-        "gender": gender,
-        "coach_name": team_coach_name,
-        "coach_email": team_coach_email,
-        "coach_gender": team_coach_gender,
-        "participants": extra_participants_details,
-        "lower": lower_limit,
-        "higher": upper_limit
-      };
-      createUserModel(data, num_extra_participants);
-    }
-  }
-  else {
-    // Display Error Toast that all fields are not filled.
-    Materialize.toast('Please Fill All Required fields before proceeding!', 4000);
-  }
-}
-// To get list of names of person in the registered section
-function getlist(sport) {
-  var sport_id= sport.parentElement.parentElement.children[0].children[1].innerHTML;
-  if (sport.parentElement.children[3].getAttribute('id')=='list') {
-    sport.parentElement.children[3].innerHTML="";
-  } else {
-    sport.parentElement.children[4].innerHTML="";
-  }
-  getSportParticipants(sport_id, sport);
-}
-function createUserModel(data, numPart) {
-  var backend_data = {
-    "users": [],
-    "csrftoken": []
-  };
-  if (data.lower==data.higher==1) {
-    backend_data["users"].push({
-      "captain": 0,
-      "coach": 0,
-      "sport_id": data.sport_id,
-      "name": data.captain_name,
-      "email": data.captain_email,
-      "phone": data.captain_phone,
-      "gender": data.gender
-    });
-  } else {
-    for (var i = 0; i < data.participants.length; i++) {
-      backend_data["users"].push({
-        "captain": 0,
-        "coach": 0,
-        "sport_id": data.participants[i].sports,
-        "name": data.participants[i].name,
-        "email": data.participants[i].email,
-        "phone": data.participants[i].phone,
-        "gender": data.gender
-      });
-    }
-  }
-  if (data.coach_name != '') {
-    var sport_arr = [];
-    sport_arr.push(data.sport_id);
-    backend_data["users"].push({
-      "captain": 0,
-      "coach": data.sport_id,
-      "sport_id": sport_arr,
-      "name": data.coach_name,
-      "email": data.coach_email,
-      "phone": 0,
-      "gender": data.coach_gender
-    });
-  }
-  var csrf_token = getCookie('csrftoken');
-  backend_data["csrftoken"].push({
-    "csrfmiddlewaretoken": csrf_token
-  });
-  sendUsers(backend_data);
-}
 var add_team_participants_count = 0;
+var participantsSaved = 1;
 function addTeamParticipants(sport, gender) {
-  if (sportsJSON == undefined) {
-    Materialize.toast('Please Wait for the Sports Data to get Updated!', 3000);
+  if (participantsSaved != 1) {
+    Materialize.toast('Please wait while particiapnts are saved and updated!', 3000);
   } else {
     var sport_id= sport.parentElement.parentElement.children[0].children[1].innerHTML;
-    $('#add-team-participants-modal').modal('open');
-    document.getElementById('add_team_participants_div').innerHTML = '<div class="row"> <form class="col s12" id="sport-extra-form"> <div class="row" id="submit-add-team-part-btn"> <div class="col s12 center"> <a class="waves-effect waves-light btn btn-large" onclick="addTeamPartSubmit(\'Male/Female\')" id="add_team_parts_btn"><i class="material-icons right">send</i>Submit</a> </div></div></form> </div>';
-    document.getElementById('add_team_parts_btn').setAttribute('onclick', 'addTeamPartSubmit('+sport_id+',\''+gender+'\')');
-    add_team_participants_count = 0
-    addNewTeamParticipant(sport_id, '\''+gender+'\'');
+    var count = parseInt(sport.parentElement.parentElement.children[1].children[0].children[1].children[0].innerHTML);
+    var lower, upper;
+    data = sportsJSON;
+    for (var x in data){
+      if(data[x].fields.idno==sport_id){
+        lower = data[x].fields.lower;
+        upper = data[x].fields.upper;
+        break;
+      }
+    }
+    if (count>=upper) {
+      Materialize.toast('You have reached the maximum number of participants allowed for this Sport!', 3000);
+    } else {
+      add_team_participants_count = 0;
+      $('#add-team-participants-modal').modal('open');
+      document.getElementById('add_team_participants_div').innerHTML = '<div class="row"> <form class="col s12" id="sport-extra-form"> <div class="row" id="submit-add-team-part-btn"> <div class="col s12 center"> <a class="waves-effect waves-light btn btn-large" onclick="addTeamPartSubmit(\'Male/Female\')" id="add_team_parts_btn"><i class="material-icons right">send</i>Submit</a> </div></div></form> </div>';
+      document.getElementById('add_team_parts_btn').setAttribute('onclick', 'addTeamPartSubmit('+sport_id+',\''+gender+'\')');
+      document.getElementById('add_parts_btn').setAttribute('onclick', 'addNewTeamParticipant('+sport_id+',\''+gender+'\')');
+    }
   }
 }
 function addNewTeamParticipant(sport_id, gender) {
   add_team_participants_count++;
   var newParticipant = document.createElement('div');
   newParticipant.setAttribute('class', 'row team_extra_team_participant');
-  var template = '<div class="input-field col m6 s12"> <i class="material-icons prefix">person_add</i> <input type="text" name="team_Participant_Name_' + add_team_participants_count + '" id="team_participant_name_field_' + add_team_participants_count + '" class="validate" required="required"> <label for="team_participant_name_field_' + add_team_participants_count + '" data-error="Enter Name of Team Member">Name of Team Member</label> </div><div class="input-field col m6 s12"> <i class="material-icons prefix">local_phone</i> <input type="text" name="team_Participant_Phone_' + add_team_participants_count + '" id="team_participant_phone_field_' + add_team_participants_count + '" class="validate" required="required" maxlength="10" data-length="10"> <label for="team_participant_phone_field_' + add_team_participants_count + '" data-error="Enter Phone Number">Phone Number</label> </div><div class="input-field col m6 s12"> <i class="material-icons prefix">email</i> <input type="email" name="team_Participant_Email_' + add_team_participants_count + '" id="team_participant_email_field_' + add_team_participants_count + '" class="validate" required="required"> <label for="team_participant_email_field_' + add_team_participants_count + '" data-error="Enter Email ID">Email ID</label> </div><div class="input-field col m6 s12"> <i class="material-icons prefix">directions_run</i> <select id="team_participant_add_sport_select_'+add_team_participants_count+'" multiple="multiple" name="team_participant_add_sport_select_'+add_team_participants_count+'"> <option value="" disabled="disabled" selected="selected"></option> </select> <label for="team_participant_add_sport_select_'+add_team_participants_count+'">Add More Sports</label> </div>';
+  var template = '<div class="input-field col m6 s12"> <i class="material-icons prefix">person_add</i> <input type="text" maxlength="100" name="team_Participant_Name_' + add_team_participants_count + '" id="team_participant_name_field_' + add_team_participants_count + '" class="validate" required="required"> <label for="team_participant_name_field_' + add_team_participants_count + '" data-error="Enter Name of Team Member">Name of Team Member</label> </div><div class="input-field col m6 s12"> <i class="material-icons prefix">local_phone</i> <input type="text" name="team_Participant_Phone_' + add_team_participants_count + '" id="team_participant_phone_field_' + add_team_participants_count + '" class="validate" required="required" maxlength="10" data-length="10"> <label for="team_participant_phone_field_' + add_team_participants_count + '" data-error="Enter Phone Number">Phone Number</label> </div><div class="input-field col m6 s12"> <i class="material-icons prefix">email</i> <input type="email" maxlength="100" name="team_Participant_Email_' + add_team_participants_count + '" id="team_participant_email_field_' + add_team_participants_count + '" class="validate" required="required"> <label for="team_participant_email_field_' + add_team_participants_count + '" data-error="Enter Email ID">Email ID</label> </div><div class="input-field col m6 s12"> <i class="material-icons prefix">directions_run</i> <select id="team_participant_add_sport_select_'+add_team_participants_count+'" multiple="multiple" name="team_participant_add_sport_select_'+add_team_participants_count+'"> <option value="" disabled="disabled" selected="selected"></option> </select> <label for="team_participant_add_sport_select_'+add_team_participants_count+'">Add More Sports</label> </div><div class="row"> <div class="col s3 white-text"> Register As </div><div class="col s3"> <input type="radio" name="team_Participant_Register_As_' + add_team_participants_count + '" id="team_Participant_Register_As_Captain_' + add_team_participants_count + '" value="Captain"> <label for="team_Participant_Register_As_Captain_' + add_team_participants_count + '">Captain</label> </div><div class="col s3"> <input type="radio" name="team_Participant_Register_As_' + add_team_participants_count + '" id="team_Participant_Register_As_Participant_' + add_team_participants_count + '" value="Participant"> <label for="team_Participant_Register_As_Participant_' + add_team_participants_count + '">Participant</label> </div><div class="col s3"> <input type="radio" name="team_Participant_Register_As_' + add_team_participants_count + '" id="team_Participant_Register_As_Coach_' + add_team_participants_count + '" value="Coach"> <label for="team_Participant_Register_As_Coach_' + add_team_participants_count + '">Coach</label> </div></div>';
   newParticipant.innerHTML = template;
   document.getElementById('sport-extra-form').insertBefore(newParticipant, document.getElementById('submit-add-team-part-btn'));
   var avail_sport =[];
@@ -267,11 +45,9 @@ function addNewTeamParticipant(sport_id, gender) {
   var j = 0;
   for (var i = 0; i < sportsJSON.length; i++) {
     if (sportsJSON[i].fields.idno != sport_id) {
-      if (gender == '\''+sportsJSON[i].fields.gender+'\'') {
-        if (sportsJSON[i].fields.upper == sportsJSON[i].fields.lower == 1) {
-          avail_sport[j] = sportsJSON[i].fields.sport;
-          avail_sport_id[j++] = sportsJSON[i].fields.idno;
-        }
+      if (gender == sportsJSON[i].fields.gender) {
+        avail_sport[j] = sportsJSON[i].fields.sport;
+        avail_sport_id[j++] = sportsJSON[i].fields.idno;
       }
     }
   }
@@ -283,130 +59,183 @@ function addNewTeamParticipant(sport_id, gender) {
   Materialize.updateTextFields();
   $("input#team_participant_phone_field_"+add_team_participants_count+"").characterCounter();
 }
-function addTeamPartSubmit(sport_id, gender) {
-  var extraFormData = serializeArray(document.getElementById('sport-extra-form'));
-  var name = extraFormData[0].value;
-  var phone = extraFormData[1].value;
-  var email = extraFormData[2].value;
-  var extra_sports = [];
-  var j = 3;
-  while(extraFormData[j].name == "team_participant_add_sport_select_1") {
-    if (j == 3) {
-      extra_sports.push(sport_id);
-    } else {
-      extra_sports.push(parseInt(extraFormData[j].value));
-    }
-    j++;
-    if (extraFormData[j] == undefined) {
-      break;
-    }
+function deleteTeamParticipants() {
+  var parentNode = document.getElementById('sport-extra-form');
+  var childNode = document.getElementsByClassName('team_extra_team_participant')[document.getElementsByClassName('team_extra_team_participant').length - 1];
+  if (document.getElementsByClassName('team_extra_team_participant').length > 0) {
+    add_team_participants_count--;
+    parentNode.removeChild(childNode);
   }
-  if (!validateEmail(email) || !validatePhoneNumber(phone)) {
-    Materialize.toast('Entered Email/Phone Number is Wrong!', 4000);
-  } else if (name == '') {
-    Materialize.toast('Please Fill all the Fields!', 4000);
+}
+// To get list of names of person in the registered section
+function getlist(sport){
+  var sport_id= sport.parentElement.parentElement.children[0].children[1].innerHTML;
+  if (sport.parentElement.children[3].getAttribute('id')=='list') {
+    sport.parentElement.children[3].innerHTML="";
   } else {
-    var data = {
-      "name": name,
-      "phone": phone,
-      "email": email,
-      "sport_id": extra_sports,
-      "gender": gender
-    }
-    sendExtraParticipants(data);
-    $('#add-team-participants-modal').modal('close');
+    sport.parentElement.children[4].innerHTML="";
   }
+  getSportParticipants(sport_id, sport);
 }
-function editname(sport_id, participant) {
-  $('#modal1').modal('open');
-  document.getElementById("modal-names").innerHTML="";
-  document.getElementById("modal-names").innerHTML="<li><input type='text' class='input-field' id='newName' placeholder=\""+participant+"\"></li>";
-  Materialize.updateTextFields();
-  oldName = participant;
-}
-var oldName;
-// AJAX Functions
-function sendEdit() {
-  var newName = document.getElementById('newName').value;
-  var csrf_token = getCookie('csrftoken');
-  var data = {
-    "oldName": oldName,
-    "newName": newName,
-    "csrfmiddlewaretoken": csrf_token
-  }
-  var data_send = JSON.stringify(data);
-  Materialize.toast('Saving Participants!', 2000);
-  var ajaxRequest = new XMLHttpRequest();
-  var url = 'url';
-  ajaxRequest.open("POST", url, true);
-  ajaxRequest.setRequestHeader("Content-type", "application/json");
-  ajaxRequest.setRequestHeader("X-CSRFToken", csrf_token);
-  ajaxRequest.onreadystatechange = function() {
-    if (ajaxRequest.readyState === 4 && ajaxRequest.status === 200) {
-      var jsonResponse = JSON.parse(ajaxRequest.responseText);
-      if (jsonResponse.error != null) {
-        triggerError(jsonResponse.error);
-      } else {
-        Materialize.toast('Your Partipants have been Saved!', 2000);
-        getSports();
+var backend_data = {
+  "users": [],
+  "csrftoken": []
+};
+var coachData = {};
+function addTeamPartSubmit(sport_id, gender) {
+  backend_data = {
+    "users": [],
+    "csrftoken": []
+  };
+  coachData = {};
+  var extraFormData = serializeArray(document.getElementById('sport-extra-form'));
+  var i = 1;
+  var radioNotSelected = 0;
+  while(i<=add_team_participants_count) {
+    for (var j = 0; j < extraFormData.length; j++) {
+      if(extraFormData[j].name == 'team_participant_add_sport_select_'+i+'') {
+        while(extraFormData[j+1] != undefined && extraFormData[j+1].name == 'team_participant_add_sport_select_'+i+'') {
+          j++;
+        }
+        j++;
+        if (extraFormData[j] != undefined) {
+        }
+        
+        if (extraFormData[j] != undefined && extraFormData[j].name == 'team_Participant_Register_As_'+i+'') {
+          // Do Nothing
+        } else {
+          radioNotSelected = 1;
+          break;
+        }
       }
-    } else if (ajaxRequest.readyState === 4 && ajaxRequest.status != 200) {
-      Materialize.toast('Error While Saving!', 2000);
     }
+    i++;
   }
-  ajaxRequest.send(data_send);
-  console.log(data);
-}
-function sendUsers(data) {
-  console.log(data);
-  var csrf_token = getCookie('csrftoken');
-  var send_data = JSON.stringify(data);
-  Materialize.toast('Saving Participants!', 2000);
-  var ajaxRequest = new XMLHttpRequest();
-  var url = 'url';
-  ajaxRequest.open("POST", url, true);
-  ajaxRequest.setRequestHeader("Content-type", "application/json");
-  ajaxRequest.setRequestHeader("X-CSRFToken", csrf_token);
-  ajaxRequest.onreadystatechange = function() {
-    if (ajaxRequest.readyState === 4 && ajaxRequest.status === 200) {
-      var jsonResponse = JSON.parse(ajaxRequest.responseText);
-      if (jsonResponse.error != null) {
-        triggerError(jsonResponse.error);
-      } else {
-        Materialize.toast('Your Partipants have been Saved!', 2000);
-        getSports();
+  if (radioNotSelected == 1) {
+    Materialize.toast('Please select Register As Type for all Participants!', 3000);
+  } else {
+    var readySend = 1;
+    var errorPhone = 0;
+    var errorEmail = 0;
+    var l =0;
+    var no_captains = 0;
+    var no_coachs = 0;
+    console.log(i);
+    for (var k = 0; k < i; k++) {
+      console.log('K1:' + k);
+      while(extraFormData[l+1] != undefined) {
+        k++;
+        console.log('K2:' + k);
+        var captain = 0;
+        var coach = 0;
+        console.log('Name: ' + extraFormData[l].value);
+        var name = extraFormData[l++].value;
+        if (name == "") {
+          readySend = 0;
+        }
+        console.log('Phone: ' + extraFormData[l].value);
+        var phone = extraFormData[l++].value;
+        if (!validatePhoneNumber(phone)) {
+          readySend = 0;
+          errorPhone = 1;
+        }
+        console.log('Email: ' + extraFormData[l].value);
+        var email = extraFormData[l++].value;
+        if (!validateEmail(email)) {
+          readySend = 0;
+          errorEmail = 1;
+        }
+        var sportsArr = [];
+        sportsArr.push(sport_id);
+        console.log('Sports Blank: ' + extraFormData[l].value);
+        if(extraFormData[l].name == 'team_participant_add_sport_select_'+k+'') {
+          while(extraFormData[l+1] != undefined && extraFormData[l++].name == 'team_participant_add_sport_select_'+k+'') {
+            if (extraFormData[l-1].value != "") {
+              sportsArr.push(parseInt(extraFormData[l-1].value));
+            }
+            console.log('Sports: ' + extraFormData[l-1].value);
+          }
+          l--;
+          if (k == (i-1)) {
+            l++;
+          }
+          console.log('L:' + l);
+          console.log('Register Type: ' + extraFormData[l].value);
+          if (extraFormData[l].value == "Captain") {
+            captain = sport_id;
+            no_captains++;
+          } else if (extraFormData[l].value == "Coach") {
+            coach = sport_id;
+            no_coachs++;
+            coachData = {
+              "captain": captain,
+              "coach": coach,
+              "name": name,
+              "phone": phone,
+              "email": email,
+              "sport_id": sportsArr,
+              "gender": gender
+            }
+          }
+        }
+        console.log('L2:' + l);
+        l++;
+        console.log('L3:' + l);
+        if (coach == 0) {
+          var data = {
+            "captain": captain,
+            "coach": coach,
+            "name": name,
+            "phone": phone,
+            "email": email,
+            "sport_id": sportsArr,
+            "gender": gender
+          }
+          backend_data["users"].push(data);
+        }
       }
-    } else if (ajaxRequest.readyState === 4 && ajaxRequest.status != 200) {
-      Materialize.toast('Error While Saving!', 2000);
+      console.log('No of Captains: ' + no_captains);
+      console.log('No of Coaches: ' + no_coachs);
     }
-  }
-  ajaxRequest.send(send_data);
-}
-function sendExtraParticipants(data) {
-  var csrf_token = getCookie('csrftoken');
-  var send_data = JSON.stringify(data);
-  Materialize.toast('Saving Participants!', 2000);
-  var ajaxRequest = new XMLHttpRequest();
-  var url = 'url';
-  ajaxRequest.open("POST", url, true);
-  ajaxRequest.setRequestHeader("Content-type", "application/json");
-  ajaxRequest.setRequestHeader("X-CSRFToken", csrf_token);
-  ajaxRequest.onreadystatechange = function() {
-    if (ajaxRequest.readyState === 4 && ajaxRequest.status === 200) {
-      var jsonResponse = JSON.parse(ajaxRequest.responseText);
-      if (jsonResponse.error != null) {
-        triggerError(jsonResponse.error);
+    if (readySend == 0) {
+      // Handle Exception
+      if (errorPhone == 1) {
+        Materialize.toast('Incorrect Phone Fields!', 3000);
+      } else if (errorEmail == 1) {
+        Materialize.toast('Incorrect Email Fields!', 3000);
       } else {
-        Materialize.toast('Your Partipants have been Saved!', 2000);
-        getSports();
+        Materialize.toast('Please Fill All Fields!', 3000);
       }
-    } else if (ajaxRequest.readyState === 4 && ajaxRequest.status != 200) {
-      Materialize.toast('Error While Saving!', 2000);
+    } else if (no_captains > 1 || no_coachs > 1) {
+      Materialize.toast("You cannot have more than one captain/coach in a sport!", 3000);
+    } else {
+      console.log(backend_data);
+      $('#add-team-participants-modal').modal('close');
+      if (coachData.name != undefined) {
+        resetCoachGenderForm();
+        $('#coach-gender-modal').modal('open');
+      } else {
+        sendUsersData();
+      }
     }
   }
-  ajaxRequest.send(send_data);
-  console.log(data);
 }
+function submitCoachData() {
+  var coachFormData = serializeArray(document.getElementById('select_coach_gender_form'));
+  if (coachFormData.length == 0) {
+    Materialize.toast('Please select Coach Gender!', 3000);
+  } else {
+    coachData.gender = coachFormData[0].value;
+    backend_data["users"].push(coachData);
+    $('#coach-gender-modal').modal('close');
+    sendUsersData();
+  }
+}
+function resetCoachGenderForm() {
+  document.getElementById('select_coach_gender_form').innerHTML='<div class="row"> <div class="col s4 white-text"> Coach Gender </div><div class="col s4"> <input type="radio" name="select_coach_gender" id="select_coach_male" value="male"> <label for="select_coach_male">Male</label> </div><div class="col s4"> <input type="radio" name="select_coach_gender" id="select_coach_female" value="female"> <label for="select_coach_female">Female</label> </div></div><div class="row" id="select_coach_gender_form_btn"> <div class="col s12 center"> <a class="waves-effect waves-light btn btn-large" onclick="submitCoachData()" id="add_team_parts_btn"><i class="material-icons right">send</i>Submit</a> </div></div>';
+}
+// Start AJAX Functions
+var sportsReady = 0;
 var sportsJSON;
 function getSports() {
   Materialize.toast('Fetching Sports Data', 2000);
@@ -428,9 +257,13 @@ function getSports() {
         } else {
           sportsJSON = sportsData // Store for future use.
           Materialize.toast('Sports Data Updated!', 2000);
+          sportsReady = 1;
         }
     } else if (ajaxRequest.readyState === 4 && ajaxRequest.status != 200) {
       Materialize.toast('Error Fetching Data!', 2000);
+      setTimeout(function() {
+        getSports();
+      }, 30000);
     }
   }
   ajaxRequest.send(data_send);
@@ -459,19 +292,10 @@ function getSportParticipants(sport_id, sport) {
           var people = participantsDetails;
           // A function to get the list of people who have been enrolled in the sport of sport_id and store in an array;
           for(var x in people) {
-            if(sport_id!=people[x].captain) {
-              if (sport.parentElement.children[3].getAttribute('id')=='list') {
-                sport.parentElement.children[3].innerHTML+="<li class='people'>"+people[x].name+"<span class='edit-name-icon badge black-text' onclick='editname("+sport_id+",\""+people[x].name+"\")'><i class='material-icons'>edit</i></span></li>";
-              } else {
-                sport.parentElement.children[4].innerHTML+="<li class='people'>"+people[x].name+"<span class='edit-name-icon badge black-text' onclick='editname("+sport_id+",\""+people[x].name+"\")'><i class='material-icons'>edit</i></span></li>";
-              }
-            }
-            else {
-              if (sport.parentElement.children[3].getAttribute('id')=='list') {
-                sport.parentElement.children[3].innerHTML+="<li class='people'>"+people[x].name+"</li>";
-              } else {
-                sport.parentElement.children[4].innerHTML+="<li class='people'>"+people[x].name+"</li>";
-              }
+            if (sport.parentElement.children[3].getAttribute('id')=='list') {
+              sport.parentElement.children[3].innerHTML+="<li class='people'>"+people[x].name+"</li>";
+            } else {
+              sport.parentElement.children[4].innerHTML+="<li class='people'>"+people[x].name+"</li>";
             }
           }
           Materialize.toast('Updated!', 2000);
@@ -481,6 +305,36 @@ function getSportParticipants(sport_id, sport) {
     }
   }
   ajaxRequest.send(data_send);
+}
+function sendUsersData() {
+  console.log(backend_data);
+  var csrf_token = getCookie('csrftoken');
+  var send_data = JSON.stringify(backend_data);
+  Materialize.toast('Saving Participants!', 2000);
+  participantsSaved = 0;
+  var ajaxRequest = new XMLHttpRequest();
+  var url = 'url';
+  ajaxRequest.open("POST", url, true);
+  ajaxRequest.setRequestHeader("Content-type", "application/json");
+  ajaxRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ajaxRequest.onreadystatechange = function() {
+    if (ajaxRequest.readyState === 4 && ajaxRequest.status === 200) {
+      var jsonResponse = JSON.parse(ajaxRequest.responseText);
+      if (jsonResponse.error != null) {
+        triggerError(jsonResponse.error);
+      } else {
+        Materialize.toast('Your Partipants have been Saved!', 2000);
+        getSports();
+        document.getElementById('reg_no_count').innerHTML = parseInt(document.getElementById('reg_no_count').innerHTML) + add_team_participants_count;
+      }
+      participantsSaved = 1;
+    } else if (ajaxRequest.readyState === 4 && ajaxRequest.status != 200) {
+      Materialize.toast('Error While Saving!', 2000);
+      participantsSaved = 1;
+      window.location.href = window.location.href;
+    }
+  }
+  ajaxRequest.send(send_data);
 }
 // End AJAX Functions
 function triggerError(msg) {

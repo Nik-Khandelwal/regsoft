@@ -44,6 +44,7 @@ function loaded(){
 $(".group").each(function(index) {
   // console.log( index + ": " + $( this ).text() );
 });
+$('.modal').modal();
 $("#tools-info_outline-tapped").tapTarget('open');
 retrieve_left();
 $('.coll-1').sideNav({
@@ -368,7 +369,7 @@ function confirm_bill(){
 		}
 	}
 }
-var bills_pk = 1;
+// var bills_pk = 1;
 function post_backend(){
 	Materialize.toast('Sending data to server!', 4000, "toast-post");
 	//Post to backend
@@ -388,7 +389,8 @@ function post_backend(){
 		// alert('Hi');
 		var recieve_json = JSON.parse(ourRequest.responseText);
 		var status = recieve_json.success;
-		bills_pk = parseInt(recieve_json.bills_pk);
+		var bills_pk = parseInt(recieve_json.bills_pk);
+		document.getElementById('print-bill-btn').setAttribute('href', '/controls/bill_pdf/'+bills_pk+'');
 		// console.log(status);
 		showRequestStatus(status)
 
@@ -630,7 +632,7 @@ function sendRetDenom(deno_2000, deno_500, deno_200, deno_100, deno_50) {
 	ourRequest.onload = function() {
 	if (ourRequest.status >= 200 && ourRequest.status < 400) {		// request sent and recieved
 		// Success Yaaaayyyy
-		printBill();
+		$('#print-bill-modal').modal('open');
 	}
 	else 		
 		Materialize.toast('Server Error!', 4000, "toast-fetch_error");	

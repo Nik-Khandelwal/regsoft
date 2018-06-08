@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>BOSM 2018 Registrations</title>
+    {% load staticfiles %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'register/css/email-style.css' %}">
+  </head>
+  <body>
+    <div id="content-wrapper">
+      <div id="bosm-header">
+        <img src="{% static 'register/images/bosm-logo.svg' %}" id="bosm-logo">
+        BOSM 2018
+      </div>
+      <div id="email-content">
+        <h4>Email Verified</h4>
+        <p>Your Email has been successfully Verified. Please wait for the PCR to activate your Account.</p>
+        <button class="button arrow" onclick="window.location.href='/register/'">Main Page</button>
+      </div>
+    </div>
+  </body>
+</html>

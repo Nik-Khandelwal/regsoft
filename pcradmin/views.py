@@ -1595,7 +1595,6 @@ def createPdf(request,pk):
 			return HttpResponseRedirect('/regsoft/')
 	else:
 		return HttpResponseRedirect('/regsoft/')
-	template = get_template('pcradmin/stats2.html')
 	data = []
 	leader = User.objects.get(pk=pk)
 	queryset=User.objects.filter(team=leader.team,deleted=0).order_by(Lower('name'))
@@ -1608,13 +1607,7 @@ def createPdf(request,pk):
 					count+=1
 			data.append({"pk":obj.pk,"name":obj.name,"mobile_no":obj.phone,"email_id":obj.email,"sport":sp.sport,"players":count})
 	context = {"teamlist":data}
-	html  = template.render(context)
-	result = StringIO.StringIO()
-
-	pdf = pisa.pisaDocument(StringIO.StringIO(html.encode("ISO-8859-1")), result)
-	if not pdf.err:
-		return HttpResponse(result.getvalue(), content_type='application/pdf')
-	return HttpResponse('We had some errors<pre>%s</pre>' % escape(html))
+	return render(request,'pcradmin/collegepdfstats.html',context)
 
 
 #RESEND CREDENTIALS

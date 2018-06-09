@@ -14,6 +14,11 @@ function showDiv(num) {
     document.getElementsByClassName('main-content')[i].style.display = 'none';
   }
   document.getElementsByClassName('main-content')[num].style.display = 'block';
+  if(num==2||num==6) {
+    document.getElementsByClassName('page-footer')[0].style.display = 'none';
+  } else {
+    document.getElementsByClassName('page-footer')[0].style.display = 'block';
+  }
 }
 function showLoader() {
   document.getElementById('main-content-loading').style.display = 'block';

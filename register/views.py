@@ -369,7 +369,7 @@ def displaysports(request):
 			return HttpResponseRedirect('/register/')
 	else:
 		return HttpResponseRedirect('/register/')
-	user = User.objects.filter(team=request.user.team,deleted=0,coach=0)
+	user = User.objects.filter(team=request.user.team,deleted=0)
 	count=[0]*40
 	for up in user:
 		for i in Sport.objects.all():

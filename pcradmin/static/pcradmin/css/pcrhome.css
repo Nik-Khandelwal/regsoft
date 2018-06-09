@@ -56,6 +56,7 @@ nav {
   top: 37vh;
   left: 38vw;
   font-size: 20vh;
+  color: white;
 }
 #bosm-splash-background {
   width: 100vw;
@@ -65,7 +66,7 @@ nav {
   z-index: 1;
   background: url(../images/final-banner.svg);
   background-size: 100% 100%;
-  opacity: 0.2;
+  opacity: 0.6;
 }
 @media only screen and (min-width: 601px) {
   #bosm-splash-background {
@@ -275,3 +276,28 @@ nav {
 }
 /* Loader End */
 #specific-stats-body{height: 33vh;}
+.page-footer {
+  background-color: #000 !important;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  z-index: 5;
+  max-height: 11vh;
+  height: 11vh;
+  overflow: hidden;
+  font-size: 5vh !important;
+  padding-top: 2vh !important;
+}
+.tabs {
+  background-color: transparent;
+}
+.tabs>.tab>a {
+  color: white;
+}
+.tabs>.indicator {
+  background-color: white;
+}
+body {
+  background-color: #000;
+}

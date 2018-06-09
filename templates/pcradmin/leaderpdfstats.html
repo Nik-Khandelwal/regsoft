@@ -69,15 +69,15 @@ h1, h2, h3, h4, h5, h6 {
       
     </div>
     <div class="table-content"> 
-    {% for obj in mylist %}
+    {% for obj in leaderlist %}
       <div class="table-row" style="display: flex; width: 100%; padding: 18px 0;">   
         <div class="table-data" style="flex: 1 1 14.285714%; text-align: center;">{{ obj.pk }}</div>
         <div class="table-data" style="flex: 1 1 14.285714%; text-align: center;">{{ obj.name }}</div>
         <div class="table-data" style="flex: 1 1 14.285714%; text-align: center;">{{ obj.email_id }}</div>
         <div class="table-data" style="flex: 1 1 14.285714%; text-align: center;">{{ obj.mobile_no }}</div>
         <div class="table-data" style="flex: 1 1 14.285714%; text-align: center;">{{ obj.college }}</div>
-        <div class="table-data" style="flex: 1 1 14.285714%; text-align: center;">{{ obj.no_teams }}</div>
-        <div class="table-data" style="flex: 1 1 14.285714%; text-align: center;">{{ obj.no_players }}</div>
+        <div class="table-data" style="flex: 1 1 14.285714%; text-align: center;">{{ obj.sportcount }}</div>
+        <div class="table-data" style="flex: 1 1 14.285714%; text-align: center;">{{ obj.players }}</div>
       </div>
     {% endfor %}
     </div>  

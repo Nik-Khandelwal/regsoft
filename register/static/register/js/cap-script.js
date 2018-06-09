@@ -289,13 +289,13 @@ function getSportParticipants(sport_id, sport) {
           triggerError(participantsDetails.error)
         } else {
           // Use the Participants Details fetched below.
-          var people = participantsDetails;
+          var people = participantsDetails.data;
           // A function to get the list of people who have been enrolled in the sport of sport_id and store in an array;
           for(var x in people) {
             if (sport.parentElement.children[3].getAttribute('id')=='list') {
-              sport.parentElement.children[3].innerHTML+="<li class='people'>"+people[x].name+"</li>";
+              sport.parentElement.children[3].innerHTML+="<li class='people'>"+people[x][0]+"</li>";
             } else {
-              sport.parentElement.children[4].innerHTML+="<li class='people'>"+people[x].name+"</li>";
+              sport.parentElement.children[4].innerHTML+="<li class='people'>"+people[x][0]+"</li>";
             }
           }
           Materialize.toast('Updated!', 2000);

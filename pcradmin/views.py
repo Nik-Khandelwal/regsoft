@@ -1572,7 +1572,6 @@ def leaderPdf(request):
 			return HttpResponseRedirect('/regsoft/')
 	else:
 		return HttpResponseRedirect('/regsoft/')
-	template = get_template('pcradmin/stats.html')
 	data = []
 	queryset=User.objects.filter(grp_leader=1,deleted=0).order_by(Lower('name'))
 	for obj in queryset:
@@ -1583,13 +1582,7 @@ def leaderPdf(request):
 					sportcount+=1
 			data.append({"pk":obj.pk,"name":obj.name,"college":obj.team.college,"mobile_no":obj.phone,"email_id":obj.email,"sportcount":sportcount,"players":count})
 	context = {"leaderlist":data}
-	html  = template.render(context)
-	result = StringIO.StringIO()
-
-	pdf = pisa.pisaDocument(StringIO.StringIO(html.encode("ISO-8859-1")), result)
-	if not pdf.err:
-		return HttpResponse(result.getvalue(), content_type='application/pdf')
-	return HttpResponse('We had some errors<pre>%s</pre>' % escape(html))
+	return render(request,'pcradmin/leaderpdfstats.html',context)
 
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_pcradmin_admin, login_url='/regsoft/')

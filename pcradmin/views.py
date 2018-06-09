@@ -1669,7 +1669,7 @@ def credplayers(request):
 	if request.method=='POST':
 		data=json.loads(request.body.decode('utf-8'))
 		t=Team.objects.get(pk=data['clg_id'])
-		splist=Sport.objects.all().order_by(Lower('college'))
+		splist=Sport.objects.all().order_by(Lower('sport'))
 		players=User.objects.filter(team=t,deleted=0).order_by(Lower('name'))
 		d=[]
 		for sp in splist:

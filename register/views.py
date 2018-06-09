@@ -217,11 +217,11 @@ def activate(request,uidb64,token):
 		#render page about correspondence
 		update_data2 = [8,4]
 		pusher_client.trigger('my-channel8', 'my-event8', update_data2)
-		return HttpResponseRedirect('/register/')
+		return render(request,'register/emailverify.html/')
 	else:
 		return HttpResponse('Activation link is invalid!')
 	if user.is_authenticated():
-		return render(request,'register/emailverify.html/')
+		return HttpResponseRedirect('/register/')
 	else:
 		return HttpResponseRedirect('/register/')
 

@@ -439,72 +439,72 @@ def viewGrpLeaders(request):
 			return HttpResponseRedirect('/regsoft/')
 	else:
 		return HttpResponseRedirect('/regsoft/')
- 	if request.method=='POST':
+	if request.method=='POST':
 
-	 	list1=Team.objects.filter(activate=0).order_by(Lower('college'))
-	 	list2=Team.objects.filter(activate=1).order_by(Lower('college'))
-	 	d=[]
-	 	for i in list1:
-	 		grpld=User.objects.filter(grp_leader=1,deleted=0,team=i)
-	 		if grpld.count():#display only if someone has registered in the college
-		 		s=[]
-		 		s.append(i.college)
-		 		s.append(i.city)
-		 		s.append(i.state)
-		 		s.append(i.pk)
-		 		
-		 		l=[]
-		 		for j in grpld:
-		 			l2=[]
-		 			l2.append(j.pk)
-		 			l2.append(j.name)
-		 			l2.append(j.phone)
-		 			l2.append(j.email)
-		 			sprt=Sport.objects.all()
-		 			sp=[]
-		 			for k in sprt:
-		 				if j.sportid[k.idno]>='1':
-		 					sp.append(k.sport)
-		 			l2.append(sp)
-		 			if (j.coach):
-		 					l2.append("YES")
-		 			else:
-		 					l2.append("NO")
-		 			l2.append(j.gender)
-		 			l.append(l2)
-		 		s.append(l)
-	 			d.append(s)
+		list1=Team.objects.filter(activate=0).order_by(Lower('college'))
+		list2=Team.objects.filter(activate=1).order_by(Lower('college'))
+		d=[]
+		for i in list1:
+			grpld=User.objects.filter(grp_leader=1,deleted=0,team=i)
+			if grpld.count():#display only if someone has registered in the college
+				s=[]
+				s.append(i.college)
+				s.append(i.city)
+				s.append(i.state)
+				s.append(i.pk)
+				
+				l=[]
+				for j in grpld:
+					l2=[]
+					l2.append(j.pk)
+					l2.append(j.name)
+					l2.append(j.phone)
+					l2.append(j.email)
+					sprt=Sport.objects.all()
+					sp=[]
+					for k in sprt:
+						if j.sportid[k.idno]>='1':
+							sp.append(k.sport)
+					l2.append(sp)
+					if (j.coach):
+							l2.append("YES")
+					else:
+							l2.append("NO")
+					l2.append(j.gender)
+					l.append(l2)
+				s.append(l)
+				d.append(s)
 
-	 	d2=[]
-	 	for i in list2:
-	 			s=[]
-	 			s.append(i.college)
-	 			s.append(i.city)
-	 			s.append(i.state)
-	 			s.append(i.pk)
-	 			grpld=User.objects.filter(grp_leader=1,deleted=0,team=i)
-	 			l=[]
-	 			for j in grpld:
-	 				l2=[]
-	 				l2.append(j.pk)
-	 				l2.append(j.name)
-	 				l2.append(j.phone)
-	 				l2.append(j.email)
-	 				sprt=Sport.objects.all()
-	 				sp=[]
-	 				for k in sprt:
-	 					if j.sportid[k.idno]>='1':
-	 						sp.append(k.sport)
-	 				l2.append(sp)
-	 				if (j.coach):
-	 					l2.append("YES")
-	 				else:
-	 					l2.append("NO")
-	 				l2.append(j.gender)
-	 				l.append(l2)
-	 			s.append(l)
-	 			d2.append(s)
-	 	return JsonResponse({'data':d,'data2':d2})
+		d2=[]
+		for i in list2:
+				s=[]
+				s.append(i.college)
+				s.append(i.city)
+				s.append(i.state)
+				s.append(i.pk)
+				grpld=User.objects.filter(grp_leader=1,deleted=0,team=i)
+				l=[]
+				for j in grpld:
+					l2=[]
+					l2.append(j.pk)
+					l2.append(j.name)
+					l2.append(j.phone)
+					l2.append(j.email)
+					sprt=Sport.objects.all()
+					sp=[]
+					for k in sprt:
+						if j.sportid[k.idno]>='1':
+							sp.append(k.sport)
+					l2.append(sp)
+					if (j.coach):
+						l2.append("YES")
+					else:
+						l2.append("NO")
+					l2.append(j.gender)
+					l.append(l2)
+				s.append(l)
+				d2.append(s)
+		return JsonResponse({'data':d,'data2':d2})
 
 
 
@@ -895,25 +895,27 @@ def stats(request):
 			s=[]
 			
 			for u in up:
-				if u.sportid[t.idno]>='1':
-					if u.team.activate==1:
-						if u.coach:
-							coachTotal+=1
-							if u.confirm1:
-								coachconfirmed+=1
-						else:
-							if u.sportid[t.idno]>='2':
-								if u.gender=='male':
-									maleconfirmed+=1
-									maleTotal+=1
-								elif u.gender=='female':
-									femaleconfirmed+=1
-									femaleTotal+=1
-							else:
-								if u.gender=='male':
-									maleTotal+=1
-								elif u.gender=='female':
-									femaleTotal+=1
+				if u:
+					if u.sportid[t.idno]>='1':
+						if u.team:
+							if u.team.activate==1:
+								if u.coach:
+									coachTotal+=1
+									if u.confirm1:
+										coachconfirmed+=1
+								else:
+									if u.sportid[t.idno]>='2':
+										if u.gender=='male':
+											maleconfirmed+=1
+											maleTotal+=1
+										elif u.gender=='female':
+											femaleconfirmed+=1
+											femaleTotal+=1
+									else:
+										if u.gender=='male':
+											maleTotal+=1
+										elif u.gender=='female':
+											femaleTotal+=1
 			s.append(t.pk)
 			s.append(t.sport)
 			s.append(maleconfirmed)
@@ -1584,7 +1586,7 @@ def leaderPdf(request):
 
 	pdf = pisa.pisaDocument(StringIO.StringIO(html.encode("ISO-8859-1")), result)
 	if not pdf.err:
-	    return HttpResponse(result.getvalue(), content_type='application/pdf')
+		return HttpResponse(result.getvalue(), content_type='application/pdf')
 	return HttpResponse('We had some errors<pre>%s</pre>' % escape(html))
 
 @login_required(login_url='/regsoft/')
@@ -1616,7 +1618,7 @@ def createPdf(request,pk):
 
 	pdf = pisa.pisaDocument(StringIO.StringIO(html.encode("ISO-8859-1")), result)
 	if not pdf.err:
-	    return HttpResponse(result.getvalue(), content_type='application/pdf')
+		return HttpResponse(result.getvalue(), content_type='application/pdf')
 	return HttpResponse('We had some errors<pre>%s</pre>' % escape(html))
 
 
@@ -1947,4 +1949,4 @@ def logoutView(request):
 
 #utilities
 def replaceindex(text,index=0,replacement=''):
-    return '%s%s%s'%(text[:index],replacement,text[index+1:])
+	return '%s%s%s'%(text[:index],replacement,text[index+1:])

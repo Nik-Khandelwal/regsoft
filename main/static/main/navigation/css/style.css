@@ -1,0 +1,88 @@
+/*Fonts*/
+@font-face {
+  font-family: 'Montserrat';  
+  src: url(../fonts/Montserrat-Regular.woff2) format('woff2');
+}
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+#banner-div {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -2;
+}
+#banner-img {
+  width: 100vw;
+  height: 100vh;
+}
+#banner-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.5);
+}
+#bosm-wrapper {
+  width: 100vw;
+  text-align: center;
+  position: fixed;
+  top: 45vh;
+}
+#bosm-logo {
+  width: 50vh;
+  height: 50vh;
+}
+#bosm-text {
+  font-size: 16vh;
+  font-family: 'Montserrat';
+  color: white;
+  position: relative;
+  top: -17vh;
+}
+#links-wrapper {
+  position: fixed;
+  width: 100vw;
+  top: 20vh;
+}
+.column {
+  display: inline-block;
+  width: calc(25vw - 4px);
+  text-align: center;
+}
+.beautify-btn {
+  border: 2px solid #D24D57;
+  color: white;
+  padding: 4vh 8vh;
+  text-decoration: none;
+  font-family: 'Montserrat';
+  font-size: 4vh;
+}
+.beautify-btn:hover {
+  background-color: #D24D57;
+  transition: 1s;
+}
+#rotate-div {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2000000000000;
+  background-color: #D24D57;
+}
+#rotate-img {
+  width: 60vw;
+  height: 40vw;
+  position: fixed;
+  top: 30vh;
+  left: 20vw;
+}
+@media screen and (orientation:landscape) {
+  #rotate-div {
+    display: none;
+  }
+}

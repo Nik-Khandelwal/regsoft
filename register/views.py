@@ -595,7 +595,7 @@ def leadersport(request):
 	return JsonResponse({'data':s})
 
 def replaceindex(text,index=0,replacement=''):
-    return '%s%s%s'%(text[:index],replacement,text[index+1:])
+	return '%s%s%s'%(text[:index],replacement,text[index+1:])
 
 # def himesh(request):
 # 	return render(request,'register/index.html')

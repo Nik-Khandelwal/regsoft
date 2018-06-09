@@ -29,7 +29,8 @@ urlpatterns = [
     url(r'^pcradmin/',include('pcradmin.urls')),
     url(r'^regsoft/',include('main.urls')),
    # url(r'^__debug__/', include(debug_toolbar.urls)),
-    url(r'^$', views.main)
+    url(r'^adminpanels/',views.adminpanels,name='adminpanels'),
+    url(r'^$', views.main),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

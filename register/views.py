@@ -217,6 +217,8 @@ def activate(request,uidb64,token):
 		#render page about correspondence
 		update_data2 = [8,4]
 		pusher_client.trigger('my-channel8', 'my-event8', update_data2)
+		update_data3 = [9,2]
+		pusher_client.trigger('dashboard-update', 'dashboard-update-event', update_data3)
 		return render(request,'register/emailverify.html/')
 	else:
 		return HttpResponse('Activation link is invalid!')
@@ -273,7 +275,7 @@ def register(request):
 		#### uncomment for python 2 #####
 		data2 = urllib.urlencode(values)
 		req = urllib2.Request(url, data2)
-		response = urllib.urlopen(req)
+		response = urllib2.urlopen(req)
 		result = json.load(response)
 		#################################
 		#### comment for python 2 #######
@@ -486,6 +488,8 @@ def regPlayer(request):
 		up.save()	
 
 		#pusher starts
+	update_data3 = [9,2]
+	pusher_client.trigger('dashboard-update', 'dashboard-update-event', update_data3)
 	update_data = [7,3]
 	pusher_client.trigger('my-channel7', 'my-event7', update_data)
 		#pusher stops
@@ -551,6 +555,9 @@ def playerview(request):
 						request.user.save()
 						request.user.confirm1=2#documents uploaded
 						request.user.save()
+
+						update_data3 = [9,2]
+						pusher_client.trigger('dashboard-update', 'dashboard-update-event', update_data3)
 						# rp = Regplayer()
 						# rp.name = request.user.name
 						# rp.gender = request.user.gender

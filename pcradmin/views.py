@@ -1254,7 +1254,8 @@ def confirmTeam(request):
 					tm.save()
 				except:
 					success=0
-
+		update_data3 = [9,2]
+		pusher_client.trigger('dashboard-update', 'dashboard-update-event', update_data3)
 		return JsonResponse({'success':success})
 
 @login_required(login_url='/regsoft/')
@@ -1294,7 +1295,8 @@ def unconfirmTeam(request):
 					tm.save()
 				except:
 					success=0
-
+		update_data3 = [9,2]
+		pusher_client.trigger('dashboard-update', 'dashboard-update-event', update_data3)
 		return JsonResponse({'success':success})
 
 

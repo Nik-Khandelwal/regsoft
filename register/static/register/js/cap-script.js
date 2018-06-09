@@ -16,7 +16,7 @@ function addTeamParticipants(sport, gender) {
     var lower, upper;
     data = sportsJSON;
     for (var x in data){
-      if(data[x].fields.idno==sport_id){
+      if(data[x].pk==sport_id){
         lower = data[x].fields.lower;
         upper = data[x].fields.upper;
         break;
@@ -44,10 +44,10 @@ function addNewTeamParticipant(sport_id, gender) {
   var avail_sport_id = [];
   var j = 0;
   for (var i = 0; i < sportsJSON.length; i++) {
-    if (sportsJSON[i].fields.idno != sport_id) {
+    if (sportsJSON[i].pk != sport_id) {
       if (gender == sportsJSON[i].fields.gender) {
         avail_sport[j] = sportsJSON[i].fields.sport;
-        avail_sport_id[j++] = sportsJSON[i].fields.idno;
+        avail_sport_id[j++] = sportsJSON[i].pk;
       }
     }
   }

@@ -63,3 +63,79 @@ function triggerModal() {
 function lol(){
     document.getElementsByClassName("fblol")[0].setAttribute("class", "fblol fbanims")
 }
+document.onfullscreenchange = function (event) {
+  if ((screen.availHeight || screen.height-30) <= window.innerHeight) {
+    document.getElementsByClassName('frame')[0].style.width = '100vw';
+    document.getElementsByClassName('frame')[0].style.height = '100vh';
+    document.getElementsByClassName('youtube')[0].style.width = '100vw';
+    document.getElementsByClassName('youtube')[0].style.height = '100vh';
+    document.getElementById('open_youtube_btn').style.zIndex = '-1';
+    document.getElementById('close_youtube_btn').style.zIndex = '-1';
+    document.getElementById('video-container').style.zIndex = '-1';
+  } else {
+    document.getElementsByClassName('frame')[0].style.width = '80vw';
+    document.getElementsByClassName('frame')[0].style.height = '90vh';
+    document.getElementsByClassName('youtube')[0].style.width = '80vw';
+    document.getElementsByClassName('youtube')[0].style.height = '90vh';
+    document.getElementById('open_youtube_btn').style.zIndex = '10';
+    document.getElementById('close_youtube_btn').style.zIndex = '3';
+    document.getElementById('video-container').style.zIndex = '2';
+  }
+}
+document.onwebkitfullscreenchange = function (event) {
+  if ((screen.availHeight || screen.height-30) <= window.innerHeight) {
+    document.getElementsByClassName('frame')[0].style.width = '100vw';
+    document.getElementsByClassName('frame')[0].style.height = '100vh';
+    document.getElementsByClassName('youtube')[0].style.width = '100vw';
+    document.getElementsByClassName('youtube')[0].style.height = '100vh';
+    document.getElementById('open_youtube_btn').style.zIndex = '-1';
+    document.getElementById('close_youtube_btn').style.zIndex = '-1';
+    document.getElementById('video-container').style.zIndex = '-1';
+  } else {
+    document.getElementsByClassName('frame')[0].style.width = '80vw';
+    document.getElementsByClassName('frame')[0].style.height = '90vh';
+    document.getElementsByClassName('youtube')[0].style.width = '80vw';
+    document.getElementsByClassName('youtube')[0].style.height = '90vh';
+    document.getElementById('open_youtube_btn').style.zIndex = '10';
+    document.getElementById('close_youtube_btn').style.zIndex = '3';
+    document.getElementById('video-container').style.zIndex = '2';
+  }
+}
+document.onmozfullscreenchange = function (event) {
+  if ((screen.availHeight || screen.height-30) <= window.innerHeight) {
+    document.getElementsByClassName('frame')[0].style.width = '100vw';
+    document.getElementsByClassName('frame')[0].style.height = '100vh';
+    document.getElementsByClassName('youtube')[0].style.width = '100vw';
+    document.getElementsByClassName('youtube')[0].style.height = '100vh';
+    document.getElementById('open_youtube_btn').style.zIndex = '-1';
+    document.getElementById('close_youtube_btn').style.zIndex = '-1';
+    document.getElementById('video-container').style.zIndex = '-1';
+  } else {
+    document.getElementsByClassName('frame')[0].style.width = '80vw';
+    document.getElementsByClassName('frame')[0].style.height = '90vh';
+    document.getElementsByClassName('youtube')[0].style.width = '80vw';
+    document.getElementsByClassName('youtube')[0].style.height = '90vh';
+    document.getElementById('open_youtube_btn').style.zIndex = '10';
+    document.getElementById('close_youtube_btn').style.zIndex = '3';
+    document.getElementById('video-container').style.zIndex = '2';
+  }
+}
+document.MSFullscreenChange = function (event) {
+  if ((screen.availHeight || screen.height-30) <= window.innerHeight) {
+    document.getElementsByClassName('frame')[0].style.width = '100vw';
+    document.getElementsByClassName('frame')[0].style.height = '100vh';
+    document.getElementsByClassName('youtube')[0].style.width = '100vw';
+    document.getElementsByClassName('youtube')[0].style.height = '100vh';
+    document.getElementById('open_youtube_btn').style.zIndex = '-1';
+    document.getElementById('close_youtube_btn').style.zIndex = '-1';
+    document.getElementById('video-container').style.zIndex = '-1';
+  } else {
+    document.getElementsByClassName('frame')[0].style.width = '80vw';
+    document.getElementsByClassName('frame')[0].style.height = '90vh';
+    document.getElementsByClassName('youtube')[0].style.width = '80vw';
+    document.getElementsByClassName('youtube')[0].style.height = '90vh';
+    document.getElementById('open_youtube_btn').style.zIndex = '10';
+    document.getElementById('close_youtube_btn').style.zIndex = '3';
+    document.getElementById('video-container').style.zIndex = '2';
+  }
+}

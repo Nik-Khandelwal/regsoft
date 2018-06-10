@@ -403,7 +403,9 @@ def regPlayer(request):
 				pass
 			else:
 				return JsonResponse({'error':"captain is already registered in this sport"})
-		if dt['coach']:	
+		if dt['coach']:
+			if len(dt['sport_id'])!=1:
+				return JsonResponse({'error':"coach cannot be participant in other sports"})
 			try:
 				us=User.objects.get(team= request.user.team,coach=dt['coach'],deleted=0)
 			except:
@@ -420,7 +422,11 @@ def regPlayer(request):
 			if u.coach == dt['coach']:
 				pass
 			elif u.coach and dt['coach']:
-				return JsonResponse({'error':"participant cant be coach in two sports"})		
+				return JsonResponse({'error':"participant cant be coach in two sports"})
+			elif u.coach!=0 and dt['coach']	==0:
+				return JsonResponse({'error':"coach cannot be participant in other sports"})
+			elif u.coach==0 and dt['coach']!=0:
+				return JsonResponse({'error':"coach cannot be participant in other sports"})
 		
 		#return render(request,'register.html',{'state':int(dt['captain'])})
 		#to check any data

@@ -145,6 +145,14 @@ from main.models import Group,Regplayer,Enteredplayer,Sport,Money,Billcontrols,P
 from django.contrib.auth import get_user_model
 User=get_user_model()
 
+pusher_client = pusher.Pusher(
+  app_id='499153',
+  key='9b825df805e0b694cccc',
+  secret='f2bbd60c69e36c90a572',
+  cluster='ap2',
+  ssl=True
+)
+
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
 def is_pcradmin_admin(user):

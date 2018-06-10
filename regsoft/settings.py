@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'register',
    # 'debug_toolbar',
     'rest_framework',
+    'lockdown',
    # 'corsheaders',
 ]
 
@@ -62,6 +63,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
  #   'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.cache.FetchFromCacheMiddleware',
+    'lockdown.middleware.LockdownMiddleware',
 ]
 
 ROOT_URLCONF = 'regsoft.urls'
@@ -183,3 +185,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 GOOGLE_RECAPTCHA_SECRET_KEY = '6LcNq10UAAAAAJVLztulO5FzlWynQ6p93k1rLnuk'
+
+
+# For Testing Purposes
+LOCKDOWN_ENABLED = True
+LOCKDOWN_PASSWORDS = ('shush&shoo',)
+
+LOCKDOWN_URL_EXCEPTIONS = (
+    r'^/$',   
+)

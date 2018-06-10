@@ -3,7 +3,7 @@ import re
 import os
 
 import urllib
-import urllib2 #### uncomment for python 2 #####
+#import urllib2 #### uncomment for python 2 #####
 from django.conf import settings
 from django.contrib import messages
 
@@ -273,16 +273,16 @@ def register(request):
 		}
 
 		#### uncomment for python 2 #####
-		data2 = urllib.urlencode(values)
-		req = urllib2.Request(url, data2)
-		response = urllib2.urlopen(req)
-		result = json.load(response)
+		#data2 = urllib.urlencode(values)
+		#req = urllib2.Request(url, data2)
+		#response = urllib2.urlopen(req)
+		#result = json.load(response)
 		#################################
 		#### comment for python 2 #######
-		#data2 = urllib.parse.urlencode(values).encode()
-		#req =  urllib.request.Request(url, data=data2)
-		#response = urllib.request.urlopen(req)
-		#result = json.loads(response.read().decode())
+		data2 = urllib.parse.urlencode(values).encode()
+		req =  urllib.request.Request(url, data=data2)
+		response = urllib.request.urlopen(req)
+		result = json.loads(response.read().decode())
 		#################################	
 
 		if result['success']:

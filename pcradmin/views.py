@@ -748,7 +748,7 @@ def statscollege(request):
 			tc=up.filter(coach=0).exclude(confirm1=0).count()
 
 			for u in up:
-				if u.coach:
+				if u.coach==t.pk:
 					coachTotal+=1
 					if u.confirm1:
 						coachconfirmed+=1

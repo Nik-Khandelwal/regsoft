@@ -978,7 +978,7 @@ def statscollegesport(request):
 				else:
 					p.append("undefined")
 				p.append(0)
-				p.append(1)#payment status
+				p.append(0)#payment status
 				p.append(u.confirm1)
 				data.append(p)
 
@@ -997,7 +997,7 @@ def statscollegesport(request):
 				else:
 					p.append("undefined")
 				p.append(1)
-				p.append(1)#payment status
+				p.append(0)#payment status
 				p.append(u.confirm1)
 				data.append(p)
 		resp={'participants':data}

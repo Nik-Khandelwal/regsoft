@@ -136,8 +136,8 @@ i:hover{
   position: relative;
   left: 3rem;
 }
-.helper-text > span {
-  color: #0058ff;
+.helper-text > a {
+  color: #0058ff !important;
 }
 /* Loader Style */
 #loader {

@@ -10,8 +10,8 @@
   background-color: #F5F5F5;
 }
 *::-webkit-scrollbar {
-  width: 3px;
-  height: 1px;
+  width: 5px;
+  height: 2px;
   background-color: #F5F5F5;
 }
 *::-webkit-scrollbar-thumb{
@@ -209,6 +209,7 @@ body, html {
 }
 .table-top-header-item {
   padding: 0 !important;
+  font-weight: bold;
 }
 .disabled-collection-item>.right-part-content-table>tbody>.right-part-content-row>.remove-right-button-wrapper>a>.remove-btn-color {
   color: grey;
@@ -242,4 +243,23 @@ body, html {
   text-transform: uppercase;
   font-size: 13px;
   text-align: center;
+}
+#rotate-div {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2000000000000;
+  background-color: #D24D57;
+}
+#rotate-img {
+  width: 60vw;
+  height: 40vw;
+  position: fixed;
+  top: 30vh;
+  left: 20vw;
+}
+@media screen and (orientation:landscape) {
+  #rotate-div {
+    display: none;
+  }
 }

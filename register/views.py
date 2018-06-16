@@ -682,6 +682,10 @@ def addplayer(request):
 											})
 			mail_subject = 'Your account details.'
 			email = EmailMessage(mail_subject, message, to=[to_email])
+			update_data = [7,3]
+			pusher_client.trigger('my-channel7', 'my-event7', update_data)
+			update_data3 = [9,2]
+			pusher_client.trigger('dashboard-update', 'dashboard-update-event', update_data3)
 			try:
 				email.send()
 			except:
@@ -781,6 +785,10 @@ def registerplayer(request):
 					error=error+('<br>'+u.name+' could not be registered')
 					success=0
 		if success==1:
+			update_data = [7,3]
+			pusher_client.trigger('my-channel7', 'my-event7', update_data)
+			update_data3 = [9,2]
+			pusher_client.trigger('dashboard-update', 'dashboard-update-event', update_data3)
 			return JsonResponse({'success':success})
 		else:
 			return JsonResponse({'success':success,'error':error})

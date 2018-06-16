@@ -267,6 +267,7 @@ function activateLeftTable(pk_arr, genderReceived) {
 }
 function resetSportSelection() {
   document.getElementById('select-sport-btn').innerHTML = '<i class="material-icons left">directions_run</i>Select Sport';
+  changeSport(document.getElementById('sport-dropdown').getElementsByTagName('li')[0].getElementsByTagName('a')[0]);
 }
 function addToRight(option) {
   if (option.parentElement.parentElement.parentElement.parentElement.classList.contains('disabled-left-part')) {
@@ -336,7 +337,11 @@ function submitSportParts() {
       "data": part_arr,
       "sport_id": sport_id
     }
-    sendPartSportData(data_send);
+    if (participantsSaved == 1) {
+      sendPartSportData(data_send);
+    } else {
+      Materialize.toast('Please wait for participants to be updated!', 3000);
+    }
   }
 }
 function checkFetchedSports() {
@@ -372,6 +377,8 @@ function fetchLeftTable() {
           document.getElementById('reg-parts-ul').innerHTML += '<li class="collection-item avatar disabled-collection-item disabled-coach-item"> <table class="left-part-content-table centered disabled-left-part"> <tr class="left-part-content-row" valign="middle"> <td class="part-name-flex">'+array[i][0]+'</td><td class="part-sport-flex">'+sports+'</td><td class="part-gender-flex">'+array[i][2]+'</td><td class="part_pk">'+array[i][3]+'</td><td class="add-right-button-wrapper"><a class="hover-effect" onclick="addToRight(this)"><i class="material-icons add-btn-color">add_circle</i></a></td></tr></table> </li>';
         }
       }
+      emptyRightTable();
+      resetSportSelection();
     } else if (ajaxRequest.readyState === 4 && ajaxRequest.status != 200) {
       Materialize.toast('Error while Fetching!', 2000);
     }
@@ -479,7 +486,8 @@ function fetchRightTable(sport_pk, gender) {
 //   ajaxRequest.send('');
 // }
 function sendPartSportData(data) {
-  console.log(data);
+  Materialize.toast('Submitting participants!',3000);
+  participantsSaved = 0;
   var csrf_token = getCookie('csrftoken');
   var ajaxRequest = new XMLHttpRequest();
   var url = 'submit/';
@@ -498,8 +506,10 @@ function sendPartSportData(data) {
         emptyRightTable();
         resetSportSelection();
       }
+      participantsSaved = 1;
     } else if (ajaxRequest.readyState === 4 && ajaxRequest.status != 200) {
       Materialize.toast('Error while connecting!', 2000);
+      participantsSaved = 1;
     }
   }
   ajaxRequest.send(send_data);

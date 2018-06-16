@@ -8,6 +8,8 @@
   <link type="text/css" rel="stylesheet" href="{% static 'register/css/materialize.min.css' %}"  media="screen,projection"/>
   <link rel="stylesheet" type="text/css" href="{% static 'register/css/register-style.css' %}">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="black">
+  <meta name="description" content="Registration Page for Group Leader's to add Participants and Sports that their college would like to participate in.">
   <script type="text/javascript" src="{% static 'register/js/jquery.js' %}"></script>
   <script type="text/javascript" src="{% static 'register/js/register-script.js' %}"></script>
   <script type="text/javascript" src="{% static 'register/js/materialize.min.js' %}"></script>
@@ -26,6 +28,7 @@
     <div class="nav-wrapper">
       <a class="brand-logo center" style="font-family: 'Montserrat'">BOSM 2018</a>
       <ul class="right">
+        <li><a href="/register/register/player"><i class="material-icons left">attach_file</i>Doc Upload</a></li>
         <li><a href="logout/"><i class="material-icons left">exit_to_app</i>Logout</a></li>
       </ul>
       <ul class="left">
@@ -40,6 +43,7 @@
       </ul>
     </div>
   </nav>
+  <div id="rotate-div"> <img src="{% static 'register/images/rotate.png' %}" id="rotate-img"> </div>
   <div id="cover"></div>
   <div id="cover-overlay-part-1"></div>
   <div id="cover-overlay-part-2"></div>
@@ -118,12 +122,12 @@
           <li class="collection-item">Instruction 9 : We will then contact you to identify a group leader (GL) among the people registered from your college and will represent your team in campus.</li>
           <li class="collection-item">Instruction 10 : The GL will be confirmed and an activation mail will be sent. The GL will be able to login and register all the participants, captain and coach.</li>
           <li class="collection-item">Instruction 11 : Registration of any participant, captain or coach does not confirm participation.</li>
-          <li class="collection-item">Instruction 12 : Participants with same mobile number and gender will be considered as single participant.</li>
-          <li class="collection-item">Instruction 13 : All participants will receive emails with their credentials at their registered email address.</li>
-          <li class="collection-item">Instruction 14 : Captains can login as soon as they have been registered by GL and can register their teams.</li>
-          <li class="collection-item">Instruction 15 : Participants and coaches can login only after their team has been confirmed.</li>
-          <li class="collection-item">Instruction 16 : Confirmation mails with the names of confirmed participaticipants will be sent to the registered email addresses of the GL and the captain of the team which has been confirmed. In case there is no captain registered in the team, Confirmation mails will be sent to the registered email addresses of the GL and all the participants in the team.</li>
-          <li class="collection-item">Instruction 17 : The shortlisted participants will be required to pay the participation fee. The payment details will be available at the time of payment.</li>
+          <li class="collection-item">Instruction 12 : All participants will receive emails with their credentials at their registered email address.</li>
+          <li class="collection-item">Instruction 13 : Captains can login as soon as they have been registered by GL and can register their teams.</li>
+          <li class="collection-item">Instruction 14 : Participants and coaches can login only after their team has been confirmed.</li>
+          <li class="collection-item">Instruction 15 : Confirmation mails with the names of confirmed participaticipants will be sent to the registered email addresses of the GL and the captain of the team which has been confirmed. In case there is no captain registered in the team, Confirmation mails will be sent to the registered email addresses of the GL and all the participants in the team.</li>
+          <li class="collection-item">Instruction 16 : The shortlisted participants will be required to pay the participation fee. The payment details will be available at the time of payment.</li>
+          <li class="collection-item">Instruction 17 : For complete demo of Registration Process <a href="/register/instructions">Click Here</a></li>
         </ul>
       </p>
     </div>

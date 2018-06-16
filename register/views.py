@@ -167,18 +167,7 @@ def index(request):
 			return HttpResponseRedirect('/register/register/player/')
 		elif request.user.grp_leader==0:
 			s=Sport.objects.get(pk=request.user.captain)
-			try:
-				u=User.objects.get(team=request.user.team, deleted=0,coach=s.idno)
-			except:
-				coach=False
-			else:
-				coach=True
-			ulist=User.objects.filter(team=request.user.team, deleted=0,coach=0)
-			count=0
-			for i in ulist:
-				if i.sportid[s.idno]>='1':
-					count+=1
-			return render(request,'register/index.html/',{'SportName':s.sport,'sportid':s.pk,'coach':coach,'lowerlimit':s.lower,'upperlimit':s.upper,'count':count,'gender':s.gender})
+			return render(request,'register/index.html/',{'sport_name':s.sport,'sport_id':s.pk,'sport_gender':s.gender})
 		return render(request,'register/player.html/')
 	else:
 		
@@ -362,182 +351,182 @@ def logoutView(request):
 	logout(request)
 	return HttpResponseRedirect('/register/')
 
-def displaysports(request):
-	if request.user.is_authenticated():
-		if is_not_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/register/')
-	else:
-		return HttpResponseRedirect('/register/')
-	user = User.objects.filter(team=request.user.team,deleted=0)
-	count=[0]*40
-	for up in user:
-		for i in Sport.objects.all():
-			if up.sportid[i.idno]>='1':
-				count[i.idno]+=1
+# def displaysports(request):
+# 	if request.user.is_authenticated():
+# 		if is_not_admin(request.user):
+# 			pass
+# 		else:
+# 			logout(request)
+# 			return HttpResponseRedirect('/register/')
+# 	else:
+# 		return HttpResponseRedirect('/register/')
+# 	user = User.objects.filter(team=request.user.team,deleted=0)
+# 	count=[0]*40
+# 	for up in user:
+# 		for i in Sport.objects.all():
+# 			if up.sportid[i.idno]>='1':
+# 				count[i.idno]+=1
 
-	sports=Sport.objects.all()
-	for sp in sports:
-		if count[sp.idno]:
-			sp.count=count[sp.idno]
-	data1 = serializers.serialize("json", sports)
-	return HttpResponse(data1,content_type='application/json')
+# 	sports=Sport.objects.all()
+# 	for sp in sports:
+# 		if count[sp.idno]:
+# 			sp.count=count[sp.idno]
+# 	data1 = serializers.serialize("json", sports)
+# 	return HttpResponse(data1,content_type='application/json')
 
-def regPlayer(request):
-	if request.user.is_authenticated():
-		if is_not_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/register/')
-	else:
-		return HttpResponseRedirect('/register/')
-	data = json.loads( request.body.decode('utf-8') )
-	for dt in data['users']:
-		if dt['captain']:
-			try:
-				us=User.objects.get(team= request.user.team,captain=dt['captain'],deleted=0)
-			except:
-				pass
-			else:
-				return JsonResponse({'error':"captain is already registered in this sport"})
-		if dt['coach']:
-			if len(dt['sport_id'])!=1:
-				return JsonResponse({'error':"coach cannot be participant in other sports"})
-			try:
-				us=User.objects.get(team= request.user.team,coach=dt['coach'],deleted=0)
-			except:
-				pass
-			else:
-				return JsonResponse({'error':"coach is already registered in this sport"})
-		try:
-			# u=User.objects.get(team= request.user.team,name=dt['name'], phone=dt['phone'],gender=dt['gender'],deleted=0)
-			u=User.objects.get(team= request.user.team,phone=dt['phone'],gender=dt['gender'],deleted=0)
+# def regPlayer(request):
+# 	if request.user.is_authenticated():
+# 		if is_not_admin(request.user):
+# 			pass
+# 		else:
+# 			logout(request)
+# 			return HttpResponseRedirect('/register/')
+# 	else:
+# 		return HttpResponseRedirect('/register/')
+# 	data = json.loads( request.body.decode('utf-8') )
+# 	for dt in data['users']:
+# 		if dt['captain']:
+# 			try:
+# 				us=User.objects.get(team= request.user.team,captain=dt['captain'],deleted=0)
+# 			except:
+# 				pass
+# 			else:
+# 				return JsonResponse({'error':"captain is already registered in this sport"})
+# 		if dt['coach']:
+# 			if len(dt['sport_id'])!=1:
+# 				return JsonResponse({'error':"coach cannot be participant in other sports"})
+# 			try:
+# 				us=User.objects.get(team= request.user.team,coach=dt['coach'],deleted=0)
+# 			except:
+# 				pass
+# 			else:
+# 				return JsonResponse({'error':"coach is already registered in this sport"})
+# 		try:
+# 			# u=User.objects.get(team= request.user.team,name=dt['name'], phone=dt['phone'],gender=dt['gender'],deleted=0)
+# 			u=User.objects.get(team= request.user.team,phone=dt['phone'],gender=dt['gender'],deleted=0)
 
-		except:
-			pass
-		else:
-			if u.coach == dt['coach']:
-				pass
-			elif u.coach and dt['coach']:
-				return JsonResponse({'error':"participant cant be coach in two sports"})
-			elif u.coach!=0 and dt['coach']	==0:
-				return JsonResponse({'error':"coach cannot be participant in other sports"})
-			elif u.coach==0 and dt['coach']!=0:
-				return JsonResponse({'error':"coach cannot be participant in other sports"})
+# 		except:
+# 			pass
+# 		else:
+# 			if u.coach == dt['coach']:
+# 				pass
+# 			elif u.coach and dt['coach']:
+# 				return JsonResponse({'error':"participant cant be coach in two sports"})
+# 			elif u.coach!=0 and dt['coach']	==0:
+# 				return JsonResponse({'error':"coach cannot be participant in other sports"})
+# 			elif u.coach==0 and dt['coach']!=0:
+# 				return JsonResponse({'error':"coach cannot be participant in other sports"})
 		
-		#return render(request,'register.html',{'state':int(dt['captain'])})
-		#to check any data
-		try:
-			up=User.objects.get(team= request.user.team, phone=dt['phone'],coach=0,gender=dt['gender'],deleted=0)
-			# up=User.objects.get(team= request.user.team,name=dt['name'], phone=dt['phone'],coach=0,gender=dt['gender'],deleted=0)
+# 		#return render(request,'register.html',{'state':int(dt['captain'])})
+# 		#to check any data
+# 		try:
+# 			up=User.objects.get(team= request.user.team, phone=dt['phone'],coach=0,gender=dt['gender'],deleted=0)
+# 			# up=User.objects.get(team= request.user.team,name=dt['name'], phone=dt['phone'],coach=0,gender=dt['gender'],deleted=0)
 			
-		except:
-			up = User.objects.create(username=(''.join(choice(ascii_uppercase) for i in range(5))),password=request.user.password,deleted=0)
-			up.username= (''.join(choice(ascii_uppercase) for i in range(5))) + str(up.pk)
-		#up.username=dt['name'] + str(dt['phone'])
-			passworduser=(''.join(choice(ascii_uppercase) for i in range(12)))+str(up.pk)
-			up.set_password(passworduser)
-			up.name = dt['name']
-			up.email= dt['email']
-			to_email = up.email
-		#current_site = get_current_site(request)
-			message = render_to_string('register/msg2.html', {
-											'user':up.name, 
-											'username':up.username,
-											'password':passworduser,
+# 		except:
+# 			up = User.objects.create(username=(''.join(choice(ascii_uppercase) for i in range(5))),password=request.user.password,deleted=0)
+# 			up.username= (''.join(choice(ascii_uppercase) for i in range(5))) + str(up.pk)
+# 		#up.username=dt['name'] + str(dt['phone'])
+# 			passworduser=(''.join(choice(ascii_uppercase) for i in range(12)))+str(up.pk)
+# 			up.set_password(passworduser)
+# 			up.name = dt['name']
+# 			up.email= dt['email']
+# 			to_email = up.email
+# 		#current_site = get_current_site(request)
+# 			message = render_to_string('register/msg2.html', {
+# 											'user':up.name, 
+# 											'username':up.username,
+# 											'password':passworduser,
 											
-											})
-			mail_subject = 'Your account details.'
-			email = EmailMessage(mail_subject, message, to=[to_email])
-			try:
-				email.send()
-			except:
-				return JsonResponse({'error':'email not sent'})
-		else:
-			print('found')
-			if up.captain ==dt['captain']:
-				pass
-			elif up.captain and dt['captain']:
-				return JsonResponse({'error':"participant cant be captain in two sports"})	
+# 											})
+# 			mail_subject = 'Your account details.'
+# 			email = EmailMessage(mail_subject, message, to=[to_email])
+# 			try:
+# 				email.send()
+# 			except:
+# 				return JsonResponse({'error':'email not sent'})
+# 		else:
+# 			print('found')
+# 			if up.captain ==dt['captain']:
+# 				pass
+# 			elif up.captain and dt['captain']:
+# 				return JsonResponse({'error':"participant cant be captain in two sports"})	
 
-		if up.captain==0:
-			up.captain=	dt['captain']
-		up.coach = dt['coach']
-		up.phone= dt['phone']
-		up.email= dt['email']
-		up.gender=(dt['gender']).lower()
-		sports=dt['sport_id']
-		up.save()
-		uplist=User.objects.filter(team=request.user.team,coach=0,deleted=0)
+# 		if up.captain==0:
+# 			up.captain=	dt['captain']
+# 		up.coach = dt['coach']
+# 		up.phone= dt['phone']
+# 		up.email= dt['email']
+# 		up.gender=(dt['gender']).lower()
+# 		sports=dt['sport_id']
+# 		up.save()
+# 		uplist=User.objects.filter(team=request.user.team,coach=0,deleted=0)
 
-		for i in sports:#check sport limits
-			sp=Sport.objects.get(pk=i)
+# 		for i in sports:#check sport limits
+# 			sp=Sport.objects.get(pk=i)
 			
-			count=0
-			for u in uplist:
-				if u.sportid[sp.idno]>='1':
-					count+=1
-			if count>=sp.upper:
-				return JsonResponse({'error':"sport limit exceeded in one or more sports"})	
+# 			count=0
+# 			for u in uplist:
+# 				if u.sportid[sp.idno]>='1':
+# 					count+=1
+# 			if count>=sp.upper:
+# 				return JsonResponse({'error':"sport limit exceeded in one or more sports"})	
 
-		for i in sports:
-			#if sports[i] =='1':
-			sp=Sport.objects.get(pk=i)
-			up.sportid=replaceindex(up.sportid,sp.idno,'1')
+# 		for i in sports:
+# 			#if sports[i] =='1':
+# 			sp=Sport.objects.get(pk=i)
+# 			up.sportid=replaceindex(up.sportid,sp.idno,'1')
 				
-			up.sport.add(sp)
-		up.team = request.user.team
-		up.team.activate=1#the participants can login
-		up.save()	
+# 			up.sport.add(sp)
+# 		up.team = request.user.team
+# 		up.team.activate=1#the participants can login
+# 		up.save()	
 
-		#pusher starts
-	update_data3 = [9,2]
-	pusher_client.trigger('dashboard-update', 'dashboard-update-event', update_data3)
-	update_data = [7,3]
-	pusher_client.trigger('my-channel7', 'my-event7', update_data)
-		#pusher stops
+# 		#pusher starts
+# 	update_data3 = [9,2]
+# 	pusher_client.trigger('dashboard-update', 'dashboard-update-event', update_data3)
+# 	update_data = [7,3]
+# 	pusher_client.trigger('my-channel7', 'my-event7', update_data)
+# 		#pusher stops
 
-	return JsonResponse({})
+# 	return JsonResponse({})
 
-def playerlist(request):
-	if request.user.is_authenticated():
-		if is_not_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/register/')
-	else:
-		return HttpResponseRedirect('/register/')
-	data = json.loads(request.body.decode('utf-8'))
-	idno=int(data['sport_id'])
-	sp=Sport.objects.get(pk=idno)
-	user=User.objects.filter(team=request.user.team,deleted=0)
-	d=[]
-	for u in user:
-		if u.sportid[sp.idno]>='1':
-			s=[]
-			s.append(u.name)
-			s.append(u.captain)
-			s.append(u.pk)
-			s.append(u.coach)
-			d.append(s)
-	data2={'data':d}
-	return JsonResponse(data2)
-	#data2 = serializers.serialize("json", user)
-	#return HttpResponse(data2,content_type='application/json')
-def editPlayer(request):
-	if request.user.is_authenticated():
-		if is_not_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/register/')
-	else:
-		return HttpResponseRedirect('/register/')
-	pass
+# def playerlist(request):
+# 	if request.user.is_authenticated():
+# 		if is_not_admin(request.user):
+# 			pass
+# 		else:
+# 			logout(request)
+# 			return HttpResponseRedirect('/register/')
+# 	else:
+# 		return HttpResponseRedirect('/register/')
+# 	data = json.loads(request.body.decode('utf-8'))
+# 	idno=int(data['sport_id'])
+# 	sp=Sport.objects.get(pk=idno)
+# 	user=User.objects.filter(team=request.user.team,deleted=0)
+# 	d=[]
+# 	for u in user:
+# 		if u.sportid[sp.idno]>='1':
+# 			s=[]
+# 			s.append(u.name)
+# 			s.append(u.captain)
+# 			s.append(u.pk)
+# 			s.append(u.coach)
+# 			d.append(s)
+# 	data2={'data':d}
+# 	return JsonResponse(data2)
+# 	#data2 = serializers.serialize("json", user)
+# 	#return HttpResponse(data2,content_type='application/json')
+# def editPlayer(request):
+# 	if request.user.is_authenticated():
+# 		if is_not_admin(request.user):
+# 			pass
+# 		else:
+# 			logout(request)
+# 			return HttpResponseRedirect('/register/')
+# 	else:
+# 		return HttpResponseRedirect('/register/')
+# 	pass
 
 def playerview(request):
 	if request.user.is_authenticated:
@@ -599,16 +588,210 @@ def playerview(request):
 	else:
 		return HttpResponseRedirect('/register/')
 
-def leadersport(request):
-	sp=Sport.objects.all()
-	s=[]
-	for i in sp:
-		if request.user.sportid[i.idno]>='0':
-			s.append(i.pk)
-	return JsonResponse({'data':s})
+# def leadersport(request):
+# 	sp=Sport.objects.all()
+# 	s=[]
+# 	for i in sp:
+# 		if request.user.sportid[i.idno]>='0':
+# 			s.append(i.pk)
+# 	return JsonResponse({'data':s})
 
 def replaceindex(text,index=0,replacement=''):
 	return '%s%s%s'%(text[:index],replacement,text[index+1:])
 
 # def himesh(request):
 # 	return render(request,'register/index.html')
+def sendplayerleft(request):
+	if request.user.is_authenticated:
+		if is_not_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/register/')
+	if request.method=='POST':
+	# data = json.loads(request.body.decode('utf-8'))
+		tm=request.user.team
+		ulist=User.objects.filter(team=tm,deleted=0).order_by(Lower('name'))
+		slist=Sport.objects.all().order_by(Lower('sport'))
+		d=[]
+		for u in ulist:
+			s=[]
+			
+			s.append(u.name)
+			
+			d2=[]
+			for sp in slist:
+				if u.sportid[sp.idno]>='1':
+					d2.append(sp.sport)
+			s.append(d2)
+			s.append(u.gender)
+			s.append(u.pk)
+			if u.coach>0:
+				s.append(1)
+			else:
+				s.append(0)
+			d.append(s)
+		return JsonResponse({'data': d})
+
+def sportlist2(request):
+	
+	slist=Sport.objects.all().order_by(Lower('sport'))
+	d=[]
+	for sp in slist:
+		s=[]
+		s.append(sp.pk)
+		s.append(sp.sport)
+		s.append(sp.gender)
+		d.append(s)
+	return JsonResponse({'data': d})
+
+def addplayer(request):
+	if request.user.is_authenticated:
+		if is_not_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/register/')
+	if request.method=='POST':
+
+		tm=request.user.team
+		data = json.loads(request.body.decode('utf-8'))
+		for dt in data['data']:
+			up = User.objects.create(username=(''.join(choice(ascii_uppercase) for i in range(5))),password=request.user.password,deleted=0)
+			up.username= (''.join(choice(ascii_uppercase) for i in range(5))) + str(up.pk)
+		#up.username=dt['name'] + str(dt['phone'])
+			passworduser=(''.join(choice(ascii_uppercase) for i in range(12)))+str(up.pk)
+			up.set_password(passworduser)
+			up.name = dt['name']
+			up.email= dt['email']
+			up.phone=dt['phone']
+			up.gender=dt['gender']
+			up.team=tm
+			up.team.activate=1
+			try:
+				up.save()
+			except:
+				return JsonResponse({'error':'Participant details could not be saved'})
+			to_email = up.email
+		#current_site = get_current_site(request)
+			message = render_to_string('register/msg2.html', {
+											'user':up.name, 
+											'username':up.username,
+											'password':passworduser,
+											
+											})
+			mail_subject = 'Your account details.'
+			email = EmailMessage(mail_subject, message, to=[to_email])
+			update_data = [7,3]
+			pusher_client.trigger('my-channel7', 'my-event7', update_data)
+			update_data3 = [9,2]
+			pusher_client.trigger('dashboard-update', 'dashboard-update-event', update_data3)
+			try:
+				email.send()
+			except:
+				return JsonResponse({'error':'credentials could not be send.'})
+		return JsonResponse({'success':1})
+
+
+def sendplayerright(request):
+	if request.user.is_authenticated:
+		if is_not_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/register/')
+	if request.method=='POST':
+		data = json.loads(request.body.decode('utf-8'))
+		sp1=Sport.objects.get(pk=data['sport_id'])
+		slist=Sport.objects.all().order_by(Lower('sport'))
+		tm=request.user.team
+		ulist=User.objects.filter(team=tm,deleted=0).order_by(Lower('name'))
+		d=[]
+		for u in ulist:
+			if u.sportid[sp1.idno]>='1':
+				s=[]
+			
+				s.append(u.name)
+				
+				d2=[]
+				for sp in slist:
+					if u.sportid[sp.idno]>='1':
+						d2.append(sp.sport)
+				s.append(d2)
+				s.append(u.gender)
+				s.append(u.pk)
+				if u.captain==sp1.pk:
+					s.append(1)
+				else:
+					s.append(0)
+				if u.coach==sp1.pk:
+					s.append(1)
+				else:
+					s.append(0)
+				d.append(s)
+		return JsonResponse({'data': d})
+
+def registerplayer(request):
+	if request.user.is_authenticated:
+		if is_not_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/register/')
+	if request.method=='POST':
+		data = json.loads(request.body.decode('utf-8'))
+		sp=Sport.objects.get(pk=data['sport_id'])
+		error=''
+		success=1
+
+		for dt in data['data']:
+			uplist=User.objects.filter(team=request.user.team,coach=0,deleted=0)
+			count=0
+			for u in uplist:
+				if u.sportid[sp.idno]>='1':
+					count+=1
+			if count>=sp.upper:
+				return JsonResponse({'error':"sport limit exceeded"})
+			u=User.objects.get(pk=dt['pk'],deleted=0)
+			if u.sportid[sp.idno]=='0':
+				u.sportid=replaceindex(u.sportid,sp.idno,'1')
+				u.sport.add(sp)
+
+			if dt['captain'] and dt['coach']:
+				error=error+('<br>'+u.name+' cannot be both coach and captain in a sport')
+				success=0
+			if u.coach and dt['coach']:
+				error=error+('<br>'+u.name+' cannot be coach in two sports')
+				success=0
+			if u.captain and dt['captain']:
+				error=error+('<br>'+u.name+' cannot be captain in two sports')
+				success=0
+			if u.captain and dt['coach']:
+				error=error+('<br>'+u.name+' cannot be both coach and captain in a sport')
+				success=0
+			try:
+				up=User.objects.get(captain=dt['captain'],deleted=0,team=request.user.team)
+			except:
+				pass
+			else:
+				error=error+('<br>'+'there cannot be two captains in a sports')
+				success=0
+			if success==1:
+				u.captain=dt['captain']
+				u.coach=dt['coach']
+				try:
+					u.save()
+				except:
+					error=error+('<br>'+u.name+' could not be registered')
+					success=0
+		if success==1:
+			update_data = [7,3]
+			pusher_client.trigger('my-channel7', 'my-event7', update_data)
+			update_data3 = [9,2]
+			pusher_client.trigger('dashboard-update', 'dashboard-update-event', update_data3)
+			return JsonResponse({'success':success})
+		else:
+			return JsonResponse({'success':success,'error':error})
+
+def instructions(request):
+ 	return render(request,'register/instruction.html')

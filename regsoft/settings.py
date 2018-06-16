@@ -185,6 +185,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 GOOGLE_RECAPTCHA_SECRET_KEY = '6LcNq10UAAAAAJVLztulO5FzlWynQ6p93k1rLnuk'
+IMPORT_EXPORT_USE_TRANSACTIONS = True
 
 
 # For Testing Purposes
@@ -194,3 +195,4 @@ LOCKDOWN_PASSWORDS = ('shush&shoo',)
 LOCKDOWN_URL_EXCEPTIONS = (
     r'^/$',   
 )
+

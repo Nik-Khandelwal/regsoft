@@ -3,73 +3,15 @@
   font-family: 'Montserrat';  
   src: url(../fonts/Montserrat-Regular.woff2) format('woff2');
 }
-@media only screen and (min-width:768px){
-  .collapsible{
-    width: 70%; margin-left: 15%;
-  }  
-}
-@media only screen and (max-width:768px){
-    
-})
-.reg{
-  padding: 5px;
-  background-color: black;
-}
-.detail_tag{
-  font-size: 90%;
-}
-.add{
-  height:0;
-  width: 100vw;
-  overflow-x:hidden;
-  transition: 0.8s;
-  position: fixed;
-  z-index: 5;
-  top: 0;
-  left: 0;
-}
-.sport_id{
-  display: none;
-}
-.close:hover{
-  cursor: pointer;
-}
-.footer{
-  margin:20px; 
-}
-body, html {
-  padding: 0;
-  margin: 0;
-}
-#team-form-wrapper, #indi-form-wrapper {
-  color: white;
-}
-.container {
-  padding: 2vh 3vw;
-}
-.prefix, label {
-  color: white !important;
-}
-input[type=email]:not(.invalid), input[type=text]:not(.invalid), input[type=password]:not(.invalid) {
-  border-bottom: 1px solid white !important;
-  color: white;
-}
-input[type=text].valid:not(.browser-default), input[type=text].valid:not(.browser-default):focus, input[type=email].valid:not(.browser-default), input[type=email].valid:not(.browser-default):focus, input[type=password].valid:not(.browser-default), input[type=password].valid:not(.browser-default):focus {
-  border-bottom: 1px solid #197C17 !important;
-  -webkit-box-shadow: 0 1px 0 0 #197C17 !important;
-  box-shadow: 0 1px 0 0 #197C17 !important;
-}
-input[type="radio"]:checked+label:after, input[type="radio"].with-gap:checked+label:after {
-  background-color: #ffffff;
-}
+/*Scroll Bar*/
 *::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
   background-color: #F5F5F5;
 }
 *::-webkit-scrollbar {
-  width: 3px;
-  height: 1px;
+  width: 5px;
+  height: 2px;
   background-color: #F5F5F5;
 }
 *::-webkit-scrollbar-thumb{
@@ -77,64 +19,46 @@ input[type="radio"]:checked+label:after, input[type="radio"].with-gap:checked+la
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   background-color: #888;
 }
-.collapsible-body{
-    
+body, html {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-size: 13px;
 }
-#team-add-more-sports, .select-wrapper>.caret {
-  color: white !important;
-}
-.indi-add-extra-name {
-  position: relative;
-  top: 2vh;
-}
-#team-sport-id, #team-sport-gender, #individual-sport-id, #individual-sport-gender {
-  display: none;
-}
-.tap-target-origin {
-  transform: translate(-77%, -46%);
-}
-.truncate {
-  white-space: normal;
-}
-.regbtn, .addbtn {
-  margin-bottom: 20px !important;
-}
-.people {
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
-#add_sport {
-  display: none;
-}
-.input-field .prefix {
-  left: 10px;
-}
-#add-team-participants-modal {
-  width: 85vw;
-  height: 80vh;
-  max-height: 80vh;
-}
-.character-counter {
-  color: white;
-}
-input[type=email], input[type=text] {
-  color: white;
-}
-#backdrop-container {
+#cover {
+  width: 100vw;
+  height: 100vh;
+  background-image: url(../images/final-banner.svg);
+  background-size: 100% 100%;
+  z-index: -3;
   position: fixed;
   top: 0;
   left: 0;
-  z-index: -1;
-  width: 100vw;
-  height: 100vh;
-  background-image: url('../images/final-banner.svg');
-  background-size: 100% 100%;
 }
-#backdrop-overlay {
-  width: 100vw;
+#cover-overlay-part-1, #cover-overlay-part-2 {
+  width: 50vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.6);
+  z-index: -2;
+  position: fixed;
+  top: 0;
 }
+#cover-overlay-part-1 {
+  background-color: #9B0012;
+  left: 0;
+  opacity: 0.7;
+}
+#cover-overlay-part-2 {
+  background-color: #2B2B2B;
+  left: 50vw;
+  opacity: 0.7;
+}
+/*Navbar Styling*/
+.tap-target-origin {
+  transform: translate(-77%, -46%);
+}
+/*Navbar Styling End*/
 #rotate-div {
   position: fixed;
   width: 100vw;
@@ -159,4 +83,183 @@ input[type=email], input[type=text] {
   height: 80%;
   max-height: 80%;
   font-family: 'Montserrat';
+}
+#left-part, #right-part {
+  width: 50vw;
+  height: calc(100vh - 64px);
+  z-index: 2;
+  position: fixed;
+  top: 64px;
+}
+@media only screen and (max-width: 601px) {
+  #left-part, #right-part {
+    top: 56px;
+    height: calc(100vh - 56px);
+  }
+  #reg-parts-list {
+    max-height: calc(86vh - 56px);
+  }
+  #select-parts-list {
+    max-height: calc(76vh - 56px);
+  }
+}
+#left-part {
+  left: 0;
+}
+#right-part {
+  left: 50vw;
+}
+.custom-btn {
+  height: 8vh;
+  line-height: 8vh;
+  min-width: 20vw;
+  letter-spacing: 0.1vw;
+  font-family: 'Montserrat';
+}
+#add-part-btn-wrapper, #select-sport-btn-wrapper {
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+}
+#reg-parts-list {
+  max-height: calc(86vh - 64px);
+  overflow: auto;
+  margin-bottom: 2vh;
+}
+#select-parts-list {
+  max-height: calc(76vh - 64px);
+  overflow: auto;
+  margin-bottom: 2vh;
+}
+.collection .collection-item.avatar, .collection .collection-item {
+  padding-left: 0px;
+  padding-right: 0px;
+  text-transform: uppercase;
+  font-family: 'Montserrat';
+  overflow-x: auto;
+}
+#submit-part-btn {
+  background-color: #C10015;
+}
+#select-sport-btn {
+  /*background-color: #41464C;*/
+  background-color: #006064;
+}
+.part_pk, .select-sport-pk, .select-sport-gender {
+  display: none;
+}
+.hover-effect {
+  cursor: pointer;
+}
+.cap-coach-btn, .cap-coach-btn:hover {
+  background-color: transparent;
+  height: unset;
+  padding: 0;
+  line-height: unset;
+  color: black;
+  border: none;
+  box-shadow: none;
+}
+.check-boxes-container {
+  margin-bottom: 0;
+}
+.part-name-flex, .part-sport-flex {
+  flex-basis: 38%;
+}
+.part-gender-flex, .add-right-button-wrapper, .remove-right-button-wrapper {
+  flex-basis: 12%;
+}
+#left-table-top-name-col, #left-table-top-sport-col {
+  flex-basis: 38%;
+}
+#left-table-top-gender-col, #left-table-top-add-col, #right-table-top-remove-col {
+  flex-basis: 12%;
+}
+#right-table-top-name-col, #right-table-top-sport-col, .right-part-name-flex, .right-part-sport-flex {
+  flex-basis: 23%;
+}
+#right-table-top-gender-col, #right-table-top-cap-col, #right-table-top-coach-col, .right-part-gender-flex, .right-part-coptain-check, .right-part-coach-check {
+  flex-basis: 14%;
+}
+#left-table-top-pk-col, #right-table-top-pk-col {
+  display: none;
+}
+.left-part-content-table, .right-part-content-table, .table-top-header {
+  width: 100%;
+}
+.left-part-content-row, .right-part-content-row, .table-top-header-row {
+  display: flex;
+}
+.add-right-button-wrapper>a>i, .remove-right-button-wrapper>a>i {
+  font-size: 24px;
+}
+.add-btn-color {
+  color: green;
+}
+.remove-btn-color {
+  color: red;
+}
+.disabled-collection-item {
+  background-color: #ccc !important;
+}
+.disabled-collection-item>.left-part-content-table>tbody>.left-part-content-row>.add-right-button-wrapper>a>.add-btn-color {
+  color: grey;
+}
+.remove-btn-color {
+  color: red;
+}
+.table-top-header-item {
+  padding: 0 !important;
+  font-weight: bold;
+}
+.disabled-collection-item>.right-part-content-table>tbody>.right-part-content-row>.remove-right-button-wrapper>a>.remove-btn-color {
+  color: grey;
+}
+#add-part-modal-footer {
+  text-align: center !important;
+}
+.modal.bottom-sheet {
+  max-height: 75%;
+}
+#add-part-modal-btn {
+  background-color: #C10015;
+}
+#del-part-modal-btn {
+  background-color: #C10015;
+}
+#submit-part-modal-btn {
+  background-color: #00E676;
+}
+.modal-content > h5 {
+  text-transform: uppercase;
+}
+.match-height {
+  display: flex;
+  flex-wrap: wrap;
+}
+.flex-center {
+  justify-content: center;
+}
+#sport-dropdown>li>a {
+  text-transform: uppercase;
+  font-size: 13px;
+  text-align: center;
+}
+#rotate-div {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2000000000000;
+  background-color: #D24D57;
+}
+#rotate-img {
+  width: 60vw;
+  height: 40vw;
+  position: fixed;
+  top: 30vh;
+  left: 20vw;
+}
+@media screen and (orientation:landscape) {
+  #rotate-div {
+    display: none;
+  }
 }

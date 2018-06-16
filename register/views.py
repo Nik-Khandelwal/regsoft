@@ -167,18 +167,7 @@ def index(request):
 			return HttpResponseRedirect('/register/register/player/')
 		elif request.user.grp_leader==0:
 			s=Sport.objects.get(pk=request.user.captain)
-			try:
-				u=User.objects.get(team=request.user.team, deleted=0,coach=s.idno)
-			except:
-				coach=False
-			else:
-				coach=True
-			ulist=User.objects.filter(team=request.user.team, deleted=0,coach=0)
-			count=0
-			for i in ulist:
-				if i.sportid[s.idno]>='1':
-					count+=1
-			return render(request,'register/index.html/',{'SportName':s.sport,'sportid':s.pk,'coach':coach,'lowerlimit':s.lower,'upperlimit':s.upper,'count':count,'gender':s.gender})
+			return render(request,'register/index.html/',{'sport_name':s.sport,'sport_id':s.pk,'sport_gender':s.gender})
 		return render(request,'register/player.html/')
 	else:
 		

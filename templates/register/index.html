@@ -1,163 +1,199 @@
+
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>BOSM 2018 Registrations</title>
-    {% load staticfiles %}
-    <link rel="stylesheet" type="text/css" href="{% static 'register/css/font.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'register/css/materialize.min.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'register/css/cap-style.css' %}">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <script type="text/javascript" src="{% static 'register/js/jquery.js' %}"></script>
-    <script type="text/javascript" src="{% static 'register/js/materialize.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'register/js/cap-script.js' %}"></script>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120495963-3"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'UA-120495963-3');
-    </script>
-    <link rel="icon" href="{% static 'main/favicon/favicon.ico' %}" type="image/x-icon"/>
-    <link rel="shortcut icon" href="{% static 'main/favicon/favicon.ico' %}" type="image/x-icon"/>
-  </head>
-  <body>
-    <nav>
-      <div class="nav-wrapper">
-        <a class="brand-logo center" style="font-family: 'Montserrat'">BOSM 2018</a>
-        <ul class="right">
-          <li><a href="logout/"><i class="material-icons left">exit_to_app</i>Logout</a></li>
-        </ul>
-        <ul class="left">
-          <li><a class="waves-effect waves-light btn-floating btn-large cyan modal-trigger" href="#instructions-modal" id="tap_info"><i class="large material-icons">info_outline</i></a>
-          <div class="tap-target cyan" data-activates="tap_info">
-            <div class="tap-target-content">
-              <h5>Instructions</h5>
-              <span>Please read the instructions</span>
-            </div>
+<head>
+{% load staticfiles %}
+  <title>BOSM 2018 Registrations</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'register/css/font.css' %}">
+  <link type="text/css" rel="stylesheet" href="{% static 'register/css/materialize.min.css' %}"  media="screen,projection"/>
+  <link rel="stylesheet" type="text/css" href="{% static 'register/css/register-style.css' %}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script type="text/javascript" src="{% static 'register/js/jquery.js' %}"></script>
+  <script type="text/javascript" src="{% static 'register/js/cap-script.js' %}"></script>
+  <script type="text/javascript" src="{% static 'register/js/materialize.min.js' %}"></script>
+  <link rel="icon" href="{% static 'main/favicon/favicon.ico' %}" type="image/x-icon"/>
+  <link rel="shortcut icon" href="{% static 'main/favicon/favicon.ico' %}" type="image/x-icon"/>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120495963-5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-120495963-5');
+  </script>
+</head>
+<body>
+  <nav>
+    <div class="nav-wrapper">
+      <a class="brand-logo center" style="font-family: 'Montserrat'">BOSM 2018</a>
+      <ul class="right">
+        <li><a href="logout/"><i class="material-icons left">exit_to_app</i>Logout</a></li>
+      </ul>
+      <ul class="left">
+        <li><a class="waves-effect waves-light btn-floating btn-large cyan modal-trigger" href="#instructions-modal" id="tap_info"><i class="large material-icons">info_outline</i></a>
+        <div class="tap-target cyan" data-activates="tap_info">
+          <div class="tap-target-content">
+            <h5>Instructions</h5>
+            <span>Please read the instructions</span>
           </div>
+        </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div id="cover"></div>
+  <div id="cover-overlay-part-1"></div>
+  <div id="cover-overlay-part-2"></div>
+  <div id="left-part">
+    <div class="row" id="add-part-btn-wrapper">
+      <div class="col s12 center">
+        <a class="waves-effect waves-light btn custom-btn z-depth-5" id="add-part-btn" onclick="resetAddPartModal()"><i class="material-icons left">person_add</i>Add Participant</a>
+      </div>
+    </div>
+    <div class="row" id="reg-parts-list">
+      <div class="col s12 center">
+        <ul class="collection" id="reg-parts-ul">
+          <li class="collection-item table-top-header-item">
+            <table class="table-top-header centered">
+              <tr class="table-top-header-row">
+                <td id="left-table-top-name-col">Name</td>
+                <td id="left-table-top-sport-col">Sports</td>
+                <td id="left-table-top-gender-col">Gender</td>
+                <td id="left-table-top-pk-col">ID No.</td>
+                <td id="left-table-top-add-col">Add</td>
+              </tr>
+            </table>
           </li>
         </ul>
       </div>
-    </nav>
-    <div id="rotate-div"> <img src="{% static 'register/images/rotate.png' %}" id="rotate-img"> </div>
-    <div id="backdrop-container">
-      <!-- Backdrop Image used as Background Image in CSS and add tint in sub-div here -->
-      <div id="backdrop-overlay"></div>
     </div>
-    <div class="container center-align">
-      <h4 class="white-text">Sports</h4>
-      <h4 class="detail_tag white-text">Click on Sport Name for details</h4>
-      <ul class="collapsible center-align" data-collapsible="accordion" id="sports">
-        <li>
-          <div class='collapsible-header'><i class='material-icons'>whatshot</i>{{SportName}}<span class='sport_id'>{{sportid}}</span></div>
-          <div class='collapsible-body blue-grey white-text'>
-            <span>
-              <h5>No. of Registered Students : </h5>
-              <span id='reg_no'>
-                <h5 id="reg_no_count">{{count}}</h5>
-              </span>
-            </span>
-            <br/><button class='btn truncate regbtn' onclick='getlist(this)'>Refresh Registered</button> <button class='btn truncate addbtn' onclick='addTeamParticipants(this, "{{gender}}")' id="add_team_part_disp">Add Team Participants</button>
-            <ol id= 'list'></ol>
-          </div>
-        </li> 
-      </ul>
-      <button class="btn center-align" onclick="window.location.href='/register/register/player'"><i class="material-icons left">attach_file</i>Documents Upload</button>
-    </div>
-    <div id="instructions-modal" class="modal modal-fixed-footer">
-      <div class="modal-content center">
-        <h4>INSTRUCTIONS</h4>
-        <p>
-          <ul class="collection">
-            <li class="collection-item">Instruction 1 : Go to <a href="https://www.bits-bosm.org">BOSM 2018</a>. Register your college by filling in necessary data.</li>
-            <li class="collection-item">Instruction 2 : If you cannot find your college in the college dropdown list – please contact:-</li>
-            <li class="collection-item">Instruction 3 : You can register yourself as a captain, participant or coach.</li>
-            <li class="collection-item">Instruction 4 : You can only register for one sport as a captain. And for others you may register as an participant</li>
-            <li class="collection-item">Instruction 5 : You can register multiple sports in case you are only a participant.</li>
-            <li class="collection-item">Instruction 6 : You can only register in one sport if you are a Coach.</li>
-            <li class="collection-item">Instruction 7 : Registering your college does not confirm participation.</li>
-            <li class="collection-item">Instruction 8 : After registering, confirm your email by clicking on activation link mailed to you to your registered email address and wait further correspondence.</li>
-            <li class="collection-item">Instruction 9 : We will then contact you to identify a group leader (GL) among the people registered from your college and will represent your team in campus.</li>
-            <li class="collection-item">Instruction 10 : The GL will be confirmed and an activation mail will be sent. The GL will be able to login and register all the participants, captain and coach.</li>
-            <li class="collection-item">Instruction 11 : Registration of any participant, captain or coach does not confirm participation.</li>
-            <li class="collection-item">Instruction 12 : Participants with same mobile number and gender will be considered as single participant.</li>
-            <li class="collection-item">Instruction 13 : All participants will receive emails with their credentials at their registered email address.</li>
-            <li class="collection-item">Instruction 14 : Captains can login as soon as they have been registered by GL and can register their teams.</li>
-            <li class="collection-item">Instruction 15 : Participants and coaches can login only after their team has been confirmed.</li>
-            <li class="collection-item">Instruction 16 : Confirmation mails with the names of confirmed participaticipants will be sent to the registered email addresses of the GL and the captain of the team which has been confirmed. In case there is no captain registered in the team, Confirmation mails will be sent to the registered email addresses of the GL and all the participants in the team.</li>
-            <li class="collection-item">Instruction 17 : The shortlisted participants will be required to pay the participation fee. The payment details will be available at the time of payment.</li>
-          </ul>
-        </p>
-      </div>
-      <div class="modal-footer">
-        <a class="modal-action modal-close waves-effect waves-green btn-flat">Done</a>
+  </div>
+  <div id="right-part">
+    <div class="row" id="select-sport-btn-wrapper">
+      <div class="col s12 center">
+        <a class="waves-effect waves-light btn custom-btn dropdown-button z-depth-5" id="select-sport-btn" data-activates="sport-dropdown" onclick="checkFetchedSports()"><i class="material-icons left">directions_run</i>Select Sport</a>
+        <ul id="sport-dropdown" class="dropdown-content">
+          <li><a class="hover-effect" onclick="changeSport(this)"><span class="select-sport-pk">{{sport_id}}</span>{{sport_name}}<span class="select-sport-gender">{{sport_gender}}</span></a></li>
+        </ul>
       </div>
     </div>
-    <div id="error-modal" class="modal modal-fixed-footer">
-      <div class="modal-content">
-        <h4>Error</h4>
-        <p id="error-msg">Error Message</p>
-      </div>
-      <div class="modal-footer">
-        <a class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+    <div class="row" id="select-parts-list">
+      <div class="col s12 center">
+        <ul class="collection" id="select-parts-ul">
+          <li class="collection-item table-top-header-item">
+            <table class="table-top-header centered">
+              <tr class="table-top-header-row">
+                <td id="right-table-top-name-col">Name</td>
+                <td id="right-table-top-sport-col">Sports</td>
+                <td id="right-table-top-gender-col">Gender</td>
+                <td id="right-table-top-pk-col">ID No.</td>
+                <td id="right-table-top-cap-col">Captain</td>
+                <td id="right-table-top-coach-col">Coach</td>
+                <td id="right-table-top-remove-col">Remove</td>
+              </tr>
+            </table>
+          </li>
+        </ul>
       </div>
     </div>
-    <div id="add-team-participants-modal" class="modal modal-fixed-footer orange">
-      <div class="modal-content center">
-        <h5 class="white-text">Add Participants</h5>
-        <div class="row">
-          <div class="col s12 center">
-            <button class='btn truncate' onclick='addNewTeamParticipant({{sportid}}, "{{gender}}")' id="add_parts_btn">Add Participant</button> <button class='btn truncate' onclick='deleteTeamParticipants()'>Delete Participant</button>
-          </div>
-        </div>
-        <div id="add_team_participants_div">
-          <div class="row">
-            <form class="col s12" id="sport-extra-form">
-              <div class="row" id="submit-add-team-part-btn">
-                <div class="col s12 center">
-                  <a class="waves-effect waves-light btn btn-large" onclick="addTeamPartSubmit('Male/Female')" id="add_team_parts_btn"><i class="material-icons right">send</i>Submit</a>
-                </div>
+    <div class="row" id="submit-sport-parts">
+      <div class="col s12 center">
+        <a class="waves-effect waves-light btn custom-btn z-depth-5" id="submit-part-btn" onclick="submitSportParts()"><i class="material-icons right">send</i>Submit</a>
+      </div>
+    </div>
+  </div>
+  <!-- Modals Start Here -->
+  <div id="instructions-modal" class="modal modal-fixed-footer">
+    <div class="modal-content center">
+      <h4>INSTRUCTIONS</h4>
+      <p>
+        <ul class="collection">
+          <li class="collection-item">Instruction 1 : Go to <a href="https://www.bits-bosm.org">BOSM 2018</a>. Register your college by filling in necessary data.</li>
+          <li class="collection-item">Instruction 2 : If you cannot find your college in the college dropdown list – please contact:-</li>
+          <li class="collection-item">Instruction 3 : You can register yourself as a captain, participant or coach.</li>
+          <li class="collection-item">Instruction 4 : You can only register for one sport as a captain. And for others you may register as an participant</li>
+          <li class="collection-item">Instruction 5 : You can register multiple sports in case you are only a participant.</li>
+          <li class="collection-item">Instruction 6 : You can only register in one sport if you are a Coach.</li>
+          <li class="collection-item">Instruction 7 : Registering your college does not confirm participation.</li>
+          <li class="collection-item">Instruction 8 : After registering, confirm your email by clicking on activation link mailed to you to your registered email address and wait further correspondence.</li>
+          <li class="collection-item">Instruction 9 : We will then contact you to identify a group leader (GL) among the people registered from your college and will represent your team in campus.</li>
+          <li class="collection-item">Instruction 10 : The GL will be confirmed and an activation mail will be sent. The GL will be able to login and register all the participants, captain and coach.</li>
+          <li class="collection-item">Instruction 11 : Registration of any participant, captain or coach does not confirm participation.</li>
+          <li class="collection-item">Instruction 12 : Participants with same mobile number and gender will be considered as single participant.</li>
+          <li class="collection-item">Instruction 13 : All participants will receive emails with their credentials at their registered email address.</li>
+          <li class="collection-item">Instruction 14 : Captains can login as soon as they have been registered by GL and can register their teams.</li>
+          <li class="collection-item">Instruction 15 : Participants and coaches can login only after their team has been confirmed.</li>
+          <li class="collection-item">Instruction 16 : Confirmation mails with the names of confirmed participaticipants will be sent to the registered email addresses of the GL and the captain of the team which has been confirmed. In case there is no captain registered in the team, Confirmation mails will be sent to the registered email addresses of the GL and all the participants in the team.</li>
+          <li class="collection-item">Instruction 17 : The shortlisted participants will be required to pay the participation fee. The payment details will be available at the time of payment.</li>
+        </ul>
+      </p>
+    </div>
+    <div class="modal-footer">
+      <a class="modal-action modal-close waves-effect waves-green btn-flat">Done</a>
+    </div>
+  </div>
+  <div id="error-modal" class="modal modal-fixed-footer">
+    <div class="modal-content">
+      <h4>Error</h4>
+      <p id="error-msg">Error Message</p>
+    </div>
+    <div class="modal-footer">
+      <a class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+    </div>
+  </div>
+  <div id="add-part-modal" class="modal bottom-sheet modal-fixed-footer cyan lighten-5">
+    <div class="modal-content">
+      <h5 class="center-align">Add Details</h5>
+      <form id="add-parts-modal-wrapper">
+        <div class="modal-added-participant row match-height">
+          <div class="col s11">
+            <div class="row">
+              <div class="input-field col s6">
+                <i class="material-icons prefix">account_circle</i>
+                <input id="part-name-1" name="part-name-1" type="text" class="validate" required="required">
+                <label for="name" data-error="Enter Name">Name</label>
               </div>
-            </form>
+              <div class="input-field col s6">
+                <i class="material-icons prefix">email</i>
+                <input id="part-email-1" name="part-email-1" type="email" class="validate" required="required">
+                <label for="email" data-error="Wrong Email">Email</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s6">
+                <i class="material-icons prefix">phone</i>
+                <input id="part-phone-1" name="part-phone-1" type="tel" class="validate" maxlength="10" data-length="10" required="required">
+                <label for="phone" data-error="Enter Mobile Number">Mobile Number</label>
+              </div>
+              <div class="input-field col s6">
+                <i class="material-icons prefix">face</i>
+                <select id="part-gender-1" required="required">
+                  <option value="" disabled selected>Choose your Gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+                <label data-error="Select Gender">Gender</label>
+              </div>
+            </div>
           </div>
+          <div class="col s1 center valign-wrapper flex-center">
+            <a class="hover-effect" onclick="delParticipant(this)"><i class="material-icons remove-btn-color">remove_circle</i></a>
+          </div>
+        </form>
+      </div>
+      <div class="row center">
+        <div class="col s12 center">
+          <a class="waves-effect waves-light btn custom-btn z-depth-5" id="add-part-modal-btn" onclick="addParticipant()"><i class="material-icons left">person_add</i>Add More</a>
         </div>
       </div>
-      <div class="modal-footer orange">
-        <a class="modal-action modal-close waves-effect waves-green btn-flat white-text">Close</a>
-      </div>
-    </div>
-    <div id="coach-gender-modal" class="modal modal-fixed-footer orange">
-      <div class="modal-content center">
-        <h5 class="white-text">Select Coach Gender</h5>
-        <div id="select_coach_gender_div">
-          <div class="row">
-            <form class="col s12" id="select_coach_gender_form">
-              <div class="row">
-                <div class="col s4 white-text">
-                  Coach Gender
-                </div>
-                <div class="col s4">
-                  <input type="radio" name="select_coach_gender" id="select_coach_male" value="male">
-                  <label for="select_coach_male">Male</label>
-                </div>
-                <div class="col s4">
-                  <input type="radio" name="select_coach_gender" id="select_coach_female" value="female">
-                  <label for="select_coach_female">Female</label>
-                </div>
-              </div>
-              <div class="row" id="select_coach_gender_form_btn">
-                <div class="col s12 center">
-                  <a class="waves-effect waves-light btn btn-large" onclick="submitCoachData()" id="add_team_parts_btn"><i class="material-icons right">send</i>Submit</a>
-                </div>
-              </div>
-            </form>
-          </div>
+      <div class="row center">
+        <div class="col s12 center">
+          <a class="waves-effect waves-light btn custom-btn z-depth-5" id="submit-part-modal-btn" onclick="submitParticipant()"><i class="material-icons right">send</i>Submit Participants</a>
         </div>
       </div>
-      <div class="modal-footer orange">
-        <a class="modal-action modal-close waves-effect waves-green btn-flat white-text">Close</a>
-      </div>
     </div>
-  </body>
+    <div class="modal-footer teal lighten-4" id="add-part-modal-footer">
+      <a class="modal-action modal-close white black-text btn-flat hover-effect">Close</a>
+    </div>
+  </div>
+</body>
 </html>

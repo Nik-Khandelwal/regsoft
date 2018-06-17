@@ -824,6 +824,7 @@ def stats(request):
 		return HttpResponseRedirect('/regsoft/')
 	if request.method=='POST':
 		tm=Team.objects.filter(activate=1).order_by(Lower('college'))
+		total=[]
 		data=[]
 		mt=0
 		ft=0
@@ -875,7 +876,7 @@ def stats(request):
 			
 			data.append(s)
 
-			total=[]
+			
 			
 			total.append(mc)
 			total.append(mt)

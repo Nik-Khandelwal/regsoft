@@ -732,12 +732,12 @@ def sendplayerright(request):
 		return JsonResponse({'data': d})
 
 def registerplayer(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_not_admin(request.user):
 			pass
-	else:
-		logout(request)
-		return HttpResponseRedirect('/register/')
+		else:
+			logout(request)
+			return HttpResponseRedirect('/register/')
 	if request.method=='POST':
 		data = json.loads(request.body.decode('utf-8'))
 		sp=Sport.objects.get(pk=data['sport_id'])
@@ -762,9 +762,6 @@ def registerplayer(request):
 			if u.captain and dt['captain']:
 				error=error+('<br>'+u.name+' cannot be captain in two sports')
 				success=0
-			if u.captain and dt['coach']:
-				error=error+('<br>'+u.name+' cannot be both coach and captain in a sport')
-				success=0
 			try:
 				up=User.objects.get(captain=dt['captain'],deleted=0,team=request.user.team)
 			except:
@@ -775,6 +772,13 @@ def registerplayer(request):
 			if dt['coach']==0 and u.gender!=sp.gender and sp.gender!='both':
 				error=error+('<br>'+u.name+' does not fit the gender requirement of this sport')
 				success=0
+			if dt['coach']:
+				sprtl=Sport.objects.all()
+				for sprt in sprtl:
+					if u.sportid[sprt.idno]>='1':
+						error=error+('<br>'+u.name+' is already registered as a participant and cannot be registered as a coach')
+						success=0
+
 		
 		if (count1+count2)>=sp.upper:
 			error=error+'<br>'+'sport limit exceeded. you may register '+(sp.upper-count1)+' participants in this sport'

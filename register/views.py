@@ -732,31 +732,27 @@ def sendplayerright(request):
 		return JsonResponse({'data': d})
 
 def registerplayer(request):
-	if request.user.is_authenticated:
+	if request.user.is_authenticated():
 		if is_not_admin(request.user):
 			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/register/')
+	else:
+		logout(request)
+		return HttpResponseRedirect('/register/')
 	if request.method=='POST':
 		data = json.loads(request.body.decode('utf-8'))
 		sp=Sport.objects.get(pk=data['sport_id'])
 		error=''
 		success=1
-
+		uplist=User.objects.filter(team=request.user.team,coach=0,deleted=0)
+		count1=0
+		count2=0
+		for u in uplist:
+			if u.sportid[sp.idno]>='1':
+				count1+=1
 		for dt in data['data']:
-			uplist=User.objects.filter(team=request.user.team,coach=0,deleted=0)
-			count=0
-			for u in uplist:
-				if u.sportid[sp.idno]>='1':
-					count+=1
-			if count>=sp.upper:
-				return JsonResponse({'error':"sport limit exceeded"})
 			u=User.objects.get(pk=dt['pk'],deleted=0)
-			if u.sportid[sp.idno]=='0':
-				u.sportid=replaceindex(u.sportid,sp.idno,'1')
-				u.sport.add(sp)
-
+			if dt['coach']==0:
+				count2+=1
 			if dt['captain'] and dt['coach']:
 				error=error+('<br>'+u.name+' cannot be both coach and captain in a sport')
 				success=0
@@ -776,7 +772,22 @@ def registerplayer(request):
 			else:
 				error=error+('<br>'+'there cannot be two captains in a sports')
 				success=0
-			if success==1:
+			if dt['coach']==0 and u.gender!=sp.gender and sp.gender!='both':
+				error=error+('<br>'+u.name+' does not fit the gender requirement of this sport')
+				success=0
+		
+		if (count1+count2)>=sp.upper:
+			error=error+'<br>'+'sport limit exceeded. you may register '+(sp.upper-count1)+' participants in this sport'
+			success=0
+		if success==0:
+			return JsonResponse({'error':error,'success':0})
+		success=1	
+		error=''
+		for dt in data['data']:
+			u=User.objects.get(pk=dt['pk'],deleted=0)
+			if u.sportid[sp.idno]=='0':
+				u.sportid=replaceindex(u.sportid,sp.idno,'1')
+				u.sport.add(sp)
 				u.captain=dt['captain']
 				u.coach=dt['coach']
 				try:
@@ -792,6 +803,7 @@ def registerplayer(request):
 			return JsonResponse({'success':success})
 		else:
 			return JsonResponse({'success':success,'error':error})
+		
 
 def instructions(request):
  	return render(request,'register/instruction.html')

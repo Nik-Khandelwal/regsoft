@@ -247,8 +247,6 @@ function activateLeftTable(pk_arr, genderReceived) {
   for (var i = 0; i < array.length; i++) {
     if (array[i][5] == 1) {
       document.getElementById('reg-parts-ul').innerHTML += '<li class="collection-item avatar disabled-collection-item disabled-coach-item"> <table class="left-part-content-table centered disabled-left-part"> <tr class="left-part-content-row" valign="middle"> <td class="part-name-flex">'+array[i][0]+'</td><td class="part-sport-flex">'+array[i][1]+'</td><td class="part-gender-flex">'+array[i][2]+'</td><td class="part_pk">'+array[i][3]+'</td><td class="add-right-button-wrapper"><a class="hover-effect" onclick="addToRight(this)"><i class="material-icons add-btn-color">add_circle</i></a></td></tr></table> </li>';
-    } else if (genderReceived != "both" && genderReceived != array[i][2]) {
-      document.getElementById('reg-parts-ul').innerHTML += '<li class="collection-item avatar disabled-collection-item"> <table class="left-part-content-table centered disabled-left-part"> <tr class="left-part-content-row" valign="middle"> <td class="part-name-flex">'+array[i][0]+'</td><td class="part-sport-flex">'+array[i][1]+'</td><td class="part-gender-flex">'+array[i][2]+'</td><td class="part_pk">'+array[i][3]+'</td><td class="add-right-button-wrapper"><a class="hover-effect" onclick="addToRight(this)"><i class="material-icons add-btn-color">add_circle</i></a></td></tr></table> </li>';
     } else {
       var disableField = false;
       for (var j = 0; j < pk_arr.length; j++) {

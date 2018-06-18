@@ -612,6 +612,11 @@ def sendplayerleft(request):
 		else:
 			logout(request)
 			return HttpResponseRedirect('/register/')
+		if request.user.grp_leader or request.user.captain:
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/register/')
 	if request.method=='POST':
 	# data = json.loads(request.body.decode('utf-8'))
 		tm=request.user.team
@@ -652,6 +657,11 @@ def sportlist2(request):
 def addplayer(request):
 	if request.user.is_authenticated:
 		if is_not_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/register/')
+		if request.user.grp_leader or request.user.captain:
 			pass
 		else:
 			logout(request)
@@ -704,6 +714,11 @@ def sendplayerright(request):
 		else:
 			logout(request)
 			return HttpResponseRedirect('/register/')
+		if request.user.grp_leader or request.user.captain:
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/register/')
 	if request.method=='POST':
 		data = json.loads(request.body.decode('utf-8'))
 		sp1=Sport.objects.get(pk=data['sport_id'])
@@ -738,6 +753,11 @@ def sendplayerright(request):
 def registerplayer(request):
 	if request.user.is_authenticated:
 		if is_not_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/register/')
+		if request.user.grp_leader or request.user.captain:
 			pass
 		else:
 			logout(request)

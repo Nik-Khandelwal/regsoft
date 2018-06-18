@@ -703,7 +703,7 @@ def addplayer(request):
 			try:
 				email.send()
 			except:
-				return JsonResponse({'error':'credentials could not be send.'})
+				return JsonResponse({'error':'Credentials could not be sent.'})
 		return JsonResponse({'success':1})
 
 
@@ -791,7 +791,7 @@ def registerplayer(request):
 			except:
 				pass
 			else:
-				error=error+('<br>'+'there cannot be two captains in a sports')
+				error=error+('<br>'+'there cannot be two captains in a sport')
 				success=0
 			if dt['coach']==0 and u.gender!=sp.gender and sp.gender!='both':
 				error=error+('<br>'+u.name+' does not fit the gender requirement of this sport')

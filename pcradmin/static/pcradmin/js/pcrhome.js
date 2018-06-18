@@ -666,8 +666,8 @@ function addSportSubmit() {
   } else {
     var jsonData = {
       "sportName": sportName,
-      "lowerLimit": lowerLimit,
-      "upperLimit": upperLimit,
+      "lowerLimit": parseInt(lowerLimit),
+      "upperLimit": parseInt(upperLimit),
       "gender": gender
     }
     var sendData = JSON.stringify(jsonData);

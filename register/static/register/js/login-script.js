@@ -5,6 +5,9 @@ $(document).ready(function(){
       closeOnClick: true
     }
   );
+  document.getElementById('loader').style.display = 'none';
+  document.getElementsByTagName('body')[0].style.overflow = 'auto';
+  console.clear();
 });
 function closelogin(){
   document.getElementById('login').style.width="0";
@@ -120,7 +123,6 @@ function submitRegisterForm() {
   }
 }
 function sendRegisterData(data) {
-  closesignup();
   document.getElementById('loader').style.display = 'block';
   Materialize.toast('Submitting Please Wait!', 4000);
   csrf_token = getCookie('csrftoken');
@@ -139,10 +141,12 @@ function sendRegisterData(data) {
           $('#sent-email-modal').modal('open');
         } else {
           triggerError(jsonData.error);
+          grecaptcha.reset();
         }
       } else {
         var success = jsonData.success;
         if (success == 1) {
+          closesignup();
           Materialize.toast('You are Registered!', 4000);
           $('#sent-email-modal').modal('open');
         }

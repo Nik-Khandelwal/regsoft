@@ -150,7 +150,7 @@ i:hover{
   opacity: 0.9;
   background-color: #191a1a;
   text-align: center;
-  display: none;
+  display: block;
 }
 #working-text {
   margin: 0;

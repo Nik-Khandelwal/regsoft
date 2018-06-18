@@ -16,6 +16,7 @@ $(document).ready(function(){
   fetchLeftTable();
   fetchSportList();
   emptyRightTable();
+  document.getElementById('submit-part-btn').style.display = 'none';
 });
 function changeSport(option) {
   document.getElementById('select-sport-btn').innerHTML = option.innerHTML;
@@ -24,6 +25,7 @@ function changeSport(option) {
   sortLeftDisabling();
   emptyRightTable();
   fetchRightTable(sport_pk, gender);
+  document.getElementById('submit-part-btn').style.display = 'inline-block';
 }
 function toggleCaptain(option) {
   if (option.parentElement.parentElement.parentElement.parentElement.classList.contains('disabled-right-part')) {
@@ -383,6 +385,7 @@ function fetchLeftTable() {
 }
 var participantsSaved = 1;
 function sendAddPartData(data) {
+  Materialize.toast('Saving Participants!', 3000);
   participantsSaved = 0;
   $('#add-part-modal').modal('close');
   var csrf_token = getCookie('csrftoken');

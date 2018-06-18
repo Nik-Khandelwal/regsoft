@@ -148,6 +148,7 @@ nav {
   -o-transform-style: preserve-3d;
   transform-style: preserve-3d;
   -webkit-transform-origin: 50% 50%;
+  cursor: pointer;
 }
 .custom-card div {
   display: block;
@@ -300,4 +301,7 @@ nav {
 }
 body {
   background-color: #000;
+}
+#slide-out>li>a {
+  padding-left: 16px;
 }

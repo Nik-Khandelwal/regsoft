@@ -67,9 +67,6 @@
     cursor: pointer;
 }
 footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
   width: 100vw;
   max-height: 25vh;
   overflow: auto;
@@ -108,4 +105,12 @@ footer {
   #rotate-div {
     display: none;
   }
+}
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+main {
+  flex: 1 0 auto;
 }

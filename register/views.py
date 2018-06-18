@@ -583,7 +583,7 @@ def playerview(request):
 				sprt=[]
 				splist=Sport.objects.all().order_by('sport')
 				for sp in splist:
-					if request.user.sportid[sp.idno]>='1':
+					if request.user.sportid[sp.idno]>='2':
 						sprt.append(sp.sport)
 				cl=request.user.team.college+", "+request.user.team.city+", "+request.user.team.state
 				return render(request,'register/playerview.html',{'status':request.user.confirm1-1,'username':request.user.username,'name':request.user.name,'college':cl,'sport':sprt,'phone':request.user.phone,'email':request.user.email,'gender':request.user.gender})

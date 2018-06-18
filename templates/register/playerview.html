@@ -48,6 +48,7 @@
             </ul>
           </div>
         </nav>
+      <main>
       <div class="container">
           <div class="center green-text"><h2>Progress:</h2></div>
       <ul class="progressbar">
@@ -65,7 +66,7 @@
               <div class="file-field input-field">
                 <div class="btn">
                   <span>File</span>
-                  <input type="file" name="filename" accept=".pdf,image/*">
+                  <input type="file" name="filename" accept=".pdf,image/*" required="required">
                 </div>
                 <div class="file-path-wrapper">
                   <input class="file-path validate" type="text">
@@ -76,7 +77,7 @@
         </div>
       </div>
       <div id="status-num" style="display: none;">{{status}}</div>
-  </body>
+  </main>
   <footer class="page-footer">
     <table class="centered">
       <thead>
@@ -101,4 +102,5 @@
       </tbody>
     </table>
   </footer>
+</body>
 </html>

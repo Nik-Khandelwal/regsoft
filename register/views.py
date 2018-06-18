@@ -174,14 +174,14 @@ def index(request):
 		return render(request,'register/login.html/')
 
 def sportlist(request):
-	sp=Sport.objects.all()	
+	sp=Sport.objects.all().order_by(Lower('sport'))	
 	d=[]
 	for st in sp:
 			s=[]
 			s.append(st.idno)
 			s.append(st.sport)
 			d.append(s)
-	tm=Team.objects.filter(activate=0)
+	tm=Team.objects.filter(activate=0).order_by(Lower('college'))
 	d2=[]
 	for i in tm:
 		s=[]
@@ -278,6 +278,10 @@ def register(request):
 			pass
 		else:
 			return JsonResponse({'error': "Invalid CAPTCHA. Please try again."})
+		for idno in data['sport_id']:
+			sp=Sport.objects.get(pk=int(idno))
+			if data['register_as']!='C' and data['gender']!=sp.gender and sp.gender!='both':
+				return JsonResponse({'error': 'Selected gender does not fit the gender requirement of the selected sports'})
 
 		team = Team.objects.get(pk=data['college'])
 		up=User()

@@ -822,7 +822,7 @@ function openMailSports(option) {
   var jsonData = {
     "clg_id": clg_id
   }
-  console.log(jsonData);
+  
   var sendData = JSON.stringify(jsonData);
   document.getElementById('send-mail-sport-body').innerHTML = '';
   modal_open(6);
@@ -863,7 +863,7 @@ function sendMail() {
       "sub": sub,
       "body": body
     }
-    console.log(jsonData);
+    
     var sendData = JSON.stringify(jsonData);
     var ourRequest = new XMLHttpRequest();
     var url = "mail/send/modify/";
@@ -930,7 +930,7 @@ function openEditSports(option) {
   var jsonData = {
     "clg_id": clg_id
   }
-  console.log(jsonData);
+  
   var sendData = JSON.stringify(jsonData);
   document.getElementById('edit-part-sport-body').innerHTML = '';
   modal_open(8);
@@ -988,7 +988,7 @@ function sendEdit() {
       "gender": gender,
       "selectedSports": selectedSports
     }
-    console.log(jsonData);
+    
     var sendData = JSON.stringify(jsonData);
     var ourRequest = new XMLHttpRequest();
     var url = "edit/team/modify/";
@@ -1023,7 +1023,7 @@ function deleteSportParticipant() {
   var jsonData = {
     "idno": del_id
   }
-  console.log(jsonData);
+  
   var sendData = JSON.stringify(jsonData);
   var ourRequest = new XMLHttpRequest();
   var url = "delete/";
@@ -1108,7 +1108,7 @@ function openResendCredentialsMailSports(option) {
   var jsonData = {
     "clg_id": clg_id
   }
-  console.log(jsonData);
+  
   var sendData = JSON.stringify(jsonData);
   document.getElementById('resend-credentials-send-mail-sport-body').innerHTML = '';
   modal_open(10);
@@ -1143,7 +1143,7 @@ function sendResendCredentialsMail() {
     "id_arr": resend_credentials_id_arr,
     "email_arr": resend_credentials_email_arr
   }
-  console.log(jsonData);
+  
   var sendData = JSON.stringify(jsonData);
   var ourRequest = new XMLHttpRequest();
   var url = "credential/display/send/";
@@ -1242,7 +1242,7 @@ function makeGroupLeader(id) {
     "old_id": old_id,
     "new_id": id
   }
-  console.log(jsonData);
+  
   var sendData = JSON.stringify(jsonData);
   var ourRequest = new XMLHttpRequest();
   var url = "changeleader/send/change/";
@@ -1339,7 +1339,7 @@ function confirmTeams() {
     "id_arr": idnos,
     "clg_id": clg_id
   }
-  console.log(jsonData);
+  
   if (idnos.length > 0) {
     closeAllModals();
     var sendData = JSON.stringify(jsonData);
@@ -1375,7 +1375,7 @@ function unconfirmTeams() {
     "id_arr": idnos,
     "clg_id": clg_id
   }
-  console.log(jsonData);
+  
   if (idnos.length > 0) {
     closeAllModals();
     var sendData = JSON.stringify(jsonData);
@@ -1486,7 +1486,7 @@ function confirmPartDocs() {
   var jsonData = {
     "id_arr": idnos
   }
-  console.log(jsonData);
+  
   if (idnos.length > 0) {
     Materialize.toast('Confirming Participants!', 3000);
     closeAllModals();
@@ -1521,7 +1521,7 @@ function unconfirmPartDocs() {
   var jsonData = {
     "id_arr": idnos
   }
-  console.log(jsonData);
+  
   if (idnos.length > 0) {
     closeAllModals();
     var sendData = JSON.stringify(jsonData);
@@ -1629,7 +1629,7 @@ function openFinalConfirmationMailSports(option) {
     "clg_id": clg_id
   }
   final_conf_clg_id = clg_id;
-  console.log(jsonData);
+  
   var sendData = JSON.stringify(jsonData);
   document.getElementById('final-confirmation-mail-sport-body').innerHTML = '';
   modal_open(15);
@@ -1676,7 +1676,7 @@ function sendFinalConfirmationMail() {
     "sport_id_arr": final_conf_id_arr,
     "clg_id": final_conf_clg_id
   }
-  console.log(jsonData);
+  
   var sendData = JSON.stringify(jsonData);
   var ourRequest = new XMLHttpRequest();
   var url = "confirmationmail/";
@@ -1739,17 +1739,14 @@ var pusher = new Pusher('9b825df805e0b694cccc', {
 });
 var channel7 = pusher.subscribe('my-channel7');
 channel7.bind('my-event7', function(data) {
-  console.log(data);
   fetchUpdateStats();
 });
 var channel8 = pusher.subscribe('my-channel8');
 channel8.bind('my-event8', function(data) {
-  console.log(data);
   updateSwitchStatus();
 });
 var dashboardUpdate = pusher.subscribe('dashboard-update');
 dashboardUpdate.bind('dashboard-update-event', function(data) {
-  console.log(data);
   updateDashboardData();
 });
 function fetchUpdateStats() {

@@ -139,6 +139,7 @@ function sendRegisterData(data) {
         if (jsonData.error == 'activation mail has been sent. please activate your account and wait for further correspondence') {
           Materialize.toast('You are Registered!', 4000);
           $('#sent-email-modal').modal('open');
+          closesignup();
         } else {
           triggerError(jsonData.error);
           grecaptcha.reset();

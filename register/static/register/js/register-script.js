@@ -17,6 +17,7 @@ $(document).ready(function(){
   fetchSportList();
   emptyRightTable();
   document.getElementById('submit-part-btn').style.display = 'none';
+  console.clear();
 });
 function changeSport(option) {
   document.getElementById('select-sport-btn').innerHTML = option.innerHTML;

@@ -27,6 +27,7 @@ $( document ).ready(function(){
 }
     document.getElementById("username").innerHTML+=name;
     document.getElementById("username1").innerHTML+=name;
+    console.clear();
 });
 //var status=0;
 //var name="Srivatsa";

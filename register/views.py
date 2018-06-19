@@ -804,8 +804,8 @@ def registerplayer(request):
 						success=0
 
 		
-		if (count1+count2)>=sp.upper:
-			error=error+'<br>'+'sport limit exceeded. you may register '+(sp.upper-count1)+' participants in this sport'
+		if (count1+count2)>sp.upper:
+			error=error+'<br>'+'sport limit exceeded. you may register '+str(sp.upper-count1)+' participants in this sport'
 			success=0
 		if success==0:
 			return JsonResponse({'error':error,'success':0})

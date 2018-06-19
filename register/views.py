@@ -229,13 +229,13 @@ def loginuser(request):
 			user = auth.authenticate(username=username, password=password)
 				
 			if user is not None:
-				if user.is_active and user.team.activate and user.grp_leader:#activation link and pcradmin activation
+				if user.is_active and user.team.activate and user.grp_leader and user.deleted==0:#activation link and pcradmin activation
 					login(request,user)
 					return HttpResponseRedirect('/register/')
-				elif user.is_active and user.team.activate and user.captain:
+				elif user.is_active and user.team.activate and user.captain and user.deleted==0:
 					login(request,user)
 					return HttpResponseRedirect('/register/')
-				elif user.is_active and user.confirm1 and user.team.activate:
+				elif user.is_active and user.confirm1 and user.team.activate and user.deleted==0:
 					login(request,user)
 					return HttpResponseRedirect('/register/')
 				else:

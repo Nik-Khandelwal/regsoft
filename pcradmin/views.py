@@ -583,7 +583,7 @@ def addSp(request):
 		data= json.loads(request.body.decode('utf-8'))
 		sp=Sport.objects.create(sport=data['sportName'],lower=data['lowerLimit'],upper=data['upperLimit'],gender=data['gender'])
 		try:
-			sp.save
+			sp.save()
 		except:
 			resp={'success':0}
 		else:

@@ -1733,7 +1733,7 @@ function serializeArray(form) {
 }
 // Pusher Code
 Pusher.logToConsole = false;
-var pusher = new Pusher('9b825df805e0b694cccc', {
+var pusher = new Pusher('a7ef26b891af0311773e', {
   cluster: 'ap2',
   encrypted: true
 });

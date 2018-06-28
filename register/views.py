@@ -138,9 +138,9 @@ from django.contrib.auth import get_user_model
 User=get_user_model()
 
 pusher_client = pusher.Pusher(
-  app_id='499153',
-  key='9b825df805e0b694cccc',
-  secret='f2bbd60c69e36c90a572',
+  app_id='551467',
+  key='a7ef26b891af0311773e',
+  secret='9270c6a4ed1b9cfef8d0',
   cluster='ap2',
   ssl=True
 )

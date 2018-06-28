@@ -25,8 +25,6 @@ $( document ).ready(function(){
         document.getElementById('4').classList.add('active');
         break;
 }
-    document.getElementById("username").innerHTML+=name;
-    document.getElementById("username1").innerHTML+=name;
     console.clear();
 });
 //var status=0;

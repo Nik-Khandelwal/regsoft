@@ -267,6 +267,7 @@ function activateLeftTable(pk_arr, genderReceived) {
 }
 function resetSportSelection() {
   document.getElementById('select-sport-btn').innerHTML = '<i class="material-icons left">directions_run</i>Select Sport';
+  document.getElementById('submit-part-btn').style.display = 'none';
 }
 function addToRight(option) {
   if (option.parentElement.parentElement.parentElement.parentElement.classList.contains('disabled-left-part')) {

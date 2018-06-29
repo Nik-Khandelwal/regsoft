@@ -258,14 +258,15 @@ def send(request):
 				p2=[]
 				for pl in players:
 					p=[]
-					if pl.sportid[sp.idno]>='1':
+					if pl.sportid[sp.idno]>='2':
 						p.append(pl.name)
 						p.append(pl.phone)
 						p.append(pl.email)
 						p.append(pl.pk)
 						p2.append(p)
 				s.append(p2)
-				d.append(s)
+				if len(p2)>0:
+					d.append(s)
 		return JsonResponse({'data':d})
 
 @login_required(login_url='/regsoft/')

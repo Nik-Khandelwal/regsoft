@@ -539,6 +539,8 @@ def playerview(request):
 		else:
 			logout(request)
 			return HttpResponseRedirect('/register/')
+		if request.user.confirm1>=3:
+				return render(request,'register/error.html',{'error':'Your documents have been verified. You cannot upload documents.'})
 		if request.method=='POST':
 			request.user.docs=request.FILES['filename']
 			extension = os.path.splitext(str(request.FILES['filename']))[-1]
@@ -588,7 +590,10 @@ def playerview(request):
 				cl=request.user.team.college+", "+request.user.team.city+", "+request.user.team.state
 				return render(request,'register/playerview.html',{'status':request.user.confirm1-1,'username':request.user.username,'name':request.user.name,'college':cl,'sport':sprt,'phone':request.user.phone,'email':request.user.email,'gender':request.user.gender})
 			else:
-				return render(request,'register/error2.html',{"error":"you have not been confirmed yet"})
+				if request.user.grp_leader or request.user.captain:
+					return render(request,'register/error.html',{"error":"you have not been confirmed yet"})
+				else:
+					return render(request,'register/error2.html',{"error":"you have not been confirmed yet"})
 	else:
 		return HttpResponseRedirect('/register/')
 

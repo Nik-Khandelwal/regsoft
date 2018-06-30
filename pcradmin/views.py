@@ -319,7 +319,7 @@ def finalmail(request):
 															
 															})
 					mail_subject = 'Confirmation mail'
-					email = EmailMessage(mail_subject, message, to=[mailid])
+					email = EmailMessage(mail_subject, message, to=mailid)
 					try:
 						email.send()
 					except:

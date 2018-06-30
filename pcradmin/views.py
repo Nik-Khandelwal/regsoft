@@ -1834,7 +1834,7 @@ def docurl(request):
 				s.append(d)
 				s.append(u.docs.url)
 				d2.append(s)
-			if u.confirm1==3:
+			if u.confirm1>=3:
 				s.append(u.pk)
 				s.append(u.name)
 				for sp in splist:

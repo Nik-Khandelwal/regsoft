@@ -582,7 +582,8 @@ def addSp(request):
 		return HttpResponseRedirect('/regsoft/')
 	if request.method=='POST':
 		data= json.loads(request.body.decode('utf-8'))
-		sp=Sport.objects.create(sport=data['sportName'],lower=data['lowerLimit'],upper=data['upperLimit'],gender=data['gender'])
+		count=Sport.objects.all().count()
+		sp=Sport.objects.create(idno=count+1,sport=data['sportName'],lower=data['lowerLimit'],upper=data['upperLimit'],gender=data['gender'])
 		try:
 			sp.save()
 		except:

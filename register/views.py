@@ -344,6 +344,8 @@ def register(request):
 		except:
 			return JsonResponse({'error':'activation mail could not be sent please try again'})
 		#return HttpResponseRedirect('login/')
+		switch_data = [8,4]
+		pusher_client.trigger('my-channel8', 'my-event8', switch_data)
 		return JsonResponse({'error':'activation mail has been sent. please activate your account and wait for further correspondence'})
 	return HttpResponseRedirect('/register/')
 

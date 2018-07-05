@@ -393,6 +393,8 @@ def activateGrp(request):
 			mail_subject = 'Activation mail'
 			email = EmailMessage(mail_subject, message, to=[up.email])
 			email.send()
+		stats_update_data = [7,3]
+		pusher_client.trigger('my-channel7', 'my-event7', stats_update_data)
 		return JsonResponse(resp)
 
 @login_required(login_url='/regsoft/')
@@ -435,6 +437,8 @@ def deactivateGrp(request):
 			resp={'success':0}
 		else:
 			resp={'success':1}
+		stats_update_data2 = [7,3]
+		pusher_client.trigger('my-channel7', 'my-event7', stats_update_data2)
 		return JsonResponse(resp)
 
 @login_required(login_url='/regsoft/')

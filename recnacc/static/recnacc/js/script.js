@@ -382,6 +382,7 @@ function showRequestStatus(success) {
     fetchBhawanStats();
     fetchStats();
     fetchAvailabilityStats();
+    removeFirewallzUpdates();
   }
   //failure||nothing||return failure
   else if (success == 0) {
@@ -670,12 +671,26 @@ function createSingleGroup(num) {
 
 function firewallzUpdates(recieve_json) {
   document.getElementById('notification').setAttribute('class', 'btn-floating btn-large waves-effect waves-light cyan z-depth-4 modal-trigger pulse');
-  document.getElementById('update-participants').innerHTML = '';
+  // document.getElementById('update-participants').innerHTML = '';
   for(ind=0;ind<recieve_json.length;ind++){
     for(j=0;j<recieve_json[ind].participants.length;j++){ // go through all participants in a group
       indiv_name=recieve_json[ind].participants[j][1];
+      indiv_id=recieve_json[ind].participants[j][9];
       indiv_group=recieve_json[ind].groupid;
-      document.getElementById('update-participants').innerHTML += '<tr> <td class="center">'+indiv_group+'</td><td class="center">'+indiv_name+'</td></tr>';
+      document.getElementById('update-participants').innerHTML += '<tr> <td class="center">'+indiv_group+'</td><td class="center">'+indiv_name+'</td><td class="part_id">'+indiv_id+'</td></tr>';
+    }
+  }
+}
+
+function removeFirewallzUpdates() {
+  var partsList = document.getElementById('update-participants').getElementsByTagName('tr');
+  for (var i = 0; i < id_arr.length; i++) {
+    for (var j = 0; j < partsList.length; j++) {
+      var parent = partsList[j];
+      if (parseInt(partsList[j].getElementsByTagName('td')[2].innerHTML) == id_arr[i]) {
+        removeElement(parent);
+        break;
+      }
     }
   }
 }

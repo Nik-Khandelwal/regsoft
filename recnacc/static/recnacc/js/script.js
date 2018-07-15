@@ -710,6 +710,7 @@ function search() {
   var ul = document.getElementById('left-table-ul');
   for (var j = 0; j < ul.getElementsByTagName('li').length; j++) {
     var div = ul.getElementsByTagName('li')[j].getElementsByTagName('div');
+    var count = 0;
     for (i = 1; i < div.length; i++) {
       span_name = div[i].getElementsByTagName("span")[0];
       span_college = div[i].getElementsByTagName("span")[1];
@@ -718,7 +719,13 @@ function search() {
         div[i].style.display = "";
       } else {
         div[i].style.display = "none";
+        count++;
       }
+    }
+    if (count == (div.length - 1)) {
+      ul.getElementsByTagName('li')[j].style.display = 'none';
+    } else {
+      ul.getElementsByTagName('li')[j].style.display = 'list-item';
     }
   }
 }

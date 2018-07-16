@@ -336,7 +336,7 @@ def register(request):
 											'uid': urlsafe_base64_encode(force_bytes(up.pk)),
 											'token': account_activation_token.make_token(up),
 											})
-		mail_subject = 'Activate your account.'
+		mail_subject = 'Registration for BOSM \'18'
 		#mail.send_mail(mail_subject, message,'f2016226@pilani.bits-pilani.ac.in',[to_email])
 		email = EmailMessage(mail_subject, message, to=[to_email])
 		try:
@@ -707,7 +707,7 @@ def addplayer(request):
 											'password':passworduser,
 											
 											})
-			mail_subject = 'Your account details.'
+			mail_subject = 'Your account details for BOSM \'18'
 			email = EmailMessage(mail_subject, message, to=[to_email])
 			update_data = [7,3]
 			pusher_client.trigger('my-channel7', 'my-event7', update_data)

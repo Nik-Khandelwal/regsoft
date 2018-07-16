@@ -300,7 +300,7 @@ def finalmail(request):
 													'nmlist':nm,
 													
 													})
-			mail_subject = 'Confirmation mail'
+			mail_subject = 'BOSM 2018 | Confirmation Mail'
 			email = EmailMessage(mail_subject, message, to=[ld.email])
 			try:
 				email.send()
@@ -318,7 +318,7 @@ def finalmail(request):
 															'nmlist':nm,
 															
 															})
-					mail_subject = 'Confirmation mail'
+					mail_subject = 'BOSM 2018 | Confirmation Mail'
 					email = EmailMessage(mail_subject, message, to=mailid)
 					try:
 						email.send()
@@ -331,7 +331,7 @@ def finalmail(request):
 														'nmlist':nm,
 														
 														})
-				mail_subject = 'Confirmation mail'
+				mail_subject = 'BOSM 2018 | Confirmation Mail'
 				email = EmailMessage(mail_subject, message, to=[cap.email])
 				try:
 					email.send()
@@ -390,7 +390,7 @@ def activateGrp(request):
 															'user':up.name,
 															
 															})
-			mail_subject = 'Activation mail'
+			mail_subject = 'BOSM 2018 | Account activated'
 			email = EmailMessage(mail_subject, message, to=[up.email])
 			email.send()
 		stats_update_data = [7,3]
@@ -1725,7 +1725,7 @@ def sendcred(request):
 														'password':passworduser,
 														
 														})
-				mail_subject = 'Your account details.'
+				mail_subject = 'Your account details for BOSM \'18'
 				email = EmailMessage(mail_subject, message, to=[up.email])
 				try:
 					email.send()

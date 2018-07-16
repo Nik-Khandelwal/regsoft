@@ -1,6 +1,25 @@
 {% autoescape off %}
-Hi {{ user.username }},
-Please click on the link to confirm your registration,
+Hello {{ user.username }}!
 
-http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
+Thank you for registering!
+
+Greetings from BITS Pilani!
+
+It gives me immense pleasure in inviting your institute to the 33rd edition of BITS Open Sports Meet (BOSM), the annual national sports meet of Birla Institute of Technology & Science, Pilani, India. This year, BOSM will be held from September 19th to 23rd.
+
+Applications close on 31st August 2018 at 1700 hrs.
+
+Please apply as soon as possible to enable us to confirm your participation at the earliest.
+
+We look forward to seeing you at BOSM 2018.
+
+<a href="https://{{ domain }}{% url 'activate' uidb64=uid token=token %}">Click Here</a> to verify your email.
+
+P.S: THIS EMAIL DOES NOT CONFIRM YOUR PRESENCE AT BOSM 2018. YOU WILL BE RECEIVING ANOTHER EMAIL FOR THE CONFIRMATION OF YOUR PARTICIPATION.
+
+Regards,
+CoSSAcn (Head)
+Dept. of Publications & Correspondence, BOSM 2018
+BITS Pilani
+<a href="mailto:pcr@bits-bosm.org">pcr@bits-bosm.org</a>
 {% endautoescape %}

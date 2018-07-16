@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from smartfields import fields
 
 # Create your models here.
 class Sport(models.Model):
@@ -42,7 +43,7 @@ class CustomUser(AbstractUser):#extending user model
 	#0 will be 1 for those sports for which the participant has registered 2 for confirmed
 	confirm1=models.IntegerField(default=0)#1 for confirmed 2 for documents 4 all done
 	sport=models.ManyToManyField(Sport)
-	docs=models.FileField(upload_to="documents/",null=True,blank=True)
+	docs=fields.FileField(upload_to="documents/",null=True,blank=True)
 	deleted=models.IntegerField(default=0)
 	
 	def __str__(self):

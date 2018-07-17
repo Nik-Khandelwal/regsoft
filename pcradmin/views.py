@@ -302,6 +302,7 @@ def finalmail(request):
 													})
 			mail_subject = 'BOSM 2018 | Confirmation Mail'
 			email = EmailMessage(mail_subject, message, to=[ld.email])
+			email.attach_file('Rate Sheet.pdf')
 			email.content_subtype = "html"
 			try:
 				email.send()
@@ -321,6 +322,7 @@ def finalmail(request):
 															})
 					mail_subject = 'BOSM 2018 | Confirmation Mail'
 					email = EmailMessage(mail_subject, message, to=mailid)
+					email.attach_file('Rate Sheet.pdf')
 					email.content_subtype = "html"
 					try:
 						email.send()
@@ -335,6 +337,7 @@ def finalmail(request):
 														})
 				mail_subject = 'BOSM 2018 | Confirmation Mail'
 				email = EmailMessage(mail_subject, message, to=[cap.email])
+				email.attach_file('Rate Sheet.pdf')
 				email.content_subtype = "html"
 				try:
 					email.send()

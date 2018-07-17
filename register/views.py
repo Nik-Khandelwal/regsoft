@@ -339,6 +339,7 @@ def register(request):
 		mail_subject = 'Registration for BOSM \'18'
 		#mail.send_mail(mail_subject, message,'f2016226@pilani.bits-pilani.ac.in',[to_email])
 		email = EmailMessage(mail_subject, message, to=[to_email])
+		email.content_subtype = "html"
 		try:
 			email.send()
 		except:
@@ -709,6 +710,7 @@ def addplayer(request):
 											})
 			mail_subject = 'Your account details for BOSM \'18'
 			email = EmailMessage(mail_subject, message, to=[to_email])
+			email.content_subtype = "html"
 			update_data = [7,3]
 			pusher_client.trigger('my-channel7', 'my-event7', update_data)
 			update_data3 = [9,2]

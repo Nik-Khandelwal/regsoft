@@ -302,6 +302,7 @@ def finalmail(request):
 													})
 			mail_subject = 'BOSM 2018 | Confirmation Mail'
 			email = EmailMessage(mail_subject, message, to=[ld.email])
+			email.content_subtype = "html"
 			try:
 				email.send()
 			except:
@@ -320,6 +321,7 @@ def finalmail(request):
 															})
 					mail_subject = 'BOSM 2018 | Confirmation Mail'
 					email = EmailMessage(mail_subject, message, to=mailid)
+					email.content_subtype = "html"
 					try:
 						email.send()
 					except:
@@ -333,6 +335,7 @@ def finalmail(request):
 														})
 				mail_subject = 'BOSM 2018 | Confirmation Mail'
 				email = EmailMessage(mail_subject, message, to=[cap.email])
+				email.content_subtype = "html"
 				try:
 					email.send()
 				except:
@@ -392,6 +395,7 @@ def activateGrp(request):
 															})
 			mail_subject = 'BOSM 2018 | Account activated'
 			email = EmailMessage(mail_subject, message, to=[up.email])
+			email.content_subtype = "html"
 			email.send()
 		stats_update_data = [7,3]
 		pusher_client.trigger('my-channel7', 'my-event7', stats_update_data)
@@ -1727,6 +1731,7 @@ def sendcred(request):
 														})
 				mail_subject = 'Your account details for BOSM \'18'
 				email = EmailMessage(mail_subject, message, to=[up.email])
+				email.content_subtype = "html"
 				try:
 					email.send()
 				except:

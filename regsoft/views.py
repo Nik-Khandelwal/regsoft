@@ -22,7 +22,7 @@ from rest_framework import status
 
 
 def main(request):
-	return render(request,'index.html')
+	return render(request,'landing.html')
 
 def adminpanels(request):
 	return render(request, 'main/index.html')

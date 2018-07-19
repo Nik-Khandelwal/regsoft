@@ -469,6 +469,13 @@ def reaccomodate(request):
 					#print(data['data']['id_arr'])
 					rp = Regplayer.objects.get(pk=int(i))
 					pl = Enteredplayer.objects.get(regplayer=rp)
+					if pl.accorecnacc.accomodation is not None:
+						pl.accorecnacc.accomodation.vacancy += 1
+					elif pl.accorecnacc.singleroom is not None:
+						pl.accorecnacc.singleroom.vacancy += 1
+					else:
+						pass
+
 					pl.accorecnacc = None
 					pl.recnacc_passed = False
 					pl.save()

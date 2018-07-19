@@ -253,10 +253,13 @@ def accomodate_singleroom(request):
 					rp = Regplayer.objects.get(pk=int(i))
 					pl = Enteredplayer.objects.get(regplayer=rp)
 					sr = Singleroom.objects.get(name=j)
+					sr.vacancy += 1
+					sr.save()
 					ac = sr.accomodation_set.all()[0]
 					ac.vacancy -= 1
 					ac.save()
 					bill.singleroom = sr
+					bill.accomodation = ac
 					bill.save()
 					pl.accorecnacc = bill
 					pl.recnacc_passed = True
@@ -537,26 +540,51 @@ def availability_stats(request):
 #var jsonResponse = {"data": [["Ram", [["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]],["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]],["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]]]],["Ram", [["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]],["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]],["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]]]],["Ram", [["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]],["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]],["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]]]],["Ram", [["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]],["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]],["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]]]]]};
 
 
+# def view_stats(request):
+# 	print("view_stats")
+# 	data = []
+# 	for ac in Acco_name.objects.all():
+# 		das = []
+# 		das.append(ac.name)
+# 		dat = []
+# 		dt = []
+# 		for pl in Enteredplayer.objects.all():
+# 			try:
+# 				pt = pl.accorecnacc
+# 				if pt.accomodation == ac.common_room:
+# 					dt.append(pl.regplayer.name.name)
+# 					dt.append(pl.regplayer.pk)
+# 					dat.append(dt)
+# 					print(dat)
+# 			except:
+# 				pass		
+# 		das.append(dat)
+# 		data.append
+
+# 		return HttpResponse(json.dumps({"data":data}), content_type='application/json')
+
+
 def view_stats(request):
 	print("view_stats")
 	data = []
 	for ac in Acco_name.objects.all():
-		das = []
-		das.append(ac.name)
 		dat = []
-		dt = []
 		for pl in Enteredplayer.objects.all():
+			dic = {}
 			try:
 				pt = pl.accorecnacc
 				if pt.accomodation == ac.common_room:
-					dt.append(pl.regplayer.name.name)
-					dt.append(pl.regplayer.pk)
-					dat.append(dt)
-					print(dat)
+					dic = {"type":"common_room","name":pl.regplayer.name.name,"mobile":pl.regplayer.mobile_no}
+				elif pt.accomodation == ac.tt_room:
+					dic = {"type":"tt_room","name":pl.regplayer.name.name,"mobile":pl.regplayer.mobile_no}
+				elif pt.accomodation == ac.s_room:
+					dic = {"type":"s_room","room_no":pt.singleroom.name,"name":pl.regplayer.name.name,"mobile":pl.regplayer.mobile_no}
+				else:
+					pass
+				dat.append(dic)
 			except:
-				pass		
-		das.append(dat)
-		data.append
+				pass	
+		data.append({"hostel_name":ac.name,"list":dat})
+	return HttpResponse(json.dumps({"data":data}), content_type='application/json')
 
-		return HttpResponse(json.dumps({"data":data}), content_type='application/json')
 

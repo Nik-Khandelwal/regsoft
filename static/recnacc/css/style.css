@@ -378,3 +378,4 @@ body::-webkit-scrollbar-thumb, #left-table-ul::-webkit-scrollbar-thumb, #right-b
 #bhawan-search-label {
   color: white;
 }
+.part_id {display: none;}

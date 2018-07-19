@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'lockdown',
    # 'corsheaders',
+   'import_export',
 ]
 
 MIDDLEWARE = [

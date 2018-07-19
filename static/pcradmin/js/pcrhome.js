@@ -14,6 +14,11 @@ function showDiv(num) {
     document.getElementsByClassName('main-content')[i].style.display = 'none';
   }
   document.getElementsByClassName('main-content')[num].style.display = 'block';
+  if(num==2||num==6) {
+    document.getElementsByClassName('page-footer')[0].style.display = 'none';
+  } else {
+    document.getElementsByClassName('page-footer')[0].style.display = 'block';
+  }
 }
 function showLoader() {
   document.getElementById('main-content-loading').style.display = 'block';
@@ -112,7 +117,7 @@ function addSport() {
   modal_open(3);
 }
 function resetAddSportForm() {
-  document.getElementById('add-sport-form').innerHTML = '<div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">person</i> <input type="text" name="sport_name_field" id="sport_name_field" class="validate" required="required"> <label for="sport_name_field" data-error="Enter Sport Name">Sport Name</label> </div></div><div class="row"> <div class="input-field col m6 s12"> <i class="material-icons prefix">compare_arrows</i> <input type="text" name="lower_limit" id="lower_limit" class="validate" required="required"> <label for="lower_limit" data-error="Enter Lower Limit">Lower Limit</label> </div><div class="input-field col m6 s12"> <i class="material-icons prefix">compare_arrows</i> <input type="text" name="upper_limit" id="upper_limit" class="validate" required="required"> <label for="upper_limit" data-error="Enter Upper Limit">Upper Limit</label> </div></div><div class="row"> <div class="col s4 center"> Gender </div><div class="col s4 center"> <input type="radio" name="indi_gender" id="indi_male" value="male"> <label for="indi_male">Male</label> </div><div class="col s4 center"> <input type="radio" name="indi_gender" id="indi_female" value="female"> <label for="indi_female">Female</label> </div></div><div class="row"> <div class="col s12 center"> <a class="waves-effect waves-light btn btn-large" onclick="addSportSubmit()"><i class="material-icons right">send</i>Submit</a> </div></div>';
+  document.getElementById('add-sport-form').innerHTML = '<div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">person</i> <input type="text" name="sport_name_field" id="sport_name_field" class="validate" required="required"> <label for="sport_name_field" data-error="Enter Sport Name">Sport Name</label> </div></div><div class="row"> <div class="input-field col m6 s12"> <i class="material-icons prefix">compare_arrows</i> <input type="text" name="lower_limit" id="lower_limit" class="validate" required="required"> <label for="lower_limit" data-error="Enter Lower Limit">Lower Limit</label> </div><div class="input-field col m6 s12"> <i class="material-icons prefix">compare_arrows</i> <input type="text" name="upper_limit" id="upper_limit" class="validate" required="required"> <label for="upper_limit" data-error="Enter Upper Limit">Upper Limit</label> </div></div><div class="row"> <div class="col s3 center"> Gender </div><div class="col s3 center"> <input type="radio" name="indi_gender" id="indi_male" value="male"> <label for="indi_male">Male</label> </div><div class="col s3 center"> <input type="radio" name="indi_gender" id="indi_female" value="female"> <label for="indi_female">Female</label> </div><div class="col s3 center"> <input type="radio" name="indi_gender" id="indi_both" value="both"> <label for="indi_both">Both</label> </div></div><div class="row"> <div class="col s12 center"> <a class="waves-effect waves-light btn btn-large" onclick="addSportSubmit()"><i class="material-icons right">send</i>Submit</a> </div></div>';
 }
 function addCollege() {
   closeAllModals();
@@ -661,8 +666,8 @@ function addSportSubmit() {
   } else {
     var jsonData = {
       "sportName": sportName,
-      "lowerLimit": lowerLimit,
-      "upperLimit": upperLimit,
+      "lowerLimit": parseInt(lowerLimit),
+      "upperLimit": parseInt(upperLimit),
       "gender": gender
     }
     var sendData = JSON.stringify(jsonData);
@@ -817,7 +822,7 @@ function openMailSports(option) {
   var jsonData = {
     "clg_id": clg_id
   }
-  console.log(jsonData);
+  
   var sendData = JSON.stringify(jsonData);
   document.getElementById('send-mail-sport-body').innerHTML = '';
   modal_open(6);
@@ -858,7 +863,7 @@ function sendMail() {
       "sub": sub,
       "body": body
     }
-    console.log(jsonData);
+    
     var sendData = JSON.stringify(jsonData);
     var ourRequest = new XMLHttpRequest();
     var url = "mail/send/modify/";
@@ -925,7 +930,7 @@ function openEditSports(option) {
   var jsonData = {
     "clg_id": clg_id
   }
-  console.log(jsonData);
+  
   var sendData = JSON.stringify(jsonData);
   document.getElementById('edit-part-sport-body').innerHTML = '';
   modal_open(8);
@@ -983,7 +988,7 @@ function sendEdit() {
       "gender": gender,
       "selectedSports": selectedSports
     }
-    console.log(jsonData);
+    
     var sendData = JSON.stringify(jsonData);
     var ourRequest = new XMLHttpRequest();
     var url = "edit/team/modify/";
@@ -1018,7 +1023,7 @@ function deleteSportParticipant() {
   var jsonData = {
     "idno": del_id
   }
-  console.log(jsonData);
+  
   var sendData = JSON.stringify(jsonData);
   var ourRequest = new XMLHttpRequest();
   var url = "delete/";
@@ -1103,7 +1108,7 @@ function openResendCredentialsMailSports(option) {
   var jsonData = {
     "clg_id": clg_id
   }
-  console.log(jsonData);
+  
   var sendData = JSON.stringify(jsonData);
   document.getElementById('resend-credentials-send-mail-sport-body').innerHTML = '';
   modal_open(10);
@@ -1138,7 +1143,7 @@ function sendResendCredentialsMail() {
     "id_arr": resend_credentials_id_arr,
     "email_arr": resend_credentials_email_arr
   }
-  console.log(jsonData);
+  
   var sendData = JSON.stringify(jsonData);
   var ourRequest = new XMLHttpRequest();
   var url = "credential/display/send/";
@@ -1237,7 +1242,7 @@ function makeGroupLeader(id) {
     "old_id": old_id,
     "new_id": id
   }
-  console.log(jsonData);
+  
   var sendData = JSON.stringify(jsonData);
   var ourRequest = new XMLHttpRequest();
   var url = "changeleader/send/change/";
@@ -1334,7 +1339,7 @@ function confirmTeams() {
     "id_arr": idnos,
     "clg_id": clg_id
   }
-  console.log(jsonData);
+  
   if (idnos.length > 0) {
     closeAllModals();
     var sendData = JSON.stringify(jsonData);
@@ -1370,7 +1375,7 @@ function unconfirmTeams() {
     "id_arr": idnos,
     "clg_id": clg_id
   }
-  console.log(jsonData);
+  
   if (idnos.length > 0) {
     closeAllModals();
     var sendData = JSON.stringify(jsonData);
@@ -1481,7 +1486,7 @@ function confirmPartDocs() {
   var jsonData = {
     "id_arr": idnos
   }
-  console.log(jsonData);
+  
   if (idnos.length > 0) {
     Materialize.toast('Confirming Participants!', 3000);
     closeAllModals();
@@ -1516,7 +1521,7 @@ function unconfirmPartDocs() {
   var jsonData = {
     "id_arr": idnos
   }
-  console.log(jsonData);
+  
   if (idnos.length > 0) {
     closeAllModals();
     var sendData = JSON.stringify(jsonData);
@@ -1624,7 +1629,7 @@ function openFinalConfirmationMailSports(option) {
     "clg_id": clg_id
   }
   final_conf_clg_id = clg_id;
-  console.log(jsonData);
+  
   var sendData = JSON.stringify(jsonData);
   document.getElementById('final-confirmation-mail-sport-body').innerHTML = '';
   modal_open(15);
@@ -1671,7 +1676,7 @@ function sendFinalConfirmationMail() {
     "sport_id_arr": final_conf_id_arr,
     "clg_id": final_conf_clg_id
   }
-  console.log(jsonData);
+  
   var sendData = JSON.stringify(jsonData);
   var ourRequest = new XMLHttpRequest();
   var url = "confirmationmail/";
@@ -1728,19 +1733,21 @@ function serializeArray(form) {
 }
 // Pusher Code
 Pusher.logToConsole = false;
-var pusher = new Pusher('9b825df805e0b694cccc', {
+var pusher = new Pusher('a7ef26b891af0311773e', {
   cluster: 'ap2',
   encrypted: true
 });
 var channel7 = pusher.subscribe('my-channel7');
 channel7.bind('my-event7', function(data) {
-  console.log(data);
   fetchUpdateStats();
 });
 var channel8 = pusher.subscribe('my-channel8');
 channel8.bind('my-event8', function(data) {
-  console.log(data);
   updateSwitchStatus();
+});
+var dashboardUpdate = pusher.subscribe('dashboard-update');
+dashboardUpdate.bind('dashboard-update-event', function(data) {
+  updateDashboardData();
 });
 function fetchUpdateStats() {
   csrf_token = getCookie('csrftoken');
@@ -1794,6 +1801,33 @@ function updateSwitchStatus() {
       for (var i = 0; i < rightData.length; i++) {
         document.getElementById('switch-status-right-list-clg').innerHTML += '<tr onclick="openCollegeLeaders(this, 2)" class="switch-status-college-row"> <td style="display: none">'+rightData[i][3]+'</td><td style="flex-basis: 40%">'+rightData[i][0]+'</td><td style="flex-basis: 30%">'+rightData[i][1]+'</td><td style="flex-basis: 30%">'+rightData[i][2]+'</td></tr>';
       }
+    } else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
+      Materialize.toast('There was some error connecting to the server!', 3000);
+    }
+  };
+  ourRequest.send('');
+}
+function updateDashboardData() {
+  csrf_token = getCookie('csrftoken');
+  var ourRequest = new XMLHttpRequest();
+  var url = 'dashboard/';
+  ourRequest.open("POST", url, true);
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onreadystatechange = function() {
+    if (ourRequest.readyState === 4 && ourRequest.status === 200) {
+      var jsonResponse = JSON.parse(ourRequest.responseText);
+      var data1 = jsonResponse.data1;
+      var data2 = jsonResponse.data2;
+      var data3 = jsonResponse.data3;
+      var data4 = jsonResponse.data4;
+      document.getElementById('no-registered-body').innerHTML = '<tr> <td>'+data1[0]+'</td><td>'+data1[1]+'</td><td>'+data1[2]+'</td></tr>';
+      document.getElementById('no-confirmed-body').innerHTML = '<tr> <td>'+data2[0]+'</td><td>'+data2[1]+'</td><td>'+data2[2]+'</td></tr>';
+      document.getElementById('no-documents-body').innerHTML = '<tr> <td>'+data3[0]+'</td><td>'+data3[1]+'</td><td>'+data3[2]+'</td></tr>';
+      document.getElementById('payment-body').innerHTML = '<tr> <td>'+data4[0][0]+'</td><td>'+data4[1][0]+'</td></tr>';
+      document.getElementById('pre-reg-body').innerHTML = '<tr> <td>'+data4[0][1]+'</td><td>'+data4[0][2]+'</td><td>'+data4[0][3]+'</td></tr>';
+      document.getElementById('tot-payment-body').innerHTML = '<tr> <td>'+data4[1][1]+'</td><td>'+data4[1][2]+'</td><td>'+data4[1][3]+'</td></tr>';
+      closeAllModals();
     } else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
       Materialize.toast('There was some error connecting to the server!', 3000);
     }

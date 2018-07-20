@@ -171,7 +171,7 @@ def index(request):
 		return render(request,'register/player.html/')
 	else:
 		
-		return render(request,'register/login.html/')
+		return render(request,'register/loginfinal.html/')
 
 def sportlist(request):
 	sp=Sport.objects.all().order_by(Lower('sport'))	

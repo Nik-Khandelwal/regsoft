@@ -44,5 +44,9 @@ urlpatterns = [
     url(r'^disp_occupency/$',views.disp_occupency,name='disp_occupency'),
 
     url(r'^edit_occupency/$',views.edit_occupency,name='edit_occupency'),
+
+    url(r'^deallocated_page/$',views.deallocated_page,name='deallocated_page'),
+
+    url(r'^fine_page/$',views.fine_page,name='fine_page'),
     
 ]

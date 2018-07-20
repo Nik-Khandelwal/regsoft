@@ -609,3 +609,19 @@ def bill_pdf(request,bill_pk):
 		data.append({"pk":obj.regplayer.pk,"name":obj.regplayer.name.name,"unbilled_amt":obj.regplayer.unbilled_amt})
 	context = {"grand_total":billl.unbilled_amt,"amt_paid":billl.amt_received,"amt_returned":(billl.amt_received-billl.unbilled_amt),"mylist":data,"time":str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))}
 	return render(request,'controls/bill_pdf.html',context)
+
+
+def denomination_display(request):
+	if request.user.is_authenticated():
+		if is_controls_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	money = Money.objects.get(pk=1)
+	data = []
+	data.append({"twothousand":money.twothousand,"fivehundred":money.fivehundred,"twohundred":money.twohundred,"hundred":money.hundred,"fifty":money.fifty})
+	return HttpResponse(json.dumps({"data":data}), content_type='application/json')
+

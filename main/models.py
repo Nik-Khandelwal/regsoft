@@ -165,3 +165,9 @@ class Firewallz_user(models.Model):
 class Pcradmin_user(models.Model):
 	user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
+
+class Note(models.Model):
+	text = models.TextField()
+	time = models.DateTimeField(auto_now=True)
+
+

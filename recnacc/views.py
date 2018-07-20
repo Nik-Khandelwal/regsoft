@@ -588,3 +588,37 @@ def view_stats(request):
 	return HttpResponse(json.dumps({"data":data}), content_type='application/json')
 
 
+# Bhawan Occupency
+
+def disp_occupency(request):
+	if request.user.is_authenticated():
+		if is_recnacc_admin(request.user):
+			dats = []
+			for ac in Acco_name.objects.all():
+				dat = []
+				dat.append(ac.name)
+				dat.append({"pk":ac.common_room.pk,"strength":ac.common_room.strength})
+				dat.append({"pk":ac.tt_room.pk,"strength":ac.tt_room.strength})
+				dat.append({"pk":ac.s_room.pk,"strength":ac.s_room.strength})
+				dats.append(dat)
+			return HttpResponse(json.dumps({"data":dats}), content_type='application/json')	
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+
+
+def edit_occupency(request):
+	if request.user.is_authenticated():
+		if is_recnacc_admin(request.user):
+			data = json.loads( request.body.decode('utf-8') )
+			ac = Accomodation.objects.get(pk=data['data']['pk'])
+			ac.strength = data['data']['strength']
+			ac.save()
+			return HttpResponse(json.dumps({"success":"1"}), content_type='application/json')	
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')

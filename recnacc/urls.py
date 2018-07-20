@@ -41,4 +41,8 @@ urlpatterns = [
 
     url(r'^view_stats/$',views.view_stats,name='view_stats'),
 
+    url(r'^disp_occupency/$',views.disp_occupency,name='disp_occupency'),
+
+    url(r'^edit_occupency/$',views.edit_occupency,name='edit_occupency'),
+    
 ]

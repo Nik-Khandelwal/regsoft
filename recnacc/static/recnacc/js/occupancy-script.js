@@ -24,7 +24,6 @@ $(document).ready(function(){
 var editpk;
 function editStrength(pk, option) {
   editpk = parseInt(pk);
-  console.log(editpk);
   document.getElementById('edit-strength-field').innerHTML='<input type="number" name="edit-strength" id="edit-strength" value="'+parseInt(option.previousElementSibling.innerHTML)+'"> <label for="edit-strength">Edit Strength</label>';
   Materialize.updateTextFields();
   $('#edit-strength-modal').modal('open');

@@ -617,6 +617,7 @@ function sendRetDenom(deno_2000, deno_500, deno_200, deno_100, deno_50) {
 	var csrf_token = getCookie('csrftoken');
 	send_obj={
 		"data": {
+			"type":"subtract",
 			"deno_2000": deno_2000,
 			"deno_500": deno_500,
 			"deno_200": deno_200,

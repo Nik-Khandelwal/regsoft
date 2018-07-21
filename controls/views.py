@@ -235,11 +235,18 @@ def arpit(request):
 	data = json.loads( request.body.decode('utf-8') )
 	money = Money.objects.get(pk=1)
 	print(data)
-	money.twothousand -= int(data['data']['deno_2000'])
-	money.fivehundred -= int(data['data']['deno_500'])
-	money.twohundred -= int(data['data']['deno_200'])
-	money.hundred -= int(data['data']['deno_100'])
-	money.fifty -= int(data['data']['deno_50'])
+	if data['data']['type'] == "subtract":
+		money.twothousand -= int(data['data']['deno_2000'])
+		money.fivehundred -= int(data['data']['deno_500'])
+		money.twohundred -= int(data['data']['deno_200'])
+		money.hundred -= int(data['data']['deno_100'])
+		money.fifty -= int(data['data']['deno_50'])
+	if data['data']['type'] == "update":
+		money.twothousand = int(data['data']['deno_2000'])
+		money.fivehundred = int(data['data']['deno_500'])
+		money.twohundred = int(data['data']['deno_200'])
+		money.hundred = int(data['data']['deno_100'])
+		money.fifty = int(data['data']['deno_50'])
 	money.save()
 	dat = {"success":1}
 	return HttpResponse(json.dumps(dat), content_type='application/json')
@@ -622,6 +629,10 @@ def denomination_display(request):
 		return HttpResponseRedirect('/regsoft/')
 	money = Money.objects.get(pk=1)
 	data = []
-	data.append({"twothousand":money.twothousand,"fivehundred":money.fivehundred,"twohundred":money.twohundred,"hundred":money.hundred,"fifty":money.fifty})
-	return HttpResponse(json.dumps({"data":data}), content_type='application/json')
+	data.apped(money.fifty)
+	data.append(money.hundred)
+	data.append(money.twohundred)
+	data.append(money.fivehundred)
+	data.append(money.twothousand)
+	return HttpResponse(json.dumps(data), content_type='application/json')
 

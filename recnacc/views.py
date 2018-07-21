@@ -647,7 +647,7 @@ def fine_page(request):
 			for ar in ac.accorecnacc_set.all():
 				for pl in Enteredplayer.objects.all():
 					if pl.accorecnacc == ar:
-						pl.regplayer.unbilled_amt += ((int)data['data']['amt']/cnt)
+						pl.regplayer.unbilled_amt += (data['data']['amt']/cnt)
 						pl.save()
 			return HttpResponse(json.dumps({"success":"1"}), content_type='application/json')	
 		else:

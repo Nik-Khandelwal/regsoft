@@ -48,5 +48,9 @@ urlpatterns = [
     url(r'^deallocated_page/$',views.deallocated_page,name='deallocated_page'),
 
     url(r'^fine_page/$',views.fine_page,name='fine_page'),
+
+    url(r'^view_notes/$',views.view_notes,name='view_notes'),
+
+    url(r'^add_note/$',views.add_note,name='add_note')
     
 ]

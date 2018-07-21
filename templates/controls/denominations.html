@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {% load staticfiles %}
+  <title>BOSM Controls</title>
+  <link href="{% static 'controls/css/font.css' %}" rel="stylesheet">
+  <link type="text/css' %}" rel="stylesheet" href="{% static 'controls/css/materialize.min.css' %}"  media="screen,projection"/>
+  <link rel="stylesheet" type="text/css" href="{% static 'controls/css/denom-style.css' %}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script type="text/javascript" src="{% static 'controls/js/jquery.js' %}"></script>
+  <script type="text/javascript" src="{% static 'controls/js/materialize.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'controls/js/denom-script.js' %}"></script>
+</head>
+<body class="center" onload="loaded()">
+  <div class="ham"><a href="#" data-activates="slide-out" class="button-collapse coll-0"><i class="material-icons medium blue-text">menu</i></a></div>
+  <div class="ham1"><a href="#" data-activates="slide-out-1" class="button-collapse coll-1" onclick="fetchPassedStats();"><i class="material-icons medium blue-text">insert_chart</i></a></div>
+  <ul id="slide-out" class="side-nav">
+    <li>
+      <div class="user-view">
+        <div class="background" style="background-color: #3794e6"></div>
+        <a><span class="white-text name">CONTROLS PANEL</span></a>
+      </div>
+    </li>
+    <li><a class="waves-effect" href="/controls/">Register</a></li>
+    <li><a class="waves-effect" href="/controls/unconfirm_grp/">Deregister</a></li>
+    <li><a class="waves-effect">Denominations</a></li>
+    <li><div class="divider"></div></li>
+    <li><a class="waves-effect bottom" href="/regsoft/regsoft_logout/">Logout</a></li>
+  </ul>
+  <ul id="slide-out-1" class="side-nav">
+    <li>
+      <div class="user-view">
+        <div class="background" style="background-color: #3794e6"></div>
+        <a><span class="white-text name">Present Stats</span></a>
+      </div>
+    </li>
+    <li><a class="waves-effect">Firewallz-Confirmed:</a></li>
+    <li><a id="fire_conf">1111</a></li>
+    <li><div class="divider"></div></li>
+    <li><a class="waves-effect">Controls Passed</a></li>
+    <li><a id="cont_conf">1111</a></li>
+    <li><div class="divider"></div></li>
+    <li><a class="waves-effect">RecNAcc Confirmed</a></li>
+    <li><a id="rec_conf">1111</a></li>
+  </ul>
+  <div class="container blue lighten-3" id="head-denom-wrapper">
+    Controls Denominations
+  </div>
+  <div class="container blue lighten-5" id="denom-wrapper">
+    <div class="row">
+      <form class="col s12" id="denoms-form">
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">attach_money</i>
+            <input type="number" name="denom-50" id="denom-50" value="0">
+            <label for="denom-50">50's</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">attach_money</i>
+            <input type="number" name="denom-100" id="denom-100" value="0">
+            <label for="denom-100">100's</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">attach_money</i>
+            <input type="number" name="denom-200" id="denom-200" value="0">
+            <label for="denom-200">200's</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="input-field col s12">
+						<i class="material-icons prefix">attach_money</i>
+						<input type="number" name="denom-500" id="denom-500" value="0">
+						<label for="denom-500">500's</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="input-field col s12">
+						<i class="material-icons prefix">attach_money</i>
+						<input type="number" name="denom-2000" id="denom-2000" value="0">
+						<label for="denom-2000">2000's</label>
+					</div>
+				</div>
+			</form>
+			<a class="waves-effect waves-light btn tooltipped" data-position="bottom" data-delay="50" data-tooltip="Update Available Denominations" onclick="updateDenoms();"><i class="material-icons left">receipt</i><span>Update Denominations</span></a>
+		</div>
+	</div>
+	<footer class="page-footer blue darken-2">
+    <div class="container">
+      <div class="row">
+        <div class="col s12 center">
+          <span>Coding Club, BOSM 2018</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

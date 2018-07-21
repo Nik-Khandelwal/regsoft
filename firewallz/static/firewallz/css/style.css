@@ -162,7 +162,7 @@
   bottom: 0;
   left: 0;
   width: 100vw;
-  z-index: 5;
+  z-index: 0;
   max-height: 11vh;
   height: 11vh;
   overflow: hidden;

@@ -9,7 +9,7 @@ i {
   position: fixed;
   height: 70vh;
   width: 45vw;
-  top: 17vh;
+  top: 11vh;
   left: 5vw;
   overflow-y: auto;
 }
@@ -54,7 +54,7 @@ i {
 
 .select_all-btn {
   position: fixed;
-  top: 90vh;
+  top: 84vh;
   left: 7vw;
   width: 15vw;
   padding: 0 1vmin;
@@ -63,7 +63,7 @@ i {
 
 .deselect_all-btn {
   position: fixed;
-  top: 90vh;
+  top: 84vh;
   left: 28vw;
   width: 15vw;
   padding: 0 1vmin;
@@ -72,13 +72,13 @@ i {
 
 .add_all-btn {
   position: fixed;
-  top: 19vh;
-  left: 50vw;
+  top: 12vh;
+  left: 50.5vw;
 }
 
 .gen_bill-btn {
   position: fixed;
-  top: 90vh;
+  top: 84vh;
   left: 57.5vw;
   width: 15vw;
   padding: 0 1vmin;
@@ -86,7 +86,7 @@ i {
 }
 .stats_1{
     position: fixed;
-    top: 90vh;
+    top: 84vh;
     width:15vw;
     left: 77.5vw;
      padding: 0 1vmin;
@@ -95,7 +95,7 @@ i {
 
 #tools-info_outline {
   position: fixed;
-  top: 70vh;
+  top: 64vh;
   right: 2vw;
 }
 
@@ -136,7 +136,7 @@ i {
   position: fixed;
   height: 70vh;
   width: 40vw;
-  top: 18vh;
+  top: 12vh;
   left: 55vw;
 }
 
@@ -305,7 +305,7 @@ body::-webkit-scrollbar-thumb, #left-table-ul::-webkit-scrollbar-thumb, #right-b
 
 #notification {
   position: fixed;
-  top: 17vh;
+  top: 12vh;
   right: 0.5vw;
 }
 
@@ -361,9 +361,9 @@ body::-webkit-scrollbar-thumb, #left-table-ul::-webkit-scrollbar-thumb, #right-b
   position: fixed;
   width: 45vw;
   left: 5vw;
-  top: 7vh;
+  top: 1vh;
 }
-.ham1{position: absolute;right: 0;bottom: 0;}
+.ham1{position: absolute;right: 0;bottom: 11vh;}
 .ham2{position: absolute;right: 0;top: 0;}
 .stats{position: fixed;z-index: 1;width: 100vw;top: 0;left: 0;transition: 0.5s;}
 #close{;z-index: 5;display: none;cursor: pointer;}
@@ -378,4 +378,23 @@ body::-webkit-scrollbar-thumb, #left-table-ul::-webkit-scrollbar-thumb, #right-b
 #bhawan-search-label {
   color: white;
 }
-.part_id {display: none;}
+html {
+  background-color: rgba(104, 168, 224, 0.3);
+}
+.page-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  z-index: 0;
+  max-height: 8vh;
+  height: 8vh;
+  overflow: hidden;
+  color: #f5dd42;
+}
+.page-footer>div>div>div>span {
+  position: relative;
+  top: -1vh;
+  font-size: 3vh;
+  vertical-align: middle;
+}

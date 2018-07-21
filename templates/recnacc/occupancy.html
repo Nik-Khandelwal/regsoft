@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>RecnAcc Occupancy</title>
+  {% load staticfiles %}
+  <link href="{% static 'recnacc/css/font.css' %}" rel="stylesheet">
+  <link type="text/css" rel="stylesheet" href="{% static 'recnacc/css/materialize.min.css' %}"  media="screen,projection"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link type="text/css" rel="stylesheet" href="{% static 'recnacc/css/occupancy-style.css' %}"/>
+  <script type="text/javascript" src="{% static 'recnacc/js/jquery.js' %}"></script>
+  <script type="text/javascript" src="{% static 'recnacc/js/materialize.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'recnacc/js/occupancy-script.js' %}"></script>
+</head>
+<body class="center">
+  <ul id="slide-out" class="side-nav">
+    <li>
+      <div class="user-view">
+        <div class="background" style="background-color: #3794e6"></div>
+        <a><span class="white-text name">RecNAcc PANEL</span></a>
+      </div>
+    </li>
+    <li><a class="waves-effect" href="/recnacc/">Accomodate</a></li>
+    <li><a class="waves-effect" href="/recnacc/reconfirm_acco/">Re Accomodate</a></li>
+    <li><a class="waves-effect" href="/recnacc/unconfirm_acco/">De Accomodate</a></li>
+    <li><a class="waves-effect">Acco Strength</a></li>
+    <li><div class="divider"></div></li>
+    <li><a class="waves-effect bottom" href="/regsoft/regsoft_logout/">Logout</a></li>
+  </ul>
+  <ul id="slide-out-1" class="side-nav">
+    <li>
+      <div class="user-view">
+        <div class="background" style="background-color: #3794e6"></div>
+        <a><span class="white-text name">Present Stats</span></a>
+      </div>
+    </li>
+    <li><a class="waves-effect">Firewallz-Confirmed:</a></li>
+    <li><a id="fire_conf">1111</a></li>
+    <li><div class="divider"></div></li>
+    <li><a class="waves-effect">Controls Passed</a></li>
+    <li><a id="cont_conf">1111</a></li>
+    <li><div class="divider"></div></li>
+    <li><a class="waves-effect">RecNAcc Confirmed</a></li>
+    <li><a id="rec_conf">1111</a></li>
+  </ul>
+  <ul id="slide-out-2" class="side-nav">
+    <li>
+      <div class="user-view">
+        <div class="background" style="background-color: #3794e6"></div>
+        <a><span class="white-text name">Availability</span></a>
+      </div>
+    </li>
+    <div id="bhawan-availability-wrapper">
+      <li class="no-padding">
+        <ul class="collapsible collapsible-accordion">
+          <li>
+            <a class="collapsible-header">Ram<i class="material-icons">arrow_drop_down</i></a>
+            <div class="collapsible-body">
+              <ul style="width: 100%;">
+                <li><a>Common Room: 90</a></li>
+                <li><a>Single Rooms: 44</a></li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </li>
+    </div>
+  </ul>
+  <div class="ham"><a href="#" data-activates="slide-out" class="button-collapse coll-0"><i class="material-icons medium blue-text">menu</i></a></div>
+  <div class="ham1"><a href="#" data-activates="slide-out-1" class="button-collapse coll-1" onclick="fetchPassedStats();"><i class="material-icons medium blue-text">insert_chart</i></a></div>
+  <div class="ham2"><a href="#" data-activates="slide-out-2" class="button-collapse coll-2" onclick="fetchAvailabilityStats()"><i class="material-icons medium blue-text">airline_seat_individual_suite</i></a></div>
+  <div class="container blue lighten-3" id="head-occu-wrapper">
+    RecnAcc Accomodation Strength
+  </div>
+  <div class="container blue lighten-5" id="occu-wrapper">
+    <div class="row" id="acco-wrapper">
+    </div>
+  </div>
+  <footer class="page-footer blue darken-2">
+    <div class="container">
+      <div class="row">
+        <div class="col s12 center">
+          <span>Coding Club, BOSM 2018</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!-- Modals Below -->
+  <div id="edit-strength-modal" class="modal bottom-sheet blue lighten-2">
+    <div class="modal-content">
+      <div class="row">
+        <div class="col s12" id="edit-strength-header">Edit Strength</div>
+      </div>
+      <div class="row">
+        <form class="col s12" id="edit-strength-form">
+          <div class="row">
+            <div class="input-field col s12" id="edit-strength-field">
+              <input type="number" name="edit-strength" id="edit-strength" value="25">
+              <label for="edit-strength">Edit Strength</label>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="modal-footer blue lighten-2 center">
+      <a onclick="updateStrength()" class="modal-action modal-close waves-effect waves-green btn-flat change-cursor">Update Strength</a>
+    </div>
+  </div>
+</body>
+</html>

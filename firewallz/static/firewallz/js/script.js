@@ -227,7 +227,7 @@ function getCookie(name) {
   return v ? v[2] : null;
 }
 function showGroupCode(code) {
-  document.getElementById('confirm_text').innerHTML = 'GROUPCODE<br><br><b>'+code+'</b><br><br><a class="waves-effect waves-light btn z-depth-3" href="/firewallz/idcards/'+code+'/" target="_blank"><span>Print ID Cards</span></a>';
+  document.getElementById('confirm_text').innerHTML = 'GROUPCODE<br><br><b>'+code+'</b><br><br><a class="waves-effect waves-light btn z-depth-3" href="/firewallz/id_card/'+code+'/" target="_blank"><span>Print ID Cards</span></a>';
   document.getElementById('group_confirm_btn1').style.display = 'none';
   document.getElementById('group_confirm_btn2').style.display = 'none';
   document.getElementById('group_confirm_btn3').style.display = 'inline-block';

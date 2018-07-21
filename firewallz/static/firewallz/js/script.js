@@ -302,7 +302,7 @@ function fetchCollegeList() {
 function addParticipantSubmit() {
   var formData = serializeArray(document.getElementById('add_participant_form'));
   var participant_name = formData[0].value;
-  var participant_college = formData[1].value;
+  var participant_college = parseInt(formData[1].value);
   var participant_email = formData[2].value;
   var participant_phone = formData[3].value;
   var sportSelected = false;

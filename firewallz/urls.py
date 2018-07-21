@@ -25,6 +25,8 @@ urlpatterns = [
 	url(r'^sportlist/$',views.sportlist,name='sportlist'),
 
     url(r'^passed_stats/$',views.passed_stats,name='passed_stats'),
-    
+
+    url(r'^id_card/(?P<string>\w+)/$',views.id_card,name='id_card'),
+
 
 ]

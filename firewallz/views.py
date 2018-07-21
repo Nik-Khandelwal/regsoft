@@ -361,3 +361,19 @@ def passed_stats(request):
 	rec_conf = Enteredplayer.objects.filter(recnacc_passed=True).count()
 	data = {"fire_conf":fire_conf,"cont_conf":cont_conf,"rec_conf":rec_conf}
 	return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+def id_card(request,string):
+	if request.user.is_authenticated():
+		if is_firewallz_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	data = 	json.loads( request.body.decode('utf-8') )
+	dats = []
+	for pl in Enteredplayer.objects.filter(group = Group.objects.get(group_code=string)):
+		dats.append({"name":pl.regplayer.name.name,"college":pl.regplayer.college,"group_id":pl.group_id,"sport":pl.regplayer.sport,"mobile_no":pl.regplayer.mobile_no})
+	return JsonResponse({"data":dats})

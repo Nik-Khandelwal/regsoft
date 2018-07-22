@@ -453,6 +453,47 @@ def unconfirm_player(request):
 		return HttpResponse(json.dumps(dat), content_type='application/json')
 
 
+def unconfirm_player_pusher(request):
+	if request.user.is_authenticated():
+		if is_controls_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	if request.method=='POST':
+		data = json.loads( request.body.decode('utf-8') )
+	data=[]
+	for gr in Group.objects.all():
+		b=[]
+		a=[]
+		for i in data['data']['id_arr']:
+			rp = Regplayer.objects.get(pk=int(i))
+			pl = Enteredplayer.objects.get(regplayer = rp)
+			if pl.group == gr:
+				a.append(rp)
+				pl.controls_displayed = True
+				pl.save()
+		for t in a:
+			s=[]
+			s.append(t.city)
+			s.append(t.name.name)
+			s.append(t.email_id)
+			s.append(t.gender)
+			s.append(t.unbilled_amt)
+			s.append(t.college)
+			s.append(t.mobile_no)
+			s.append(t.entered)
+			s.append(t.sport)
+			s.append(t.pk)
+			b.append(s)
+		if b:
+			data.append({"participants":b,"groupid":gr.group_code})
+	pusher_client.trigger('controls_unconfirm_channel', 'controls_unconfirm_event', data)
+	
+
+
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_controls_admin, login_url='/regsoft/')
 def passed_stats(request):

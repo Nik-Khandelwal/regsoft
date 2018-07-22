@@ -503,6 +503,37 @@ def reaccomodate(request):
 		return HttpResponseRedirect('/regsoft/')
 
 
+def reaccomodate_pusher(request):
+	if request.user.is_authenticated():
+		if is_recnacc_admin(request.user):
+			print("participant_details")
+			data=[]
+			for gr in Group.objects.all():
+				b=[]
+				a=[]
+				for i in data['data']['id_arr']:
+					#print(data['data']['id_arr'])
+					rp = Regplayer.objects.get(pk=int(i))
+					pl = Enteredplayer.objects.get(regplayer=rp)
+					if pl.group == gr:
+						a.append(rp)
+						pl.recnacc_displayed = True
+						pl.save()
+					#print(p)
+				for t in a:
+					b.append({"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
+				if b:
+					data.append({"participants":b,"groupid":gr.group_code})
+			#print(data)
+			pusher_client.trigger('recnreacc_channel', 'recnreacc_event', data)
+
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+
+
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
 def passed_stats(request):

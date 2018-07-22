@@ -325,8 +325,15 @@ def unconfirm_player(request):
 		pl.save()
 		en = Enteredplayer.objects.get(regplayer=pl)
 		en.delete()
+
+		datss = []
+		b = {"name":pl.name.name,"gender":pl.gender,"college":pl.college,"city":pl.city,"mobile_no":pl.mobile_no,"email_id":pl.email_id,"sport":pl.sport,"entered":pl.entered,"unbilled_amt":pl.unbilled_amt}
+			datss.append({"pk":pl.pk,"fields":b})
+
+		pusher_client.trigger('firewallz_unconfirm_channel', 'firewallz_unconfirm_event', datss)
 		dat = {"success":1}
 		return HttpResponse(json.dumps(dat), content_type='application/json')
+
 
 
 def sportlist(request):

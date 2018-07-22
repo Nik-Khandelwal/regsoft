@@ -19,6 +19,8 @@ urlpatterns = [
 
     url(r'^generate_bill/$',views.generate_bill,name='generate_bill'),
 
+    url(r'^generate_bill_pusher/$',views.generate_bill_pusher,name='generate_bill_pusher'),
+
     url(r'^unconfirm_grp/$',views.unconfirm_grp,name='unconfirm_grp'),
 
     url(r'^unconfirm_details/$',views.unconfirm_details,name='unconfirm_details'),
@@ -26,6 +28,8 @@ urlpatterns = [
     url(r'^view_stats/$',views.view_stats,name='view_stats'),
 
     url(r'^unconfirm_player/$',views.unconfirm_player,name='unconfirm_player'),
+
+    url(r'^unconfirm_player_pusher/$',views.unconfirm_player_pusher,name='unconfirm_player_pusher'),
 
     url(r'^passed_stats/$',views.passed_stats,name='passed_stats'),
 

@@ -171,35 +171,49 @@ def confirm_group(request):
 				grp.save()
 		data = {"groupcode":grp.group_code}
 
-		data_controls=[]
-		for gr in Group.objects.all():
-			b=[]
-			pl = Enteredplayer.objects.filter(group=gr).filter(controls_passed=False).filter(controls_displayed=False)
-			a=[]
-			for p in pl:
-				a.append(Regplayer.objects.get(pk=p.regplayer_id))
-				p.controls_displayed = True
-				p.save()
-			for t in a:
-				s=[]
-				s.append(t.city)
-				s.append(t.name.name)
-				s.append(t.email_id)
-				s.append(t.gender)
-				s.append(t.unbilled_amt)
-				s.append(t.college)
-				s.append(t.mobile_no)
-				s.append(t.entered)
-				s.append(t.sport)
-				s.append(t.pk)
-				b.append(s)
-			if b:
-				data_controls.append({"participants":b,"groupid":gr.group_code})
-
-		pusher_client.trigger('my-channel2', 'my-event2', data_controls)
+		
 
 		return HttpResponse(json.dumps(data), content_type='application/json')
-	
+
+
+def confirm_group_pusher(request):
+	if request.user.is_authenticated():
+		if is_firewallz_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	data_controls=[]
+	for gr in Group.objects.all():
+		b=[]
+		pl = Enteredplayer.objects.filter(group=gr).filter(controls_passed=False).filter(controls_displayed=False)
+		a=[]
+		for p in pl:
+			a.append(Regplayer.objects.get(pk=p.regplayer_id))
+			p.controls_displayed = True
+			p.save()
+		for t in a:
+			s=[]
+			s.append(t.city)
+			s.append(t.name.name)
+			s.append(t.email_id)
+			s.append(t.gender)
+			s.append(t.unbilled_amt)
+			s.append(t.college)
+			s.append(t.mobile_no)
+			s.append(t.entered)
+			s.append(t.sport)
+			s.append(t.pk)
+			b.append(s)
+		if b:
+			data_controls.append({"participants":b,"groupid":gr.group_code})
+
+	pusher_client.trigger('my-channel2', 'my-event2', data_controls)
+	return HttpResponse(json.dumps({"success":1}), content_type='application/json')
+
+
 
 
 @login_required(login_url = '/regsoft/')

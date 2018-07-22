@@ -12,6 +12,8 @@ urlpatterns = [
 
 	url(r'^confirm_group/$',views.confirm_group,name='confirm_group'),
 
+    url(r'^confirm_group_pusher/$',views.confirm_group_pusher,name='confirm_group_pusher'),
+
 	url(r'^unconfirm_grp/$',views.unconfirm_grp,name='unconfirm_grp'),
 
     url(r'^add_participant/$',views.add_participant,name='add_participant'),

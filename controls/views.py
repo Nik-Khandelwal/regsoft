@@ -196,28 +196,36 @@ def generate_bill(request):
 
 		dat = {"success":1, "bills_pk":bil.pk}
 		print(pl.controls_passed)
-
-
-
-		data_recnacc=[]
-		for gr in Group.objects.all():
-			b=[]
-			pl = Enteredplayer.objects.filter(controls_passed=True).filter(group=gr).filter(recnacc_displayed=False)
-			a=[]
-			for p in pl:
-				a.append(Regplayer.objects.get(pk=p.regplayer_id))
-				p.recnacc_displayed = True
-				p.save()
-			for t in a:
-				b.append({"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
-			if b:
-				data_recnacc.append({"participants":b,"groupid":gr.group_code})
-				
-		print("pusher start")
-		pusher_client.trigger('my-channel', 'my-event', data_recnacc)
-		print("pusher")
-
 		return HttpResponse(json.dumps(dat), content_type='application/json')
+
+
+def generate_bill_pusher(request):
+	if request.user.is_authenticated():
+		if is_controls_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	data_recnacc=[]
+	for gr in Group.objects.all():
+		b=[]
+		pl = Enteredplayer.objects.filter(controls_passed=True).filter(group=gr).filter(recnacc_displayed=False)
+		a=[]
+		for p in pl:
+			a.append(Regplayer.objects.get(pk=p.regplayer_id))
+			p.recnacc_displayed = True
+			p.save()
+		for t in a:
+			b.append({"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
+		if b:
+			data_recnacc.append({"participants":b,"groupid":gr.group_code})
+			
+	print("pusher start")
+	pusher_client.trigger('my-channel', 'my-event', data_recnacc)
+	print("pusher")
+	return HttpResponse(json.dumps({"success":1}), content_type='application/json')
 
 
 
@@ -320,24 +328,6 @@ def piyali(request):
 		bil.save()
 		dat = {"success":1}
 		print(pl.controls_passed)
-
-		data_recnacc=[]
-		for gr in Group.objects.all():
-			b=[]
-			pl = Enteredplayer.objects.filter(controls_passed=True).filter(group=gr).filter(recnacc_displayed=False)
-			a=[]
-			for p in pl:
-				a.append(Regplayer.objects.get(pk=p.regplayer_id))
-				p.recnacc_displayed = True
-				p.save()
-			for t in a:
-				b.append({"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
-			if b:
-				data_recnacc.append({"participants":b,"groupid":gr.group_code})
-				
-		print("pusher start")
-		pusher_client.trigger('my-channel', 'my-event', data_recnacc)
-		print("pusher")
 		return HttpResponse(json.dumps(dat), content_type='application/json')
 
 

@@ -25,6 +25,8 @@ urlpatterns = [
 
     url(r'^reaccomodate/$',views.reaccomodate,name='reaccomodate'),
 
+    url(r'^reaccomodate_pusher/$',views.reaccomodate_pusher,name='reaccomodate_pusher'),
+
     url(r'^fine_amount/$',views.fine_amount,name='fine_amount'),    
 
     url(r'^srivatsa/$',views.srivatsa,name='srivatsa'),

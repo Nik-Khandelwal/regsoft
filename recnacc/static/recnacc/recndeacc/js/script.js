@@ -362,7 +362,7 @@ function deacc() {
     $('#due').modal('open');
     document.getElementById('amount_fine').innerHTML = 'Loading...';
     var ourRequest = new XMLHttpRequest();
-    var url = "/recnacc/reaccomodate/";
+    var url = "/recnacc/deaccomodate/";
     ourRequest.open("POST", url, true);
     ourRequest.setRequestHeader("Content-type", "application/json");
     ourRequest.setRequestHeader("X-CSRFToken", csrf_token);

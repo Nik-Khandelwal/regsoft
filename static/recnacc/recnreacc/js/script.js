@@ -729,21 +729,41 @@ function fetchStats() {
     if (ourRequest.status >= 200 && ourRequest.status < 400) {
       ourData = JSON.parse(ourRequest.responseText);
       var data = ourData.data;
+      document.getElementById('stats_ul').innerHTML = '';
       for (var i = 0; i < data.length; i++) {
-        var rooms = '';
-        var participants = '';
-        for (var j = 0; j < data[i][1].length; j++) {
-          participants = '';
-          for (var k = 0; k < data[i][1][j][1].length; k+=2) {
-            if (data[i][1][j][1][k+1] == 1) {
-              participants += '<a class="collection-item">'+data[i][1][j][1][k]+'<span class="right">Deaccomodated</span></a>';
-            } else {
-              participants += '<a class="collection-item">'+data[i][1][j][1][k]+'<span class="right">Accomodated</span></a>';
-            }
+        var hostel_name = data[i].hostel_name;
+        var list = data[i].list;
+        var common_room = '';
+        var common_room_present = false;
+        var common_room_list = '';
+        var tt_room = '';
+        var tt_room_present = false;
+        var tt_room_list = '';
+        var single_room = '';
+        var single_room_present = false;
+        var single_room_list = '';
+        for (var j = 0; j < list.length; j++) {
+          if (list[j].type=="common_room") {
+            common_room_present=true;
+            single_room_list+='<a class="collection-item">'+list[j].name+'<span class="right">'+list[j].mobile+'</span></a>';
+          } else if(list[j].type=="tt_room") {
+            tt_room_present=true;
+            tt_room_list+='<a class="collection-item">'+list[j].name+'<span class="right">'+list[j].mobile+'</span></a>';
+          } else if (list[j].type=='s_room') {
+            single_room_present=true;
+            single_room_list+='<a class="collection-item">'+list[j].name+' - Room No : '+list[j].room_no+'<span class="right">'+list[j].mobile+'</span></a>';
           }
-          rooms += '<li> <div class="collapsible-header"><i class="material-icons">airline_seat_individual_suite</i>'+data[i][1][j][0]+'</div><div class="collapsible-body center white"> <div class="collection" style="width: 100%;">'+participants+'</div></div></li>';
         }
-        document.getElementById('stats_ul').innerHTML += '<li> <div class="collapsible-header active"><i class="material-icons">airline_seat_individual_suite</i>'+data[i][0]+'</div><div class="collapsible-body center white"> <ul class="collapsible center-align" data-collapsible="accordion" style="width: 100%;">'+rooms+'</ul> </div></li>';
+        if (common_room_present) {
+          common_room = '<li class="bhawan-rooms-wrapper"> <div class="collapsible-header"><i class="material-icons">airline_seat_individual_suite</i>Common Room</div><div class="collapsible-body center white parts-wrapper"> <div class="collection" style="width: 100%;"> '+common_room_list+' </div></div></li>';
+        }
+        if (tt_room_present) {
+          tt_room = '<li class="bhawan-rooms-wrapper"> <div class="collapsible-header"><i class="material-icons">airline_seat_individual_suite</i>TT Room</div><div class="collapsible-body center white parts-wrapper"> <div class="collection" style="width: 100%;"> '+tt_room_list+' </div></div></li>';
+        }
+        if (single_room_present) {
+          single_room = '<li class="bhawan-rooms-wrapper"> <div class="collapsible-header"><i class="material-icons">airline_seat_individual_suite</i>Common Room</div><div class="collapsible-body center white parts-wrapper"> <div class="collection" style="width: 100%;"> '+single_room_list+' </div></div></li>';
+        }
+        document.getElementById('stats_ul').innerHTML += '<li class="bhawan-name-wrapper"> <div class="collapsible-header"><i class="material-icons">airline_seat_individual_suite</i>'+hostel_name+'</div><div class="collapsible-body center white bhawan-wrapper"> <ul class="collapsible popout center-align" data-collapsible="accordion" style="width: 100%;">'+common_room+tt_room+single_room+'</ul> </div></li>';
       }
       $('.collapsible').collapsible();
       for (var i = 0; i < document.getElementsByClassName('collapsible').length; i++) {
@@ -751,11 +771,11 @@ function fetchStats() {
       }
       statsReady = 1;
     } else {
-      Materialize.toast('Server Error!', 4000, "toast-fetch_error");  
+      Materialize.toast('Server Error!', 3000, "toast-fetch_error");  
     }
   }
   ourRequest.onerror = function() {
-    Materialize.toast('Could not connect to server!', 4000, "toast-fetch_no_connect");
+    Materialize.toast('Could not connect to server!', 3000, "toast-fetch_no_connect");
     // var jsonResponse = {"data": [["Ram", [["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]],["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]],["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]]]],["Ram", [["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]],["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]],["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]]]],["Ram", [["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]],["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]],["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]]]],["Ram", [["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]],["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]],["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]]]]]};
   }
   ourRequest.send();

@@ -1,14 +1,14 @@
-body::-webkit-scrollbar-track, #left-body::-webkit-scrollbar-track, #right-body::-webkit-scrollbar-track {
+*::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
   background-color: #F5F5F5;
 }
-body::-webkit-scrollbar, #left-body::-webkit-scrollbar, #right-body::-webkit-scrollbar {
+*::-webkit-scrollbar {
   width: 8px;
   height: 7px;
   background-color: #F5F5F5;
 }
-body::-webkit-scrollbar-thumb, #left-body::-webkit-scrollbar-thumb, #right-body::-webkit-scrollbar-thumb {
+*::-webkit-scrollbar-thumb {
   border-radius: 10px;
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   background-color: #888;
@@ -18,7 +18,7 @@ body::-webkit-scrollbar-thumb, #left-body::-webkit-scrollbar-thumb, #right-body:
   position: fixed;
   height: 70vh;
   width: 45vw;
-  top: 18vh;
+  top: 10vh;
   left: 5vw;
 }
 .name, .group-id, .coll-name {
@@ -64,8 +64,8 @@ body::-webkit-scrollbar-thumb, #left-body::-webkit-scrollbar-thumb, #right-body:
   position: fixed;
   height: 70vh;
   width: 45vw;
-  top: 18vh;
-  left: 51vw;
+  top: 10vh;
+  left: 50.5vw;
 }
 .right-one {
   border: 0;
@@ -109,7 +109,7 @@ body::-webkit-scrollbar-thumb, #left-body::-webkit-scrollbar-thumb, #right-body:
 }
 .add_participant-btn {
   position: fixed;
-  top: 90vh;
+  top: 81vh;
   left: 56vw;
   width: 15vw;
   padding: 0 1vmin;
@@ -117,7 +117,7 @@ body::-webkit-scrollbar-thumb, #left-body::-webkit-scrollbar-thumb, #right-body:
 }
 .confirm_group-btn {
   position: fixed;
-  top: 90vh;
+  top: 81vh;
   left: 76vw;
   width: 15vw;
   padding: 0 1vmin;
@@ -125,8 +125,8 @@ body::-webkit-scrollbar-thumb, #left-body::-webkit-scrollbar-thumb, #right-body:
 }
 .add_all-btn {
   position: fixed;
-  top: 12vh;
-  left: 48vw;
+  top: 10vh;
+  left: 0.5vw;
 }
 #confirm_dialog {
   top: 30vh !important;
@@ -139,7 +139,7 @@ body::-webkit-scrollbar-thumb, #left-body::-webkit-scrollbar-thumb, #right-body:
   position: fixed;
   width: 45vw;
   left: 5vw;
-  top: 7vh;
+  top: 0vh;
 }
 .modal {
   width: 85%;
@@ -148,12 +148,30 @@ body::-webkit-scrollbar-thumb, #left-body::-webkit-scrollbar-thumb, #right-body:
   display: block;
   width: 100% !important;
 }
-.no_of_part{position: fixed; top: 17.5vh; right: 0vw;}
-.ham1{position: absolute;right: 0;bottom: 0;}
+.no_of_part{position: fixed; top: 1vh; right: 1vh;}
+.ham1{position: absolute;right: 0;bottom: 11vh;}
 .stats{position: fixed;z-index: 1;width: 100vw;top: 0;left: 0;transition: 0.5s;}
 #close{;z-index: 5;display: none;cursor: pointer;}
 #stat_data{;z-index: 5;display: none;height:80vh;overflow-y: auto;}
 #csv{width:20vw;display: none;z-index: 5;position: fixed; bottom: 0;left: 0;background-color: white;color:teal;}
 #excel{width:20vw;display: none;z-index: 5;position: fixed; bottom: 0;left: 40vw;background-color: white;color:teal;}
 #pdf{width:20vw;display: none;z-index: 5;position: fixed; bottom: 0;left: 80vw;background-color: white;color:teal;}
-.cont{position: absolute;bottom: 5px;left: 5px;}
+.cont{position: absolute;bottom: calc(11vh + 5px);left: 5px;}
+.page-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  z-index: 0;
+  max-height: 11vh;
+  height: 11vh;
+  overflow: hidden;
+  color: #f5dd42;
+}
+.page-footer>div>div>div>span {
+  font-size: 3vh;
+  vertical-align: middle;
+}
+html {
+  background-color: rgba(104, 168, 224, 0.3);
+}

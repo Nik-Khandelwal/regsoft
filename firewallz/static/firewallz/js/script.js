@@ -278,7 +278,7 @@ function fetchCollegeList() {
   ourRequest.onreadystatechange = function() {
     if (ourRequest.readyState === 4 && ourRequest.status === 200) {
       var college = JSON.parse(ourRequest.responseText);
-      collegeList = college;
+      collegeList = college.data;
       Materialize.toast('Updated College List!', 3000);
       document.getElementById('college_field').innerHTML = '<option value="" disabled="disabled" selected="selected"></option>';
       for (var i = 0; i < college.length; i++) {

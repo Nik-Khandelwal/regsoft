@@ -38,7 +38,7 @@ import json
 from django.core import serializers, mail
 from django.contrib.auth.decorators import login_required
 from django.dispatch import receiver
-
+from django.db.models.functions import Lower
 from random import choice
 from string import ascii_uppercase
 
@@ -377,3 +377,47 @@ def id_card(request,string):
 	for pl in Enteredplayer.objects.filter(group = Group.objects.get(group_code=string)):
 		dats.append({"name":pl.regplayer.name.name,"college":pl.regplayer.college,"group_id":pl.group_id,"sport":pl.regplayer.sport,"mobile_no":pl.regplayer.mobile_no})
 	return JsonResponse({"data":dats})
+
+
+def collegelist(request):
+	if request.user.is_authenticated():
+		if is_firewallz_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	data = []
+	for tm in Team.objects.filter(activate=0).order_by(Lower('college')):
+		data.append({"pk":tm.pk,"college":tm.college})
+	return JsonResponse({"data":data})
+
+ #var data = [["BITS Pilani",[["Arpit", 9829775537],["Nikhil", 921379131],["Sri", 2349719891],["Satya", 9958295537]]],["BITS Hyderabad",[["Arpit", 9829775537],["Nikhil", 921379131],["Sri", 2349719891],["Satya", 9958295537],["Piyali", 4567890435]]],["IIT Delhi",[["Part1", 47656575537],["Part2", 7647676],["Part3", 2345678435678]]]];
+
+
+def view_stats(request):
+	if request.user.is_authenticated():
+		if is_firewallz_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	data =[]
+	for tm in Team.objects.filter(activate=0).order_by(Lower('college')):
+		dat = []
+		da = []
+		for pl in Regplayer.objects.filter(college = tm.college):
+			d = []
+			if Enteredplayer.objects.get(regplayer=pl):
+				d.append(pl.name.name)
+				d.append(pl.mobile_no)
+			if d:
+				da.append(d)
+		if da:
+			dat.append(tm.college)
+			dat.append(da)
+			data.append(dat)
+	return JsonResponse({"data":data})

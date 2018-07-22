@@ -667,12 +667,6 @@ function printBill() {
 	}
 	ourRequest.send(string_obj);
 }
-// function timedCheck() {
-//   updateLeft();
-//   setTimeout(function(){
-//     timedCheck();
-//   }, 30000);
-// }
 
 function search() {
   var span_name, span_college, span_groupid;
@@ -735,19 +729,19 @@ function fetchStats() {
   ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
   ourRequest.onload = function() {
     if (ourRequest.status >= 200 && ourRequest.status < 400) {
-      ourData = JSON.parse(ourRequest.responseText);
-      console.log(ourData);
-      var data = ourData;
-      for (var i = 0; i < data.length; i++) {
-        var participants = '';
-        for (var j = 0; j < data[i][1].length; j++) {
-          participants += '<a class="collection-item">'+data[i][1][j][0]+'<span id="phn_no" class="right">'+data[i][1][j][1]+'</span></a>';
-        }
-        document.getElementById('stats_ul').innerHTML += '<li> <div class="collapsible-header"><i class="material-icons">account_balance</i>'+data[i][0]+'</div><div class="collapsible-body center white"> <div class="collection ">'+participants+'</div></div></li>';
-      }
-      Materialize.toast('Updated!', 3000);
+      	ourData = JSON.parse(ourRequest.responseText);
+      	console.log(ourData);
+      	var data = ourData;
+      	for (var i = 0; i < data.length; i++) {
+        	var participants = '';
+        	for (var j = 0; j < data[i][1].length; j++) {
+          		participants += '<a class="collection-item">'+data[i][1][j][0]+'<span id="phn_no" class="right">'+data[i][1][j][1]+'</span></a>';
+        	}
+        	document.getElementById('stats_ul').innerHTML += '<li> <div class="collapsible-header"><i class="material-icons">account_balance</i>'+data[i][0]+'</div><div class="collapsible-body center white"> <div class="collection ">'+participants+'</div></div></li>';
+      	}
+      	Materialize.toast('Updated!', 3000);
     } else {
-      Materialize.toast('Server Error!', 4000, "toast-fetch_error");  
+      	Materialize.toast('Server Error!', 4000, "toast-fetch_error");  
     }
   }
   ourRequest.onerror = function() {
@@ -756,24 +750,41 @@ function fetchStats() {
   }
   ourRequest.send();
 }
-        function stats(){
-            $('.button-collapse').sideNav('hide');
-            fetchStats();
-            document.getElementById("stat").style.height="100vh";
-            document.getElementById("close").style.display="block";
-            document.getElementById("stat_data").style.display="block";
-            document.getElementById("csv").style.display="inline-block";
-            document.getElementById("excel").style.display="inline-block";
-            document.getElementById("pdf").style.display="inline-block";
-        }
+function stats(){
+	$('.button-collapse').sideNav('hide');
+	fetchStats();
+	document.getElementById("stat").style.height="100vh";
+	document.getElementById("close").style.display="block";
+	document.getElementById("stat_data").style.display="block";
+	document.getElementById("csv").style.display="inline-block";
+	document.getElementById("excel").style.display="inline-block";
+	document.getElementById("pdf").style.display="inline-block";
+}
 function close_stats(){
-         
-            document.getElementById("stat").style.height="0vh";
-   
-                document.getElementById("close").style.display="none";
-                document.getElementById("stat_data").style.display="none";
-                document.getElementById("csv").style.display="none";
-                document.getElementById("excel").style.display="none";
-                document.getElementById("pdf").style.display="none";
-
-        }
+	document.getElementById("stat").style.height="0vh";
+	document.getElementById("close").style.display="none";
+	document.getElementById("stat_data").style.display="none";
+	document.getElementById("csv").style.display="none";
+	document.getElementById("excel").style.display="none";
+	document.getElementById("pdf").style.display="none";
+}
+// Enable pusher logging - don't include this in production
+Pusher.logToConsole = false;
+var pusher = new Pusher('9b825df805e0b694cccc', {
+	cluster: 'ap2',
+	encrypted: true
+});
+// Below Channel for Data from Firewallz Socket
+var channel = pusher.subscribe('my-channel2');
+channel.bind('my-event2', function(data) {
+	// Same Data Format as details view.
+	console.log(data);
+	poppulate_left(data);
+});
+// Below Channel for Data from Controls Unconfirm Socket
+var controls_unconfirm_channel = pusher.subscribe('controls_unconfirm_channel');
+controls_unconfirm_channel.bind('unconfirm_event', function(data) {
+	// Same Data Format as details view.
+	console.log(data);
+	poppulate_left(data);
+});

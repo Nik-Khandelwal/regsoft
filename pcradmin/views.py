@@ -157,7 +157,7 @@ CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
 def is_pcradmin_admin(user):
 	if user:
-		if Pcradmin_user.objects.get(pk=1).user == user or Pcradmin_user.objects.get(pk=2).user == user:
+		if Pcradmin_user.objects.get(pk=1).user == user:
 			return True
 	return False
 

@@ -198,7 +198,7 @@ function confirmGroup() {
       fetchParticipants();
     } else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
       Materialize.toast('There was some error connecting to the server!', 3000);
-      showGroupCode('RANDOM');
+      showGroupCode('ERROR');
       resetTables();
       fetchParticipants();
     }
@@ -221,7 +221,7 @@ function getCookie(name) {
   return v ? v[2] : null;
 }
 function showGroupCode(code) {
-  document.getElementById('confirm_text').innerHTML = 'GROUPCODE<br><br><b>'+code+'</b>';
+  document.getElementById('confirm_text').innerHTML = 'GROUPCODE<br><br><b>'+code+'</b><br><br><a class="waves-effect waves-light btn z-depth-3" href="/firewallz/id_card/'+code+'/" target="_blank"><span>Print ID Cards</span></a>';
   document.getElementById('group_confirm_btn1').style.display = 'none';
   document.getElementById('group_confirm_btn2').style.display = 'none';
   document.getElementById('group_confirm_btn3').style.display = 'inline-block';
@@ -230,10 +230,11 @@ function showGroupCode(code) {
 function addParticipant() {
   resetAddForm();
   fetchSportList();
+  fetchCollegeList();
   $('#add_participant_modal').modal('open');
 }
 function resetAddForm() {
-  document.getElementById('add_participant_modal').innerHTML = '<div class="row"> <form class="col s12" id="add_participant_form"> <div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">person</i> <input type="text" name="Indi_Captain_Name" id="indi_captain_name_field" class="validate" required="required"> <label for="indi_captain_name_field" data-error="Enter Name of Participant">Name of Participant</label> </div></div><div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">business</i> <input type="text" name="Indi_College_Name" id="indi_college_name_field" class="validate" required="required"> <label for="indi_college_name_field" data-error="Enter College of Participant">College Name</label> </div></div><div class="row"> <div class="input-field col m6 s12"> <i class="material-icons prefix">location_city</i> <input type="text" name="City" id="city_field" class="validate" required="required"> <label for="city_field" data-error="Enter your City">City</label> </div><div class="input-field col m6 s12"> <i class="material-icons prefix">location_on</i> <input type="text" name="State" id="state_field" class="validate" required="required"> <label for="state_field" data-error="Enter your State">State</label> </div></div><div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">email</i> <input type="email" name="Indi_Captain_Email" id="indi_captain_email_field" class="validate" required="required"> <label for="indi_captain_email_field" data-error="Enter a Valid Email">E-Mail of Participant</label> </div></div><div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">local_phone</i> <input type="text" name="Indi_Captain_Phone" id="indi_captain_phone_field" class="validate" required="required" maxlength="10" data-length="10"> <label for="indi_captain_phone_field" data-error="Enter Phone Number">Participant Phone Number</label> </div></div><div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">directions_run</i> <select id="participant_sport_select" multiple="multiple"> <option value="" disabled="disabled" selected="selected"></option> </select> <label for="indi_sport_field" data-error="Enter Sport of Participant">Sport</label> </div></div><div class="row"> <div class="col s4 center"> Gender </div><div class="col s4 center"> <input type="radio" name="indi_gender" id="indi_male" value="Male"> <label for="indi_male">Male</label> </div><div class="col s4 center"> <input type="radio" name="indi_gender" id="indi_female" value="Female"> <label for="indi_female">Female</label> </div></div><div class="row" id="submit-indi-btn"> <div class="col s12 center"> <a class="waves-effect waves-light btn btn-large" onclick="addParticipantSubmit()"><i class="material-icons right">send</i>Submit</a> </div></div></form> </div>';
+  document.getElementById('add_participant_modal').innerHTML = '<div class="row"> <form class="col s12" id="add_participant_form"> <div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">person</i> <input type="text" name="Indi_Captain_Name" id="indi_captain_name_field" class="validate" required="required"> <label for="indi_captain_name_field" data-error="Enter Name of Participant">Name of Participant</label> </div></div><div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">business</i> <select id="college_field" name="College"> <option value="" disabled="disabled" selected="selected"></option> </select> <label for="college_field" data-error="Select College Name">College</label> </div></div><div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">email</i> <input type="email" name="Indi_Captain_Email" id="indi_captain_email_field" class="validate" required="required"> <label for="indi_captain_email_field" data-error="Enter a Valid Email">E-Mail of Participant</label> </div></div><div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">local_phone</i> <input type="text" name="Indi_Captain_Phone" id="indi_captain_phone_field" class="validate" required="required" maxlength="10" data-length="10"> <label for="indi_captain_phone_field" data-error="Enter Phone Number">Participant Phone Number</label> </div></div><div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">directions_run</i> <select id="participant_sport_select" multiple="multiple"> <option value="" disabled="disabled" selected="selected"></option> </select> <label for="indi_sport_field" data-error="Enter Sport of Participant">Sport</label> </div></div><div class="row"> <div class="col s4 center"> Gender </div><div class="col s4 center"> <input type="radio" name="indi_gender" id="indi_male" value="Male"> <label for="indi_male">Male</label> </div><div class="col s4 center"> <input type="radio" name="indi_gender" id="indi_female" value="Female"> <label for="indi_female">Female</label> </div></div><div class="row" id="submit-indi-btn"> <div class="col s12 center"> <a class="waves-effect waves-light btn btn-large" onclick="addParticipantSubmit()"><i class="material-icons right">send</i>Submit</a> </div></div></form> </div>';
   $('select').material_select();
   Materialize.updateTextFields();
   $("input#indi_captain_phone_field").characterCounter();
@@ -251,7 +252,6 @@ function fetchSportList() {
       var sport = JSON.parse(ourRequest.responseText);
       sportsList = sport;
       Materialize.toast('Updated Sport List!', 3000);
-      console.log(sport);
       document.getElementById('participant_sport_select').innerHTML = '<option value="" disabled="disabled" selected="selected"></option>';
       for (var i = 0; i < sport.length; i++) {
         document.getElementById('participant_sport_select').innerHTML += '<option value="'+sport[i].pk+'">'+sport[i].sport+'</option>';
@@ -266,25 +266,59 @@ function fetchSportList() {
   ourRequest.send('');
 }
 var sportsList;
+var collegeList;
+function fetchCollegeList() {
+  Materialize.toast('Updating College List!', 3000);
+  csrf_token = getCookie('csrftoken');
+  var ourRequest = new XMLHttpRequest();
+  var url = "/firewallz/collegelist/";
+  ourRequest.open("POST", url, true);
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onreadystatechange = function() {
+    if (ourRequest.readyState === 4 && ourRequest.status === 200) {
+      var college = JSON.parse(ourRequest.responseText);
+      collegeList = college;
+      Materialize.toast('Updated College List!', 3000);
+      document.getElementById('college_field').innerHTML = '<option value="" disabled="disabled" selected="selected"></option>';
+      for (var i = 0; i < college.length; i++) {
+        document.getElementById('college_field').innerHTML += '<option value="'+college[i].pk+'">'+college[i].college+'</option>';
+      }
+      $('select').material_select();
+      Materialize.updateTextFields();
+    } else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
+      Materialize.toast('There was some error connecting to the server!', 3000);
+      // var sport = [{"pk": 1, "sport": "Basketball"},{"pk": 2, "sport": "Badminton Boys"},{"pk": 3, "sport": "Cricket Girls"}];
+    }
+  };
+  ourRequest.send('');
+}
 function addParticipantSubmit() {
   var formData = serializeArray(document.getElementById('add_participant_form'));
   var participant_name = formData[0].value;
-  var participant_college = formData[1].value;
-  var participant_city = formData[2].value;
-  var participant_state = formData[3].value;
-  var participant_email = formData[4].value;
-  var participant_phone = formData[5].value;
-  var participant_sport = $('#participant_sport_select').val();
+  var participant_college = parseInt(formData[1].value);
+  var participant_email = formData[2].value;
+  var participant_phone = formData[3].value;
+  var sportSelected = false;
+  var participant_sport = [];
+  var i=4;
+  while (formData[i] != undefined && formData[i].name=='participant_sport_select') {
+    if (formData[i].name=='participant_sport_select' && i>4) {
+      sportSelected=true;
+      participant_sport.push(parseInt(formData[i].value));
+    }
+    i++;
+  }
   var participant_gender = '';
-  if (formData.length > 6) {
-    participant_gender = formData[6].value;
+  if (formData[i] != undefined) {
+    participant_gender = formData[i].value;
   }
 
   if (participant_gender == '') {
     Materialize.toast('Please Enter Participants Gender!', 3000);
   } else if (!validateEmail(participant_email) || !validatePhoneNumber(participant_phone)) {
     Materialize.toast('Email/Phone Number is Wrong', 3000);
-  } else if (participant_name && participant_college && participant_city && participant_state && participant_email && participant_phone && participant_sport) {
+  } else if (participant_name && participant_college && participant_email && participant_phone && sportSelected) {
     // Submit Form to Backend
     Materialize.toast('Adding Participant, Please Wait!', 4000);
     var newParticipant = {
@@ -294,8 +328,6 @@ function addParticipantSubmit() {
     newParticipant["data"].push({
       "name": participant_name,
       "college": participant_college,
-      "city": participant_city,
-      "state": participant_state,
       "email": participant_email,
       "phone": participant_phone,
       "sport": participant_sport,
@@ -315,12 +347,15 @@ function addParticipantSubmit() {
     ourRequest.onreadystatechange = function() {
       if (ourRequest.readyState === 4 && ourRequest.status === 200) {
         var json = JSON.parse(ourRequest.responseText);
-        var sportsNames = [];
+        var sportsNames = '';
         // Obtain PK of the Participant just registered
         for (var i = 0; i < participant_sport.length; i++) {
           for (var j = 0; j < sportsList.length; j++) {
             if (participant_sport[i] == sportsList[j].pk) {
-              sportsNames.push(sportsList[j].sport);
+              sportsNames+=sportsList[j].sport;
+              if (i!=(participant_sport.length-1)) {
+                sportsNames+=', ';
+              }
             }
           }
         }

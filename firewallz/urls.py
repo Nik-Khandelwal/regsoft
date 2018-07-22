@@ -28,5 +28,8 @@ urlpatterns = [
 
     url(r'^id_card/(?P<string>\w+)/$',views.id_card,name='id_card'),
 
+    url(r'^collegelist/$',views.collegelist,name='collegelist'),
+
+    url(r'^view_stats/$',views.view_stats,name='view_stats'),
 
 ]

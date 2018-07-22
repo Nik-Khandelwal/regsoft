@@ -254,3 +254,49 @@ function fetchPassedStats() {
   }
   ourRequest.send('');
 }
+// Below Channel for Data from Firewallz Socket
+var channel = pusher.subscribe('my-channel2');
+channel.bind('my-event2', function(data) {
+  // Same Data Format as details view.
+  pusherGetGroups();
+});
+// Below Channel for Controls Confirm
+var channel = pusher.subscribe('my-channel');
+channel.bind('my-event', function(data) {
+  pusherGetGroups();
+});
+// Below Channel for Data from Controls Unconfirm Socket
+var controls_unconfirm_channel = pusher.subscribe('controls_unconfirm_channel');
+controls_unconfirm_channel.bind('controls_unconfirm_event', function(data) {
+  // Same Data Format as details view.
+  pusherGetGroups();
+});
+function pusherGetGroups() {
+  var csrf_token = getCookie('csrftoken');
+  var ourRequest = new XMLHttpRequest();
+  var url = "/firewallz/unconfirm_details/";
+  ourRequest.open("POST", url, true);
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  // POST
+  send_obj = {
+    "csrftoken": {
+      "csrfmiddlewaretoken": csrf_token
+    }
+  };
+  var send_json = JSON.stringify(send_obj);
+  // Obtain 
+  ourRequest.onreadystatechange = function () {
+    if (ourRequest.readyState === 4 && ourRequest.status === 200) {
+      document.getElementById("table-ul").innerHTML='<div class="collapsible-body custom-collapsible-body blue lighten-5"> <span class="pk-col center" style="flex-basis: 10%;">Group No</span> <span class="name center" style="flex-basis: 40%;">Name</span> <span class="coll-name center" style="flex-basis: 40%;">College</span> <span class="group-id-col center">Group ID</span> <i style="flex-basis: 10%;" class="material-icons">account_circle</i> </div>';
+      var recieve_json = JSON.parse(ourRequest.responseText);
+      for (var i = 0; i < recieve_json.length; i++) {
+        document.getElementById("table-ul").innerHTML+='<div class="collapsible-body custom-collapsible-body blue lighten-5 change_cursor" onclick="open_details(this)"> <span class="pk-col center" style="flex-basis: 10%;">'+recieve_json[i].pk+'</span> <span class="name center" style="flex-basis: 40%;">'+recieve_json[i].name+'</span> <span class="coll-name center" style="flex-basis: 40%;">'+recieve_json[i].college+'</span> <span class="group-id-col center">'+recieve_json[i].groupid+'</span> <i style="flex-basis: 10%;" class="material-icons">account_circle</i> </div>';
+      }
+    }
+    else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
+      // Do Nothing
+    }
+  }
+  ourRequest.send(send_json);
+}

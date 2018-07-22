@@ -9,29 +9,8 @@
     <link type="text/css" rel="stylesheet" href="{% static 'recnacc/css/style.css' %}"/>
     <script type="text/javascript" src="{% static 'recnacc/js/jquery.js' %}"></script>
     <script type="text/javascript" src="{% static 'recnacc/js/materialize.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'recnacc/js/script.js' %}"></script>
     <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
-    <script>
-
-      // Enable pusher logging - don't include this in production
-      Pusher.logToConsole = false;
-
-      var pusher = new Pusher('9b825df805e0b694cccc', {
-        cluster: 'ap2',
-        encrypted: true
-      });
-
-      var channel = pusher.subscribe('my-channel');
-      channel.bind('my-event', function(data) {
-        console.log(data);
-        poppulate_left(data);
-      });
-      var channel2 = pusher.subscribe('my-channel2');
-      channel2.bind('my-event2', function(data) {
-        console.log(data);
-        firewallzUpdates(data);
-      });
-    </script>
+    <script type="text/javascript" src="{% static 'recnacc/js/script.js' %}"></script>
   </head>
   <body onload="loaded();">
     <!-- Notification Button -->

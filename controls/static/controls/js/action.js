@@ -783,7 +783,7 @@ channel.bind('my-event2', function(data) {
 });
 // Below Channel for Data from Controls Unconfirm Socket
 var controls_unconfirm_channel = pusher.subscribe('controls_unconfirm_channel');
-controls_unconfirm_channel.bind('unconfirm_event', function(data) {
+controls_unconfirm_channel.bind('controls_unconfirm_event', function(data) {
 	// Same Data Format as details view.
 	console.log(data);
 	poppulate_left(data);

@@ -278,7 +278,7 @@ function fetchCollegeList() {
   ourRequest.onreadystatechange = function() {
     if (ourRequest.readyState === 4 && ourRequest.status === 200) {
       var college = JSON.parse(ourRequest.responseText);
-      collegeList = college;
+      collegeList = college.data;
       Materialize.toast('Updated College List!', 3000);
       document.getElementById('college_field').innerHTML = '<option value="" disabled="disabled" selected="selected"></option>';
       for (var i = 0; i < college.length; i++) {
@@ -635,3 +635,15 @@ function fetchPassedStats() {
   }
   ourRequest.send('');
 }
+Pusher.logToConsole = false;
+var pusher = new Pusher('9b825df805e0b694cccc', {
+  cluster: 'ap2',
+  encrypted: true
+});
+
+var firewallz_unconfirm_channel = pusher.subscribe('firewallz_unconfirm_channel');
+channel.bind('firewallz_unconfirm_event', function(data) {
+  console.log(data);
+  updateLeftTable(data);
+  // Data Format - Same as Firewallz Details View
+});

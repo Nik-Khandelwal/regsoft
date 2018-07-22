@@ -635,3 +635,15 @@ function fetchPassedStats() {
   }
   ourRequest.send('');
 }
+Pusher.logToConsole = false;
+var pusher = new Pusher('9b825df805e0b694cccc', {
+  cluster: 'ap2',
+  encrypted: true
+});
+
+var firewallz_unconfirm_channel = pusher.subscribe('firewallz_unconfirm_channel');
+channel.bind('firewallz_unconfirm_event', function(data) {
+  console.log(data);
+  updateLeftTable(data);
+  // Data Format - Same as Firewallz Details View
+});

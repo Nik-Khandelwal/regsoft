@@ -89,6 +89,13 @@ User=get_user_model()
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
+pusher_client = pusher.Pusher(
+  app_id='499153',
+  key='9b825df805e0b694cccc',
+  secret='f2bbd60c69e36c90a572',
+  cluster='ap2',
+  ssl=True
+)
 
 def is_recnacc_admin(user):
 	if user:
@@ -231,6 +238,8 @@ def accomodate(request):
 				bill = Accorecnacc.objects.filter(accomodation=None).first()
 				bill.accomodation = ac
 				bill.save()
+				data_update = [4]
+				pusher_client.trigger('recnreacc_channel', 'recnreacc_event', data_update)
 				return HttpResponse(json.dumps(dat), content_type='application/json')
 		else:
 			logout(request)
@@ -265,6 +274,8 @@ def accomodate_singleroom(request):
 					pl.recnacc_passed = True
 					pl.save()
 				dat = {"success":1}
+				data_update = [5]
+				pusher_client.trigger('recnreacc_channel', 'recnreacc_event', data_update)
 				return HttpResponse(json.dumps(dat), content_type='application/json')
 		else:
 			logout(request)
@@ -363,6 +374,8 @@ def deaccomodate(request):
 					pl.save()
 					fine += rp.unbilled_amt
 				dat = {"fine":fine}
+				data_update = [7]
+				pusher_client.trigger('recndeacc_channel', 'recndeacc_event', data_update)
 				return HttpResponse(json.dumps(dat), content_type='application/json')
 		else:
 			logout(request)
@@ -616,6 +629,8 @@ def edit_occupency(request):
 			ac = Accomodation.objects.get(pk=data['data']['pk'])
 			ac.strength = data['data']['strength']
 			ac.save()
+			data_update = [9]
+			pusher_client.trigger('recnacc_occupancy_channel', 'recnacc_occupancy_event', data_update)
 			return HttpResponse(json.dumps({"success":"1"}), content_type='application/json')	
 		else:
 			logout(request)

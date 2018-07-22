@@ -538,22 +538,65 @@ function updatePassedStats(data) {
   document.getElementById('cont_conf').innerHTML = data[1];
   document.getElementById('rec_conf').innerHTML = data[2];
 }
-/*
 Pusher.logToConsole = false;
 var pusher = new Pusher('9b825df805e0b694cccc', {
   cluster: 'ap2',
   encrypted: true
 });
-var channel3 = pusher.subscribe('my-channel3');
-channel3.bind('my-event3', function(data) {
-  console.log(data);
-  remove_right_all();  // empty right table
-  remove_left_all(); // empty left table
-  retrieve_left();
+
+// Controls to RecnAcc Channel
+var channel = pusher.subscribe('my-channel');
+channel.bind('my-event', function(data) {
+  pusher_retrieve_left();
 });
-var channel = pusher.subscribe('my-channel5');
-channel.bind('my-event5', function(data) {
-  console.log(data);
-  poppulate_left(data);
+// RecnAcc to RecnReAcc Channel
+var recnacc_channel = pusher.subscribe('recnacc_channel');
+recnacc_channel.bind('recnacc_event', function(data) {
+	pusher_retrieve_left();
 });
-*/
+// RecnReAcc to RecnAcc Channel
+var recnreacc_channel = pusher.subscribe('recnreacc_channel');
+recnreacc_channel.bind('recnreacc_event', function(data) {
+	pusher_retrieve_left();
+});
+
+function pusher_retrieve_left(){
+	var csrf_token = getCookie('csrftoken');
+	var ourRequest = new XMLHttpRequest();
+	ourRequest.open("POST", "/controls/unconfirm_details/");
+	ourRequest.setRequestHeader("Content-type", "application/json");
+	ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+	ourRequest.onload = function() {
+		if (ourRequest.status >= 200 && ourRequest.status < 400) {
+			ourData = JSON.parse(ourRequest.responseText);
+			pusher_poppulate_left(ourData);
+		}
+		else 		
+			// Do nothing	
+	}
+	ourRequest.onerror = function() {
+		// Nothing
+	}
+	ourRequest.send();
+}
+function pusher_poppulate_left(ourData){
+	for(ind=0;ind<ourData.length;ind++){
+		var tmp_group= document.getElementById("left-group-temp"); //template || group
+		var un_list= document.getElementsByClassName("left-one")[0];
+		// append as last child of unordered list
+		//un_list.appendChild(tmp_group.content.cloneNode(true)); 
+		un_list.insertBefore(tmp_group.content.cloneNode(true),un_list.firstElementChild); //add group || list index to expandable container || ul
+		document.getElementsByClassName("group-id-group")[0].innerHTML=ourData[ind].groupid; // group added as first element[li] of ul || give groupId to first group
+		for(j=0;j<ourData[ind].participants.length;j++){ // go through all participants in a group
+			indiv_name=ourData[ind].participants[j][1];
+			indiv_college=ourData[ind].participants[j][5];
+			indiv_group=ourData[ind].groupid;
+			indiv_amt=ourData[ind].participants[j][4];
+			indiv_id=ourData[ind].participants[j][9];
+			add_to_left(document.getElementsByClassName("list-ind")[0]); // insert participant to group 0 || first li of ul
+		}
+	}
+	$(".group").each(function(index) {
+		$( this ).toggleClass("active");
+	});
+}

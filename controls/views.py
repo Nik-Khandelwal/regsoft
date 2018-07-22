@@ -249,6 +249,8 @@ def arpit(request):
 		money.fifty = int(data['data']['deno_50'])
 	money.save()
 	dat = {"success":1}
+	data_denoms = [1]
+	pusher_client.trigger('controls_denoms_channel', 'controls_denoms_event', data_denoms)
 	return HttpResponse(json.dumps(dat), content_type='application/json')
 	
 

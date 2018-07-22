@@ -119,3 +119,37 @@ function search() {
     }
   }
 }
+Pusher.logToConsole = false;
+var pusher = new Pusher('9b825df805e0b694cccc', {
+  cluster: 'ap2',
+  encrypted: true
+});
+
+var recndeacc_channel = pusher.subscribe('recndeacc_channel');
+recndeacc_channel.bind('recndeacc_event', function(data) {
+  pusher_fetchParticipants();
+});
+function pusher_fetchParticipants() {
+  var csrf_token = getCookie('csrftoken');
+  var ourRequest = new XMLHttpRequest();
+  ourRequest.open("POST", "/recnacc/deallocated_page/", true);
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onload = function() {
+    if (ourRequest.status >= 200 && ourRequest.status < 400) {
+      document.getElementById('table-ul').innerHTML = '';
+      var ourData = JSON.parse(ourRequest.responseText);
+      var data = ourData.data;
+      for (var i = 0; i < data.length; i++) {
+        document.getElementById('table-ul').innerHTML+='<div class="collapsible-body blue lighten-5"> <span class="name center" style="flex-basis: 45%;">'+data[i].name+'</span> <span class="coll-name center" style="flex-basis: 45%;">'+data[i].college+'</span> <i style="flex-basis: 10%;" class="material-icons">account_circle</i> </div>';
+      }
+      // Nothing
+    } else {
+      // Nothing
+    }
+  }
+  ourRequest.onerror = function() {
+    // Nothing
+  }
+  ourRequest.send('');
+}

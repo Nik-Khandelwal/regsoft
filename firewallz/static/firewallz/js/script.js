@@ -46,13 +46,7 @@ function updateLeftTable(data) {
     document.getElementById("left-body").appendChild(lefttmp.content.cloneNode(true));
     document.getElementsByClassName('left-table-name')[i].innerHTML = data[i].fields.name;
     document.getElementsByClassName('left-table-college')[i].innerHTML = data[i].fields.college;
-    document.getElementsByClassName('left-table-sport')[i].innerHTML = '';
-    for (var j = 0; j < data[i].fields.sport.length; j++) {
-      document.getElementsByClassName('left-table-sport')[i].innerHTML += data[i].fields.sport[j];
-      if (j != (data[i].fields.sport.length - 1)) {
-        document.getElementsByClassName('left-table-sport')[i].innerHTML += ', ';
-      }
-    }
+    document.getElementsByClassName('left-table-sport')[i].innerHTML = data[i].fields.sport;
     document.getElementsByClassName('left-table-gender')[i].innerHTML = data[i].fields.gender;
     document.getElementsByClassName('left-table-id')[i].innerHTML = data[i].pk;
   }

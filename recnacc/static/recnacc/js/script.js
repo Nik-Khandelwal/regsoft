@@ -520,7 +520,7 @@ function selectBhawan(index) {
       if (ourRequest.readyState === 4 && ourRequest.status === 200) {
         var recieve_json = JSON.parse(ourRequest.responseText);
         var status = recieve_json.success;
-        showRequestStatus(status)
+        showRequestStatus(status);
         // either 1 or 0
         //json object received
       }
@@ -579,7 +579,7 @@ function selectBhawanRooms(index) {
         if (ourRequest.readyState === 4 && ourRequest.status === 200) {
           var recieve_json = JSON.parse(ourRequest.responseText);
           var status = recieve_json.success;
-          showRequestStatus(status)
+          showRequestStatus(status);
           // either 1 or 0
           //json object received
         }

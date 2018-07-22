@@ -393,7 +393,7 @@ function post_backend(){
 		document.getElementById('print-bill-btn').setAttribute('href', '/controls/bill_pdf/'+bills_pk+'');
 		// console.log(status);
 		showRequestStatus(status)
-
+		sendPusherUpdate();
 		 // either 1 or 0
 		//json object received
 	  }
@@ -788,3 +788,23 @@ controls_unconfirm_channel.bind('controls_unconfirm_event', function(data) {
 	console.log(data);
 	poppulate_left(data);
 });
+function sendPusherUpdate() {
+  var send_obj = {"data": id_arr};
+  var string_obj = JSON.stringify(send_obj);
+  var csrf_token = getCookie('csrftoken');
+  var ourRequest = new XMLHttpRequest();
+  ourRequest.open("POST", "/controls/generate_bill_pusher/", true);
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onload = function() {
+    if (ourRequest.status >= 200 && ourRequest.status < 400) {
+      var ourData = JSON.parse(ourRequest.responseText);
+    } else {
+      // Nothing
+    }
+  }
+  ourRequest.onerror = function() {
+    // Nothing
+  }
+  ourRequest.send(string_obj);
+}

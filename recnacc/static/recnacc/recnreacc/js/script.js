@@ -418,6 +418,7 @@ function reacc() {
         // document.getElementById('amount_fine').innerHTML = 'Rs: ' + fine;
         Materialize.toast('Updated', 4000);
         showRequestStatus(1);
+        sendPusherUpdate(send_obj);
       }
       else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
         Materialize.toast('Error Fetching Fine!', 3000);
@@ -957,4 +958,25 @@ function pusher_fetchAvailabilityStats() {
     // var jsonResponse = {"data": [["Ram", ["Common Room", 90, "Single Rooms", 40, "TT Room", 80]],["Budh", ["Common Room", 120, "Single Rooms", 50]],["Meera", ["Common Room", 190, "Single Rooms", 100]],["MAL-A", ["Common Room", 90, "Single Rooms", 20, "TT Room", 10]],["Ram", ["Common Room", 90, "Single Rooms", 40, "TT Room", 80]]]};
   }
   ourRequest.send('');
+}
+function sendPusherUpdate(myObj) {
+  var pk_arr = myObj.data.id_arr;
+  var send_obj = {"data": pk_arr};
+  var string_obj = JSON.stringify(send_obj);
+  var csrf_token = getCookie('csrftoken');
+  var ourRequest = new XMLHttpRequest();
+  ourRequest.open("POST", "/recnacc/reaccomodate_pusher/", true);
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onload = function() {
+    if (ourRequest.status >= 200 && ourRequest.status < 400) {
+      var ourData = JSON.parse(ourRequest.responseText);
+    } else {
+      // Nothing
+    }
+  }
+  ourRequest.onerror = function() {
+    // Nothing
+  }
+  ourRequest.send(string_obj);
 }

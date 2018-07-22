@@ -403,29 +403,24 @@ function serializeArray(form) {
   }
   return s;
 }
-
-  
-        function stats(){
-            $('.button-collapse').sideNav('hide');
-            fetchStats();
-            document.getElementById("stat").style.height="100vh";
-            document.getElementById("close").style.display="block";
-            document.getElementById("stat_data").style.display="block";
-            document.getElementById("csv").style.display="inline-block";
-            document.getElementById("excel").style.display="inline-block";
-            document.getElementById("pdf").style.display="inline-block";
-        }
+function stats(){
+    $('.button-collapse').sideNav('hide');
+    fetchStats();
+    document.getElementById("stat").style.height="100vh";
+    document.getElementById("close").style.display="block";
+    document.getElementById("stat_data").style.display="block";
+    document.getElementById("csv").style.display="inline-block";
+    document.getElementById("excel").style.display="inline-block";
+    document.getElementById("pdf").style.display="inline-block";
+}
 function close_stats(){
-         
-            document.getElementById("stat").style.height="0vh";
-   
-                document.getElementById("close").style.display="none";
-                document.getElementById("stat_data").style.display="none";
-                document.getElementById("csv").style.display="none";
-                document.getElementById("excel").style.display="none";
-                document.getElementById("pdf").style.display="none";
-
-        }
+	document.getElementById("stat").style.height="0vh";
+	document.getElementById("close").style.display="none";
+	document.getElementById("stat_data").style.display="none";
+	document.getElementById("csv").style.display="none";
+	document.getElementById("excel").style.display="none";
+	document.getElementById("pdf").style.display="none";
+}
 function fetchStats() {
   document.getElementById('stats_ul').innerHTML = '';
   Materialize.toast('Fetching Stats!', 3000);
@@ -488,11 +483,11 @@ function deregisterParts() {
   Materialize.toast('Deregistering!', 3000);
   var csrf_token = getCookie('csrftoken');
   send_obj={
-        "data": {
-          "id_arr": id_arr
-        }
-      };
-      var send_json = JSON.stringify(send_obj);
+      "data": {
+      "id_arr": id_arr
+    }
+  };
+  var send_json = JSON.stringify(send_obj);
   var ourRequest = new XMLHttpRequest();
   ourRequest.open("POST", "/controls/unconfirm_player/", true);
   ourRequest.setRequestHeader("Content-type", "application/json");
@@ -500,6 +495,7 @@ function deregisterParts() {
   ourRequest.onload = function() {
     if (ourRequest.status >= 200 && ourRequest.status < 400) {
       Materialize.toast('Deregistered!', 3000);
+      sendPusherUpdate(send_obj);
     } else {
       Materialize.toast('Server Error!', 4000, "toast-fetch_error");  
     }
@@ -599,4 +595,25 @@ function pusher_poppulate_left(ourData){
 	$(".group").each(function(index) {
 		$( this ).toggleClass("active");
 	});
+}
+function sendPusherUpdate(myObj) {
+  var pk_arr = myObj.data.id_arr;
+  var send_obj = {"data": pk_arr};
+  var string_obj = JSON.stringify(send_obj);
+  var csrf_token = getCookie('csrftoken');
+  var ourRequest = new XMLHttpRequest();
+  ourRequest.open("POST", "/controls/unconfirm_player_pusher/", true);
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onload = function() {
+    if (ourRequest.status >= 200 && ourRequest.status < 400) {
+      var ourData = JSON.parse(ourRequest.responseText);
+    } else {
+      // Nothing
+    }
+  }
+  ourRequest.onerror = function() {
+    // Nothing
+  }
+  ourRequest.send(string_obj);
 }

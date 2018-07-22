@@ -196,6 +196,7 @@ function confirmGroup() {
       showGroupCode(groupCode);
       resetTables();
       fetchParticipants();
+      sendPusherUpdate(myObj);
     } else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
       Materialize.toast('There was some error connecting to the server!', 3000);
       showGroupCode('ERROR');
@@ -560,27 +561,24 @@ function search() {
   }
 }
 function stats(){
-            $('.button-collapse').sideNav('hide');
-            fetchStats();
-            document.getElementById("stat").style.height="100vh";
-            document.getElementById("close").style.display="block";
-            document.getElementById("stat_data").style.display="block";
-            document.getElementById("csv").style.display="inline-block";
-            document.getElementById("excel").style.display="inline-block";
-            document.getElementById("pdf").style.display="inline-block";
-        }
-function close_stats(){
-         
-            document.getElementById("stat").style.height="0vh";
-   
-                document.getElementById("close").style.display="none";
-                document.getElementById("stat_data").style.display="none";
-                document.getElementById("csv").style.display="none";
-                document.getElementById("excel").style.display="none";
-                document.getElementById("pdf").style.display="none";
-
-        }
-        function fetchStats() {
+  $('.button-collapse').sideNav('hide');
+  fetchStats();
+  document.getElementById("stat").style.height="100vh";
+  document.getElementById("close").style.display="block";
+  document.getElementById("stat_data").style.display="block";
+  document.getElementById("csv").style.display="inline-block";
+  document.getElementById("excel").style.display="inline-block";
+  document.getElementById("pdf").style.display="inline-block";
+}
+function close_stats(){ 
+  document.getElementById("stat").style.height="0vh";
+  document.getElementById("close").style.display="none";
+  document.getElementById("stat_data").style.display="none";
+  document.getElementById("csv").style.display="none";
+  document.getElementById("excel").style.display="none";
+  document.getElementById("pdf").style.display="none";
+}
+function fetchStats() {
   document.getElementById('stats_ul').innerHTML = '';
   Materialize.toast('Fetching Stats!', 3000);
   var csrf_token = getCookie('csrftoken');
@@ -647,3 +645,29 @@ channel.bind('firewallz_unconfirm_event', function(data) {
   updateLeftTable(data);
   // Data Format - Same as Firewallz Details View
 });
+
+function sendPusherUpdate(myObj) {
+  var pk_arr = [];
+  var data = myObj.data;
+  for (var i = 0; i < data.length; i++) {
+    pk_arr.push(data[i].pk);
+  }
+  var send_obj = {"data": pk_arr};
+  var string_obj = JSON.stringify(send_obj);
+  var csrf_token = getCookie('csrftoken');
+  var ourRequest = new XMLHttpRequest();
+  ourRequest.open("POST", "/firewallz/confirm_group_pusher/", true);
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onload = function() {
+    if (ourRequest.status >= 200 && ourRequest.status < 400) {
+      var ourData = JSON.parse(ourRequest.responseText);
+    } else {
+      // Nothing
+    }
+  }
+  ourRequest.onerror = function() {
+    // Nothing
+  }
+  ourRequest.send(string_obj);
+}

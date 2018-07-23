@@ -222,7 +222,7 @@ def generate_bill_pusher(request):
 		if b:
 			data_recnacc.append({"participants":b,"groupid":gr.group_code})
 			
-	print("pusher start")
+	print("generate bill pusher start")
 	pusher_client.trigger('my-channel', 'my-event', data_recnacc)
 	print("pusher")
 	return HttpResponse(json.dumps({"success":1}), content_type='application/json')
@@ -453,35 +453,38 @@ def unconfirm_player_pusher(request):
 	else:
 		return HttpResponseRedirect('/regsoft/')
 	if request.method=='POST':
-		data = json.loads( request.body.decode('utf-8') )
-	data=[]
-	for gr in Group.objects.all():
-		b=[]
-		a=[]
-		for i in data['data']['id_arr']:
-			rp = Regplayer.objects.get(pk=int(i))
-			pl = Enteredplayer.objects.get(regplayer = rp)
-			if pl.group == gr:
-				a.append(rp)
-				pl.controls_displayed = True
-				pl.save()
-		for t in a:
-			s=[]
-			s.append(t.city)
-			s.append(t.name.name)
-			s.append(t.email_id)
-			s.append(t.gender)
-			s.append(t.unbilled_amt)
-			s.append(t.college)
-			s.append(t.mobile_no)
-			s.append(t.entered)
-			s.append(t.sport)
-			s.append(t.pk)
-			b.append(s)
-		if b:
-			data.append({"participants":b,"groupid":gr.group_code})
-	pusher_client.trigger('controls_unconfirm_channel', 'controls_unconfirm_event', data)
-	
+		dats = json.loads( request.body.decode('utf-8') )
+		data=[]
+		for gr in Group.objects.all():
+			b=[]
+			a=[]
+			print(dats)
+			for i in dats['data']['id_arr']:
+				rp = Regplayer.objects.get(pk=int(i))
+				pl = Enteredplayer.objects.get(regplayer = rp)
+				if pl.group == gr:
+					a.append(rp)
+					pl.controls_displayed = True
+					pl.save()
+			for t in a:
+				s=[]
+				s.append(t.city)
+				s.append(t.name.name)
+				s.append(t.email_id)
+				s.append(t.gender)
+				s.append(t.unbilled_amt)
+				s.append(t.college)
+				s.append(t.mobile_no)
+				s.append(t.entered)
+				s.append(t.sport)
+				s.append(t.pk)
+				b.append(s)
+			if b:
+				data.append({"participants":b,"groupid":gr.group_code})
+		print("unconfirm pusher started")
+		pusher_client.trigger('controls_unconfirm_channel', 'controls_unconfirm_event', data)
+		print("pusher ends")
+	return HttpResponse(json.dumps({"success":1}), content_type='application/json')
 
 
 @login_required(login_url='/regsoft/')

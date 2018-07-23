@@ -955,7 +955,9 @@ function pusher_fetchBhawanStats() {
       roomsData = ourData;
     }
     else
-      // Nothing
+    {
+      console.log("wassup");
+    }
   } // server sent an error after connection
   ourRequest.onerror = function () { // error connecting to URL
     // Nothing

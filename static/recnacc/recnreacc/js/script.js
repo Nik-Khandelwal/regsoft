@@ -418,6 +418,7 @@ function reacc() {
         // document.getElementById('amount_fine').innerHTML = 'Rs: ' + fine;
         Materialize.toast('Updated', 4000);
         showRequestStatus(1);
+        sendPusherUpdate(send_obj);
       }
       else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
         Materialize.toast('Error Fetching Fine!', 3000);
@@ -861,4 +862,121 @@ function fetchAvailabilityStats() {
     // var jsonResponse = {"data": [["Ram", ["Common Room", 90, "Single Rooms", 40, "TT Room", 80]],["Budh", ["Common Room", 120, "Single Rooms", 50]],["Meera", ["Common Room", 190, "Single Rooms", 100]],["MAL-A", ["Common Room", 90, "Single Rooms", 20, "TT Room", 10]],["Ram", ["Common Room", 90, "Single Rooms", 40, "TT Room", 80]]]};
   }
   ourRequest.send('');
+}
+// Pusher Code Below
+Pusher.logToConsole = false;
+var pusher = new Pusher('9b825df805e0b694cccc', {
+  cluster: 'ap2',
+  encrypted: true
+});
+// RecnAcc Channel to RecnReAcc Channel
+var recnacc_channel = pusher.subscribe('recnacc_channel');
+recnacc_channel.bind('recnacc_event', function(data) {
+  pusher_retrieve_left();
+});
+// RecnDeAcc Channel to RecnDeallocated Channel
+var recndeacc_channel = pusher.subscribe('recndeacc_channel');
+recndeacc_channel.bind('recndeacc_event', function(data) {
+  pusher_retrieve_left();
+});
+// RecnAcc Occupancy Channel
+var recnacc_occupancy_channel = pusher.subscribe('recnacc_occupancy_channel');
+recnacc_occupancy_channel.bind('recnacc_occupancy_event', function(data) {
+  pusher_fetchAvailabilityStats();
+});
+// Pusher Code Ends
+function pusher_retrieve_left() {
+  var csrf_token = getCookie('csrftoken');
+  var ourRequest = new XMLHttpRequest();
+  ourRequest.open("POST", "/recnacc/unconfirm_acco_details/", true); // method and url
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onload = function () {
+    if (ourRequest.status >= 200 && ourRequest.status < 400) { // request sent and recieved
+      ourData = JSON.parse(ourRequest.responseText);
+      remove_right_all();
+      document.getElementsByClassName("left-one")[0].innerHTML='';
+      pusher_poppulate_left(ourData);
+      total = 0;
+      document.getElementById("stats").innerHTML="Selected: "+total;
+    }
+    else
+      // Nothing
+  } // server sent an error after connection
+  ourRequest.onerror = function () { // error connecting to URL
+    // Nothing
+  }
+  ourRequest.send(); // sending request
+}
+
+function pusher_poppulate_left(ourData) {
+  for (ind = 0; ind < ourData.length; ind++) {
+    var tmp_group = document.getElementById("left-group-temp"); //template || group
+    var un_list = document.getElementsByClassName("left-one")[0];
+    // append as last child of unordered list
+    //un_list.appendChild(tmp_group.content.cloneNode(true)); 
+    un_list.insertBefore(tmp_group.content.cloneNode(true), un_list.firstElementChild); //add group || list index to expandable container || ul
+    document.getElementsByClassName("group-id-group")[0].innerHTML = ourData[ind].groupid; // group added as first element[li] of ul || give groupId to first group
+    for (j = 0; j < ourData[ind].participants.length; j++) { // go through all participants in a group
+      indiv_name = ourData[ind].participants[j].indiv_name;
+      indiv_college = ourData[ind].participants[j].indiv_college;
+      indiv_group = ourData[ind].groupid;
+      indiv_gender = ourData[ind].participants[j].indiv_gender;
+      indiv_id = ourData[ind].participants[j].indiv_id;
+      add_to_left(document.getElementsByClassName("list-ind")[0]); // insert participant to group 0 || first li of ul
+    }
+  }
+  $(".group").each(function (index) {
+    $(this).toggleClass("active");
+  });
+}
+function pusher_fetchAvailabilityStats() {
+  var csrf_token = getCookie('csrftoken');
+  var ourRequest = new XMLHttpRequest();
+  ourRequest.open("POST", "/recnacc/availability_stats/", true);
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onload = function() {
+    if (ourRequest.status >= 200 && ourRequest.status < 400) {
+      var ourData = JSON.parse(ourRequest.responseText);
+      var data = ourData.data;
+      document.getElementById('bhawan-availability-wrapper').innerHTML = '';
+      for (var i = 0; i < data.length; i++) {
+        var accoList = ''
+        for (var j = 0; j < data[i][1].length; j+=2) {
+          accoList += '<li><a>'+data[i][1][j]+' : '+data[i][1][j+1]+'</a></li>';
+        }
+        document.getElementById('bhawan-availability-wrapper').innerHTML += '<li class="no-padding"> <ul class="collapsible collapsible-accordion"> <li> <a class="collapsible-header">'+data[i][0]+'<i class="material-icons">arrow_drop_down</i></a> <div class="collapsible-body"> <ul style="width: 100%;"> '+accoList+'</ul> </div></li></ul> </li>';
+      }
+      $('.collapsible').collapsible();
+    } else {
+      // Nothing 
+    }
+  }
+  ourRequest.onerror = function() {
+    // Nothing
+    // var jsonResponse = {"data": [["Ram", ["Common Room", 90, "Single Rooms", 40, "TT Room", 80]],["Budh", ["Common Room", 120, "Single Rooms", 50]],["Meera", ["Common Room", 190, "Single Rooms", 100]],["MAL-A", ["Common Room", 90, "Single Rooms", 20, "TT Room", 10]],["Ram", ["Common Room", 90, "Single Rooms", 40, "TT Room", 80]]]};
+  }
+  ourRequest.send('');
+}
+function sendPusherUpdate(myObj) {
+  var pk_arr = myObj.data.id_arr;
+  var send_obj = {"data": pk_arr};
+  var string_obj = JSON.stringify(send_obj);
+  var csrf_token = getCookie('csrftoken');
+  var ourRequest = new XMLHttpRequest();
+  ourRequest.open("POST", "/recnacc/reaccomodate_pusher/", true);
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onload = function() {
+    if (ourRequest.status >= 200 && ourRequest.status < 400) {
+      var ourData = JSON.parse(ourRequest.responseText);
+    } else {
+      // Nothing
+    }
+  }
+  ourRequest.onerror = function() {
+    // Nothing
+  }
+  ourRequest.send(string_obj);
 }

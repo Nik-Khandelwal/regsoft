@@ -520,7 +520,7 @@ function selectBhawan(index) {
       if (ourRequest.readyState === 4 && ourRequest.status === 200) {
         var recieve_json = JSON.parse(ourRequest.responseText);
         var status = recieve_json.success;
-        showRequestStatus(status)
+        showRequestStatus(status);
         // either 1 or 0
         //json object received
       }
@@ -579,7 +579,7 @@ function selectBhawanRooms(index) {
         if (ourRequest.readyState === 4 && ourRequest.status === 200) {
           var recieve_json = JSON.parse(ourRequest.responseText);
           var status = recieve_json.success;
-          showRequestStatus(status)
+          showRequestStatus(status);
           // either 1 or 0
           //json object received
         }
@@ -909,6 +909,86 @@ function fetchAvailabilityStats() {
   }
   ourRequest.onerror = function() {
     Materialize.toast('Could not connect to server!', 4000, "toast-fetch_no_connect");
+    // var jsonResponse = {"data": [["Ram", ["Common Room", 90, "Single Rooms", 40, "TT Room", 80]],["Budh", ["Common Room", 120, "Single Rooms", 50]],["Meera", ["Common Room", 190, "Single Rooms", 100]],["MAL-A", ["Common Room", 90, "Single Rooms", 20, "TT Room", 10]],["Ram", ["Common Room", 90, "Single Rooms", 40, "TT Room", 80]]]};
+  }
+  ourRequest.send('');
+}
+Pusher.logToConsole = false;
+var pusher = new Pusher('9b825df805e0b694cccc', {
+  cluster: 'ap2',
+  encrypted: true
+});
+
+var channel = pusher.subscribe('my-channel');
+channel.bind('my-event', function(data) {
+  console.log(data);
+  poppulate_left(data);
+});
+var channel2 = pusher.subscribe('my-channel2');
+channel2.bind('my-event2', function(data) {
+  console.log(data);
+  firewallzUpdates(data);
+});
+// RecnReAcc Channel to RecnAcc Channel
+var recnreacc_channel = pusher.subscribe('recnreacc_channel');
+recnreacc_channel.bind('recnreacc_event', function(data) {
+  poppulate_left(data);
+});
+// RecnAcc Occupancy Channel
+var recnacc_occupancy_channel = pusher.subscribe('recnacc_occupancy_channel');
+recnacc_occupancy_channel.bind('recnacc_occupancy_event', function(data) {
+  pusher_fetchBhawanStats();
+  pusher_fetchAvailabilityStats();
+});
+
+// Pusher Special Functions
+function pusher_fetchBhawanStats() {
+  //GET Left List
+  var csrf_token = getCookie('csrftoken');
+  var ourRequest = new XMLHttpRequest();
+  ourRequest.open("POST", "/recnacc/acco_details/", true); // method and url
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onload = function () {
+    if (ourRequest.status >= 200 && ourRequest.status < 400) { // request sent and recieved
+      ourData = JSON.parse(ourRequest.responseText);
+      roomsData = ourData;
+    }
+    else
+    {
+      console.log("wassup");
+    }
+  } // server sent an error after connection
+  ourRequest.onerror = function () { // error connecting to URL
+    // Nothing
+  }
+  ourRequest.send(); // sending request
+}
+function pusher_fetchAvailabilityStats() {
+  var csrf_token = getCookie('csrftoken');
+  var ourRequest = new XMLHttpRequest();
+  ourRequest.open("POST", "/recnacc/availability_stats/", true);
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onload = function() {
+    if (ourRequest.status >= 200 && ourRequest.status < 400) {
+      var ourData = JSON.parse(ourRequest.responseText);
+      var data = ourData.data;
+      document.getElementById('bhawan-availability-wrapper').innerHTML = '';
+      for (var i = 0; i < data.length; i++) {
+        var accoList = ''
+        for (var j = 0; j < data[i][1].length; j+=2) {
+          accoList += '<li><a>'+data[i][1][j]+' : '+data[i][1][j+1]+'</a></li>';
+        }
+        document.getElementById('bhawan-availability-wrapper').innerHTML += '<li class="no-padding"> <ul class="collapsible collapsible-accordion"> <li> <a class="collapsible-header">'+data[i][0]+'<i class="material-icons">arrow_drop_down</i></a> <div class="collapsible-body"> <ul style="width: 100%;"> '+accoList+'</ul> </div></li></ul> </li>';
+      }
+      $('.collapsible').collapsible();
+    } else {
+      // Nothing 
+    }
+  }
+  ourRequest.onerror = function() {
+    // Nothing
     // var jsonResponse = {"data": [["Ram", ["Common Room", 90, "Single Rooms", 40, "TT Room", 80]],["Budh", ["Common Room", 120, "Single Rooms", 50]],["Meera", ["Common Room", 190, "Single Rooms", 100]],["MAL-A", ["Common Room", 90, "Single Rooms", 20, "TT Room", 10]],["Ram", ["Common Room", 90, "Single Rooms", 40, "TT Room", 80]]]};
   }
   ourRequest.send('');

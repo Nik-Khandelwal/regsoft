@@ -118,7 +118,18 @@ function fetchUpdateDenoms() {
   ourRequest.send('');
 }
 // Pusher Code
-// Pusher Here 
+// Enable pusher logging - don't include this in production
+Pusher.logToConsole = false;
+var pusher = new Pusher('9b825df805e0b694cccc', {
+  cluster: 'ap2',
+  encrypted: true
+});
+// Below Channel for Data from Firewallz Socket
+var controls_denoms_channel = pusher.subscribe('controls_denoms_channel');
+controls_denoms_channel.bind('controls_denoms_event', function(data) {
+  // Same Data Format as details view.
+  fetchUpdateDenoms();
+});
 // Utility Functions
 function getCookie(name) {
   var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');

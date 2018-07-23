@@ -459,7 +459,7 @@ def unconfirm_player_pusher(request):
 			b=[]
 			a=[]
 			print(dats)
-			for i in dats['data']['id_arr']:
+			for i in dats['data']:
 				rp = Regplayer.objects.get(pk=int(i))
 				pl = Enteredplayer.objects.get(regplayer = rp)
 				if pl.group == gr:

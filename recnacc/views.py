@@ -511,7 +511,7 @@ def reaccomodate_pusher(request):
 			for gr in Group.objects.all():
 				b=[]
 				a=[]
-				for i in data['data']['id_arr']:
+				for i in data['data']:
 					#print(data['data']['id_arr'])
 					rp = Regplayer.objects.get(pk=int(i))
 					pl = Enteredplayer.objects.get(regplayer=rp)

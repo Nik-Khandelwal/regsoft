@@ -496,7 +496,7 @@ function deregisterParts() {
   ourRequest.onload = function() {
     if (ourRequest.status >= 200 && ourRequest.status < 400) {
       Materialize.toast('Deregistered!', 3000);
-      sendPusherUpdate(send_obj);
+      sendPusherUpdate(send_json);
     } else {
       Materialize.toast('Server Error!', 4000, "toast-fetch_error");  
     }
@@ -597,9 +597,11 @@ function pusher_poppulate_left(ourData){
 		$( this ).toggleClass("active");
 	});
 }
-function sendPusherUpdate(myObj) {
+function sendPusherUpdate(stringObj) {
+  var myObj = JSON.parse(stringObj);
   var pk_arr = myObj.data.id_arr;
   var send_obj = {"data": pk_arr};
+  console.log(send_obj);
   var string_obj = JSON.stringify(send_obj);
   var csrf_token = getCookie('csrftoken');
   var ourRequest = new XMLHttpRequest();

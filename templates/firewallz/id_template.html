@@ -428,7 +428,9 @@
       var part = {
         "name": '{{participant.name}}',
         "college": '{{participant.college}}',
-        "group_id": '{{participant.group_id}}'
+        "group_id": '{{participant.group_id}}',
+        "group_code": '{{participant.group_code}}',
+        "pk": '{{participant.pk}}'
       }
       data.push(part);
     {% endfor %}
@@ -439,9 +441,9 @@
       var pages = '';
       for (var j = 0; j < data.length && j<(i+8); j++) {
         if (j%2==0) {
-          pages+='<div class="custom-col-left"> <div class="img-banner-wrapper"> <img src="/static/firewallz/icons/bosm-logo.png" class="bosm-logo-img"> <div class="bosm-head-wrapper"> <div class="bosm-head-text">BOSM</div><div class="bosm-slogan-text">GRIT|GUTS|GLORY</div></div><div class="bosm-dates-wrapper"> <div class="bosm-dates-year">2018</div><div class="bosm-dates">19th - 23rd September</div></div></div><div class="participant-card-text">Participant Card</div><div class="photo-holder"></div><div class="firewallz-text">Firewallz&nbsp&nbsp</div><div class="card-no-text">Card No. : <span>12/GAFSSD/36</span></div><div class="name-text">Name : <span>Arpit Anshuman</span></div><div class="college-text">College : <span>Birla Institute of Technology and Science, Pilani, Rajasthan</span></div><div class="accomodation-text">Accomodation : <span>Vishwa Karma Bhawan - Room No. - 171</span></div></div>';
+          pages+='<div class="custom-col-left"> <div class="img-banner-wrapper"> <img src="/static/firewallz/icons/bosm-logo.png" class="bosm-logo-img"> <div class="bosm-head-wrapper"> <div class="bosm-head-text">BOSM</div><div class="bosm-slogan-text">GRIT|GUTS|GLORY</div></div><div class="bosm-dates-wrapper"> <div class="bosm-dates-year">2018</div><div class="bosm-dates">19th - 23rd September</div></div></div><div class="participant-card-text">Participant Card</div><div class="photo-holder"></div><div class="firewallz-text">Firewallz&nbsp&nbsp</div><div class="card-no-text">Card No. : <span>'+data[j].group_id+'/'+data[j].group_code+'/'+data[j].pk+'</span></div><div class="name-text">Name : <span>'+data[j].name+'</span></div><div class="college-text">College : <span>'+data[j].college+'</span></div><div class="accomodation-text">Accomodation : <span></span></div></div>';
         } else if(j%2==1) {
-          pages+='<div class="custom-col-right"> <div class="img-banner-wrapper"> <img src="/static/firewallz/icons/bosm-logo.png" class="bosm-logo-img"> <div class="bosm-head-wrapper"> <div class="bosm-head-text">BOSM</div><div class="bosm-slogan-text">GRIT|GUTS|GLORY</div></div><div class="bosm-dates-wrapper"> <div class="bosm-dates-year">2018</div><div class="bosm-dates">19th - 23rd September</div></div></div><div class="participant-card-text">Participant Card</div><div class="photo-holder"></div><div class="firewallz-text">Firewallz&nbsp&nbsp</div><div class="card-no-text">Card No. : <span>12/GAFSSD/36</span></div><div class="name-text">Name : <span>Arpit Anshuman</span></div><div class="college-text">College : <span>Birla Institute of Technology and Science, Pilani, Rajasthan</span></div><div class="accomodation-text">Accomodation : <span>Vishwa Karma Bhawan - Room No. - 171</span></div></div><div class="margin-gap-div"></div>';
+          pages+='<div class="custom-col-right"> <div class="img-banner-wrapper"> <img src="/static/firewallz/icons/bosm-logo.png" class="bosm-logo-img"> <div class="bosm-head-wrapper"> <div class="bosm-head-text">BOSM</div><div class="bosm-slogan-text">GRIT|GUTS|GLORY</div></div><div class="bosm-dates-wrapper"> <div class="bosm-dates-year">2018</div><div class="bosm-dates">19th - 23rd September</div></div></div><div class="participant-card-text">Participant Card</div><div class="photo-holder"></div><div class="firewallz-text">Firewallz&nbsp&nbsp</div><div class="card-no-text">Card No. : <span>'+data[j].group_id+'/'+data[j].group_code+'/'+data[j].pk+'</span></div><div class="name-text">Name : <span>'+data[j].name+'</span></div><div class="college-text">College : <span>'+data[j].college+'</span></div><div class="accomodation-text">Accomodation : <span></span></div></div><div class="margin-gap-div"></div>';
         }
       }
       onepage += '<div class="one-page">'+pages+'</div>';

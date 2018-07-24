@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Firewallz ID Card</title>
+  {% load staticfiles %}
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" type="text/css" href="{% static 'firewallz/css/load-font.css' %}">
+  <style type="text/css">
+    @font-face{
+      font-family:Montserrat;
+      src:url({% static 'firewallz/fonts/Montserrat-Regular.woff2' %}) format('woff2')
+    }
+    body, html, .row, .col {
+      margin: 0;
+      padding: 0 !important;
+    }
+    html, body {
+      background-color: #FFC000;
+    }
+    .one-page, .two-page {
+      margin-left: 48px;
+      margin-top: 48px;
+      height: 1074px;
+    }
+    .one-page:first-child {
+      height: calc(1074px + 0.01vh)
+    }
+    .img-banner-wrapper {
+      width: 325px;
+      height: 55px;
+      background-color: white;
+      overflow: hidden;
+      display: inline-block;
+    }
+    .custom-col-left, .custom-col-right, .back-face-id {
+      width: 325px;
+      height: 219px;
+      overflow: hidden;
+      display: inline-block;
+    }
+    .bosm-logo-img {
+      height: 55px;
+      width: 55px;
+      overflow: hidden;
+    }
+    .bosm-head-wrapper {
+      width: 155px;
+      height: 55px;
+      overflow: hidden;
+      display: inline-block;
+    }
+    .bosm-dates-wrapper {
+      width: 105px;
+      height: 55px;
+      overflow: hidden;
+      display: inline-block;
+    }
+    .bosm-head-text, .bosm-slogan-text {
+      width: 155px;
+      text-align: center;
+    }
+    .bosm-head-text {
+      font-weight: bolder;
+      font-size: 40px;
+      transform: scaleX(1.1);
+      position: relative;
+      bottom: 8px;
+      font-family: 'Montserrat';
+    }
+    .bosm-slogan-text {
+      font-weight: 500;
+      font-size: 12px;
+      position: relative;
+      bottom: 22px;
+      font-family: 'Montserrat';
+    }
+    .bosm-dates-year, .bosm-dates {
+      width: 105px;
+      text-align: center;
+    }
+    .bosm-dates-year {
+      font-weight: bolder;
+      font-size: 40px;
+      transform: scaleX(1.1);
+      font-family: 'Montserrat';
+      position: relative;
+      bottom: 8px;
+    }
+    .bosm-dates {
+      font-weight: 400;
+      font-size: 9px;
+      font-family: 'Montserrat';
+      position: relative;
+      bottom: 19px;
+    }
+    .participant-card-text {
+      text-transform: uppercase;
+      width: 325px;
+      text-align: center;
+      font-weight: bold;
+      position: relative;
+      bottom: 0px;
+      font-size: 11px;
+    }
+    .card-no-text, .name-text, .college-text, .accomodation-text {
+      width: 236.19px;
+      text-transform: uppercase;
+      font-weight: bold;
+      font-size: 11px;
+      position: relative;
+      bottom: 110px;
+    }
+    .firewallz-text {
+      width: 325px;
+      text-transform: uppercase;
+      font-weight: bold;
+      font-size: 11px;
+      text-align: right;
+      position: relative;
+      top: 8px;
+    }
+    .photo-holder {
+      height: 103px;
+      width: 84.81px;
+      background-color: #8FB3E3;
+      border: 2px solid #7A8AB1;
+      position: relative;
+      left: 236.19px;
+      top: 5px;
+    }
+    .custom-col-right {
+      position: relative;
+      left: 47.2px;
+    }
+    .back-face-id {
+      font-size: 14px;
+    }
+    .emergency-wrapper {
+      text-align: center;
+    }
+    ul {
+      list-style-image: url({% static 'firewallz/icons/arrow.svg' %});
+    }
+    @media print {
+      body {
+        background-color: #FFC000 !important;
+        -webkit-print-color-adjust: exact;
+      }
+      * {
+        -webkit-print-color-adjust:exact;
+      }
+    }
+    @page {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="one-page">
+    <div class="custom-col-left">
+      <div class="img-banner-wrapper">
+        <img src="{% static 'firewallz/icons/bosm-logo.png' %}" class="bosm-logo-img">
+        <div class="bosm-head-wrapper">
+          <div class="bosm-head-text">BOSM</div>
+          <div class="bosm-slogan-text">GRIT|GUTS|GLORY</div>
+        </div>
+        <div class="bosm-dates-wrapper">
+          <div class="bosm-dates-year">2018</div>
+          <div class="bosm-dates">19th - 23rd September</div>
+        </div>
+      </div>
+      <div class="participant-card-text">Participant Card</div>
+      <div class="photo-holder"></div>
+      <div class="firewallz-text">Firewallz&nbsp&nbsp</div>
+      <div class="card-no-text">Card No. : <span>12/GAFSSD/36</span></div>
+      <div class="name-text">Name : <span>Arpit Anshuman</span></div>
+      <div class="college-text">College : <span>Birla Institute of Technology and Science, Pilani, Rajasthan</span></div>
+      <div class="accomodation-text">Accomodation : <span>Vishwa Karma Bhawan - Room No. - 171</span></div>
+    </div>
+    <div class="custom-col-right">
+      <div class="img-banner-wrapper">
+        <img src="{% static 'firewallz/icons/bosm-logo.png' %}" class="bosm-logo-img">
+        <div class="bosm-head-wrapper">
+          <div class="bosm-head-text">BOSM</div>
+          <div class="bosm-slogan-text">GRIT|GUTS|GLORY</div>
+        </div>
+        <div class="bosm-dates-wrapper">
+          <div class="bosm-dates-year">2018</div>
+          <div class="bosm-dates">19th - 23rd September</div>
+        </div>
+      </div>
+      <div class="participant-card-text">Participant Card</div>
+      <div class="photo-holder"></div>
+      <div class="firewallz-text">Firewallz&nbsp&nbsp</div>
+      <div class="card-no-text">Card No. : <span>12/GAFSSD/36</span></div>
+      <div class="name-text">Name : <span>Arpit Anshuman</span></div>
+      <div class="college-text">College : <span>Birla Institute of Technology and Science, Pilani, Rajasthan</span></div>
+      <div class="accomodation-text">Accomodation : <span>Vishwa Karma Bhawan - Room No. - 171</span></div>
+    </div>
+    <div class="margin-gap-div"></div>
+    <div class="custom-col-left">
+      <div class="img-banner-wrapper">
+        <img src="static/firewallz/icons/bosm-logo.png" class="bosm-logo-img">
+        <div class="bosm-head-wrapper">
+          <div class="bosm-head-text">BOSM</div>
+          <div class="bosm-slogan-text">GRIT|GUTS|GLORY</div>
+        </div>
+        <div class="bosm-dates-wrapper">
+          <div class="bosm-dates-year">2018</div>
+          <div class="bosm-dates">19th - 23rd September</div>
+        </div>
+      </div>
+      <div class="participant-card-text">Participant Card</div>
+      <div class="photo-holder"></div>
+      <div class="firewallz-text">Firewallz&nbsp&nbsp</div>
+      <div class="card-no-text">Card No. : <span>12/GAFSSD/36</span></div>
+      <div class="name-text">Name : <span>Arpit Anshuman</span></div>
+      <div class="college-text">College : <span>Birla Institute of Technology and Science, Pilani, Rajasthan</span></div>
+      <div class="accomodation-text">Accomodation : <span>Vishwa Karma Bhawan - Room No. - 171</span></div>
+    </div>
+    <div class="custom-col-right">
+      <div class="img-banner-wrapper">
+        <img src="static/firewallz/icons/bosm-logo.png" class="bosm-logo-img">
+        <div class="bosm-head-wrapper">
+          <div class="bosm-head-text">BOSM</div>
+          <div class="bosm-slogan-text">GRIT|GUTS|GLORY</div>
+        </div>
+        <div class="bosm-dates-wrapper">
+          <div class="bosm-dates-year">2018</div>
+          <div class="bosm-dates">19th - 23rd September</div>
+        </div>
+      </div>
+      <div class="participant-card-text">Participant Card</div>
+      <div class="photo-holder"></div>
+      <div class="firewallz-text">Firewallz&nbsp&nbsp</div>
+      <div class="card-no-text">Card No. : <span>12/GAFSSD/36</span></div>
+      <div class="name-text">Name : <span>Arpit Anshuman</span></div>
+      <div class="college-text">College : <span>Birla Institute of Technology and Science, Pilani, Rajasthan</span></div>
+      <div class="accomodation-text">Accomodation : <span>Vishwa Karma Bhawan - Room No. - 171</span></div>
+    </div>
+    <div class="margin-gap-div"></div>
+    <div class="custom-col-left">
+      <div class="img-banner-wrapper">
+        <img src="static/firewallz/icons/bosm-logo.png" class="bosm-logo-img">
+        <div class="bosm-head-wrapper">
+          <div class="bosm-head-text">BOSM</div>
+          <div class="bosm-slogan-text">GRIT|GUTS|GLORY</div>
+        </div>
+        <div class="bosm-dates-wrapper">
+          <div class="bosm-dates-year">2018</div>
+          <div class="bosm-dates">19th - 23rd September</div>
+        </div>
+      </div>
+      <div class="participant-card-text">Participant Card</div>
+      <div class="photo-holder"></div>
+      <div class="firewallz-text">Firewallz&nbsp&nbsp</div>
+      <div class="card-no-text">Card No. : <span>12/GAFSSD/36</span></div>
+      <div class="name-text">Name : <span>Arpit Anshuman</span></div>
+      <div class="college-text">College : <span>Birla Institute of Technology and Science, Pilani, Rajasthan</span></div>
+      <div class="accomodation-text">Accomodation : <span>Vishwa Karma Bhawan - Room No. - 171</span></div>
+    </div>
+    <div class="custom-col-right">
+      <div class="img-banner-wrapper">
+        <img src="static/firewallz/icons/bosm-logo.png" class="bosm-logo-img">
+        <div class="bosm-head-wrapper">
+          <div class="bosm-head-text">BOSM</div>
+          <div class="bosm-slogan-text">GRIT|GUTS|GLORY</div>
+        </div>
+        <div class="bosm-dates-wrapper">
+          <div class="bosm-dates-year">2018</div>
+          <div class="bosm-dates">19th - 23rd September</div>
+        </div>
+      </div>
+      <div class="participant-card-text">Participant Card</div>
+      <div class="photo-holder"></div>
+      <div class="firewallz-text">Firewallz&nbsp&nbsp</div>
+      <div class="card-no-text">Card No. : <span>12/GAFSSD/36</span></div>
+      <div class="name-text">Name : <span>Arpit Anshuman</span></div>
+      <div class="college-text">College : <span>Birla Institute of Technology and Science, Pilani, Rajasthan</span></div>
+      <div class="accomodation-text">Accomodation : <span>Vishwa Karma Bhawan - Room No. - 171</span></div>
+    </div>
+    <div class="margin-gap-div"></div>
+    <div class="custom-col-left">
+      <div class="img-banner-wrapper">
+        <img src="static/firewallz/icons/bosm-logo.png" class="bosm-logo-img">
+        <div class="bosm-head-wrapper">
+          <div class="bosm-head-text">BOSM</div>
+          <div class="bosm-slogan-text">GRIT|GUTS|GLORY</div>
+        </div>
+        <div class="bosm-dates-wrapper">
+          <div class="bosm-dates-year">2018</div>
+          <div class="bosm-dates">19th - 23rd September</div>
+        </div>
+      </div>
+      <div class="participant-card-text">Participant Card</div>
+      <div class="photo-holder"></div>
+      <div class="firewallz-text">Firewallz&nbsp&nbsp</div>
+      <div class="card-no-text">Card No. : <span>12/GAFSSD/36</span></div>
+      <div class="name-text">Name : <span>Arpit Anshuman</span></div>
+      <div class="college-text">College : <span>Birla Institute of Technology and Science, Pilani, Rajasthan</span></div>
+      <div class="accomodation-text">Accomodation : <span>Vishwa Karma Bhawan - Room No. - 171</span></div>
+    </div>
+    <div class="custom-col-right">
+      <div class="img-banner-wrapper">
+        <img src="static/firewallz/icons/bosm-logo.png" class="bosm-logo-img">
+        <div class="bosm-head-wrapper">
+          <div class="bosm-head-text">BOSM</div>
+          <div class="bosm-slogan-text">GRIT|GUTS|GLORY</div>
+        </div>
+        <div class="bosm-dates-wrapper">
+          <div class="bosm-dates-year">2018</div>
+          <div class="bosm-dates">19th - 23rd September</div>
+        </div>
+      </div>
+      <div class="participant-card-text">Participant Card</div>
+      <div class="photo-holder"></div>
+      <div class="firewallz-text">Firewallz&nbsp&nbsp</div>
+      <div class="card-no-text">Card No. : <span>12/GAFSSD/36</span></div>
+      <div class="name-text">Name : <span>Arpit Anshuman</span></div>
+      <div class="college-text">College : <span>Birla Institute of Technology and Science, Pilani, Rajasthan</span></div>
+      <div class="accomodation-text">Accomodation : <span>Vishwa Karma Bhawan - Room No. - 171</span></div>
+    </div>
+  </div>
+  <div class="two-page">
+    <div class="custom-col-left">
+      <div class="back-face-id">
+        <ul class="instructions-list">
+          <li>This card should be carried all the time.</li>
+          <li>The card should be produced on demand to any of the FIREWALLZ member.</li>
+          <li>Please deposit the card in the FIREWALLZ booth before leaving the campus.</li>
+        </ul>
+        <div class="emergency-wrapper">
+          <b>In case of any Safety or Medical Emergency, contact +91 9441569515 or +91 9983093025.</b>
+        </div>
+      </div>
+    </div>
+    <div class="custom-col-right">
+      <div class="back-face-id">
+        <ul class="instructions-list">
+          <li>This card should be carried all the time.</li>
+          <li>The card should be produced on demand to any of the FIREWALLZ member.</li>
+          <li>Please deposit the card in the FIREWALLZ booth before leaving the campus.</li>
+        </ul>
+        <div class="emergency-wrapper">
+          <b>In case of any Safety or Medical Emergency, contact +91 9441569515 or +91 9983093025.</b>
+        </div>
+      </div>
+    </div>
+    <div class="margin-gap-div"></div>
+    <div class="custom-col-left">
+      <div class="back-face-id">
+        <ul class="instructions-list">
+          <li>This card should be carried all the time.</li>
+          <li>The card should be produced on demand to any of the FIREWALLZ member.</li>
+          <li>Please deposit the card in the FIREWALLZ booth before leaving the campus.</li>
+        </ul>
+        <div class="emergency-wrapper">
+          <b>In case of any Safety or Medical Emergency, contact +91 9441569515 or +91 9983093025.</b>
+        </div>
+      </div>
+    </div>
+    <div class="custom-col-right">
+      <div class="back-face-id">
+        <ul class="instructions-list">
+          <li>This card should be carried all the time.</li>
+          <li>The card should be produced on demand to any of the FIREWALLZ member.</li>
+          <li>Please deposit the card in the FIREWALLZ booth before leaving the campus.</li>
+        </ul>
+        <div class="emergency-wrapper">
+          <b>In case of any Safety or Medical Emergency, contact +91 9441569515 or +91 9983093025.</b>
+        </div>
+      </div>
+    </div>
+    <div class="margin-gap-div"></div>
+    <div class="custom-col-left">
+      <div class="back-face-id">
+        <ul class="instructions-list">
+          <li>This card should be carried all the time.</li>
+          <li>The card should be produced on demand to any of the FIREWALLZ member.</li>
+          <li>Please deposit the card in the FIREWALLZ booth before leaving the campus.</li>
+        </ul>
+        <div class="emergency-wrapper">
+          <b>In case of any Safety or Medical Emergency, contact +91 9441569515 or +91 9983093025.</b>
+        </div>
+      </div>
+    </div>
+    <div class="custom-col-right">
+      <div class="back-face-id">
+        <ul class="instructions-list">
+          <li>This card should be carried all the time.</li>
+          <li>The card should be produced on demand to any of the FIREWALLZ member.</li>
+          <li>Please deposit the card in the FIREWALLZ booth before leaving the campus.</li>
+        </ul>
+        <div class="emergency-wrapper">
+          <b>In case of any Safety or Medical Emergency, contact +91 9441569515 or +91 9983093025.</b>
+        </div>
+      </div>
+    </div>
+    <div class="margin-gap-div"></div>
+    <div class="custom-col-left">
+      <div class="back-face-id">
+        <ul class="instructions-list">
+          <li>This card should be carried all the time.</li>
+          <li>The card should be produced on demand to any of the FIREWALLZ member.</li>
+          <li>Please deposit the card in the FIREWALLZ booth before leaving the campus.</li>
+        </ul>
+        <div class="emergency-wrapper">
+          <b>In case of any Safety or Medical Emergency, contact +91 9441569515 or +91 9983093025.</b>
+        </div>
+      </div>
+    </div>
+    <div class="custom-col-right">
+      <div class="back-face-id">
+        <ul class="instructions-list">
+          <li>This card should be carried all the time.</li>
+          <li>The card should be produced on demand to any of the FIREWALLZ member.</li>
+          <li>Please deposit the card in the FIREWALLZ booth before leaving the campus.</li>
+        </ul>
+        <div class="emergency-wrapper">
+          <b>In case of any Safety or Medical Emergency, contact +91 9441569515 or +91 9983093025.</b>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    var data = [];
+    {{% for participant in data %}}
+      var part = {
+        "name": {{participant.name}},
+        "college": {{participant.college}},
+        "group_id": {{participant.group_id}}
+      }
+      data.push(part);
+    {{% endfor %}}
+    console.log(data);
+    document.getElementsByTagName('body')[0].innerHTML = '';
+    var onepage = '';
+    for (var i = 0; i < data.length; i+=8) {
+      var pages = '';
+      for (var j = 0; j < data.length && j<(i+8); j++) {
+        if (j%2==0) {
+          pages+='<div class="custom-col-left"> <div class="img-banner-wrapper"> <img src="/static/firewallz/icons/bosm-logo.png" class="bosm-logo-img"> <div class="bosm-head-wrapper"> <div class="bosm-head-text">BOSM</div><div class="bosm-slogan-text">GRIT|GUTS|GLORY</div></div><div class="bosm-dates-wrapper"> <div class="bosm-dates-year">2018</div><div class="bosm-dates">19th - 23rd September</div></div></div><div class="participant-card-text">Participant Card</div><div class="photo-holder"></div><div class="firewallz-text">Firewallz&nbsp&nbsp</div><div class="card-no-text">Card No. : <span>12/GAFSSD/36</span></div><div class="name-text">Name : <span>Arpit Anshuman</span></div><div class="college-text">College : <span>Birla Institute of Technology and Science, Pilani, Rajasthan</span></div><div class="accomodation-text">Accomodation : <span>Vishwa Karma Bhawan - Room No. - 171</span></div></div>';
+        } else if(j%2==1) {
+          pages+='<div class="custom-col-right"> <div class="img-banner-wrapper"> <img src="/static/firewallz/icons/bosm-logo.png" class="bosm-logo-img"> <div class="bosm-head-wrapper"> <div class="bosm-head-text">BOSM</div><div class="bosm-slogan-text">GRIT|GUTS|GLORY</div></div><div class="bosm-dates-wrapper"> <div class="bosm-dates-year">2018</div><div class="bosm-dates">19th - 23rd September</div></div></div><div class="participant-card-text">Participant Card</div><div class="photo-holder"></div><div class="firewallz-text">Firewallz&nbsp&nbsp</div><div class="card-no-text">Card No. : <span>12/GAFSSD/36</span></div><div class="name-text">Name : <span>Arpit Anshuman</span></div><div class="college-text">College : <span>Birla Institute of Technology and Science, Pilani, Rajasthan</span></div><div class="accomodation-text">Accomodation : <span>Vishwa Karma Bhawan - Room No. - 171</span></div></div><div class="margin-gap-div"></div>';
+        }
+      }
+      onepage += '<div class="one-page">'+pages+'</div>';
+    }
+    document.getElementsByTagName('body')[0].innerHTML = onepage;
+  </script>
+</body>
+</html>

@@ -193,6 +193,7 @@ function confirmGroup() {
     if (ourRequest.readyState === 4 && ourRequest.status === 200) {
       json = JSON.parse(ourRequest.responseText);
       var groupCode = json.groupcode;
+      console.log(groupCode);
       showGroupCode(groupCode);
       resetTables();
       fetchParticipants();

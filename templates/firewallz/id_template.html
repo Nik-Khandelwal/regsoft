@@ -424,14 +424,14 @@
   </div>
   <script type="text/javascript">
     var data = [];
-    {{% for participant in data %}}
+    {% for participant in data %}
       var part = {
-        "name": {{participant.name}},
-        "college": {{participant.college}},
-        "group_id": {{participant.group_id}}
+        "name": '{{participant.name}}',
+        "college": '{{participant.college}}',
+        "group_id": '{{participant.group_id}}'
       }
       data.push(part);
-    {{% endfor %}}
+    {% endfor %}
     console.log(data);
     document.getElementsByTagName('body')[0].innerHTML = '';
     var onepage = '';

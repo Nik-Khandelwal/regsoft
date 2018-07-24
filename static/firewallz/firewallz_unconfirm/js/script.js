@@ -161,6 +161,11 @@ function participant_search() {
     }
   }
 }
+Pusher.logToConsole = false;
+var pusher = new Pusher('9b825df805e0b694cccc', {
+  cluster: 'ap2',
+  encrypted: true
+});
 var channel2 = pusher.subscribe('my-channel2');
 channel2.bind('my-event2', function(data) {
   console.log(data);

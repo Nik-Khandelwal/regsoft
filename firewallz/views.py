@@ -391,11 +391,11 @@ def id_card(request,string):
 			return HttpResponseRedirect('/regsoft/')
 	else:
 		return HttpResponseRedirect('/regsoft/')
-	data = 	json.loads( request.body.decode('utf-8') )
 	dats = []
+	print(string)
 	for pl in Enteredplayer.objects.filter(group = Group.objects.get(group_code=string)):
-		dats.append({"name":pl.regplayer.name.name,"college":pl.regplayer.college,"group_id":pl.group_id,"sport":pl.regplayer.sport,"mobile_no":pl.regplayer.mobile_no})
-	return JsonResponse({"data":dats})
+		dats.append({"pk":pl.regplayer.pk,"name":pl.regplayer.name.name,"college":pl.regplayer.college,"group_code":string,"group_id":pl.group_id,"sport":pl.regplayer.sport,"mobile_no":pl.regplayer.mobile_no})
+	return render(request,'firewallz/id_template.html',{"data":dats})
 
 
 def collegelist(request):

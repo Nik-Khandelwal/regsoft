@@ -193,6 +193,7 @@ function confirmGroup() {
     if (ourRequest.readyState === 4 && ourRequest.status === 200) {
       json = JSON.parse(ourRequest.responseText);
       var groupCode = json.groupcode;
+      console.log(groupCode);
       showGroupCode(groupCode);
       resetTables();
       fetchParticipants();
@@ -640,7 +641,7 @@ var pusher = new Pusher('9b825df805e0b694cccc', {
 });
 
 var firewallz_unconfirm_channel = pusher.subscribe('firewallz_unconfirm_channel');
-channel.bind('firewallz_unconfirm_event', function(data) {
+firewallz_unconfirm_channel.bind('firewallz_unconfirm_event', function(data) {
   console.log(data);
   updateLeftTable(data);
   // Data Format - Same as Firewallz Details View

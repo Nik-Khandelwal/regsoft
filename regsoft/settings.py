@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'register',
    # 'debug_toolbar',
     'rest_framework',
-    'lockdown',
+   # 'lockdown',
    # 'corsheaders',
    'import_export',
 ]
@@ -64,7 +64,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
  #   'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.cache.FetchFromCacheMiddleware',
-    'lockdown.middleware.LockdownMiddleware',
+  #  'lockdown.middleware.LockdownMiddleware',
 ]
 
 ROOT_URLCONF = 'regsoft.urls'
@@ -190,10 +190,10 @@ IMPORT_EXPORT_USE_TRANSACTIONS = True
 
 
 # For Testing Purposes
-LOCKDOWN_ENABLED = True
-LOCKDOWN_PASSWORDS = ('shush&shoo',)
+# LOCKDOWN_ENABLED = True
+# LOCKDOWN_PASSWORDS = ('shush&shoo',)
 
-LOCKDOWN_URL_EXCEPTIONS = (
-    r'^/$',   
-)
+# LOCKDOWN_URL_EXCEPTIONS = (
+#     r'^/$',   
+# )
 

@@ -153,7 +153,7 @@ pusher_client = pusher.Pusher(
   ssl=True
 )
 
-CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
+#CACHE_TTL = getattr(settings, '#CACHE_TTL', DEFAULT_TIMEOUT)
 
 def is_pcradmin_admin(user):
 	if user:
@@ -161,7 +161,7 @@ def is_pcradmin_admin(user):
 			return True
 	return False
 
-@cache_page(CACHE_TTL)
+#@cache_page(#CACHE_TTL)
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_pcradmin_admin, login_url='/regsoft/')
 def index(request):

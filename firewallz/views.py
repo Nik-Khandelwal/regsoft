@@ -55,7 +55,7 @@ from django.contrib.auth import get_user_model
 User=get_user_model()
  
 
-CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
+#CACHE_TTL = getattr(settings, '#CACHE_TTL', DEFAULT_TIMEOUT)
 
 
 pusher_client = pusher.Pusher(
@@ -87,7 +87,7 @@ def group_code_generator(size=5, chars=string.ascii_uppercase + string.digits):
 	return str
 
 
-@cache_page(CACHE_TTL)
+#@cache_page(#CACHE_TTL)
 @login_required(login_url = '/regsoft/')
 @user_passes_test(is_firewallz_admin, login_url='/regsoft/')
 def main(request):
@@ -266,7 +266,7 @@ def add_participant(request):
 		return HttpResponse(json.dumps(dat), content_type='application/json')
 
 
-@cache_page(CACHE_TTL)
+#@cache_page(#CACHE_TTL)
 @login_required(login_url = '/regsoft/')
 @user_passes_test(is_firewallz_admin, login_url='/regsoft/')
 def unconfirm_grp(request):

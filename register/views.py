@@ -145,7 +145,7 @@ pusher_client = pusher.Pusher(
   ssl=True
 )
 
-CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
+#CACHE_TTL = getattr(settings, '#CACHE_TTL', DEFAULT_TIMEOUT)
 
 def is_not_admin(user):
 	if user:

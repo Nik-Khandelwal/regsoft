@@ -87,7 +87,7 @@ from django.contrib.auth import logout
 from django.contrib.auth import get_user_model
 User=get_user_model()
 
-CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
+#CACHE_TTL = getattr(settings, '#CACHE_TTL', DEFAULT_TIMEOUT)
 
 pusher_client = pusher.Pusher(
   app_id='499153',
@@ -312,7 +312,7 @@ def check_updates(request):
 		return HttpResponseRedirect('/regsoft/')
 
 
-@cache_page(CACHE_TTL)
+#@cache_page(#CACHE_TTL)
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
 def unconfirm_acco(request):
@@ -427,7 +427,7 @@ def fine_amount(request):
 #		dat = {"success":1}
 #	return HttpResponse(json.dumps(dat), content_type='application/json')
 
-@cache_page(CACHE_TTL)
+#@cache_page(#CACHE_TTL)
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
 def reconfirm_acco(request):

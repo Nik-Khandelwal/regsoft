@@ -326,7 +326,7 @@ def piyali(request):
 		bil.amt_received = data['data']['paid_amt']
 		bil.dd_no = data['data']['dd_num']
 		bil.save()
-		dat = {"success":1}
+		dat = {"success":1, "bills_pk":bil.pk}
 		print(pl.controls_passed)
 		return HttpResponse(json.dumps(dat), content_type='application/json')
 

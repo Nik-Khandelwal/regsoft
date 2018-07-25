@@ -239,7 +239,7 @@ def accomodate(request):
 				bill.accomodation = ac
 				bill.save()
 				data_update = [4]
-				pusher_client.trigger('recnreacc_channel', 'recnreacc_event', data_update)
+				pusher_client.trigger('recnacc_channel', 'recnacc_event', data_update)
 				return HttpResponse(json.dumps(dat), content_type='application/json')
 		else:
 			logout(request)
@@ -275,7 +275,7 @@ def accomodate_singleroom(request):
 					pl.save()
 				dat = {"success":1}
 				data_update = [5]
-				pusher_client.trigger('recnreacc_channel', 'recnreacc_event', data_update)
+				pusher_client.trigger('recnacc_channel', 'recnacc_event', data_update)
 				return HttpResponse(json.dumps(dat), content_type='application/json')
 		else:
 			logout(request)
@@ -507,10 +507,11 @@ def reaccomodate_pusher(request):
 	if request.user.is_authenticated():
 		if is_recnacc_admin(request.user):
 			print("participant_details")
-			data=[]
+			dat=[]
 			for gr in Group.objects.all():
 				b=[]
 				a=[]
+				data = json.loads( request.body.decode('utf-8') )
 				for i in data['data']:
 					#print(data['data']['id_arr'])
 					rp = Regplayer.objects.get(pk=int(i))
@@ -523,9 +524,9 @@ def reaccomodate_pusher(request):
 				for t in a:
 					b.append({"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
 				if b:
-					data.append({"participants":b,"groupid":gr.group_code})
+					dat.append({"participants":b,"groupid":gr.group_code})
 			#print(data)
-			pusher_client.trigger('recnreacc_channel', 'recnreacc_event', data)
+			pusher_client.trigger('recnreacc_channel', 'recnreacc_event', dat)
 
 		else:
 			logout(request)

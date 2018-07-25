@@ -591,7 +591,7 @@ function fetchStats() {
     if (ourRequest.status >= 200 && ourRequest.status < 400) {
       ourData = JSON.parse(ourRequest.responseText);
       console.log(ourData);
-      var data = ourData;
+      var data = ourData.data;
       for (var i = 0; i < data.length; i++) {
         var participants = '';
         for (var j = 0; j < data[i][1].length; j++) {

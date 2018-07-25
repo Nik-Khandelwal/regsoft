@@ -398,3 +398,6 @@ html {
   font-size: 3vh;
   vertical-align: middle;
 }
+.part_id {
+  display: none;
+}

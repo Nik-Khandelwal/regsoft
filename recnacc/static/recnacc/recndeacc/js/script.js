@@ -619,8 +619,9 @@ function pusher_retrieve_left() {
       total = 0;
       document.getElementById("stats").innerHTML="Selected: "+total;
     }
-    else
+    else {
       // Do Nothing
+    }
   } // server sent an error after connection
   ourRequest.onerror = function () { // error connecting to URL
     // Nothing

@@ -320,6 +320,10 @@ function confirm_bill(){
 		if (paid_amt>=net_amt) {
 			var ddNum = formData[1].value;
 			if (ddNum != '') {
+				if(!document.getElementById("btn-conf_bill").classList.contains("disabled"))
+					document.getElementById("btn-conf_bill").classList.add("disabled");
+				if(!document.getElementById("btn-conf_back").classList.contains("disabled"))
+					document.getElementById("btn-conf_back").classList.add("disabled");
 				Materialize.toast('Sending data to server!', 4000, "toast-post");
 				//Post to backend
 				var csrf_token = getCookie('csrftoken');
@@ -350,8 +354,10 @@ function confirm_bill(){
 					var recieve_json = JSON.parse(ourRequest.responseText);
 					var status = recieve_json.success;
 					// console.log(status);
-					showRequestStatus(status)
-
+					showRequestStatus(status);
+					var bills_pk = parseInt(recieve_json.bills_pk);
+					document.getElementById('print-bill-btn').setAttribute('href', '/controls/bill_pdf/'+bills_pk+'');
+					sendPusherUpdate();
 					 // either 1 or 0
 					//json object received
 				  }
@@ -392,7 +398,7 @@ function post_backend(){
 		var bills_pk = parseInt(recieve_json.bills_pk);
 		document.getElementById('print-bill-btn').setAttribute('href', '/controls/bill_pdf/'+bills_pk+'');
 		// console.log(status);
-		showRequestStatus(status)
+		showRequestStatus(status);
 		sendPusherUpdate();
 		 // either 1 or 0
 		//json object received

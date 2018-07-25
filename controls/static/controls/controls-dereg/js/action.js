@@ -566,6 +566,7 @@ function pusher_retrieve_left(){
 	ourRequest.onload = function() {
 		if (ourRequest.status >= 200 && ourRequest.status < 400) {
 			ourData = JSON.parse(ourRequest.responseText);
+			document.getElementsByClassName("left-one")[0].innerHTML = '';
 			pusher_poppulate_left(ourData);
 		}
 		else {}

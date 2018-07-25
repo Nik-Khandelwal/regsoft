@@ -418,7 +418,7 @@ function reacc() {
         // document.getElementById('amount_fine').innerHTML = 'Rs: ' + fine;
         Materialize.toast('Updated', 4000);
         showRequestStatus(1);
-        sendPusherUpdate(send_obj);
+        sendPusherUpdate(JSON.stringify(send_obj));
       }
       else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
         Materialize.toast('Error Fetching Fine!', 3000);
@@ -900,8 +900,9 @@ function pusher_retrieve_left() {
       total = 0;
       document.getElementById("stats").innerHTML="Selected: "+total;
     }
-    else
+    else {
       // Nothing
+    }
   } // server sent an error after connection
   ourRequest.onerror = function () { // error connecting to URL
     // Nothing
@@ -959,7 +960,8 @@ function pusher_fetchAvailabilityStats() {
   }
   ourRequest.send('');
 }
-function sendPusherUpdate(myObj) {
+function sendPusherUpdate(stringObj) {
+  var myObj = JSON.parse(stringObj);
   var pk_arr = myObj.data.id_arr;
   var send_obj = {"data": pk_arr};
   var string_obj = JSON.stringify(send_obj);

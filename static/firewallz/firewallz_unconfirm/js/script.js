@@ -161,21 +161,6 @@ function participant_search() {
     }
   }
 }
-Pusher.logToConsole = false;
-var pusher = new Pusher('9b825df805e0b694cccc', {
-  cluster: 'ap2',
-  encrypted: true
-});
-var channel2 = pusher.subscribe('my-channel2');
-channel2.bind('my-event2', function(data) {
-  console.log(data);
-  getGroups();
-});
-var channel = pusher.subscribe('my-channel');
-channel.bind('my-event', function(data) {
-  console.log(data);
-  poppulate_left(data);
-});
 function stats(){
   $('.button-collapse').sideNav('hide');
   fetchStats();
@@ -206,7 +191,7 @@ function fetchStats() {
     if (ourRequest.status >= 200 && ourRequest.status < 400) {
       ourData = JSON.parse(ourRequest.responseText);
       console.log(ourData);
-      var data = ourData;
+      var data = ourData.data;
       for (var i = 0; i < data.length; i++) {
         var participants = '';
         for (var j = 0; j < data[i][1].length; j++) {
@@ -259,6 +244,11 @@ function fetchPassedStats() {
   }
   ourRequest.send('');
 }
+Pusher.logToConsole = false;
+var pusher = new Pusher('9b825df805e0b694cccc', {
+  cluster: 'ap2',
+  encrypted: true
+});
 // Below Channel for Data from Firewallz Socket
 var channel = pusher.subscribe('my-channel2');
 channel.bind('my-event2', function(data) {

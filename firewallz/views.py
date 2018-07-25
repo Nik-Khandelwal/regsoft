@@ -292,7 +292,7 @@ def unconfirm_details(request):
 		return HttpResponseRedirect('/regsoft/')
 	data = []
 	for gr in Group.objects.all():
-		if gr.enteredplayer_set.all().count() is not 0:
+		if gr.enteredplayer_set.filter(controls_passed=False).count() is not 0:
 			if Regplayer.objects.get(pk=gr.group_leader):
 				player = Regplayer.objects.get(pk=gr.group_leader)
 				data.append({"pk":gr.pk,"name": player.name.name, "college":player.college, "groupid":gr.group_code})

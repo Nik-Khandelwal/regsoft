@@ -197,7 +197,7 @@ function confirmGroup() {
       showGroupCode(groupCode);
       resetTables();
       fetchParticipants();
-      sendPusherUpdate(myObj);
+      sendPusherUpdate(JSON.stringify(myObj));
     } else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
       Materialize.toast('There was some error connecting to the server!', 3000);
       showGroupCode('ERROR');
@@ -591,7 +591,7 @@ function fetchStats() {
     if (ourRequest.status >= 200 && ourRequest.status < 400) {
       ourData = JSON.parse(ourRequest.responseText);
       console.log(ourData);
-      var data = ourData;
+      var data = ourData.data;
       for (var i = 0; i < data.length; i++) {
         var participants = '';
         for (var j = 0; j < data[i][1].length; j++) {
@@ -643,11 +643,12 @@ var pusher = new Pusher('9b825df805e0b694cccc', {
 var firewallz_unconfirm_channel = pusher.subscribe('firewallz_unconfirm_channel');
 firewallz_unconfirm_channel.bind('firewallz_unconfirm_event', function(data) {
   console.log(data);
-  updateLeftTable(data);
+  pusher_updateLeftTable(data);
   // Data Format - Same as Firewallz Details View
 });
 
-function sendPusherUpdate(myObj) {
+function sendPusherUpdate(stringObj) {
+  var myObj = JSON.parse(stringObj);
   var pk_arr = [];
   var data = myObj.data;
   for (var i = 0; i < data.length; i++) {
@@ -671,4 +672,15 @@ function sendPusherUpdate(myObj) {
     // Nothing
   }
   ourRequest.send(string_obj);
+}
+function pusher_updateLeftTable(data) {
+  var lefttmp = document.getElementById('left-temp');
+  for (var i = 0; i < data.length; i++) {
+    document.getElementById("left-body").insertBefore(lefttmp.content.cloneNode(true), document.getElementById("left-body").childNodes[0]);
+    document.getElementsByClassName('left-table-name')[i].innerHTML = data[i].fields.name;
+    document.getElementsByClassName('left-table-college')[i].innerHTML = data[i].fields.college;
+    document.getElementsByClassName('left-table-sport')[i].innerHTML = data[i].fields.sport;
+    document.getElementsByClassName('left-table-gender')[i].innerHTML = data[i].fields.gender;
+    document.getElementsByClassName('left-table-id')[i].innerHTML = data[i].pk;
+  }
 }

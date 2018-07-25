@@ -53,6 +53,14 @@ urlpatterns = [
 
     url(r'^view_notes/$',views.view_notes,name='view_notes'),
 
-    url(r'^add_note/$',views.add_note,name='add_note')
+    url(r'^add_note/$',views.add_note,name='add_note'),
+
+    url(r'^acco_strength/$',views.acco_strength,name='acco_strength'),
+
+    url(r'^deallocated/$',views.deallocated,name='deallocated'),
+
+    url(r'^fines/$',views.fines,name='fines'),
+
+    url(r'^notes/$',views.notes,name='notes'),
     
 ]

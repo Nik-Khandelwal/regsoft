@@ -43,7 +43,9 @@ urlpatterns = [
 
     url(r'^bill_pdf/(?P<bill_pk>[0-9]+)/$',views.bill_pdf,name='bill_pdf'),
 
-    url(r'^denomination_display/$',views.denomination_display,name='denomination_display'),    
+    url(r'^denomination_display/$',views.denomination_display,name='denomination_display'),
+
+    url(r'^denominations/$',views.denominations,name='denominations'),    
 
    # url(r'^pdf/$',views.pdf,name='pdf'),
     

@@ -635,6 +635,18 @@ def view_stats(request):
 
 # Bhawan Occupency
 
+def acco_strength(request):
+	if request.user.is_authenticated():
+		if is_recnacc_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	return render(request,'recnacc/occupancy.html')
+
+
 def disp_occupency(request):
 	if request.user.is_authenticated():
 		if is_recnacc_admin(request.user):
@@ -658,8 +670,11 @@ def edit_occupency(request):
 	if request.user.is_authenticated():
 		if is_recnacc_admin(request.user):
 			data = json.loads( request.body.decode('utf-8') )
+			print(data)
 			ac = Accomodation.objects.get(pk=data['data']['pk'])
+			diff = data['data']['strength'] - ac.strength
 			ac.strength = data['data']['strength']
+			ac.vacancy += diff
 			ac.save()
 			data_update = [9]
 			pusher_client.trigger('recnacc_occupancy_channel', 'recnacc_occupancy_event', data_update)
@@ -669,6 +684,18 @@ def edit_occupency(request):
 			return HttpResponseRedirect('/regsoft/')
 	else:
 		return HttpResponseRedirect('/regsoft/')
+
+
+def deallocated(request):
+	if request.user.is_authenticated():
+		if is_recnacc_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	return render(request, 'recnacc/deallocated.html')
 
 		
 def deallocated_page(request):
@@ -684,6 +711,16 @@ def deallocated_page(request):
 	else:
 		return HttpResponseRedirect('/regsoft/')
 
+def fines(request):
+	if request.user.is_authenticated():
+		if is_recnacc_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	return render(request,'recnacc/fines.html')
 
 def fine_page(request):
 	if request.user.is_authenticated():
@@ -703,6 +740,16 @@ def fine_page(request):
 	else:
 		return HttpResponseRedirect('/regsoft/')
 
+def notes(request):
+	if request.user.is_authenticated():
+		if is_recnacc_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	return render(request,'recnacc/notes.html')
 
 def view_notes(request):
 	if request.user.is_authenticated():

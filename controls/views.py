@@ -672,3 +672,15 @@ def denomination_display(request):
 	data.append(money.twothousand)
 	return HttpResponse(json.dumps(data), content_type='application/json')
 
+
+def denominations(request):
+	if request.user.is_authenticated():
+		if is_controls_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	return render(request, 'controls/denominations.html')
+

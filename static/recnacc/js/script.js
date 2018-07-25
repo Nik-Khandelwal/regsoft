@@ -933,6 +933,8 @@ channel2.bind('my-event2', function(data) {
 var recnreacc_channel = pusher.subscribe('recnreacc_channel');
 recnreacc_channel.bind('recnreacc_event', function(data) {
   poppulate_left(data);
+  pusher_fetchBhawanStats();
+  pusher_fetchAvailabilityStats();
 });
 // RecnAcc Occupancy Channel
 var recnacc_occupancy_channel = pusher.subscribe('recnacc_occupancy_channel');

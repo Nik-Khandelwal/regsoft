@@ -181,7 +181,7 @@ def sportlist(request):
 			s.append(st.idno)
 			s.append(st.sport)
 			d.append(s)
-	tm=Team.objects.filter(activate=0).order_by(Lower('college'))
+	tm=Team.objects.all().order_by(Lower('college'))
 	d2=[]
 	for i in tm:
 		s=[]
@@ -326,6 +326,8 @@ def register(request):
 		up.email=data['email']
 		up.grp_leader = 1
 		up.team = team
+		if team.activate==1:
+			up.deleted=1
 		up.is_active=False
 		up.save()
 		to_email = up.email

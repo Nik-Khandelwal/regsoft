@@ -891,14 +891,14 @@ def stats(request):
 
 			
 			
-			total.append(mc)
-			total.append(mt)
-			total.append(fc)
-			total.append(ft)
-			total.append(mc+fc)
-			total.append(mt+ft)
-			total.append(cc)
-			total.append(ct)
+		total.append(mc)
+		total.append(mt)
+		total.append(fc)
+		total.append(ft)
+		total.append(mc+fc)
+		total.append(mt+ft)
+		total.append(cc)
+		total.append(ct)
 
 		sp=Sport.objects.all().order_by(Lower('sport'))
 		data2=[]

@@ -465,7 +465,7 @@ def viewGrpLeaders(request):
 		list2=Team.objects.filter(activate=1).order_by(Lower('college'))
 		d=[]
 		for i in list1:
-			grpld=User.objects.filter(grp_leader=1,deleted=0,team=i)
+			grpld=User.objects.filter(grp_leader=1,deleted=0,team=i).order_by(Lower('name'))
 			if grpld.count():#display only if someone has registered in the college
 				s=[]
 				s.append(i.college)
@@ -502,7 +502,7 @@ def viewGrpLeaders(request):
 				s.append(i.city)
 				s.append(i.state)
 				s.append(i.pk)
-				grpld=User.objects.filter(grp_leader=1,team=i)
+				grpld=User.objects.filter(grp_leader=1,team=i).order_by(Lower('name'))
 				l=[]
 				for j in grpld:
 					l2=[]

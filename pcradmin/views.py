@@ -502,7 +502,7 @@ def viewGrpLeaders(request):
 				s.append(i.city)
 				s.append(i.state)
 				s.append(i.pk)
-				grpld=User.objects.filter(grp_leader=1,deleted=0,team=i)
+				grpld=User.objects.filter(grp_leader=1,team=i)
 				l=[]
 				for j in grpld:
 					l2=[]
@@ -521,6 +521,7 @@ def viewGrpLeaders(request):
 					else:
 						l2.append("NO")
 					l2.append(j.gender)
+					l2.append(j.deleted)
 					l.append(l2)
 				s.append(l)
 				d2.append(s)

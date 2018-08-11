@@ -71,7 +71,11 @@ function openCollegeLeaders(college, num) {
               sportsList += ', ';
             }
           }
-          document.getElementById('switch-status-list-body').innerHTML += '<tr class="status-selection"> <td style="display: none;">'+rightData[i][4][k][0]+'</td><td style="flex-basis: 20%;">'+rightData[i][4][k][1]+'</td><td style="flex-basis: 14%">'+rightData[i][4][k][2]+'</td><td style="flex-basis: 25%;">'+rightData[i][4][k][3]+'</td><td style="flex-basis: 20%;">'+sportsList+'</td><td style="flex-basis: 8%;">'+rightData[i][4][k][6]+'</td><td style="flex-basis: 8%;">'+rightData[i][4][k][5]+'</td><td style="flex-basis: 5%;"><i class="material-icons change-cursor" onclick="toggleSelection(this);">check_box_outline_blank</i></td></tr>';
+          if(rightData[i][4][k][7]==0) {
+            document.getElementById('switch-status-list-body').innerHTML += '<b><tr class="status-selection"> <td style="display: none;">'+rightData[i][4][k][0]+'</td><td style="flex-basis: 20%;">'+rightData[i][4][k][1]+'</td><td style="flex-basis: 14%">'+rightData[i][4][k][2]+'</td><td style="flex-basis: 25%;">'+rightData[i][4][k][3]+'</td><td style="flex-basis: 20%;">'+sportsList+'</td><td style="flex-basis: 8%;">'+rightData[i][4][k][6]+'</td><td style="flex-basis: 8%;">'+rightData[i][4][k][5]+'</td><td style="flex-basis: 5%;"><i class="material-icons change-cursor" onclick="toggleSelection(this);">check_box_outline_blank</i></td></tr>';
+          } else {
+            document.getElementById('switch-status-list-body').innerHTML += '<b><tr class="status-selection"> <td style="display: none;">'+rightData[i][4][k][0]+'</td><td style="flex-basis: 20%;">'+rightData[i][4][k][1]+'</td><td style="flex-basis: 14%">'+rightData[i][4][k][2]+'</td><td style="flex-basis: 25%;">'+rightData[i][4][k][3]+'</td><td style="flex-basis: 20%;">'+sportsList+'</td><td style="flex-basis: 8%;">'+rightData[i][4][k][6]+'</td><td style="flex-basis: 8%;">'+rightData[i][4][k][5]+'</td><td style="flex-basis: 5%;"><i class="material-icons change-cursor">do_not_disturb_alt</i></td></tr></b>';
+          }
         }
       }
     }

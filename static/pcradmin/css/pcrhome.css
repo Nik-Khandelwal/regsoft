@@ -101,6 +101,22 @@ nav {
   .table thead th {height: 8vh;}
   .table thead tr {overflow: auto;}
 }
+@media only screen and (max-width: 601px) {
+  .table tbody {overflow: auto; max-height: 54vh; height: 54vh;}
+  .table thead th {height: 8vh;}
+  .table thead tr {overflow: auto;}
+}
+@media only screen and (max-width: 601px) {
+  #switch-status-right-list-clg, #switch-status-left-list-clg {
+    max-width: 47vw;
+  }
+  #edit-groupleader-body {
+    max-width: calc(100vw - 24px);
+  }
+  .card-container {
+    top: 10vh;
+  }
+}
 .switch-status-college-row:hover, .stats-row:hover, .specific-col-sport-row:hover, .mail-groupleader-row:hover, .edit-groupleader-row:hover, .resend-credentials-mail-groupleader-row:hover, .change-groupleader-row:hover, .confirm-groupleader-row:hover, .verify-docs-groupleader-row:hover, .final-confirmation-mail-row:hover {
   background-color: white;
   cursor: pointer;

@@ -1896,8 +1896,8 @@ def dashboard(request):
 	else:
 		return HttpResponseRedirect('/regsoft/')
 	if request.method=='POST':
-		upmale=User.objects.filter(deleted=0,gender='male')
-		upfemale=User.objects.filter(deleted=0,gender='female')
+		upmale=User.objects.filter(deleted=0,gender='male').exclude(team__isnull=True)
+		upfemale=User.objects.filter(deleted=0,gender='female').exclude(team__isnull=True)
 		d1=[]
 		d2=[]
 		d3=[]

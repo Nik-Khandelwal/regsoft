@@ -1287,10 +1287,9 @@ def confirmTeam(request):
 				
 						email = EmailMessage(mail_subject, message, to=[u.email])
 						email.content_subtype="html"
-						try:
-							email.send()
-						except:
-							success=0
+						
+						email.send()
+						
 
 				try:	
 					u.save()
@@ -1311,10 +1310,10 @@ def confirmTeam(request):
 		
 				email = EmailMessage(mail_subject, message, to=[ld.email])
 				email.content_subtype="html"
-				try:
-					email.send()
-				except:
-					success=0
+				
+				email.send()
+				
+				
 		update_data3 = [9,2]
 		pusher_client.trigger('dashboard-update', 'dashboard-update-event', update_data3)
 		return JsonResponse({'success':success})

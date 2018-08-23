@@ -1258,7 +1258,6 @@ def confirmTeam(request):
 
 			sp=Sport.objects.get(pk=dt)
 			nm=[]
-			mailid=[]
 			#up.team.confirmedsp1[sp.idno]=1
 			#up.team.save()
 			for u in user:
@@ -1266,24 +1265,43 @@ def confirmTeam(request):
 				if u.sportid[sp.idno]=='1':
 					u.sportid=replaceindex(u.sportid,sp.idno,'2')
 					nm.append(u.name)
-					mailid.append(u.email)
-					
+
 					if u.confirm1==0 and u.docs:#when u.docs is empty it will go to else
-						print(u.docs)
 						u.confirm1=2
 					elif u.confirm1==0:
 						u.confirm1=1
 					tm.confirmedsp1=replaceindex(tm.confirmedsp1,sp.idno,'1')
+					try:	
+						u.save()
+						tm.save()
+					except:
+						success=0
+					if sucess:
+						message = render_to_string('msg5.html', {
+													'college':tm.college, 
+													'sport':sp.sport,
+													'nm':u.name,
+													
+													})
+						mail_subject = 'Action Request | Document Upload | BOSM 2018'
 				
+						email = EmailMessage(mail_subject, message, to=[u.email])
+						email.content_subtype="html"
+						try:
+							email.send()
+						except:
+							success=0
+
 				try:	
 					u.save()
 					tm.save()
 				except:
 					success=0
+
+
 			ld=User.objects.get(team=tm,deleted=0,grp_leader=1)
-			mailid.append(ld.email)
 			if success:
-				message = render_to_string('pcradmin/msg4.html', {
+				message = render_to_string('msg4.html', {
 												'college':tm.college, 
 												'sport':sp.sport,
 												'nmlist':nm,
@@ -1291,7 +1309,7 @@ def confirmTeam(request):
 												})
 				mail_subject = 'Action Request | Document Upload | BOSM 2018'
 		
-				email = EmailMessage(mail_subject, message, to=mailid)
+				email = EmailMessage(mail_subject, message, to=[ld.email])
 				email.content_subtype="html"
 				try:
 					email.send()
@@ -1651,14 +1669,21 @@ def createPdf(request,pk):
 	data = []
 	leader = User.objects.get(pk=pk)
 	queryset=User.objects.filter(team=leader.team,deleted=0).order_by(Lower('name'))
+	spt=Sport.objects.all()
 	for obj in queryset:
+		captn=''
 		if obj.captain:
-			sp=Sport.objects.get(idno=obj.captain)
-			count=0
-			for q in queryset:
-				if q.sportid[sp.idno]>='1':
-					count+=1
-			data.append({"pk":obj.pk,"name":obj.name,"mobile_no":obj.phone,"email_id":obj.email,"sport":sp.sport,"players":count})
+			c1=Sport.objects.get(idno=obj.captain)
+			captn=c1.sport
+		cch=''
+		if obj.coach:
+			c2=Sport.objects.get(idno=obj.coach)
+			cch=c2.sport
+		sprt=''
+		for i in spt:
+			if obj.sportid[i.idno]>='1':
+				sprt=sprt+i.sport
+		data.append({"name":obj.name,"mobile_no":obj.phone,"email_id":obj.email,"sport":sprt,"Captain":captn,"Coach":cch})
 	context = {"teamlist":data}
 	return render(request,'pcradmin/collegepdfstats.html',context)
 

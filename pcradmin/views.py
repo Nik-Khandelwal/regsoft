@@ -1276,8 +1276,8 @@ def confirmTeam(request):
 						tm.save()
 					except:
 						success=0
-					if sucess:
-						message = render_to_string('msg5.html', {
+					if success:
+						message = render_to_string('pcradmin/msg5.html', {
 													'college':tm.college, 
 													'sport':sp.sport,
 													'nm':u.name,
@@ -1301,7 +1301,7 @@ def confirmTeam(request):
 
 			ld=User.objects.get(team=tm,deleted=0,grp_leader=1)
 			if success:
-				message = render_to_string('msg4.html', {
+				message = render_to_string('pcradmin/msg4.html', {
 												'college':tm.college, 
 												'sport':sp.sport,
 												'nmlist':nm,
@@ -1682,7 +1682,7 @@ def createPdf(request,pk):
 		sprt=''
 		for i in spt:
 			if obj.sportid[i.idno]>='1':
-				sprt=sprt+i.sport
+				sprt=sprt+i.sport+" "
 		data.append({"name":obj.name,"mobile_no":obj.phone,"email_id":obj.email,"sport":sprt,"Captain":captn,"Coach":cch})
 	context = {"teamlist":data}
 	return render(request,'pcradmin/collegepdfstats.html',context)

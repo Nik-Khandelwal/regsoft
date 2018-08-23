@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+{% load staticfiles %}
+<link rel="icon" href="{% static 'main/favicon/favicon.ico' %}" type="image/x-icon"/>
+<link rel="shortcut icon" href="{% static 'main/favicon/favicon.ico' %}" type="image/x-icon"/>
 <style>
 /*@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700");*/
 *, *:before, *:after {
@@ -58,23 +61,23 @@ h1, h2, h3, h4, h5, h6 {
   
   <div class="table" style="width: 100%; border: 1px solid #EEEEEE;">
     <div class="table-header" style="display: flex; width: 100%; background: #000; padding: 18px 0;">
-      <div class="header__item" style="text-transform: uppercase; color: white; flex: 1 1 16.66666%; text-align: center;"><a id="total">ID No.</a></div>
-      <div class="header__item" style="text-transform: uppercase; color: white; flex: 1 1 16.66666%; text-align: center;"><a id="name">Name</a></div>
+      <div class="header__item" style="text-transform: uppercase; color: white; flex: 1 1 16.66666%; text-align: center;"><a id="total">Name</a></div>
+      <div class="header__item" style="text-transform: uppercase; color: white; flex: 1 1 16.66666%; text-align: center;"><a id="name">Mobile</a></div>
       <div class="header__item" style="text-transform: uppercase; color: white; flex: 1 1 16.66666%; text-align: center;"><a id="losses">Email</a></div>
-      <div class="header__item" style="text-transform: uppercase; color: white; flex: 1 1 16.66666%; text-align: center;"><a id="draws">Phone</a></div>
-      <div class="header__item" style="text-transform: uppercase; color: white; flex: 1 1 16.66666%; text-align: center;"><a id="college">Sport</a></div>
-      <div class="header__item" style="text-transform: uppercase; color: white; flex: 1 1 16.66666%; text-align: center;"><a id="total">No. of Players</a></div>
+      <div class="header__item" style="text-transform: uppercase; color: white; flex: 1 1 16.66666%; text-align: center;"><a id="draws">Sport</a></div>
+      <div class="header__item" style="text-transform: uppercase; color: white; flex: 1 1 16.66666%; text-align: center;"><a id="college">Captain</a></div>
+      <div class="header__item" style="text-transform: uppercase; color: white; flex: 1 1 16.66666%; text-align: center;"><a id="total">Coach</a></div>
       
     </div>
     <div class="table-content"> 
     {% for obj in teamlist %}
       <div class="table-row" style="display: flex; width: 100%; padding: 18px 0;">   
-        <div class="table-data" style="flex: 1 1 16.66666%; text-align: center;">{{ obj.pk }}</div>
         <div class="table-data" style="flex: 1 1 16.66666%; text-align: center;">{{ obj.name }}</div>
-        <div class="table-data" style="flex: 1 1 16.66666%; text-align: center;">{{ obj.email_id }}</div>
         <div class="table-data" style="flex: 1 1 16.66666%; text-align: center;">{{ obj.mobile_no }}</div>
+        <div class="table-data" style="flex: 1 1 16.66666%; text-align: center;">{{ obj.email_id }}</div>
         <div class="table-data" style="flex: 1 1 16.66666%; text-align: center;">{{ obj.sport }}</div>
-        <div class="table-data" style="flex: 1 1 16.66666%; text-align: center;">{{ obj.players }}</div>
+        <div class="table-data" style="flex: 1 1 16.66666%; text-align: center;">{{ obj.Captain }}</div>
+        <div class="table-data" style="flex: 1 1 16.66666%; text-align: center;">{{ obj.Coach }}</div>
       </div>
     {% endfor %}
     </div>  

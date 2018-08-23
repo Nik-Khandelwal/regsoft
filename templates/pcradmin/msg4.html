@@ -1,0 +1,19 @@
+{% autoescape off %}
+Dear Group leader of {{college}},<br>
+Following is a tentative list of participants who have been approved by PCr to upload their documents. Kindly ensure that all of them <b>upload their bonafides/college photo ID in the next 2 days</b>. We've sent out individual mails to them as well.<br><br>
+
+<b>The following participants are selected to participate in the sport : </b> <b style="text-transform: uppercase;">{{sport}}</b> this BOSM.<br><br>
+
+<ul>
+{% for nm in nmlist %}
+<li><b>{{nm}}</b></li><br>
+{% endfor %}
+</ul><br><br>
+
+Regards,<br>
+Devansh Ghatak<br>
+CoSSAcn (Head)<br>
+Dept. of Publications & Correspondence, BOSM 2018<br>
+BITS Pilani<br>
+<a href="mailto:pcr@bits-bosm.org">pcr@bits-bosm.org</a></span>
+{% endautoescape %}

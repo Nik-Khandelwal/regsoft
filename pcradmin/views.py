@@ -1257,13 +1257,16 @@ def confirmTeam(request):
 		for dt in data['id_arr']:
 
 			sp=Sport.objects.get(pk=dt)
+			nm=[]
+			mailid=[]
 			#up.team.confirmedsp1[sp.idno]=1
 			#up.team.save()
 			for u in user:
 				#u.confirmed1[sp.idno]=1
 				if u.sportid[sp.idno]=='1':
 					u.sportid=replaceindex(u.sportid,sp.idno,'2')
-					print(u.name)
+					nm.append(u.name)
+					mailid.append(u.email)
 					
 					if u.confirm1==0 and u.docs:#when u.docs is empty it will go to else
 						print(u.docs)
@@ -1275,6 +1278,23 @@ def confirmTeam(request):
 				try:	
 					u.save()
 					tm.save()
+				except:
+					success=0
+			ld=User.objects.get(team=tm,deleted=0,grp_leader=1)
+			mailid.append(ld.email)
+			if success:
+				message = render_to_string('pcradmin/msg4.html', {
+												'college':tm.college, 
+												'sport':sp.sport,
+												'nmlist':nm,
+												
+												})
+				mail_subject = 'Action Request | Document Upload | BOSM 2018'
+		
+				email = EmailMessage(mail_subject, message, to=mailid)
+				email.content_subtype="html"
+				try:
+					email.send()
 				except:
 					success=0
 		update_data3 = [9,2]
@@ -1377,12 +1397,12 @@ def createExcel(request,pk):
 	row_num = 0
 
 	columns = [
-		(u"ID", 15),
-		(u"Name", 40),
-		(u"Email", 50),
-		(u"Phone", 20),
-		(u"Event", 20),
-		(u"No of players", 10),
+		(u"Name", 30),
+		(u"Email", 20),
+		(u"Phone", 15),
+		(u"Sports", 30),
+		(u"Captain", 15),
+		(u"Coach", 15),
 	]
 
 	for col_num in range(len(columns)):
@@ -1391,30 +1411,35 @@ def createExcel(request,pk):
 		#c.style.font.bold = True
 		# set column width
 		ws.column_dimensions[get_column_letter(col_num+1)].width = columns[col_num][1]
-
+	spt=Sport.objects.all()
 	for obj in queryset:
+		row_num += 1
+		captn=''
 		if obj.captain:
-			sp=Sport.objects.get(idno=obj.captain)
-			count=0
-			for q in queryset:
-				if q.sportid[sp.idno]>='1':
-					count+=1
+			c1=Sport.objects.get(idno=obj.captain)
+			captn=c1.sport
+		cch=''
+		if obj.coach:
+			c2=Sport.objects.get(idno=obj.coach)
+			cch=c2.sport
+		sprt=''
+		for i in spt:
+			if obj.sportid[i.idno]>='1':
+				sprt=sprt+i.sport
+		row = [
+			obj.name,
+			obj.email,
+			obj.phone,
+			sprt,
+			captn,
+			cch,
 
-			row_num += 1
-			row = [
-				obj.pk,
-				obj.name,
-				obj.email,
-				obj.phone,
-				sp.sport,
-				count,
+		]
 
-			]
-
-			for col_num in range(len(row)):
-				c = ws.cell(row=row_num + 1, column=col_num + 1)
-				c.value = row[col_num]
-				#c.style.alignment.wrap_text = True
+		for col_num in range(len(row)):
+			c = ws.cell(row=row_num + 1, column=col_num + 1)
+			c.value = row[col_num]
+			#c.style.alignment.wrap_text = True
 
 	wb.save(response)
 	return response
@@ -1556,31 +1581,36 @@ def createCsv(request,pk):
 	writer = csv.writer(response, csv.excel)
 	response.write(u'\ufeff'.encode('utf8')) # BOM (optional...Excel needs it to open UTF-8 file properly)
 	writer.writerow([
-		smart_str(u"ID"),
 		smart_str(u"Name"),
 		smart_str(u"Email"),
 		smart_str(u"Phone"),
-		smart_str(u"Event"),
-		smart_str(u"No of players"),
+		smart_str(u"Sports"),
+		smart_str(u"Captain"),
+		smart_str(u"Coach"),
 	])
-	
 
+	spt=Sport.objects.all()
 	for obj in queryset:
+		captn=''
 		if obj.captain:
-			sp=Sport.objects.get(idno=obj.captain)
-			count=0
-			for q in queryset:
-				if q.sportid[sp.idno]>='1':
-					count+=1
-
-			writer.writerow([
-			smart_str(obj.pk),
-			smart_str(obj.name),
-			smart_str(obj.email),
-			smart_str(obj.phone),
-			smart_str(sp.sport),
-			count,
-			])
+			c1=Sport.objects.get(idno=obj.captain)
+			captn=c1.sport
+		cch=''
+		if obj.coach:
+			c2=Sport.objects.get(idno=obj.coach)
+			cch=c2.sport
+		sprt=''
+		for i in spt:
+			if obj.sportid[i.idno]>='1':
+				sprt=sprt+i.sport
+		writer.writerow([
+		smart_str(obj.name),
+		smart_str(obj.email),
+		smart_str(obj.phone),
+		smart_str(sprt),
+		smart_str(captn),
+		smart_str(cch),
+		])
 
 	return response
 

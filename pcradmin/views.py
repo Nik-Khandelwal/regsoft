@@ -1892,6 +1892,16 @@ def docurl(request):
 		for u in uplist:
 			s=[]
 			d=[]
+			if u.confirm1==1:
+				s.append(u.pk)
+				s.append(u.name)
+				for sp in splist:
+					if u.sportid[sp.idno]>='2':
+						d.append(sp.sport)
+				s.append(d)
+				s.append("")
+				s.append(0)
+				d2.append(s)
 			if u.confirm1==2:
 				s.append(u.pk)
 				s.append(u.name)
@@ -1900,6 +1910,7 @@ def docurl(request):
 						d.append(sp.sport)
 				s.append(d)
 				s.append(u.docs.url)
+				s.append(1)
 				d2.append(s)
 			if u.confirm1>=3:
 				s.append(u.pk)

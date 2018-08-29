@@ -104,7 +104,7 @@ import csv
 from django.utils.encoding import smart_str
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404,HttpResponseRedirect, JsonResponse
-from main.models import CustomUser, Team
+from main.models import CustomUser, Team, PaytmHistory
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import auth
 from django.views.generic import View, ListView, FormView
@@ -129,6 +129,10 @@ from django.core.mail import EmailMessage
 from django.core import serializers
 from main.models import Group,Regplayer,Enteredplayer,Sport,Money,Billcontrols,Controls_user
 from datetime import datetime
+
+from django.utils.translation import get_language
+from django.views.decorators.csrf import csrf_exempt
+from . import Checksum
 
 from django.contrib.auth import get_user_model
 User=get_user_model()
@@ -858,3 +862,137 @@ def registerplayer(request):
 
 def instructions(request):
  	return render(request,'register/instruction.html')
+
+def getpay(request):
+	if request.user.is_authenticated():
+		pass
+	else:
+		return HttpResponseRedirect('/register/')
+	if request.method=='POST':
+		data = json.loads(request.body.decode('utf-8'))
+		prereg=Amounts.objects.get(name='pre').amount
+		reg=Amounts.objects.get(name='reg').amount
+		tm=request.user.team
+		error=''
+		success=1
+		amnt=0
+		for i in idarr:
+			u=User.objects.get(pk=i[0])
+			if u.team!=tm: and u.confirm1>=3 and u.pay==0:
+				error=error+'invalid participant: '+u.name+'\n'
+				success=0
+			elif u.confirm1<3:
+				error=error+'participant not confirmed for payment: '+u.name+'\n'
+				success=0
+			elif u.pay2 or (u.pay1 and u.pay3):
+				error=error+'payment for participant is done: '+u.name+'\n'
+				success=0
+			elif (u.pay2 or u.pay3) and i[2]:
+				error=error+'full payment for participant is done: '+u.name+'\n'
+				success=0
+			elif u.pay1 and i[1]:
+				error=error+'preregistration payment for participant is done: '+u.name+'\n'
+				success=0
+			elif u.pay1==0 and i[3]:
+				error=error+'preregistration payment for participant is not done: '+u.name+'\n'
+				success=0
+			#need more checks
+			else:
+				if i[1]==1:
+					amnt+=prereg
+				if i[1]==2:
+					amnt+=reg
+				if i[1]==3:
+					amnt+=reg-prereg
+			if success==0:
+				return JsonResponse({'error':error})
+
+		MERCHANT_KEY = settings.PAYTM_MERCHANT_KEY
+	    MERCHANT_ID = settings.PAYTM_MERCHANT_ID
+	    get_lang = "/" + get_language() if get_language() else ''
+	    CALLBACK_URL = settings.HOST_URL + get_lang + settings.PAYTM_CALLBACK_URL
+	    # Generating unique temporary ids
+	    order_id = Checksum.__id_generator__()
+	    for i in idarr:
+			u=User.objects.get(pk=i[0])
+			if i[1]==1 and u.pay1==0:
+				u.orderid1=order_id
+			if i[1]==2 and u.pay2==0:
+				u.orderid1=order_id
+			if i[1]==3 and u.pay3==0:
+				u.orderid1=order_id
+			try:
+				u.save()
+			except:
+				return JsonResponse({'error': 'Payment not done'})
+
+	    bill_amount = amnt
+	    if bill_amount:
+	        data_dict = {
+	                    'MID':MERCHANT_ID,
+	                    'ORDER_ID':order_id,
+	                    'TXN_AMOUNT': bill_amount,
+	                    'CUST_ID':'harish@pickrr.com',
+	                    'INDUSTRY_TYPE_ID':'Retail',
+	                    'WEBSITE': settings.PAYTM_WEBSITE,
+	                    'CHANNEL_ID':'WEB',
+	                    #'CALLBACK_URL':CALLBACK_URL,
+	                }
+	        param_dict = data_dict
+	        param_dict['CHECKSUMHASH'] = Checksum.generate_checksum(data_dict, MERCHANT_KEY)
+	        return render(request,"payment.html",{'paytmdict':param_dict})
+	    return HttpResponse("Bill Amount Could not find.")
+	    	
+@csrf_exempt
+def response(request):
+    if request.method == "POST":
+        MERCHANT_KEY = settings.PAYTM_MERCHANT_KEY
+        data_dict = {}
+        for key in request.POST:
+            data_dict[key] = request.POST[key]
+        verify = Checksum.verify_checksum(data_dict, MERCHANT_KEY, data_dict['CHECKSUMHASH'])
+        if verify:
+            PaytmHistory.objects.create(user=request.user, **data_dict)
+            order_id=request.POST['ORDERID']
+            u1=User.objects.filter(orderid1=order_id)
+            u2=User.objects.filter(orderid2=order_id)
+            u3=User.objects.filter(orderid3=order_id)
+            upre=[]
+            ureg=[]
+            up2r=[]
+            for u in u1:
+            	u.pre.append(u.name)
+            	if request.POST['STATUS']=="TXN_SUCCESS":
+            		u.pay1=1
+            		u.save()
+            for u in u2:
+            	u.reg.append(u.name)
+            	if request.POST['STATUS']=="TXN_SUCCESS":
+            		u.pay2=1
+            		u.save()
+            for u in u3:
+            	u.p2r.append(u.name)
+            	if request.POST['STATUS']=="TXN_SUCCESS":
+            		u.pay3=1
+            		u.save()
+
+            to_email = up.email
+			message = render_to_string('msg6.html', {
+											'user':request.user.name, 
+											'prereg':upre,
+											'reg':ureg,
+											'prereg2reg':up2r,
+											'college':request.user.team.college,
+											'amount':request.POST['TXNAMOUNT'],
+											'TXNID':request.POST['TXNID'],
+											'timestamp':request.POST['TXNDATE'],
+											'status':request.POST['STATUS'],
+											
+											})
+			mail_subject = 'Your account details.'
+			email = EmailMessage(mail_subject, message, to=[to_email])
+			email.send()
+            return render(request,"response.html",{"paytm":data_dict})
+        else:
+            return HttpResponse("checksum verify failed")
+    return HttpResponse(status=200)

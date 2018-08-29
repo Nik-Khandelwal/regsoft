@@ -180,6 +180,7 @@ class Note(models.Model):
 class Amounts(models.Model):
 	name = models.CharField(max_length=10)#pre and reg
 	amount=models.IntegerField(default=0)
+	deactivate=models.IntegerField(default=0)
 	def __str__(self):
 		return self.name
 

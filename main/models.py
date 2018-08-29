@@ -45,7 +45,14 @@ class CustomUser(AbstractUser):#extending user model
 	sport=models.ManyToManyField(Sport)
 	docs=fields.FileField(upload_to="documents/",null=True,blank=True)
 	deleted=models.IntegerField(default=0)
+	pcramt=models.IntegerField(default=0)
 	
+	pay1=models.IntegerField(default=0)#1 for prereg, 2 for reg, 3 reg to prereg
+	pay2=models.IntegerField(default=0)
+	pay3=models.IntegerField(default=0)
+	orderid1=models.CharField(max_length=10, null=True, blank=True)
+	orderid2=models.CharField(max_length=10, null=True, blank=True)
+	orderid3=models.CharField(max_length=10, null=True, blank=True)
 	def __str__(self):
 		return self.username
 
@@ -169,5 +176,28 @@ class Pcradmin_user(models.Model):
 class Note(models.Model):
 	text = models.TextField()
 	time = models.DateTimeField(auto_now=True)
+	
+class Amounts(models.Model):
+	name = models.CharField(max_length=10)#pre and reg
+	amount=models.IntegerField(default=0)
+	def __str__(self):
+		return self.name
 
+class PaytmHistory(models.Model):
+    user = models.IntegerField()
+    ORDERID = models.CharField('ORDER ID', max_length=30)
+    TXNDATE = models.DateTimeField('TXN DATE', default=timezone.now)
+    TXNID = models.IntegerField('TXN ID')
+    BANKTXNID = models.IntegerField('BANK TXN ID', null=True, blank=True)
+    BANKNAME = models.CharField('BANK NAME', max_length=50, null=True, blank=True)
+    RESPCODE = models.IntegerField('RESP CODE')
+    PAYMENTMODE = models.CharField('PAYMENT MODE', max_length=10, null=True, blank=True)
+    CURRENCY = models.CharField('CURRENCY', max_length=4, null=True, blank=True)
+    GATEWAYNAME = models.CharField("GATEWAY NAME", max_length=30, null=True, blank=True)
+    MID = models.CharField(max_length=40)
+    RESPMSG = models.TextField('RESP MSG', max_length=250)
+    TXNAMOUNT = models.FloatField('TXN AMOUNT')
+    STATUS = models.CharField('STATUS', max_length=12)
+    def __str__(self):
+		return self.ORDERID+','+str(self.TXNID)
 

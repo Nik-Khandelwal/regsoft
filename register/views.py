@@ -887,48 +887,43 @@ def getpay(request):
 			elif u.pay2 or (u.pay1 and u.pay3):
 				error=error+'payment for participant is done: '+u.name+'\n'
 				success=0
-			elif (u.pay2 or u.pay3) and i[2]:
+			elif (u.pay2 or u.pay3) and i[1]==2:
 				error=error+'full payment for participant is done: '+u.name+'\n'
 				success=0
-			elif u.pay1 and i[1]:
+			elif u.pay1 and i[1]==1:
 				error=error+'preregistration payment for participant is done: '+u.name+'\n'
 				success=0
-			elif u.pay1==0 and i[3]:
+			elif u.pay1==0 and i[1]==3:
 				error=error+'preregistration payment for participant is not done: '+u.name+'\n'
 				success=0
-			#need more checks
-			else:
-				if i[1]==1:
-					amnt+=prereg
-				if i[1]==2:
-					amnt+=reg
-				if i[1]==3:
-					amnt+=reg-prereg
 			if success==0:
 				return JsonResponse({'error':error})
 
 		MERCHANT_KEY = settings.PAYTM_MERCHANT_KEY
-	    MERCHANT_ID = settings.PAYTM_MERCHANT_ID
-	    get_lang = "/" + get_language() if get_language() else ''
-	    CALLBACK_URL = settings.HOST_URL + get_lang + settings.PAYTM_CALLBACK_URL
-	    # Generating unique temporary ids
-	    order_id = Checksum.__id_generator__()
-	    for i in idarr:
+	    	MERCHANT_ID = settings.PAYTM_MERCHANT_ID
+	    	get_lang = "/" + get_language() if get_language() else ''
+	    	CALLBACK_URL = settings.HOST_URL + get_lang + settings.PAYTM_CALLBACK_URL
+	    	# Generating unique temporary ids
+	    	order_id = Checksum.__id_generator__()
+	    	for i in idarr:
 			u=User.objects.get(pk=i[0])
-			if i[1]==1 and u.pay1==0:
+			if i[1]==1 and u.pay1==0 and u.pcramt==0:
 				u.orderid1=order_id
-			if i[1]==2 and u.pay2==0:
+				amnt+=prereg
+			if i[1]==2 and u.pay2==0 and u.pcramt==0:
 				u.orderid1=order_id
-			if i[1]==3 and u.pay3==0:
+				amnt+=reg
+			if i[1]==3 and u.pay3==0 and u.pcramt==prereg:
 				u.orderid1=order_id
+				amnt+=reg-prereg
 			try:
 				u.save()
 			except:
 				return JsonResponse({'error': 'Payment not done'})
 
-	    bill_amount = amnt
-	    if bill_amount:
-	        data_dict = {
+	    	bill_amount = amnt
+	    	if bill_amount:
+	        	data_dict = {
 	                    'MID':MERCHANT_ID,
 	                    'ORDER_ID':order_id,
 	                    'TXN_AMOUNT': bill_amount,
@@ -938,14 +933,16 @@ def getpay(request):
 	                    'CHANNEL_ID':'WEB',
 	                    #'CALLBACK_URL':CALLBACK_URL,
 	                }
-	        param_dict = data_dict
-	        param_dict['CHECKSUMHASH'] = Checksum.generate_checksum(data_dict, MERCHANT_KEY)
-	        return render(request,"payment.html",{'paytmdict':param_dict})
-	    return HttpResponse("Bill Amount Could not find.")
+	        	param_dict = data_dict
+	        	param_dict['CHECKSUMHASH'] = Checksum.generate_checksum(data_dict, MERCHANT_KEY)
+	        	return render(request,"payment.html",{'paytmdict':param_dict})
+	    	return HttpResponse("Bill Amount Could not find.")
 	    	
 @csrf_exempt
 def response(request):
     if request.method == "POST":
+	prereg=Amounts.objects.get(name='pre').amount
+	reg=Amounts.objects.get(name='reg').amount
         MERCHANT_KEY = settings.PAYTM_MERCHANT_KEY
         data_dict = {}
         for key in request.POST:
@@ -964,16 +961,19 @@ def response(request):
             	u.pre.append(u.name)
             	if request.POST['STATUS']=="TXN_SUCCESS":
             		u.pay1=1
+			u.pcramt+=prereg
             		u.save()
             for u in u2:
             	u.reg.append(u.name)
             	if request.POST['STATUS']=="TXN_SUCCESS":
             		u.pay2=1
+			u.pcramt+=reg
             		u.save()
             for u in u3:
             	u.p2r.append(u.name)
             	if request.POST['STATUS']=="TXN_SUCCESS":
             		u.pay3=1
+			u.pcramt+=reg-prereg
             		u.save()
 
             to_email = up.email

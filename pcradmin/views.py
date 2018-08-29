@@ -694,25 +694,25 @@ def statssport(request):
 			fc+=femaleconfirmed
 			ct+=coachTotal
 			cc+=coachconfirmed
-
-			s.append(t.pk)
-			s.append(t.college)
-			s.append(t.city)
-			s.append(t.state)
-			s.append(maleconfirmed)
-			s.append(maleTotal)
-			s.append(femaleconfirmed)
-			s.append(femaleTotal)
-			s.append(maleconfirmed+femaleconfirmed)
-			s.append(maleTotal+femaleTotal)
-			s.append(coachconfirmed)
-			s.append(coachTotal)
-			
-			
-			
-			
-			
-			data.append(s)
+			if maleTotal+femaleTotal!=0 or coachTotal!=0:
+				s.append(t.pk)
+				s.append(t.college)
+				s.append(t.city)
+				s.append(t.state)
+				s.append(maleconfirmed)
+				s.append(maleTotal)
+				s.append(femaleconfirmed)
+				s.append(femaleTotal)
+				s.append(maleconfirmed+femaleconfirmed)
+				s.append(maleTotal+femaleTotal)
+				s.append(coachconfirmed)
+				s.append(coachTotal)
+				
+				
+				
+				
+				
+				data.append(s)
 
 		total=[]
 		

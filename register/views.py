@@ -881,6 +881,9 @@ def getpay(request):
 			if u.team!=tm: and u.confirm1>=3 and u.pay==0:
 				error=error+'invalid participant: '+u.name+'\n'
 				success=0
+			elif i[1]==1 and Amounts.objects.get(name='pre').deactivate:
+				error=error+'pre registration payment is invalid '+u.name+'\n'
+				success=0
 			elif u.confirm1<3:
 				error=error+'participant not confirmed for payment: '+u.name+'\n'
 				success=0

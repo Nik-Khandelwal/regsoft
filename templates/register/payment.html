@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% load staticfiles %}
+    <title>BOSM 2018 Registrations</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'register/css/font.css' %}">
+    <link type="text/css" rel="stylesheet" href="{% static 'register/css/materialize.min.css' %}" media="screen,projection"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'register/css/payment-style.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="theme-color" content="black">
+    <meta name="description" content="Registration Page for Group Leader's to add Participants and Sports that their college would like to participate in.">
+    <script type="text/javascript" src="{% static 'register/js/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'register/js/payment-script.js' %}"></script>
+    <script type="text/javascript" src="{% static 'register/js/materialize.min.js' %}"></script> 
+    <link rel="icon" href="{% static 'main/favicon/favicon.ico' %}" type="image/x-icon"/>
+    <link rel="shortcut icon" href="{% static 'main/favicon/favicon.ico' %}" type="image/x-icon"/>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120495963-11"></script> <script>window.dataLayer=window.dataLayer || []; function gtag(){dataLayer.push(arguments);}gtag('js', new Date()); gtag('config', 'UA-120495963-11'); </script>
+  </head>
+  <body>
+    <nav>
+      <div class="nav-wrapper">
+        <a class="brand-logo center" style="font-family: 'Montserrat'">BOSM 2018</a> 
+        <ul class="right">
+          <li><a href="logout/"><i class="material-icons left">exit_to_app</i>Logout</a></li>
+        </ul>
+        <ul class="left">
+          <li>
+            <a class="waves-effect waves-light btn-floating btn-large cyan modal-trigger" href="#instructions-modal" id="tap_info"><i class="large material-icons">info_outline</i></a> 
+            <div class="tap-target cyan" data-activates="tap_info">
+              <div class="tap-target-content">
+                <h5>Instructions</h5>
+                <span>Please read the instructions</span> 
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div id="cover"></div>
+    <div id="cover-overlay"></div>
+    <div class="container center" id="participants-container">
+      <div class="row">
+        <div class="col s12">
+          <span id="select-parts-text">Select Participants whose Payment is to be done</span>
+        </div>
+      </div>
+      <div class="row" id="reg-parts-list">
+        <div class="col s12 center">
+          <ul class="collection" id="reg-parts-head">
+            <li class="collection-item table-top-header-item">
+              <table class="table-top-header centered">
+                <tr class="table-top-header-row">
+                  <td id="top-pk-col">ID No.</td>
+                  <td id="top-name-col">Name</td>
+                  <td id="top-gender-col">Gender</td>
+                  <td id="top-pre-reg-col">Pre-Reg</td>
+                  <td id="top-reg-col">Reg</td>
+                </tr>
+              </table>
+            </li>
+          </ul>
+          <ul class="collection" id="reg-parts-ul">
+            <li class="collection-item participant-list-item">
+              <form class="col s12" action="/register/makepayment/" method="POST" id="payment-form">
+                {% csrf_token %}
+                <table class="table-top-header centered">
+                  <tr class="table-row disabled-pre-reg">
+                    <td class="pk-col">1</td>
+                    <td class="name-col">Arpit Anshuman</td>
+                    <td class="gender-col">Male</td>
+                    <td class="pre-reg-col">
+                      <input type="checkbox" name="pre-reg" class="filled-in" value="1" id="pre-reg-1" checked="checked" disabled="disabled" />
+                      <label for="pre-reg-1" class="selected-previously hidden-label"></label>
+                    </td>
+                    <td class="reg-col">
+                      <input type="checkbox" name="reg" class="filled-in" value="1" id="reg-1" />
+                      <label for="reg-1" class="selected-previously hidden-label"></label>
+                    </td>
+                  </tr>
+                  <tr class="table-row disabled-pre-reg disabled-reg disabled-both">
+                    <td class="pk-col">2</td>
+                    <td class="name-col">Arpit Anshuman</td>
+                    <td class="gender-col">Male</td>
+                    <td class="pre-reg-col">
+                      <input type="checkbox" name="pre-reg" class="filled-in" value="2" id="pre-reg-2" checked="checked" disabled="disabled" />
+                      <label for="pre-reg-2" class="selected-previously hidden-label"></label>
+                    </td>
+                    <td class="reg-col">
+                      <input type="checkbox" name="reg" class="filled-in" value="2" id="reg-2" checked="checked" disabled="disabled" />
+                      <label for="reg-2" class="selected-previously hidden-label"></label>
+                    </td>
+                  </tr>
+                  <tr class="table-row">
+                    <td class="pk-col">4</td>
+                    <td class="name-col">Arpit Anshuman</td>
+                    <td class="gender-col">Male</td>
+                    <td class="pre-reg-col">
+                      <input type="checkbox" name="pre-reg" class="filled-in" value="3" id="pre-reg-3" />
+                      <label for="pre-reg-3" class="selected-previously hidden-label"></label>
+                    </td>
+                    <td class="reg-col">
+                      <input type="checkbox" name="reg" class="filled-in" value="3" id="reg-3" />
+                      <label for="reg-3" class="selected-previously hidden-label"></label>
+                    </td>
+                  </tr>
+                </table>
+              </form>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="container center" id="pay-part-div">
+      <div class="row">
+        <div class="col s12">
+          <a class="waves-effect waves-light btn custom-btn z-depth-5" id="pay-part-btn" onclick="document.getElementById('payment-form').submit()" style="display: inline-block;"><i class="material-icons right">send</i>Pay</a>
+        </div>
+      </div>
+    </div>
+    <div id="instructions-modal" class="modal modal-fixed-footer">
+      <div class="modal-content center">
+        <h4>INSTRUCTIONS</h4>
+        <p> 
+        <ul class="collection">
+          <li class="collection-item">Total amount payable is &nbsp &#8377; 1100</a></li>
+          <li class="collection-item">Participant can choose to pay either the pre-reg amount &nbsp &#8377; 600 or the full amount by selecting reg</a></li>
+          <li class="collection-item">Participants can only pay for themselves</li>
+          <li class="collection-item">Captains can pay for themselves as well as members of the team</li>
+          <li class="collection-item">Groupleader can pay for all the participants and captains as well as for self</li>
+          <li class="collection-item">In case of any issues/queries contact : <a href="mailto:pcr@bits-bosm.org?Subject=Query%20regarding%20payment">pcr@bits-bosm.org</a> or <a href="mailto:register@bits-bosm.org?Subject=Query%20regarding%20payment">register@bits-bosm.org</a></li>
+        </ul>
+        </p>
+      </div>
+      <div class="modal-footer"> <a class="modal-action modal-close waves-effect waves-green btn-flat">Done</a> </div>
+    </div>
+    <div id="transaction-modal" class="modal modal-fixed-footer">
+      <div class="modal-content center">
+        <div class="row">
+          <div class="col s12">
+            <div class="card">
+              <div class="card-image center">
+                <img src="/static/register/images/bosm-2018.png" id="bosm-payment-logo">
+              </div>
+              <div class="card-content">
+                <ul class="collection">
+                  <li class="collection-item">Please note your transaction ID below for all future communications</li>
+                  <li class="collection-item">Transaction ID : <span class="transaction-id"></span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer"> <a class="modal-action modal-close waves-effect waves-green btn-flat">Done</a> </div>
+    </div>
+  </body>
+</html>

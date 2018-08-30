@@ -1288,7 +1288,10 @@ def confirmTeam(request):
 						email = EmailMessage(mail_subject, message, to=[u.email])
 						email.content_subtype="html"
 						
-						email.send()
+						try:
+							email.send()
+						except:
+							pass
 						
 
 				try:	

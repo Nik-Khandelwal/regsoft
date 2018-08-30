@@ -938,7 +938,7 @@ def getpay(request):
 	                }
 	        	param_dict = data_dict
 	        	param_dict['CHECKSUMHASH'] = Checksum.generate_checksum(data_dict, MERCHANT_KEY)
-	        	return render(request,"payment.html",{'paytmdict':param_dict})
+	        	return render(request,"register/payment.html",{'paytmdict':param_dict})
 	    	return HttpResponse("Bill Amount Could not find.")
 	    	
 @csrf_exempt
@@ -995,7 +995,7 @@ def response(request):
 			mail_subject = 'Your account details.'
 			email = EmailMessage(mail_subject, message, to=[to_email])
 			email.send()
-            return render(request,"response.html",{"paytm":data_dict})
+            return render(request,"register/response.html",{"paytm":data_dict})
         else:
             return HttpResponse("checksum verify failed")
     return HttpResponse(status=200)

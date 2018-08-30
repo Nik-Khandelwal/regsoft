@@ -141,7 +141,7 @@ from register.tokens import account_activation_token
 from django.core.mail import EmailMessage
 from django.core import serializers
 from main.models import Group,Regplayer,Enteredplayer,Sport,Money,Billcontrols,Pcradmin_user
-
+connection = mail.get_connection()
 from django.contrib.auth import get_user_model
 User=get_user_model()
 
@@ -1240,6 +1240,7 @@ def confirmTeamDisplay(request):#show details of grp
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_pcradmin_admin, login_url='/regsoft/')
 def confirmTeam(request):
+	
 	#get pk of grp leader selected and idno of sport confirmed
 	if request.user.is_authenticated():
 		if is_pcradmin_admin(request.user):
@@ -1250,6 +1251,7 @@ def confirmTeam(request):
 	else:
 		return HttpResponseRedirect('/regsoft/')
 	if request.method=='POST':
+		connection.open()
 		success=1
 		data=json.loads(request.body.decode('utf-8'))
 		tm=Team.objects.get(pk=data['clg_id'])
@@ -1314,8 +1316,11 @@ def confirmTeam(request):
 				email = EmailMessage(mail_subject, message, to=[ld.email])
 				email.content_subtype="html"
 				
-				email.send()
-				
+				try:
+					email.send()
+				except:
+					pass
+		connection.close()		
 				
 		update_data3 = [9,2]
 		pusher_client.trigger('dashboard-update', 'dashboard-update-event', update_data3)

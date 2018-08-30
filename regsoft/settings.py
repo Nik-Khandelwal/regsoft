@@ -49,7 +49,6 @@ INSTALLED_APPS = [
    # 'lockdown',
    # 'corsheaders',
    'import_export',
-    'paytm',
 ]
 
 MIDDLEWARE = [

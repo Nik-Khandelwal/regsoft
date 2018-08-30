@@ -25,6 +25,8 @@ urlpatterns = [
 	#url(r'^add/(?P<number>[0-9]+)/error/$',error),
 	url(r'^instructions/$', instructions),
 	url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',activate, name='activate'),
+	url(r'^paytm/payment/', getpay),
+    	url(r'^paytm/response/', response),
 	
 	
 ]

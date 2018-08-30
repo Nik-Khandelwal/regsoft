@@ -151,12 +151,12 @@ body,html {
 }
 
 .disabled-both {
-  background-color: #1b5e20;
+  background-color: #43a047;
   color: white;
 }
 
 .disabled-pre-reg>td>i, .disabled-reg>td>i, .disabled-both>td>i {
-  color: red;
+  color: #d32f2f;
 }
 
 td>i {
@@ -181,13 +181,8 @@ form {
   padding: 0 !important;
 }
 .selected-previously {
-  color: red;
+  color: #b71c1c;
 }
-[type="checkbox"].filled-in:checked+label:after {
-  background-color: green;
-  border-color: green;
-}
-[type="checkbox"].filled-in:disabled:checked+label:after {
-  background-color: red;
-  border-color: red;
+#form-holder {
+  display: none;
 }

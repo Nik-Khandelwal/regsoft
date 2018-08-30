@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
-from .models import Regplayer,Group,Enteredplayer,Pcradmin_user,Firewallz_user,Controls_user,Recnacc_user,Controlsystem,Acco_name,Accorecnacc,Accomodation,Singleroom,Billcontrols,Money, Sport,Team,CustomUser
+from .models import Amounts,PaytmHistory,Regplayer,Group,Enteredplayer,Pcradmin_user,Firewallz_user,Controls_user,Recnacc_user,Controlsystem,Acco_name,Accorecnacc,Accomodation,Singleroom,Billcontrols,Money, Sport,Team,CustomUser
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 #admin.site.register(Regplayer)
@@ -74,4 +74,12 @@ class SportAdmin(ImportExportModelAdmin):
 
 @admin.register(CustomUser)
 class CustomUserAdmin(ImportExportModelAdmin):
+    pass
+
+@admin.register(Amounts)
+class AmountsAdmin(ImportExportModelAdmin):
+    pass
+
+@admin.register(PaytmHistory)
+class PaytmHistoryAdmin(ImportExportModelAdmin):
     pass

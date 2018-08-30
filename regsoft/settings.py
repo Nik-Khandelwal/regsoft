@@ -199,11 +199,11 @@ IMPORT_EXPORT_USE_TRANSACTIONS = True
 
 PAYTM_MERCHANT_KEY = ""
 PAYTM_MERCHANT_ID = ""
-#HOST_URL = "http://localhost:8080"
+HOST_URL = "http://localhost:8080"
 PAYTM_CALLBACK_URL = "/paytm/response/"
 
 if DEBUG:
     PAYTM_MERCHANT_KEY = "xxxx"
     PAYTM_MERCHANT_ID = "xxxx"
     PAYTM_WEBSITE = 'WEB_STAGING'
-    #HOST_URL = 'http://localhost:8000'
+    HOST_URL = 'http://localhost:8000'

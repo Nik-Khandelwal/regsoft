@@ -141,7 +141,7 @@ from register.tokens import account_activation_token
 from django.core.mail import EmailMessage
 from django.core import serializers
 from main.models import Group,Regplayer,Enteredplayer,Sport,Money,Billcontrols,Pcradmin_user
-
+connection = mail.get_connection()
 from django.contrib.auth import get_user_model
 User=get_user_model()
 
@@ -153,7 +153,7 @@ pusher_client = pusher.Pusher(
   ssl=True
 )
 
-CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
+#CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
 def is_pcradmin_admin(user):
 	if user:
@@ -161,7 +161,7 @@ def is_pcradmin_admin(user):
 			return True
 	return False
 
-@cache_page(CACHE_TTL)
+#@cache_page(CACHE_TTL)
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_pcradmin_admin, login_url='/regsoft/')
 def index(request):
@@ -226,10 +226,10 @@ def modify_pcrmail(request):
 		to_email = data['email_arr']
 		for mail in to_email:
 			email = EmailMessage(mail_subject, message, to=[mail])
-			try:
-				email.send()
-			except:
-				resp={'success':0}
+			# try:
+			# 	email.send()
+			# except:
+			# 	resp={'success':0}
 		return JsonResponse(resp)
 
 @login_required(login_url='/regsoft/')
@@ -304,10 +304,10 @@ def finalmail(request):
 			email = EmailMessage(mail_subject, message, to=[ld.email])
 			email.attach_file('Rate Sheet.pdf')
 			email.content_subtype = "html"
-			try:
-				email.send()
-			except:
-				success=0
+			# try:
+			# 	email.send()
+			# except:
+			# 	success=0
 
 
 			try:
@@ -324,10 +324,10 @@ def finalmail(request):
 					email = EmailMessage(mail_subject, message, to=mailid)
 					email.attach_file('Rate Sheet.pdf')
 					email.content_subtype = "html"
-					try:
-						email.send()
-					except:
-						success=0
+					# try:
+					# 	email.send()
+					# except:
+					# 	success=0
 			else:
 				message = render_to_string('pcradmin/msg1.html', {
 														'college':team.college, 
@@ -339,10 +339,10 @@ def finalmail(request):
 				email = EmailMessage(mail_subject, message, to=[cap.email])
 				email.attach_file('Rate Sheet.pdf')
 				email.content_subtype = "html"
-				try:
-					email.send()
-				except:
-					success=0
+				# try:
+				# 	email.send()
+				# except:
+				# 	success=0
 		resp={'success':success}
 		return JsonResponse(resp)
 
@@ -399,7 +399,7 @@ def activateGrp(request):
 			mail_subject = 'BOSM 2018 | Account activated'
 			email = EmailMessage(mail_subject, message, to=[up.email])
 			email.content_subtype = "html"
-			email.send()
+			# email.send()
 		stats_update_data = [7,3]
 		pusher_client.trigger('my-channel7', 'my-event7', stats_update_data)
 		return JsonResponse(resp)
@@ -1250,6 +1250,7 @@ def confirmTeam(request):
 	else:
 		return HttpResponseRedirect('/regsoft/')
 	if request.method=='POST':
+		# connection.open()
 		success=1
 		data=json.loads(request.body.decode('utf-8'))
 		tm=Team.objects.get(pk=data['clg_id'])
@@ -1287,10 +1288,11 @@ def confirmTeam(request):
 				
 						email = EmailMessage(mail_subject, message, to=[u.email])
 						email.content_subtype="html"
-						try:
-							email.send()
-						except:
-							pass
+						
+						# try:
+						# 	email.send()
+						# except:
+						# 	pass
 						
 
 				try:	
@@ -1313,7 +1315,11 @@ def confirmTeam(request):
 				email = EmailMessage(mail_subject, message, to=[ld.email])
 				email.content_subtype="html"
 				
-				email.send()
+				# try:
+				# 	email.send()
+				# except:
+				# 	pass
+		# connection.close()
 				
 				
 		update_data3 = [9,2]
@@ -1792,10 +1798,10 @@ def sendcred(request):
 				mail_subject = 'Your account details for BOSM \'18'
 				email = EmailMessage(mail_subject, message, to=[up.email])
 				email.content_subtype = "html"
-				try:
-					email.send()
-				except:
-					resp={'success':0}
+				# try:
+				# 	email.send()
+				# except:
+				# 	resp={'success':0}
 		return JsonResponse(resp)
 
 

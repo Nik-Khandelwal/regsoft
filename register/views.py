@@ -549,7 +549,8 @@ def playerview(request):
 			logout(request)
 			return HttpResponseRedirect('/register/')
 		if request.user.confirm1>=3:
-				return render(request,'register/error.html',{'error':'Your documents have been verified. You cannot upload documents.'})
+			return HttpResponseRedirect('/register/payments/')
+				# return render(request,'register/error.html',{'error':'Your documents have been verified. You cannot upload documents.'})
 		if request.method=='POST':
 			request.user.docs=request.FILES['filename']
 			extension = os.path.splitext(str(request.FILES['filename']))[-1]
@@ -881,7 +882,7 @@ def getpay(request):
 			if Amounts.objects.get(name='pre').deactivate:
 				error=error+'pre registration payment is invalid '+u.name+'\n'
 				success=0
-			if u.team!=tm: or u.confirm1<3:
+			if u.team!=tm or u.confirm1<3:
 				error=error+'invalid participant: '+u.name+'\n'
 				success=0
 			if u.pay1 or u.pay2 or u.pay3 or u.pcramt>=prereg:
@@ -889,7 +890,7 @@ def getpay(request):
 				success=0
 		for i in data["reg"]:
 			u=User.objects.get(pk=i)
-			if u.team!=tm: or u.confirm1<3:
+			if u.team!=tm or u.confirm1<3:
 				error=error+'invalid participant: '+u.name+'\n'
 				success=0
 			if u.pay2 or u.pay3 or u.pcramt>=reg:
@@ -897,7 +898,7 @@ def getpay(request):
 				success=0
 		for i in data["extra"]:
 			u=User.objects.get(pk=i)
-			if u.team!=tm: or u.confirm1<3:
+			if u.team!=tm or u.confirm1<3:
 				error=error+'invalid participant: '+u.name+'\n'
 				success=0
 			if u.pay1==0:
@@ -1035,7 +1036,7 @@ def response(request):
 			u.pcramt+=reg-prereg
             		u.save()
 
-            to_email = up.email
+            # to_email = up.email
 			message = render_to_string('msg6.html', {
 											'user':request.user.name, 
 											'prereg':upre,
@@ -1048,9 +1049,9 @@ def response(request):
 											'status':request.POST['STATUS'],
 											
 											})
-			mail_subject = 'Your account details.'
-			email = EmailMessage(mail_subject, message, to=[to_email])
-			email.send()
+			# mail_subject = 'Your account details.'
+			# email = EmailMessage(mail_subject, message, to=[to_email])
+			# email.send()
             return HttpResponseRedirect('/register/')
         else:
             return HttpResponse("checksum verify failed")
@@ -1062,16 +1063,16 @@ def sendpay(request):
 		pass
 	else:
 		return HttpResponseRedirect('/register/')
-	if request.method=='POST':
+	if request.method=='GET':
 	# data = json.loads(request.body.decode('utf-8'))
 		if request.user.grp_leader==0 and request.user.captain==0:
 			if request.user.coach:
-				return JsonResponse({'error':"No payment required for coach"})#or render an error page
+				return render(request,'register/error.html',{"error":"No payment required for coach"})#or render an error page
 			if request.user.pay2 or request.user.pay3:
-				return JsonResponse({'msg':'full reg'})
+				return render(request,'register/error.html',{"error":"full reg"})
 			if request.user.pay1:
-				return JsonResponse({'msg':'pre reg'})
-			return JsonResponse({'msg':'pls pay'})
+				return render(request,'register/error.html',{"error":"pre reg"})
+			return render(request,'register/error.html',{"error":"pls pay"})
 		tm=request.user.team
 		ulist=User.objects.filter(team=tm,deleted=0,coach=0).order_by(Lower('name'))
 		if request.user.captain:
@@ -1094,4 +1095,5 @@ def sendpay(request):
 				elif request.user.grp_leader:
 					d.append(s)
 
-		return JsonResponse({'data': d})
+		return render(request,'register/payment.html/',{'data':d})
+		# return render() JsonResponse({'data': d})

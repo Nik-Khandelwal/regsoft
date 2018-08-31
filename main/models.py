@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from smartfields import fields
+from django.utils import timezone
+import datetime
 
 # Create your models here.
 class Sport(models.Model):

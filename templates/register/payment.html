@@ -61,50 +61,35 @@
           </ul>
           <ul class="collection" id="reg-parts-ul">
             <li class="collection-item participant-list-item">
-              <form class="col s12" action="/register/makepayment/" method="POST" id="payment-form">
-                {% csrf_token %}
-                <table class="table-top-header centered">
-                  <tr class="table-row disabled-pre-reg">
-                    <td class="pk-col">1</td>
-                    <td class="name-col">Arpit Anshuman</td>
-                    <td class="gender-col">Male</td>
-                    <td class="pre-reg-col">
-                      <input type="checkbox" name="pre-reg" class="filled-in" value="1" id="pre-reg-1" checked="checked" disabled="disabled" />
-                      <label for="pre-reg-1" class="selected-previously hidden-label"></label>
-                    </td>
-                    <td class="reg-col">
-                      <input type="checkbox" name="reg" class="filled-in" value="1" id="reg-1" />
-                      <label for="reg-1" class="selected-previously hidden-label"></label>
-                    </td>
-                  </tr>
-                  <tr class="table-row disabled-pre-reg disabled-reg disabled-both">
-                    <td class="pk-col">2</td>
-                    <td class="name-col">Arpit Anshuman</td>
-                    <td class="gender-col">Male</td>
-                    <td class="pre-reg-col">
-                      <input type="checkbox" name="pre-reg" class="filled-in" value="2" id="pre-reg-2" checked="checked" disabled="disabled" />
-                      <label for="pre-reg-2" class="selected-previously hidden-label"></label>
-                    </td>
-                    <td class="reg-col">
-                      <input type="checkbox" name="reg" class="filled-in" value="2" id="reg-2" checked="checked" disabled="disabled" />
-                      <label for="reg-2" class="selected-previously hidden-label"></label>
-                    </td>
-                  </tr>
-                  <tr class="table-row">
-                    <td class="pk-col">4</td>
-                    <td class="name-col">Arpit Anshuman</td>
-                    <td class="gender-col">Male</td>
-                    <td class="pre-reg-col">
-                      <input type="checkbox" name="pre-reg" class="filled-in" value="3" id="pre-reg-3" />
-                      <label for="pre-reg-3" class="selected-previously hidden-label"></label>
-                    </td>
-                    <td class="reg-col">
-                      <input type="checkbox" name="reg" class="filled-in" value="3" id="reg-3" />
-                      <label for="reg-3" class="selected-previously hidden-label"></label>
-                    </td>
-                  </tr>
-                </table>
-              </form>
+              <table class="table-top-header centered">
+                {% for d in data %}
+                {% if d.3 == 1 %}
+                <tr class="table-row disabled-pre-reg">
+                  <td class="pk-col">{{d.0}}</td>
+                  <td class="name-col">{{d.1}}</td>
+                  <td class="gender-col">{{d.2}}</td>
+                  <td class="pre-reg-col"><i class="material-icons hover-effect selected-previously" onclick="switchPreRegPayment(this)">check_box</i></td>
+                  <td class="reg-col"><i class="material-icons hover-effect" onclick="switchRegPayment(this)">check_box_outline_blank</i></td>
+                </tr>
+                {% elif d.3 == 2 %}
+                <tr class="table-row disabled-pre-reg disabled-reg disabled-both">
+                  <td class="pk-col">{{d.0}}</td>
+                  <td class="name-col">{{d.1}}</td>
+                  <td class="gender-col">{{d.2}}</td>
+                  <td class="pre-reg-col"><i class="material-icons hover-effect selected-previously" onclick="switchPreRegPayment(this)">check_box</i></td>
+                  <td class="reg-col"><i class="material-icons hover-effect selected-previously" onclick="switchRegPayment(this)">check_box</i></td>
+                </tr>
+                {% else %}
+                <tr class="table-row">
+                  <td class="pk-col">{{d.0}}</td>
+                  <td class="name-col">{{d.1}}</td>
+                  <td class="gender-col">{{d.2}}</td>
+                  <td class="pre-reg-col"><i class="material-icons hover-effect" onclick="switchPreRegPayment(this)">check_box_outline_blank</i></td>
+                  <td class="reg-col"><i class="material-icons hover-effect" onclick="switchRegPayment(this)">check_box_outline_blank</i></td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+              </table>
             </li>
           </ul>
         </div>
@@ -113,7 +98,7 @@
     <div class="container center" id="pay-part-div">
       <div class="row">
         <div class="col s12">
-          <a class="waves-effect waves-light btn custom-btn z-depth-5" id="pay-part-btn" onclick="document.getElementById('payment-form').submit()" style="display: inline-block;"><i class="material-icons right">send</i>Pay</a>
+          <a class="waves-effect waves-light btn custom-btn z-depth-5" id="pay-part-btn" onclick="submitPayParts()" style="display: inline-block;"><i class="material-icons right">send</i>Pay</a>
         </div>
       </div>
     </div>
@@ -127,31 +112,18 @@
           <li class="collection-item">Participants can only pay for themselves</li>
           <li class="collection-item">Captains can pay for themselves as well as members of the team</li>
           <li class="collection-item">Groupleader can pay for all the participants and captains as well as for self</li>
+          <li class="collection-item">Option for Pre-Reg payment is only available till 10th September after that only Reg payment is allowed</li>
           <li class="collection-item">In case of any issues/queries contact : <a href="mailto:pcr@bits-bosm.org?Subject=Query%20regarding%20payment">pcr@bits-bosm.org</a> or <a href="mailto:register@bits-bosm.org?Subject=Query%20regarding%20payment">register@bits-bosm.org</a></li>
         </ul>
         </p>
       </div>
       <div class="modal-footer"> <a class="modal-action modal-close waves-effect waves-green btn-flat">Done</a> </div>
     </div>
-    <div id="transaction-modal" class="modal modal-fixed-footer">
-      <div class="modal-content center">
-        <div class="row">
-          <div class="col s12">
-            <div class="card">
-              <div class="card-image center">
-                <img src="/static/register/images/bosm-2018.png" id="bosm-payment-logo">
-              </div>
-              <div class="card-content">
-                <ul class="collection">
-                  <li class="collection-item">Please note your transaction ID below for all future communications</li>
-                  <li class="collection-item">Transaction ID : <span class="transaction-id"></span></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer"> <a class="modal-action modal-close waves-effect waves-green btn-flat">Done</a> </div>
+    <div class="container" id="form-holder">
+      <form id="payment-form" method="POST" action="/register/makepayment/">
+        {% csrf_token %}
+        <input type="text" name="data" value="{'pre-reg':[],'reg':[]}" id="data-field">
+      </form>
     </div>
   </body>
 </html>

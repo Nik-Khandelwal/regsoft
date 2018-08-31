@@ -1927,7 +1927,10 @@ def docurl(request):
 					if u.sportid[sp.idno]>='2':
 						d.append(sp.sport)
 				s.append(d)
-				s.append(u.docs.url)
+				if u.docs:
+					s.append(u.docs.url)
+				else:
+					s.append("")
 				d3.append(s)
 		return JsonResponse({'unconfirmed':d2,'confirmed':d3})
 

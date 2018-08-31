@@ -869,38 +869,70 @@ def getpay(request):
 	else:
 		return HttpResponseRedirect('/register/')
 	if request.method=='POST':
-		data = json.loads(request.body.decode('utf-8'))
+		data = json.loads(request.POST["data"].decode('utf-8'))
 		prereg=Amounts.objects.get(name='pre').amount
 		reg=Amounts.objects.get(name='reg').amount
 		tm=request.user.team
 		error=''
 		success=1
 		amnt=0
-		for i in idarr:
-			u=User.objects.get(pk=i[0])
-			if u.team!=tm: and u.confirm1>=3 and u.pay==0:
-				error=error+'invalid participant: '+u.name+'\n'
-				success=0
-			elif i[1]==1 and Amounts.objects.get(name='pre').deactivate:
+		for i in data["prereg"]:
+			u=User.objects.get(pk=i)
+			if Amounts.objects.get(name='pre').deactivate:
 				error=error+'pre registration payment is invalid '+u.name+'\n'
 				success=0
-			elif u.confirm1<3:
-				error=error+'participant not confirmed for payment: '+u.name+'\n'
+			if u.team!=tm: or u.confirm1<3:
+				error=error+'invalid participant: '+u.name+'\n'
 				success=0
-			elif u.pay2 or (u.pay1 and u.pay3):
-				error=error+'payment for participant is done: '+u.name+'\n'
-				success=0
-			elif (u.pay2 or u.pay3) and i[1]==2:
-				error=error+'full payment for participant is done: '+u.name+'\n'
-				success=0
-			elif u.pay1 and i[1]==1:
+			if u.pay1 or u.pay2 or u.pay3 or u.pcramt>=prereg:
 				error=error+'preregistration payment for participant is done: '+u.name+'\n'
 				success=0
-			elif u.pay1==0 and i[1]==3:
-				error=error+'preregistration payment for participant is not done: '+u.name+'\n'
+		for i in data["reg"]:
+			u=User.objects.get(pk=i)
+			if u.team!=tm: or u.confirm1<3:
+				error=error+'invalid participant: '+u.name+'\n'
 				success=0
-			if success==0:
-				return JsonResponse({'error':error})
+			if u.pay2 or u.pay3 or u.pcramt>=reg:
+				error=error+'full registration payment for participant is done: '+u.name+'\n'
+				success=0
+		for i in data["extra"]:
+			u=User.objects.get(pk=i)
+			if u.team!=tm: or u.confirm1<3:
+				error=error+'invalid participant: '+u.name+'\n'
+				success=0
+			if u.pay1==0:
+				error=error+'invalid payment '+u.name+'\n'
+				success=0
+			if u.pay3 or u.pay2:
+				error=error+'full registration payment for participant is done: '+u.name+'\n'
+				success=0
+		if success==0:
+			return JsonResponse({'error':error})
+# 		for i in idarr:
+# 			u=User.objects.get(pk=i[0])
+# 			if u.team!=tm: and u.confirm1>=3 and u.pay==0:
+# 				error=error+'invalid participant: '+u.name+'\n'
+# 				success=0
+# 			elif i[1]==1 and Amounts.objects.get(name='pre').deactivate:
+# 				error=error+'pre registration payment is invalid '+u.name+'\n'
+# 				success=0
+# 			elif u.confirm1<3:
+# 				error=error+'participant not confirmed for payment: '+u.name+'\n'
+# 				success=0
+# 			elif u.pay2 or (u.pay1 and u.pay3):
+# 				error=error+'payment for participant is done: '+u.name+'\n'
+# 				success=0
+# 			elif (u.pay2 or u.pay3) and i[1]==2:
+# 				error=error+'full payment for participant is done: '+u.name+'\n'
+# 				success=0
+# 			elif u.pay1 and i[1]==1:
+# 				error=error+'preregistration payment for participant is done: '+u.name+'\n'
+# 				success=0
+# 			elif u.pay1==0 and i[1]==3:
+# 				error=error+'preregistration payment for participant is not done: '+u.name+'\n'
+# 				success=0
+# 			if success==0:
+# 				return JsonResponse({'error':error})
 
 		MERCHANT_KEY = settings.PAYTM_MERCHANT_KEY
 	    	MERCHANT_ID = settings.PAYTM_MERCHANT_ID
@@ -908,17 +940,41 @@ def getpay(request):
 	    	CALLBACK_URL = settings.HOST_URL + get_lang + settings.PAYTM_CALLBACK_URL
 	    	# Generating unique temporary ids
 	    	order_id = Checksum.__id_generator__()
-	    	for i in idarr:
-			u=User.objects.get(pk=i[0])
-			if i[1]==1 and u.pay1==0 and u.pcramt==0:
-				u.orderid1=order_id
-				amnt+=prereg
-			if i[1]==2 and u.pay2==0 and u.pcramt==0:
-				u.orderid1=order_id
-				amnt+=reg
-			if i[1]==3 and u.pay3==0 and u.pcramt==prereg:
-				u.orderid1=order_id
-				amnt+=reg-prereg
+# 	    	for i in idarr:
+# 			u=User.objects.get(pk=i[0])
+# 			if i[1]==1 and u.pay1==0 and u.pcramt==0:
+# 				u.orderid1=order_id
+# 				amnt+=prereg
+# 			if i[1]==2 and u.pay2==0 and u.pcramt==0:
+# 				u.orderid1=order_id
+# 				amnt+=reg
+# 			if i[1]==3 and u.pay3==0 and u.pcramt==prereg:
+# 				u.orderid1=order_id
+# 				amnt+=reg-prereg
+# 			try:
+# 				u.save()
+# 			except:
+# 				return JsonResponse({'error': 'Payment not done'})
+		for i in data["prereg"]:
+			u=User.objects.get(pk=i)
+			u.orderid1=order_id
+			amnt+=prereg
+			try:
+				u.save()
+			except:
+				return JsonResponse({'error': 'Payment not done'})
+		for i in data["reg"]:
+			u=User.objects.get(pk=i)
+			u.orderid2=order_id
+			amnt+=reg
+			try:
+				u.save()
+			except:
+				return JsonResponse({'error': 'Payment not done'})
+		for i in data["extra"]:
+			u=User.objects.get(pk=i)
+			u.orderid3=order_id
+			amnt+=reg-prereg
 			try:
 				u.save()
 			except:
@@ -999,3 +1055,43 @@ def response(request):
         else:
             return HttpResponse("checksum verify failed")
     return HttpResponse(status=200)
+
+
+def sendpay(request):
+	if request.user.is_authenticated():
+		pass
+	else:
+		return HttpResponseRedirect('/register/')
+	if request.method=='POST':
+	# data = json.loads(request.body.decode('utf-8'))
+		if request.user.grp_leader==0 and request.user.captain==0:
+			if request.user.coach:
+				return JsonResponse({'error':"No payment required for coach"})#or render an error page
+			if request.user.pay2 or request.user.pay3:
+				return JsonResponse({'msg':'full reg'})
+			if request.user.pay1:
+				return JsonResponse({'msg':'pre reg'})
+			return JsonResponse({'msg':'pls pay'})
+		tm=request.user.team
+		ulist=User.objects.filter(team=tm,deleted=0,coach=0).order_by(Lower('name'))
+		if request.user.captain:
+			spt=Sport.objects.get(idno=request.user.captain)
+		d=[]
+		for u in ulist:
+			if u.confirm1>=3:
+				s=[]
+				s.append(u.pk)
+				s.append(u.name)
+				s.append(u.gender)
+				if request.user.pay2 or request.user.pay3:
+					s.append(2)
+				elif request.user.pay1:
+					s.append(1)
+				else:
+					s.append(0)
+				if request.user.captain and u.sportid[request.user.captain]>='2':
+					d.append(s)
+				elif request.user.grp_leader:
+					d.append(s)
+
+		return JsonResponse({'data': d})

@@ -120,7 +120,7 @@
       <div class="modal-footer"> <a class="modal-action modal-close waves-effect waves-green btn-flat">Done</a> </div>
     </div>
     <div class="container" id="form-holder">
-      <form id="payment-form" method="POST" action="/register/makepayment/">
+      <form id="payment-form" method="POST" action="/register/paytm/payment/">
         {% csrf_token %}
         <input type="text" name="data" value="{'pre-reg':[],'reg':[]}" id="data-field">
       </form>

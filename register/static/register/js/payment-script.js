@@ -36,6 +36,7 @@ function switchRegPayment(option) {
 function submitPayParts() {
   var pre_reg = [];
   var reg = [];
+  var extra = [];
   var success=1;
   for (var i = 0; i < document.getElementsByClassName('pay-reg').length; i++) {
   	if(document.getElementsByClassName('pay-reg')[i].classList.contains('pay-pre-reg')) {
@@ -43,7 +44,11 @@ function submitPayParts() {
   		break;
   	}
     var reg_pk = parseInt(document.getElementsByClassName('pay-reg')[i].getElementsByTagName('td')[0].innerHTML);
-    reg.push(reg_pk);
+    if(!document.getElementsByClassName('pay-reg')[i].classList.contains('disabled-pre-reg')) {
+      reg.push(reg_pk);
+    } else {
+      extra.push(reg_pk);
+    }
     success=2;
   }
   for (var j = 0; j < document.getElementsByClassName('pay-pre-reg').length; j++) {
@@ -55,7 +60,8 @@ function submitPayParts() {
   }
   var sendObj = {
     "pre-reg": pre_reg,
-    "reg": reg
+    "reg": reg,
+    "extra": extra
   }
   if(success==2) {
     var stringObj = JSON.stringify(sendObj);

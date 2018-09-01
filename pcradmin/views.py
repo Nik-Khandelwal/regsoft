@@ -993,7 +993,12 @@ def statscollegesport(request):
 				else:
 					p.append("undefined")
 				p.append(0)
-				p.append(0)#payment status
+				if u.pay2 or u.pay3:
+					p.append(2)#payment status
+				elif u.pay1:
+					p.append(1)
+				else:
+					p.append(0)#payment status
 				p.append(u.confirm1)
 				data.append(p)
 
@@ -1012,7 +1017,12 @@ def statscollegesport(request):
 				else:
 					p.append("undefined")
 				p.append(1)
-				p.append(0)#payment status
+				if u.pay2 or u.pay3:
+					p.append(2)#payment status
+				elif u.pay1:
+					p.append(1)
+				else:
+					p.append(0)
 				p.append(u.confirm1)
 				data.append(p)
 		resp={'participants':data}

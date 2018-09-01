@@ -911,7 +911,7 @@ def getpay(request):
 		# 		error=error+'full registration payment for participant is done: '+u.name+'\n'
 		# 		success=0
 		if success==0:
-			return return render(request,'register/error.html',{'error':error})
+			return render(request,'register/error.html',{'error':error})
 
 		MERCHANT_KEY = settings.PAYTM_MERCHANT_KEY
 		MERCHANT_ID = settings.PAYTM_MERCHANT_ID

@@ -1,0 +1,37 @@
+{% autoescape off %}
+This is an automated generated mail for tracking Payments!<br><br>
+
+<b>{{user}}</b> paid <b>{{amount}}</b> at <b>{{timestamp}}</b> for the college : <b>{{college}}</b> :<br><br>
+
+Pre-Reg Paid Users :<br>
+<ul>
+{% for name in prereg %}
+<li><b>{{name}}</b></li><br>
+{% endfor %}
+</ul><br><br>
+
+Reg Paid Users :<br>
+<ul>
+{% for unm in reg %}
+<li><b>{{unm}}</b></li><br>
+{% endfor %}
+</ul><br><br>
+
+Pre-Reg Paid earlier to currently Reg Paid Users :<br>
+<ul>
+{% for uname in prereg2reg %}
+<li><b>{{uname}}</b></li><br>
+{% endfor %}
+</ul><br><br>
+
+The following are the details :<br><br>
+<ul>
+  <li><b>Transaction ID : {{TXNID}}</b></li>
+  <li><b>Status of Payment : {{status}}</b></li>
+  <li><b>Order ID : {{orderid}}</b></li>
+</ul>
+
+Regards,<br>
+Coding Club<br>
+BITS Pilani<br>
+{% endautoescape %}

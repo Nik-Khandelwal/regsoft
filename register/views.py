@@ -963,7 +963,7 @@ def getpay(request):
 		param_dict = data_dict
 		param_dict['CHECKSUMHASH'] = Checksum.generate_checksum(data_dict, MERCHANT_KEY)
 		return render(request,"register/paytm.html",{'paytmdict':param_dict})
-	return HttpResponse("Bill Amount Could not find.")
+	return HttpResponse("Bill Amount could not be found.")
 	
 @csrf_exempt
 def response(request):
@@ -1021,7 +1021,7 @@ def response(request):
 			email.send() 
 			return HttpResponseRedirect('/register/payments/')
 		else:
-			return HttpResponse("checksum verify failed")
+			return HttpResponse("Verification Failed")
 	return HttpResponse(status=200)
 
 
@@ -1037,10 +1037,10 @@ def sendpay(request):
 			if request.user.coach:
 				return render(request,'register/error.html',{"error":"No payment required for coach"})#or render an error page
 			if request.user.pay2 or request.user.pay3:
-				return render(request,'register/error.html',{"error":"full reg"})
+				return render(request,'register/error.html',{"error":"Full Registration payment already done"})
 			if request.user.pay1:
-				return render(request,'register/error.html',{"error":"pre reg"})
-			return render(request,'register/error.html',{"error":"pls pay"})
+				return render(request,'register/error.html',{"error":"Pre Registration payment already done"})
+			return render(request,'register/error.html',{"error":"Please proceed for payment"})
 		tm=request.user.team
 		ulist=User.objects.filter(team=tm,deleted=0,coach=0).order_by(Lower('name'))
 		if request.user.captain:

@@ -899,17 +899,17 @@ def getpay(request):
 			if u.pay2 or u.pay3 or u.pcramt>=reg:
 				error=error+'full registration payment for participant is done: '+u.name+'\n'
 				success=0
-		# for i in data["extra"]:
-		# 	u=User.objects.get(pk=i)
-		# 	if u.team!=tm or u.confirm1<3:
-		# 		error=error+'invalid participant: '+u.name+'\n'
-		# 		success=0
-		# 	if u.pay1==0:
-		# 		error=error+'invalid payment '+u.name+'\n'
-		# 		success=0
-		# 	if u.pay3 or u.pay2:
-		# 		error=error+'full registration payment for participant is done: '+u.name+'\n'
-		# 		success=0
+		for i in data["extra"]:
+			u=User.objects.get(pk=i)
+			if u.team!=tm or u.confirm1<3:
+				error=error+'invalid participant: '+u.name+'\n'
+				success=0
+			if u.pay1==0:
+				error=error+'invalid payment '+u.name+'\n'
+				success=0
+			if u.pay3 or u.pay2:
+				error=error+'full registration payment for participant is done: '+u.name+'\n'
+				success=0
 		if success==0:
 			return render(request,'register/error.html',{'error':error})
 
@@ -1036,11 +1036,26 @@ def sendpay(request):
 		if request.user.grp_leader==0 and request.user.captain==0:
 			if request.user.coach:
 				return render(request,'register/error.html',{"error":"No payment required for coach"})#or render an error page
-			if request.user.pay2 or request.user.pay3:
-				return render(request,'register/error.html',{"error":"Full Registration payment already done"})
-			if request.user.pay1:
-				return render(request,'register/error.html',{"error":"Pre Registration payment already done"})
-			return render(request,'register/error.html',{"error":"Please proceed for payment"})
+			u=request.user
+			if u.confirm1>=3:
+				pass
+			else:
+				return render(request,'register/error.html',{"error":"You cannot pay before verification of documents"})
+				
+			s=[]
+			s.append(u.pk)
+			s.append(u.name)
+			s.append(u.gender)
+			if u.pay2 or u.pay3:
+				s.append(2)
+			elif u.pay1:
+				s.append(1)
+			else:
+				s.append(0)
+			if request.user.captain and u.sportid[request.user.captain]>='2':
+				d.append(s)
+			elif request.user.grp_leader:
+				d.append(s)
 		tm=request.user.team
 		ulist=User.objects.filter(team=tm,deleted=0,coach=0).order_by(Lower('name'))
 		if request.user.captain:

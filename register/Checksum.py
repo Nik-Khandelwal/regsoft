@@ -2,6 +2,9 @@ import base64
 import string
 import random
 import hashlib
+import crypto
+import sys
+sys.modules['Crypto'] = crypto
 
 from Crypto.Cipher import AES
 
@@ -11,6 +14,22 @@ BLOCK_SIZE = 16
 
 
 def generate_checksum(param_dict, merchant_key, salt=None):
+    params_string = __get_param_string__(param_dict)
+    salt = salt if salt else __id_generator__(4)
+    final_string = '%s|%s' % (params_string, salt)
+
+    hasher = hashlib.sha256(final_string.encode())
+    hash_string = hasher.hexdigest()
+
+    hash_string += salt
+
+    return __encode__(hash_string, IV, merchant_key)
+
+def generate_refund_checksum(param_dict, merchant_key, salt=None):
+    for i in param_dict:    
+        if("|" in param_dict[i]):
+            param_dict = {}
+            exit()
     params_string = __get_param_string__(param_dict)
     salt = salt if salt else __id_generator__(4)
     final_string = '%s|%s' % (params_string, salt)
@@ -45,7 +64,8 @@ def verify_checksum(param_dict, merchant_key, checksum):
     paytm_hash = __decode__(checksum, IV, merchant_key)
     salt = paytm_hash[-4:]
     calculated_checksum = generate_checksum(param_dict, merchant_key, salt=salt)
-    return calculated_checksum == checksum
+    print(calculated_checksum,checksum)
+    return calculated_checksum.decode("utf-8") == checksum
 
 def verify_checksum_by_str(param_str, merchant_key, checksum):
     # Remove checksum
@@ -93,5 +113,26 @@ def __decode__(to_decode, iv, key):
     # Decrypt
     c = AES.new(key, AES.MODE_CBC, iv)
     to_decode = c.decrypt(to_decode)
+    if type(to_decode) == bytes:
+        # convert bytes array to str.
+        to_decode = to_decode.decode()
     # remove pad
     return __unpad__(to_decode)
+
+
+# if __name__ == "__main__":
+#     params = {
+#         "MID": "mid",
+#         "ORDER_ID": "order_id",
+#         "CUST_ID": "cust_id",
+#         "TXN_AMOUNT": "1",
+#         "CHANNEL_ID": "WEB",
+#         "INDUSTRY_TYPE_ID": "Retail",
+#         "WEBSITE": "WEB_STAGING"
+#     }
+
+#     print verify_checksum(
+#         params, 'xxxxxxxxxxxxxxxx',
+#         "CD5ndX8VVjlzjWbbYoAtKQIlvtXPypQYOg0Fi2AUYKXZA5XSHiRF0FDj7vQu66S8MHx9NaDZ/uYm3WBOWHf+sDQAmTyxqUipA7i1nILlxrk=")
+
+    # print generate_checksum(params, "xxxxxxxxxxxxxxxx")

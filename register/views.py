@@ -989,18 +989,21 @@ def response(request):
 				if request.POST['STATUS']=="TXN_SUCCESS":
 					u.pay1=1
 					u.pcramt+=prereg
+					u.comfirm1=4
 					u.save()
 			for u in u2:
 				ureg.append(u.name)
 				if request.POST['STATUS']=="TXN_SUCCESS":
 					u.pay2=1
 					u.pcramt+=reg
+					u.comfirm1=4
 					u.save()
 			for u in u3:
 				up2r.append(u.name)
 				if request.POST['STATUS']=="TXN_SUCCESS":
 					u.pay3=1
 					u.pcramt+=reg-prereg
+					u.comfirm1=4
 					u.save()
 
 			message = render_to_string('register/msg6.html', {

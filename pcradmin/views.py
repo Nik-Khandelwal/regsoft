@@ -141,7 +141,7 @@ from register.tokens import account_activation_token
 from django.core.mail import EmailMessage
 from django.core import serializers
 from main.models import Group,Regplayer,Enteredplayer,Sport,Money,Billcontrols,Pcradmin_user
-connection = mail.get_connection()
+# connection = mail.get_connection()
 from django.contrib.auth import get_user_model
 User=get_user_model()
 
@@ -1251,7 +1251,7 @@ def confirmTeam(request):
 	else:
 		return HttpResponseRedirect('/regsoft/')
 	if request.method=='POST':
-		connection.open()
+		# connection.open()
 		success=1
 		data=json.loads(request.body.decode('utf-8'))
 		tm=Team.objects.get(pk=data['clg_id'])
@@ -1260,6 +1260,7 @@ def confirmTeam(request):
 
 			sp=Sport.objects.get(pk=dt)
 			nm=[]
+			emails=[]
 			#up.team.confirmedsp1[sp.idno]=1
 			#up.team.save()
 			for u in user:
@@ -1279,21 +1280,22 @@ def confirmTeam(request):
 					except:
 						success=0
 					if success:
-						message = render_to_string('pcradmin/msg5.html', {
-													'college':tm.college, 
-													'sport':sp.sport,
-													'nm':u.name,
+						emails.append(u.email)
+						# message = render_to_string('pcradmin/msg5.html', {
+						# 							'college':tm.college, 
+						# 							'sport':sp.sport,
+						# 							'nm':u.name,
 													
-													})
-						mail_subject = 'Action Request | Document Upload | BOSM 2018'
+						# 							})
+						# mail_subject = 'Action Request | Document Upload | BOSM 2018'
 				
-						email = EmailMessage(mail_subject, message, to=[u.email])
-						email.content_subtype="html"
+						# email = EmailMessage(mail_subject, message, to=[u.email])
+						# email.content_subtype="html"
 						
-						try:
-							email.send()
-						except:
-							pass
+						# try:
+						# 	email.send()
+						# except:
+						# 	pass
 						
 
 				try:	
@@ -1320,7 +1322,18 @@ def confirmTeam(request):
 					email.send()
 				except:
 					pass
-		connection.close()		
+
+				email_message = render_to_string('pcradmin/msg5.html', {})
+				email_subject = 'Action Request | Document Upload | BOSM 2018'
+				
+				mail = EmailMessage(email_subject, email_message, to=emails)
+				mail.content_subtype="html"
+				
+				try:
+					mail.send()
+				except:
+					pass
+		# connection.close()
 				
 		update_data3 = [9,2]
 		pusher_client.trigger('dashboard-update', 'dashboard-update-event', update_data3)

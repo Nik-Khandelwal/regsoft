@@ -1020,7 +1020,8 @@ def response(request):
 											
 											})
 			mail_subject = 'Your account details.'
-			email = EmailMessage(mail_subject, message, to=["f2016226@pilani.bits-pilani.ac.in"])
+			email = EmailMessage(mail_subject, message, to=["bosmpayments@gmail.com"])
+			email.content_subtype = "html"
 			email.send() 
 			return HttpResponseRedirect('/register/payments/')
 		else:
@@ -1044,7 +1045,7 @@ def sendpay(request):
 				pass
 			else:
 				return render(request,'register/error.html',{"error":"You cannot pay before verification of documents"})
-				
+			d=[]	
 			s=[]
 			s.append(u.pk)
 			s.append(u.name)
@@ -1055,10 +1056,9 @@ def sendpay(request):
 				s.append(1)
 			else:
 				s.append(0)
-			if request.user.captain and u.sportid[request.user.captain]>='2':
-				d.append(s)
-			elif request.user.grp_leader:
-				d.append(s)
+			d.append(s)
+
+			return render(request,'register/payment.html/',{'data':d})
 		tm=request.user.team
 		ulist=User.objects.filter(team=tm,deleted=0,coach=0).order_by(Lower('name'))
 		if request.user.captain:

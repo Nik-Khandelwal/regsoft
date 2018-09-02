@@ -548,10 +548,13 @@ def playerview(request):
 		else:
 			logout(request)
 			return HttpResponseRedirect('/register/')
-		if request.user.confirm1>=3:
-			return HttpResponseRedirect('/register/payments/')
+# 		if request.user.confirm1>=3:
+# 			return HttpResponseRedirect('/register/payments/')
 				# return render(request,'register/error.html',{'error':'Your documents have been verified. You cannot upload documents.'})
 		if request.method=='POST':
+			if request.user.confirm1>=3:
+				#return HttpResponseRedirect('/register/payments/')
+				return render(request,'register/error.html',{'error':'Your documents have been verified. You cannot upload documents.'})
 			request.user.docs=request.FILES['filename']
 			extension = os.path.splitext(str(request.FILES['filename']))[-1]
 			print((request.FILES['filename']).size)

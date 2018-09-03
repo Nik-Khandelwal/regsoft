@@ -1461,7 +1461,11 @@ function openVerifyDocsGroupleader(option) {
             sports += ', ';
           }
         }
-        document.getElementById('unconfirmed-parts-view-docs-list-body').innerHTML += '<tr class="unconfirmed-parts-status-selection"> <td style="display: none;">'+unconfirmed[i][0]+'</td><td style="flex-basis: 40%;">'+unconfirmed[i][1]+'</td><td style="flex-basis: 40%">'+sports+'</td><td style="flex-basis: 10%;"><a href=\"'+unconfirmed[i][3]+'\" target="_blank"><i class="material-icons black-text">file_download</i></a></td><td style="flex-basis: 10%"><i class="material-icons black-text change_cursor" onclick="toggleUnconfirmedPartDocsSelection(this)">check_box_outline_blank</i></td></tr>';
+        if (unconfirmed[i][3]!=0&&unconfirmed[i][4]==1) {
+          document.getElementById('unconfirmed-parts-view-docs-list-body').innerHTML += '<tr class="unconfirmed-parts-status-selection"> <td style="display: none;">'+unconfirmed[i][0]+'</td><td style="flex-basis: 40%;">'+unconfirmed[i][1]+'</td><td style="flex-basis: 40%">'+sports+'</td><td style="flex-basis: 10%;"><a href=\"'+unconfirmed[i][3]+'\" target="_blank"><i class="material-icons black-text">file_download</i></a></td><td style="flex-basis: 10%"><i class="material-icons black-text change_cursor" onclick="toggleUnconfirmedPartDocsSelection(this)">check_box_outline_blank</i></td></tr>';
+        } else {
+          document.getElementById('unconfirmed-parts-view-docs-list-body').innerHTML += '<tr class="unconfirmed-parts-status-selection"> <td style="display: none;">'+unconfirmed[i][0]+'</td><td style="flex-basis: 40%;">'+unconfirmed[i][1]+'</td><td style="flex-basis: 40%">'+sports+'</td><td style="flex-basis: 10%;"><i class="material-icons black-text">block</i></td><td style="flex-basis: 10%"><i class="material-icons black-text change_cursor" onclick="toggleUnconfirmedPartDocsSelection(this)">check_box_outline_blank</i></td></tr>';
+        }
       }
       for (var i = 0; i < confirmed.length; i++) {
         var sports = '';
@@ -1471,7 +1475,11 @@ function openVerifyDocsGroupleader(option) {
             sports += ', ';
           }
         }
-        document.getElementById('confirmed-parts-view-docs-list-body').innerHTML = '<tr class="confirmed-parts-status-selection"> <td style="display: none;">'+confirmed[i][0]+'</td><td style="flex-basis: 40%;">'+confirmed[i][1]+'</td><td style="flex-basis: 50%">'+sports+'</td><td style="flex-basis: 10%;"><a href=\"'+confirmed[i][3]+'\" target="_blank"><i class="material-icons black-text">file_download</i></a></td></tr>';
+        if (confirmed[i][3]!=0&&confirmed[i][4]==1) {
+          document.getElementById('confirmed-parts-view-docs-list-body').innerHTML = '<tr class="confirmed-parts-status-selection"> <td style="display: none;">'+confirmed[i][0]+'</td><td style="flex-basis: 40%;">'+confirmed[i][1]+'</td><td style="flex-basis: 50%">'+sports+'</td><td style="flex-basis: 10%;"><a href=\"'+confirmed[i][3]+'\" target="_blank"><i class="material-icons black-text">file_download</i></a></td></tr>';
+        } else {
+          document.getElementById('confirmed-parts-view-docs-list-body').innerHTML = '<tr class="confirmed-parts-status-selection"> <td style="display: none;">'+confirmed[i][0]+'</td><td style="flex-basis: 40%;">'+confirmed[i][1]+'</td><td style="flex-basis: 50%">'+sports+'</td><td style="flex-basis: 10%;"><i class="material-icons black-text">block</i></td></tr>';
+        }
       }
     } else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
       Materialize.toast('There was some error connecting to the server!', 3000);

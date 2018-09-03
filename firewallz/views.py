@@ -116,6 +116,7 @@ def details(request):
 	if request.method=='POST':
 		dat=[]
 		for rp in Regplayer.objects.filter(entered=False):
+			# rp.unbilled_amt = 1100-int(rp.name.pcramt)
 			b = {"name":rp.name.name,"gender":rp.gender,"college":rp.college,"city":rp.city,"mobile_no":rp.mobile_no,"email_id":rp.email_id,"sport":rp.sport,"entered":rp.entered,"unbilled_amt":rp.unbilled_amt}
 			dat.append({"pk":rp.pk,"fields":b})
 		#data = serializers.serialize("json", Regplayer.objects.filter(entered=False))
@@ -160,6 +161,7 @@ def confirm_group(request):
 			Player = Regplayer.objects.get(pk=dt['pk'])
 			print(Player.name.name)
 			Player.entered = True
+			# Player.unbilled_amt = 1100-int(rp.name.pcramt)
 			Player.name.grp_leader = dt['groupleader']
 			Player.save()
 			pl = Enteredplayer()
@@ -394,7 +396,7 @@ def id_card(request,string):
 	dats = []
 	print(string)
 	for pl in Enteredplayer.objects.filter(group = Group.objects.get(group_code=string)):
-		dats.append({"pk":pl.regplayer.pk,"name":pl.regplayer.name.name,"college":pl.regplayer.college,"group_code":string,"group_id":pl.group_id,"sport":pl.regplayer.sport,"mobile_no":pl.regplayer.mobile_no})
+		dats.append({"uid":pl.regplayer.uid,"pk":pl.regplayer.pk,"name":pl.regplayer.name.name,"college":pl.regplayer.college,"group_code":string,"group_id":pl.group_id,"sport":pl.regplayer.sport,"mobile_no":pl.regplayer.mobile_no})
 	return render(request,'firewallz/id_template.html',{"data":dats})
 
 

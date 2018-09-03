@@ -435,6 +435,8 @@ def unconfirm_player(request):
 		data = json.loads( request.body.decode('utf-8') )
 		for i in data['data']['id_arr']:
 			rp = Regplayer.objects.get(pk=int(i))
+			rp.unbilled_amt = 1100-int(rp.name.pcramt)
+			rp.save()
 			pl = Enteredplayer.objects.get(regplayer = rp)
 			pl.controls_passed = False
 			pl.billcontrols = None
@@ -647,6 +649,9 @@ def bill_pdf(request,bill_pk):
 	data = []
 	billl = Billcontrols.objects.get(pk=int(bill_pk))
 	for obj in billl.enteredplayer_set.all():
+		rp = Regplayer.objects.get(pk = obj.regplayer.pk)
+		rp.unbilled_amt = 0
+		rp.save()
 		if obj.regplayer.name.grp_leader == 1:
 			data.append({"lis":{"name":obj.regplayer.name.name,"mobile":obj.regplayer.name.phone,"college":obj.regplayer.college}})
 		data.append({"pk":obj.regplayer.pk,"name":obj.regplayer.name.name,"unbilled_amt":obj.regplayer.unbilled_amt})

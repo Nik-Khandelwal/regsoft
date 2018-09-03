@@ -1,6 +1,6 @@
 #from __future__ import unicode_literals
 import re
-	
+import uuid 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404,HttpResponseRedirect, JsonResponse
 #from register.models import CustomUser, Team, Sport
@@ -1968,7 +1968,25 @@ def docapprove(request):
 				u.save()
 			except:
 				success=0
+			rp = Regplayer()
+			rp.name = u.name
+			rp.gender = u.gender
+			rp.college = u.team.college
+			rp.city = u.team.city
+			rp.mobile_no = u.phone
+			rp.email_id = u.email
+			rp.uid = str(uuid.uuid3(uuid.NAMESPACE_DNS, str(u.name)+str(u.pk)))
+			rp.sport=''
+			for s in Sport.objects.all():
+				if u.sportid[s.idno]=='2':
+					rp.sport=rp.sport+s.sport+','
+			try:
+				rp.save()
+			except:
+				success=0
 		return JsonResponse({'success':success})
+
+
 
 
 

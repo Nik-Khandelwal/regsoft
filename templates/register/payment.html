@@ -21,7 +21,8 @@
       <div class="nav-wrapper">
         <a class="brand-logo center" style="font-family: 'Montserrat'">BOSM 2018</a> 
         <ul class="right">
-          <li><a href="logout/"><i class="material-icons left">exit_to_app</i>Logout</a></li>
+          <li><a href="/register/"><i class="material-icons left">home</i>Home</a></li>
+          <li><a href="/register/logout/"><i class="material-icons left">exit_to_app</i>Logout</a></li>
         </ul>
         <ul class="left">
           <li>
@@ -62,27 +63,33 @@
           <ul class="collection" id="reg-parts-ul">
             <li class="collection-item participant-list-item">
               <table class="table-top-header centered">
+                {% for d in data %}
+                {% if d.3 == 1 %}
                 <tr class="table-row disabled-pre-reg">
-                  <td class="pk-col">1</td>
-                  <td class="name-col">Arpit Anshuman</td>
-                  <td class="gender-col">Male</td>
+                  <td class="pk-col">{{d.0}}</td>
+                  <td class="name-col">{{d.1}}</td>
+                  <td class="gender-col">{{d.2}}</td>
                   <td class="pre-reg-col"><i class="material-icons hover-effect selected-previously" onclick="switchPreRegPayment(this)">check_box</i></td>
                   <td class="reg-col"><i class="material-icons hover-effect" onclick="switchRegPayment(this)">check_box_outline_blank</i></td>
                 </tr>
+                {% elif d.3 == 2 %}
                 <tr class="table-row disabled-pre-reg disabled-reg disabled-both">
-                  <td class="pk-col">2</td>
-                  <td class="name-col">Arpit Anshuman</td>
-                  <td class="gender-col">Male</td>
+                  <td class="pk-col">{{d.0}}</td>
+                  <td class="name-col">{{d.1}}</td>
+                  <td class="gender-col">{{d.2}}</td>
                   <td class="pre-reg-col"><i class="material-icons hover-effect selected-previously" onclick="switchPreRegPayment(this)">check_box</i></td>
                   <td class="reg-col"><i class="material-icons hover-effect selected-previously" onclick="switchRegPayment(this)">check_box</i></td>
                 </tr>
+                {% else %}
                 <tr class="table-row">
-                  <td class="pk-col">3</td>
-                  <td class="name-col">Arpit Anshuman</td>
-                  <td class="gender-col">Male</td>
+                  <td class="pk-col">{{d.0}}</td>
+                  <td class="name-col">{{d.1}}</td>
+                  <td class="gender-col">{{d.2}}</td>
                   <td class="pre-reg-col"><i class="material-icons hover-effect" onclick="switchPreRegPayment(this)">check_box_outline_blank</i></td>
                   <td class="reg-col"><i class="material-icons hover-effect" onclick="switchRegPayment(this)">check_box_outline_blank</i></td>
                 </tr>
+                {% endif %}
+                {% endfor %}
               </table>
             </li>
           </ul>
@@ -114,7 +121,7 @@
       <div class="modal-footer"> <a class="modal-action modal-close waves-effect waves-green btn-flat">Done</a> </div>
     </div>
     <div class="container" id="form-holder">
-      <form id="payment-form" method="POST" action="/register/makepayment/">
+      <form id="payment-form" method="POST" action="/register/paytm/payment/">
         {% csrf_token %}
         <input type="text" name="data" value="{'pre-reg':[],'reg':[]}" id="data-field">
       </form>

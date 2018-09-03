@@ -110,11 +110,11 @@ body,html {
   flex-basis: 24%
 }
 
-/*@media screen and (orientation:portrait) {
+@media screen and (orientation:portrait) {
   .brand-logo {
     display: none !important
   }
-}*/
+}
 
 .table-top-header-item {
   padding: 0 !important

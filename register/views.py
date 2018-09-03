@@ -38,7 +38,7 @@ import re
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404,HttpResponseRedirect, JsonResponse
-from main.models import CustomUser, Team, Sport
+from main.models import CustomUser, Team, Sport, Amounts, PaytmHistory
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import auth
 from django.views.generic import View, ListView, FormView
@@ -78,7 +78,7 @@ import pusher
 from django.conf import settings
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.shortcuts import render
-from django.views.decorators.cache import cache_page
+from django.views.decorators.cache import cache_page, never_cache
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -104,7 +104,7 @@ import csv
 from django.utils.encoding import smart_str
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404,HttpResponseRedirect, JsonResponse
-from main.models import CustomUser, Team
+from main.models import CustomUser, Team, PaytmHistory
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import auth
 from django.views.generic import View, ListView, FormView
@@ -129,6 +129,10 @@ from django.core.mail import EmailMessage
 from django.core import serializers
 from main.models import Group,Regplayer,Enteredplayer,Sport,Money,Billcontrols,Controls_user
 from datetime import datetime
+
+from django.utils.translation import get_language
+from django.views.decorators.csrf import csrf_exempt
+from . import Checksum
 
 from django.contrib.auth import get_user_model
 User=get_user_model()
@@ -544,9 +548,13 @@ def playerview(request):
 		else:
 			logout(request)
 			return HttpResponseRedirect('/register/')
-		if request.user.confirm1>=3:
-				return render(request,'register/error.html',{'error':'Your documents have been verified. You cannot upload documents.'})
+# 		if request.user.confirm1>=3:
+# 			return HttpResponseRedirect('/register/payments/')
+				# return render(request,'register/error.html',{'error':'Your documents have been verified. You cannot upload documents.'})
 		if request.method=='POST':
+			if request.user.confirm1>=3:
+				#return HttpResponseRedirect('/register/payments/')
+				return render(request,'register/error.html',{'error':'Your documents have been verified. You cannot upload documents.'})
 			request.user.docs=request.FILES['filename']
 			extension = os.path.splitext(str(request.FILES['filename']))[-1]
 			print((request.FILES['filename']).size)
@@ -858,3 +866,222 @@ def registerplayer(request):
 
 def instructions(request):
  	return render(request,'register/instruction.html')
+
+def getpay(request):
+	if request.user.is_authenticated():
+		pass
+	else:
+		return HttpResponseRedirect('/register/')
+	if request.method=='POST':
+		data = json.loads(request.POST["data"])
+		prereg=Amounts.objects.get(name='pre').amount
+		reg=Amounts.objects.get(name='reg').amount
+		tm=request.user.team
+		error=''
+		success=1
+		amnt=0
+		for i in data["pre-reg"]:
+			u=User.objects.get(pk=i)
+			if Amounts.objects.get(name='pre').deactivate:
+				error=error+'pre registration payment is invalid '+u.name+'\n'
+				success=0
+			if u.team!=tm or u.confirm1<3:
+				error=error+'invalid participant: '+u.name+'\n'
+				success=0
+			if u.pay1 or u.pay2 or u.pay3 or u.pcramt>=prereg:
+				error=error+'preregistration payment for participant is done: '+u.name+'\n'
+				success=0
+		for i in data["reg"]:
+			u=User.objects.get(pk=i)
+			if u.team!=tm or u.confirm1<3:
+				error=error+'invalid participant: '+u.name+'\n'
+				success=0
+			if u.pay1 or u.pcramt>=prereg:
+				error=error+'invlid payment details.: '+u.name+'\n'
+				success=0
+			if u.pay2 or u.pay3 or u.pcramt>=reg:
+				error=error+'full registration payment for participant is done: '+u.name+'\n'
+				success=0
+		for i in data["extra"]:
+			u=User.objects.get(pk=i)
+			if u.team!=tm or u.confirm1<3:
+				error=error+'invalid participant: '+u.name+'\n'
+				success=0
+			if u.pay1==0:
+				error=error+'invalid payment '+u.name+'\n'
+				success=0
+			if u.pay3 or u.pay2:
+				error=error+'full registration payment for participant is done: '+u.name+'\n'
+				success=0
+		if success==0:
+			return render(request,'register/error.html',{'error':error})
+
+		MERCHANT_KEY = settings.PAYTM_MERCHANT_KEY
+		MERCHANT_ID = settings.PAYTM_MERCHANT_ID
+		#get_lang = "/" + get_language() if get_language() else ''
+		CALLBACK_URL = settings.HOST_URL + settings.PAYTM_CALLBACK_URL
+		# Generating unique temporary ids
+		xyz=Amounts.objects.get(name='count')
+		order_id = Checksum.__id_generator__()+str(xyz.amount)
+		xyz.amount+=1
+		xyz.save()
+
+		for i in data["pre-reg"]:
+			u=User.objects.get(pk=i)
+			u.orderid1=order_id
+			amnt+=prereg
+			try:
+				u.save()
+			except:
+				return render(request,'register/error.html',{"error":'Payment not done'})
+		for i in data["reg"]:
+			u=User.objects.get(pk=i)
+			u.orderid2=order_id
+			amnt+=reg
+			try:
+				u.save()
+			except:
+				return render(request,'register/error.html',{"error":'Payment not done'})
+		for i in data["extra"]:
+			u=User.objects.get(pk=i)
+			u.orderid3=order_id
+			amnt+=reg-prereg
+			try:
+				u.save()
+			except:
+				return render(request,'register/error.html',{"error":'Payment not done'})
+
+		bill_amount = amnt
+		if bill_amount:
+			data_dict = {
+				'MID':MERCHANT_ID,
+				'ORDER_ID':order_id,
+				'TXN_AMOUNT': bill_amount,
+				'CUST_ID':'harish@pickrr.com',
+				'INDUSTRY_TYPE_ID':'Retail',
+				'WEBSITE': settings.PAYTM_WEBSITE,
+				'CHANNEL_ID':'WEB',
+				'CALLBACK_URL':CALLBACK_URL,
+				}
+		param_dict = data_dict
+		param_dict['CHECKSUMHASH'] = Checksum.generate_checksum(data_dict, MERCHANT_KEY)
+		return render(request,"register/paytm.html",{'paytmdict':param_dict})
+	return HttpResponse("Bill Amount could not be found.")
+	
+@csrf_exempt
+def response(request):
+	if request.method == "POST":
+		prereg=Amounts.objects.get(name='pre').amount
+		reg=Amounts.objects.get(name='reg').amount
+		MERCHANT_KEY = settings.PAYTM_MERCHANT_KEY
+		data_dict = {}
+		for key in request.POST:
+			data_dict[key] = request.POST[key]
+		verify = Checksum.verify_checksum(data_dict, MERCHANT_KEY, data_dict['CHECKSUMHASH'])
+		if verify:
+			PaytmHistory.objects.create(user=request.user.pk, **data_dict)
+			order_id=request.POST['ORDERID']
+			u1=User.objects.filter(orderid1=order_id)
+			u2=User.objects.filter(orderid2=order_id)
+			u3=User.objects.filter(orderid3=order_id)
+			upre=[]
+			ureg=[]
+			up2r=[]
+			for u in u1:
+				upre.append(u.name)
+				if request.POST['STATUS']=="TXN_SUCCESS":
+					u.pay1=1
+					u.pcramt+=prereg
+					u.confirm1=4
+					u.save()
+			for u in u2:
+				ureg.append(u.name)
+				if request.POST['STATUS']=="TXN_SUCCESS":
+					u.pay2=1
+					u.pcramt+=reg
+					u.confirm1=4
+					u.save()
+			for u in u3:
+				up2r.append(u.name)
+				if request.POST['STATUS']=="TXN_SUCCESS":
+					u.pay3=1
+					u.pcramt+=reg-prereg
+					u.confirm1=4
+					u.save()
+
+			message = render_to_string('register/msg6.html', {
+											'user':request.user.name, 
+											'prereg':upre,
+											'reg':ureg,
+											'prereg2reg':up2r,
+											'college':request.user.team.college,
+											'amount':request.POST['TXNAMOUNT'],
+											'TXNID':request.POST['TXNID'],
+											'timestamp':request.POST['TXNDATE'],
+											'status':request.POST['STATUS'],
+											'orderid':order_id,
+											
+											})
+			mail_subject = 'Your account details.'
+			email = EmailMessage(mail_subject, message, to=["bosmpayments@gmail.com"])
+			email.content_subtype = "html"
+			email.send() 
+			return HttpResponseRedirect('/register/payments/')
+		else:
+			return HttpResponse("Verification Failed")
+	return HttpResponse(status=200)
+
+
+@never_cache
+def sendpay(request):
+	if request.user.is_authenticated():
+		pass
+	else:
+		return HttpResponseRedirect('/register/')
+	if request.method=='GET':
+	# data = json.loads(request.body.decode('utf-8'))
+		if request.user.grp_leader==0 and request.user.captain==0:
+			if request.user.coach:
+				return render(request,'register/error.html',{"error":"No payment required for coach"})#or render an error page
+			u=request.user
+			if u.confirm1>=3:
+				pass
+			else:
+				return render(request,'register/error.html',{"error":"You cannot pay before verification of documents"})
+			d=[]	
+			s=[]
+			s.append(u.pk)
+			s.append(u.name)
+			s.append(u.gender)
+			if u.pay2 or u.pay3:
+				s.append(2)
+			elif u.pay1:
+				s.append(1)
+			else:
+				s.append(0)
+			d.append(s)
+
+			return render(request,'register/payment.html/',{'data':d})
+		tm=request.user.team
+		ulist=User.objects.filter(team=tm,deleted=0,coach=0).order_by(Lower('name'))
+		if request.user.captain:
+			spt=Sport.objects.get(idno=request.user.captain)
+		d=[]
+		for u in ulist:
+			if u.confirm1>=3:
+				s=[]
+				s.append(u.pk)
+				s.append(u.name)
+				s.append(u.gender)
+				if u.pay2 or u.pay3:
+					s.append(2)
+				elif u.pay1:
+					s.append(1)
+				else:
+					s.append(0)
+				if request.user.captain and u.sportid[request.user.captain]>='2':
+					d.append(s)
+				elif request.user.grp_leader:
+					d.append(s)
+
+		return render(request,'register/payment.html/',{'data':d})

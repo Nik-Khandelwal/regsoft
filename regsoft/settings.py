@@ -58,7 +58,7 @@ MIDDLEWARE = [
    # 'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    #'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -197,3 +197,13 @@ IMPORT_EXPORT_USE_TRANSACTIONS = True
 #     r'^/$',   
 # )
 
+PAYTM_MERCHANT_KEY = "bKMfNxPPf_QdZppa"
+PAYTM_MERCHANT_ID = "DIY12386817555501617"
+HOST_URL = "http://127.0.0.1:8000"
+PAYTM_CALLBACK_URL = "/register/paytm/response/"
+
+if DEBUG:
+    PAYTM_MERCHANT_KEY = "bKMfNxPPf_QdZppa"
+    PAYTM_MERCHANT_ID = "DIY12386817555501617"
+    PAYTM_WEBSITE = 'WEB_STAGING'
+    HOST_URL = 'http://127.0.0.1:8000'

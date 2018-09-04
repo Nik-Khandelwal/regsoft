@@ -5,6 +5,7 @@
   {% load staticfiles %}
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="stylesheet" type="text/css" href="{% static 'firewallz/css/load-font.css' %}">
+  <script type="text/javascript" src="{% static 'firewallz/js/qrcode.min.js' %}"></script>
   <style type="text/css">
     @font-face{
       font-family:Montserrat;
@@ -13,9 +14,6 @@
     body, html, .row, .col {
       margin: 0;
       padding: 0 !important;
-    }
-    html, body {
-      background-color: #FFC000;
     }
     .one-page, .two-page {
       margin-left: 48px;
@@ -34,7 +32,7 @@
     }
     .custom-col-left, .custom-col-right, .back-face-id {
       width: 325px;
-      height: 219px;
+      height: 249px;
       overflow: hidden;
       display: inline-block;
     }
@@ -138,12 +136,29 @@
     .emergency-wrapper {
       text-align: center;
     }
+    .qrcode-wrapper {
+      width: 325px;
+      /*overflow: auto;*/
+      height: 40px;
+      text-transform: uppercase;
+      font-weight: bold;
+      font-size: 11px;
+      text-align: center;
+      position: relative;
+      bottom: 100px;
+    }
+    .qrcode-div>img {
+      width: 60px;
+      height: 60px;
+    }
+    .uid {
+      display: none;
+    }
     ul {
       list-style-image: url({% static 'firewallz/icons/arrow.svg' %});
     }
     @media print {
       body {
-        background-color: #FFC000 !important;
         -webkit-print-color-adjust: exact;
       }
       * {
@@ -164,7 +179,8 @@
         "college": '{{participant.college}}',
         "group_id": '{{participant.group_id}}',
         "group_code": '{{participant.group_code}}',
-        "pk": '{{participant.pk}}'
+        "pk": '{{participant.pk}}',
+        "uid": '{{participant.uid}}'
       }
       data.push(part);
     {% endfor %}
@@ -173,11 +189,11 @@
     var onepage = '';
     for (var i = 0; i < data.length; i+=8) {
       var pages = '';
-      for (var j = 0; j < data.length && j<(i+8); j++) {
+      for (var j = i; j < data.length && j<(i+8); j++) {
         if (j%2==0) {
-          pages+='<div class="custom-col-left"> <div class="img-banner-wrapper"> <img src="/static/firewallz/icons/bosm-logo.png" class="bosm-logo-img"> <div class="bosm-head-wrapper"> <div class="bosm-head-text">BOSM</div><div class="bosm-slogan-text">GRIT|GUTS|GLORY</div></div><div class="bosm-dates-wrapper"> <div class="bosm-dates-year">2018</div><div class="bosm-dates">19th - 23rd September</div></div></div><div class="participant-card-text">Participant Card</div><div class="photo-holder"></div><div class="firewallz-text">Firewallz&nbsp&nbsp</div><div class="card-no-text">Card No. : <span>'+data[j].group_id+'/'+data[j].group_code+'/'+data[j].pk+'</span></div><div class="name-text">Name : <span>'+data[j].name+'</span></div><div class="college-text">College : <span>'+data[j].college+'</span></div><div class="accomodation-text">Accomodation : <span></span></div></div>';
+          pages+='<div class="custom-col-left"> <div class="img-banner-wrapper"> <img src="/static/firewallz/icons/bosm-logo.png" class="bosm-logo-img"> <div class="bosm-head-wrapper"> <div class="bosm-head-text">BOSM</div><div class="bosm-slogan-text">GRIT|GUTS|GLORY</div></div><div class="bosm-dates-wrapper"> <div class="bosm-dates-year">2018</div><div class="bosm-dates">19th - 23rd September</div></div></div><div class="participant-card-text">Participant Card</div><div class="photo-holder"></div><div class="firewallz-text">Firewallz&nbsp&nbsp</div><div class="card-no-text">Card No. : <span>'+data[j].group_id+'/'+data[j].group_code+'/'+data[j].pk+'</span></div><div class="name-text">Name : <span>'+data[j].name+'</span></div><div class="college-text">College : <span>'+data[j].college+'</span></div><div class="qrcode-wrapper"><div class="uid">'+data[j].uid+'</div><div class="qrcode-div"></div></div></div>';
         } else if(j%2==1) {
-          pages+='<div class="custom-col-right"> <div class="img-banner-wrapper"> <img src="/static/firewallz/icons/bosm-logo.png" class="bosm-logo-img"> <div class="bosm-head-wrapper"> <div class="bosm-head-text">BOSM</div><div class="bosm-slogan-text">GRIT|GUTS|GLORY</div></div><div class="bosm-dates-wrapper"> <div class="bosm-dates-year">2018</div><div class="bosm-dates">19th - 23rd September</div></div></div><div class="participant-card-text">Participant Card</div><div class="photo-holder"></div><div class="firewallz-text">Firewallz&nbsp&nbsp</div><div class="card-no-text">Card No. : <span>'+data[j].group_id+'/'+data[j].group_code+'/'+data[j].pk+'</span></div><div class="name-text">Name : <span>'+data[j].name+'</span></div><div class="college-text">College : <span>'+data[j].college+'</span></div><div class="accomodation-text">Accomodation : <span></span></div></div><div class="margin-gap-div"></div>';
+          pages+='<div class="custom-col-right"> <div class="img-banner-wrapper"> <img src="/static/firewallz/icons/bosm-logo.png" class="bosm-logo-img"> <div class="bosm-head-wrapper"> <div class="bosm-head-text">BOSM</div><div class="bosm-slogan-text">GRIT|GUTS|GLORY</div></div><div class="bosm-dates-wrapper"> <div class="bosm-dates-year">2018</div><div class="bosm-dates">19th - 23rd September</div></div></div><div class="participant-card-text">Participant Card</div><div class="photo-holder"></div><div class="firewallz-text">Firewallz&nbsp&nbsp</div><div class="card-no-text">Card No. : <span>'+data[j].group_id+'/'+data[j].group_code+'/'+data[j].pk+'</span></div><div class="name-text">Name : <span>'+data[j].name+'</span></div><div class="college-text">College : <span>'+data[j].college+'</span></div><div class="qrcode-wrapper"><div class="uid">'+data[j].uid+'</div><div class="qrcode-div"></div></div></div><div class="margin-gap-div"></div>';
         }
       }
       onepage += '<div class="one-page">'+pages+'</div>';
@@ -185,7 +201,7 @@
     var twopage = '';
     for (var i = 0; i < data.length; i+=8) {
       var twopages = '';
-      for (var j = 0; j < data.length && j<(i+8); j++) {
+      for (var j = i; j < data.length && j<(i+8); j++) {
         if (j%2==0) {
           twopages+='<div class="custom-col-left"> <div class="back-face-id"> <ul class="instructions-list"> <li>This card should be carried all the time.</li><li>The card should be produced on demand to any of the FIREWALLZ member.</li><li>Please deposit the card in the FIREWALLZ booth before leaving the campus.</li></ul> <div class="emergency-wrapper"> <b>In case of any Safety or Medical Emergency, contact +91 9441569515 or +91 9983093025.</b> </div></div></div>';
         } else if(j%2==1) {
@@ -195,6 +211,11 @@
       twopage += '<div class="one-page">'+twopages+'</div>';
     }
     document.getElementsByTagName('body')[0].innerHTML = onepage+twopage;
+    for (var i = 0; i < document.getElementsByClassName('qrcode-div').length; i++) {
+      var qr = document.getElementsByClassName('qrcode-div')[i];
+      var qrcode = qr.previousSibling.innerHTML;
+      new QRCode(qr,qrcode);
+    }
     window.print();
   </script>
 </body>

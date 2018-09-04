@@ -184,7 +184,7 @@ function fetchStats() {
   Materialize.toast('Fetching Stats!', 3000);
   var csrf_token = getCookie('csrftoken');
   var ourRequest = new XMLHttpRequest();
-  ourRequest.open("POST", "/controls/view_stats/", true);
+  ourRequest.open("POST", "/firewallz/view_stats/", true);
   ourRequest.setRequestHeader("Content-type", "application/json");
   ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
   ourRequest.onload = function() {
@@ -225,7 +225,7 @@ function fetchPassedStats() {
   document.getElementById('rec_conf').innerHTML = 'Loading';
   var csrf_token = getCookie('csrftoken');
   var ourRequest = new XMLHttpRequest();
-  ourRequest.open("POST", "/controls/passed_stats/", true);
+  ourRequest.open("POST", "/firewallz/passed_stats/", true);
   ourRequest.setRequestHeader("Content-type", "application/json");
   ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
   ourRequest.onload = function() {

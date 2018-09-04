@@ -1979,7 +1979,7 @@ def docapprove(request):
 			except:
 				success=0
 			rp = Regplayer()
-			rp.name = u.name
+			rp.name = User.objects.get(pk=u.pk)
 			rp.gender = u.gender
 			rp.college = u.team.college
 			rp.city = u.team.city

@@ -363,8 +363,8 @@ body::-webkit-scrollbar-thumb, #left-table-ul::-webkit-scrollbar-thumb, #right-b
   left: 5vw;
   top: 1vh;
 }
-.ham1{position: absolute;right: 0;bottom: 11vh;}
-.ham2{position: absolute;right: 0;top: 0;}
+.ham2{position: absolute;right: 0;bottom: 11vh;}
+.ham1{position: absolute;right: 0;top: 0;}
 .stats{position: fixed;z-index: 1;width: 100vw;top: 0;left: 0;transition: 0.5s;}
 #close{;z-index: 5;display: none;cursor: pointer;}
 #stat_data{;z-index: 5;display: none;height:80vh;overflow-y: auto;}
@@ -401,3 +401,7 @@ html {
 .part_id {
   display: none;
 }
+.firewallz_part{position: fixed; top: 2vh; left: 54vw;}
+.controls_part{position: fixed; top: 2vh; left: 71vw;}
+.recnacc_part{position: fixed; top: 2vh; left: 88vw;}
+.ham1{display: none}

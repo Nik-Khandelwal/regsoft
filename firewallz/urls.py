@@ -24,6 +24,8 @@ urlpatterns = [
 
 	url(r'^unconfirm_player/$',views.unconfirm_player,name='unconfirm_player'),
 
+    url(r'^unconfirm_player_grp/$',views.unconfirm_player_grp,name='unconfirm_player_grp'),
+
 	url(r'^sportlist/$',views.sportlist,name='sportlist'),
 
     url(r'^passed_stats/$',views.passed_stats,name='passed_stats'),

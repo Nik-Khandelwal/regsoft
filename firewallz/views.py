@@ -332,8 +332,35 @@ def unconfirm_player(request):
 	if request.method=='POST':
 		data = json.loads( request.body.decode('utf-8') )
 		print(data)
+		dat = []
+		pl = Regplayer.objects.get(pk=data['data']['participant_id'])
+		pl.entered = 0
+		pl.save()
+		en = Enteredplayer.objects.get(regplayer=pl)
+		en.delete()
 		datss = []
-		gr = Group.objects.get(pk=data['data']['participant_id'])
+		b = {"name":pl.name.name,"gender":pl.gender,"college":pl.college,"city":pl.city,"mobile_no":pl.mobile_no,"email_id":pl.email_id,"sport":pl.sport,"entered":pl.entered,"unbilled_amt":pl.unbilled_amt}
+		datss.append({"pk":pl.pk,"fields":b})
+		print("unconfirm_player pusher")
+		print(datss)
+		pusher_client.trigger('firewallz_unconfirm_channel', 'firewallz_unconfirm_event', datss)
+		dat = {"success":1}
+		return HttpResponse(json.dumps(dat), content_type='application/json')
+
+def unconfirm_player_grp(request):
+	if request.user.is_authenticated():
+		if is_firewallz_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	if request.method=='POST':
+		data = json.loads( request.body.decode('utf-8') )
+		print(data)
+		datss = []
+		gr = Group.objects.get(pk=data['data']['group_id'])
 		for pl in gr.enteredplayer_set.filter(controls_passed=False):
 			rp = Regplayer.objects.get(pk=pl.regplayer.pk)
 			rp.entered = 0
@@ -341,7 +368,7 @@ def unconfirm_player(request):
 			pl.delete()
 			b = {"name":rp.name.name,"gender":rp.gender,"college":rp.college,"city":rp.city,"mobile_no":rp.mobile_no,"email_id":rp.email_id,"sport":rp.sport,"entered":rp.entered,"unbilled_amt":rp.unbilled_amt}
 			datss.append({"pk":rp.pk,"fields":b})
-		print("unconfirm_player pusher")
+		print("unconfirm_player_grp pusher")
 		print(datss)
 		pusher_client.trigger('firewallz_unconfirm_channel', 'firewallz_unconfirm_event', datss)
 		dat = {"success":1}
@@ -551,4 +578,4 @@ data = []
 for obj in Enteredplayer.objects.all():
 	data.append({"pk":obj.regplayer.pk,"name":obj.regplayer.name.name,"group_code":obj.group.group_code,"college":obj.regplayer.college,"mobile_no":obj.regplayer.mobile_no,"email_id":obj.regplayer.email_id,"sport":obj.regplayer.sport})
 context = {"mylist":data}
-return render(request,'controls/controls_stats.html',context)
+return render(request,'firewallz/firewallz_stats.html',context)

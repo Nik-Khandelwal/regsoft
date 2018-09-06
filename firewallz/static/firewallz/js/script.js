@@ -193,14 +193,15 @@ function confirmGroup() {
     if (ourRequest.readyState === 4 && ourRequest.status === 200) {
       json = JSON.parse(ourRequest.responseText);
       var groupCode = json.groupcode;
+      var grouppk = json.pk;
       console.log(groupCode);
-      showGroupCode(groupCode);
+      showGroupCode(grouppk, groupCode);
       resetTables();
       fetchParticipants();
       sendPusherUpdate(JSON.stringify(myObj));
     } else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
       Materialize.toast('There was some error connecting to the server!', 3000);
-      showGroupCode('ERROR');
+      showGroupCode(0,'ERROR');
       resetTables();
       fetchParticipants();
     }
@@ -222,8 +223,8 @@ function getCookie(name) {
   var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
   return v ? v[2] : null;
 }
-function showGroupCode(code) {
-  document.getElementById('confirm_text').innerHTML = 'GROUPCODE<br><br><b>'+code+'</b><br><br><a class="waves-effect waves-light btn z-depth-3" href="/firewallz/id_card/'+code+'/" target="_blank"><span>Print ID Cards</span></a>';
+function showGroupCode(pk, code) {
+  document.getElementById('confirm_text').innerHTML = 'GROUP NO.&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;GROUPCODE<br><br><b>'+pk+'&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+code+'</b><br><br><a class="waves-effect waves-light btn z-depth-3" href="/firewallz/id_card/'+code+'/" target="_blank"><span>Print ID Cards</span></a>';
   document.getElementById('group_confirm_btn1').style.display = 'none';
   document.getElementById('group_confirm_btn2').style.display = 'none';
   document.getElementById('group_confirm_btn3').style.display = 'inline-block';

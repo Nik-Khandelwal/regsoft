@@ -933,4 +933,4 @@ data = []
 for obj in Enteredplayer.objects.filter(recnacc_passed=True):
 	data.append({"pk":obj.regplayer.pk,"name":obj.regplayer.name.name,"group_code":obj.group.group_code,"college":obj.regplayer.college,"mobile_no":obj.regplayer.mobile_no,"email_id":obj.regplayer.email_id,"sport":obj.regplayer.sport})
 context = {"mylist":data}
-return render(request,'controls/controls_stats.html',context)
+return render(request,'recnacc/recnacc_stats.html',context)

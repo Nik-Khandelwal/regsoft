@@ -15,6 +15,7 @@ $(document).ready(function() {
       draggable: true // Choose whether you can drag to open on touch screens
     }
   );
+  fetchPassedStats();
 });
 function fetchParticipants() {
   Materialize.toast('Updating Participants List!', 4000, "toast-fetch");

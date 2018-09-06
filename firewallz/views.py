@@ -470,57 +470,57 @@ def view_stats(request):
 	return JsonResponse({"data":data})
 
 def stats_excel(request):
-if request.user.is_authenticated():
-	if is_firewallz_admin(request.user):
-		pass
+	if request.user.is_authenticated():
+		if is_firewallz_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
 	else:
-		logout(request)
 		return HttpResponseRedirect('/regsoft/')
-else:
-	return HttpResponseRedirect('/regsoft/')
-response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-response['Content-Disposition'] = 'attachment; filename=Firewallz_stats.xlsx'
-wb = openpyxl.Workbook()
-ws = wb.get_active_sheet()
-ws.title = "Firewallz Passed Stats"
+	response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+	response['Content-Disposition'] = 'attachment; filename=Firewallz_stats.xlsx'
+	wb = openpyxl.Workbook()
+	ws = wb.get_active_sheet()
+	ws.title = "Firewallz Passed Stats"
 
-row_num = 0
+	row_num = 0
 
-columns = [
-	(u"ID", 15),
-	(u"Name", 40),
-	(u"Group_code", 20),
-	(u"College",50),
-	(u"Phone", 20),
-	(u"Email", 50),
-	(u"Sport", 20),
-]
-
-for col_num in range(len(columns)):
-	c = ws.cell(row=row_num + 1, column=col_num + 1)
-	c.value = columns[col_num][0]
-	#c.style.font.bold = True
-	# set column width
-	ws.column_dimensions[get_column_letter(col_num+1)].width = columns[col_num][1]
-
-for obj in Enteredplayer.objects.all():
-	row_num += 1
-	row = [
-		obj.regplayer.pk,
-		obj.regplayer.name.name,
-		obj.group.group_code,
-		obj.regplayer.college,
-		obj.regplayer.mobile_no,
-		obj.regplayer.email_id,
-		obj.regplayer.sport,
+	columns = [
+		(u"ID", 15),
+		(u"Name", 40),
+		(u"Group_code", 20),
+		(u"College",50),
+		(u"Phone", 20),
+		(u"Email", 50),
+		(u"Sport", 20),
 	]
 
-	for col_num in range(len(row)):
-			c = ws.cell(row=row_num + 1, column=col_num + 1)
-			c.value = row[col_num]
+	for col_num in range(len(columns)):
+		c = ws.cell(row=row_num + 1, column=col_num + 1)
+		c.value = columns[col_num][0]
+		#c.style.font.bold = True
+		# set column width
+		ws.column_dimensions[get_column_letter(col_num+1)].width = columns[col_num][1]
 
-wb.save(response)
-return response
+	for obj in Enteredplayer.objects.all():
+		row_num += 1
+		row = [
+			obj.regplayer.pk,
+			obj.regplayer.name.name,
+			obj.group.group_code,
+			obj.regplayer.college,
+			obj.regplayer.mobile_no,
+			obj.regplayer.email_id,
+			obj.regplayer.sport,
+		]
+
+		for col_num in range(len(row)):
+				c = ws.cell(row=row_num + 1, column=col_num + 1)
+				c.value = row[col_num]
+
+	wb.save(response)
+	return response
 
 
 @login_required(login_url='/regsoft/')
@@ -566,16 +566,16 @@ def stats_csv(request):
 
 
 def stats_html(request):
-if request.user.is_authenticated():
-	if is_firewallz_admin(request.user):
-		pass
+	if request.user.is_authenticated():
+		if is_firewallz_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
 	else:
-		logout(request)
 		return HttpResponseRedirect('/regsoft/')
-else:
-	return HttpResponseRedirect('/regsoft/')
-data = []
-for obj in Enteredplayer.objects.all():
-	data.append({"pk":obj.regplayer.pk,"name":obj.regplayer.name.name,"group_code":obj.group.group_code,"college":obj.regplayer.college,"mobile_no":obj.regplayer.mobile_no,"email_id":obj.regplayer.email_id,"sport":obj.regplayer.sport})
-context = {"mylist":data}
-return render(request,'firewallz/firewallz_stats.html',context)
+	data = []
+	for obj in Enteredplayer.objects.all():
+		data.append({"pk":obj.regplayer.pk,"name":obj.regplayer.name.name,"group_code":obj.group.group_code,"college":obj.regplayer.college,"mobile_no":obj.regplayer.mobile_no,"email_id":obj.regplayer.email_id,"sport":obj.regplayer.sport})
+	context = {"mylist":data}
+	return render(request,'firewallz/firewallz_stats.html',context)

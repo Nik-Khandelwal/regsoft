@@ -61,20 +61,7 @@ $('.coll-1').sideNav({
       draggable: true // Choose whether you can drag to open on touch screens
     }
   );
-// timedCheck();
-/*
-$(window).resize(function() {
-  // This will execute whenever the window is resized
-  if($(window).width()<700){
-	$(".sel-text").innerHTML="";
-	$(".sel-text").innerHTML="";
-	}	
-  else{
-	$(".sel-text").innerHTML="Select All";
-	$(".sel-text").innerHTML="Deselect All";
-  }
-});
-*/
+fetchPassedStats();
 }
 var indiv;
 function add_this_group(parent,resist){

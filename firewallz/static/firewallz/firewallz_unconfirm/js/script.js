@@ -16,7 +16,7 @@ $(document).ready(function() {
 });
 function open_details(data){
   document.getElementById("det").style.height="100%";
-  group_id = data.children[3].innerHTML;
+  group_id = data.children[4].innerHTML;
   document.getElementById("uncnfrm_grp").innerHTML='<div class="collapsible-body custom-collapsible-body blue lighten-5"> <span class="unconfirm-name center" style="flex-basis: 45%;">Name</span> <span class="unconfirm-coll-name center" style="flex-basis: 45%;">College</span> <span class="unconfirm-id-col center">ID</span> <i style="flex-basis: 10%;" class="material-icons">account_circle</i> </div>';
   Materialize.toast('Loading, Please Wait', 4000);
   var csrf_token = getCookie('csrftoken');
@@ -296,8 +296,9 @@ function pusherGetGroups() {
   ourRequest.send(send_json);
 }
 function delete_group(option) {
+  close_details();
   Materialize.toast('Unconfirming Group Please Wait!', 4000);
-  var id = parseInt(option.parentElement.getElementsByTagName('span')[4].innerHTML);
+  var id = parseInt(option.parentElement.getElementsByTagName('span')[0].innerHTML);
   var csrf_token = getCookie('csrftoken');
   var ourRequest = new XMLHttpRequest();
   var url = "/firewallz/unconfirm_player_grp/";

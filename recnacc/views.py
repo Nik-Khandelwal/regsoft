@@ -780,83 +780,83 @@ def add_note(request):
 
 
 def stats_excel(request):
-if request.user.is_authenticated():
-	if is_recnacc_admin(request.user):
-		pass
+	if request.user.is_authenticated():
+		if is_recnacc_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
 	else:
-		logout(request)
 		return HttpResponseRedirect('/regsoft/')
-else:
-	return HttpResponseRedirect('/regsoft/')
-response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-response['Content-Disposition'] = 'attachment; filename=Recnacc_stats.xlsx'
-wb = openpyxl.Workbook()
-ws = wb.get_active_sheet()
-ws.title = "Recnacc Passed Stats"
+	response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+	response['Content-Disposition'] = 'attachment; filename=Recnacc_stats.xlsx'
+	wb = openpyxl.Workbook()
+	ws = wb.get_active_sheet()
+	ws.title = "Recnacc Passed Stats"
 
-row_num = 0
+	row_num = 0
 
-columns = [
-	(u"ID", 15),
-	(u"Hostel", 10),
-	(u"Room", 20),
-	(u"Name",50),
-	(u"College", 50),
-	(u"Mobile_no", 50),
-]
+	columns = [
+		(u"ID", 15),
+		(u"Hostel", 10),
+		(u"Room", 20),
+		(u"Name",50),
+		(u"College", 50),
+		(u"Mobile_no", 50),
+	]
 
-for col_num in range(len(columns)):
-	c = ws.cell(row=row_num + 1, column=col_num + 1)
-	c.value = columns[col_num][0]
-	#c.style.font.bold = True
-	# set column width
-	ws.column_dimensions[get_column_letter(col_num+1)].width = columns[col_num][1]
+	for col_num in range(len(columns)):
+		c = ws.cell(row=row_num + 1, column=col_num + 1)
+		c.value = columns[col_num][0]
+		#c.style.font.bold = True
+		# set column width
+		ws.column_dimensions[get_column_letter(col_num+1)].width = columns[col_num][1]
 
-for ac in Acco_name.objects.all():
-		for pl in Enteredplayer.objects.all():
-			row_num += 1
-			try:
-				pt = pl.accorecnacc
-				if pt.accomodation == ac.common_room:
-					row = [
-						pl.regplayer.pk,
-						ac.name,
-						"common_room",
-						pl.regplayer.name.name,
-						pl.regplayer.college,
-						pl.regplayer.mobile_no,
-						]
-				elif pt.accomodation == ac.tt_room:
-					row = [
-						pl.regplayer.pk,
-						ac.name,
-						"tt_room",
-						pl.regplayer.name.name,
-						pl.regplayer.college,
-						pl.regplayer.mobile_no,
-						]
-				elif pt.accomodation == ac.s_room:
-					row = [
-						pl.regplayer.pk,
-						ac.name,
-						pt.singleroom.name,
-						pl.regplayer.name.name,
-						pl.regplayer.college,
-						pl.regplayer.mobile_no,
-						]
-				else:
-					pass
+	for ac in Acco_name.objects.all():
+			for pl in Enteredplayer.objects.all():
+				row_num += 1
+				try:
+					pt = pl.accorecnacc
+					if pt.accomodation == ac.common_room:
+						row = [
+							pl.regplayer.pk,
+							ac.name,
+							"common_room",
+							pl.regplayer.name.name,
+							pl.regplayer.college,
+							pl.regplayer.mobile_no,
+							]
+					elif pt.accomodation == ac.tt_room:
+						row = [
+							pl.regplayer.pk,
+							ac.name,
+							"tt_room",
+							pl.regplayer.name.name,
+							pl.regplayer.college,
+							pl.regplayer.mobile_no,
+							]
+					elif pt.accomodation == ac.s_room:
+						row = [
+							pl.regplayer.pk,
+							ac.name,
+							pt.singleroom.name,
+							pl.regplayer.name.name,
+							pl.regplayer.college,
+							pl.regplayer.mobile_no,
+							]
+					else:
+						pass
 
-	for col_num in range(len(row)):
-			c = ws.cell(row=row_num + 1, column=col_num + 1)
-			c.value = row[col_num]
+		for col_num in range(len(row)):
+				c = ws.cell(row=row_num + 1, column=col_num + 1)
+				c.value = row[col_num]
 
-wb.save(response)
-return response
+	wb.save(response)
+	return response
 
 
 @login_required(login_url='/regsoft/')
-@user_passes_test(is_firewallz_admin, login_url='/regsoft/')
+@user_passes_test(is_recnacc_admin, login_url='/regsoft/')
 def stats_csv(request):
 	if request.user.is_authenticated():
 		if is_recnacc_admin(request.user):
@@ -921,16 +921,16 @@ def stats_csv(request):
 
 
 def stats_html(request):
-if request.user.is_authenticated():
-	if is_recnacc_admin(request.user):
-		pass
+	if request.user.is_authenticated():
+		if is_recnacc_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
 	else:
-		logout(request)
 		return HttpResponseRedirect('/regsoft/')
-else:
-	return HttpResponseRedirect('/regsoft/')
-data = []
-for obj in Enteredplayer.objects.filter(recnacc_passed=True):
-	data.append({"pk":obj.regplayer.pk,"name":obj.regplayer.name.name,"group_code":obj.group.group_code,"college":obj.regplayer.college,"mobile_no":obj.regplayer.mobile_no,"email_id":obj.regplayer.email_id,"sport":obj.regplayer.sport})
-context = {"mylist":data}
-return render(request,'recnacc/recnacc_stats.html',context)
+	data = []
+	for obj in Enteredplayer.objects.filter(recnacc_passed=True):
+		data.append({"pk":obj.regplayer.pk,"name":obj.regplayer.name.name,"group_code":obj.group.group_code,"college":obj.regplayer.college,"mobile_no":obj.regplayer.mobile_no,"email_id":obj.regplayer.email_id,"sport":obj.regplayer.sport})
+	context = {"mylist":data}
+	return render(request,'recnacc/recnacc_stats.html',context)

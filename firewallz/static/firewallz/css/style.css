@@ -148,7 +148,10 @@
   display: block;
   width: 100% !important;
 }
-.no_of_part{position: fixed; top: 1vh; right: 1vh;}
+.no_of_part{position: fixed; top: 10vh; right: 0.1vh;}
+.firewallz_part{position: fixed; top: 2vh; left: 52vw;}
+.controls_part{position: fixed; top: 2vh; left: 69vw;}
+.recnacc_part{position: fixed; top: 2vh; left: 86vw;}
 .ham1{position: absolute;right: 0;bottom: 11vh;}
 .stats{position: fixed;z-index: 1;width: 100vw;top: 0;left: 0;transition: 0.5s;}
 #close{;z-index: 5;display: none;cursor: pointer;}
@@ -174,4 +177,6 @@
 }
 html {
   background-color: rgba(104, 168, 224, 0.3);
+  width: 100vw;
 }
+.ham1{display: none}

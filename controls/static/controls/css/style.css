@@ -83,3 +83,7 @@ html{background-color: rgba(104, 168, 224, 0.3);}
   font-size: 3vh;
   vertical-align: middle;
 }
+.firewallz_part{position: fixed; top: 2vh; left: 54.5vw;}
+.controls_part{position: fixed; top: 2vh; left: 71.5vw;}
+.recnacc_part{position: fixed; top: 2vh; left: 88.5vw;}
+.ham1{display: none}

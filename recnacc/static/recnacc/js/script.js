@@ -846,6 +846,9 @@ function fetchPassedStats() {
       document.getElementById('fire_conf').innerHTML = ourData.fire_conf;
       document.getElementById('cont_conf').innerHTML = ourData.cont_conf;
       document.getElementById('rec_conf').innerHTML = ourData.rec_conf;
+      document.getElementById('firewallz_passed_stats_text').innerHTML = ourData.fire_conf;
+      document.getElementById('controls_passed_stats_text').innerHTML = ourData.cont_conf;
+      document.getElementById('recnacc_passed_stats_text').innerHTML = ourData.rec_conf;
     } else {
       Materialize.toast('Server Error!', 4000, "toast-fetch_error");  
     }
@@ -923,11 +926,13 @@ var channel = pusher.subscribe('my-channel');
 channel.bind('my-event', function(data) {
   console.log(data);
   poppulate_left(data);
+  fetchPassedStats();
 });
 var channel2 = pusher.subscribe('my-channel2');
 channel2.bind('my-event2', function(data) {
   console.log(data);
   firewallzUpdates(data);
+  fetchPassedStats();
 });
 // RecnReAcc Channel to RecnAcc Channel
 var recnreacc_channel = pusher.subscribe('recnreacc_channel');
@@ -935,12 +940,36 @@ recnreacc_channel.bind('recnreacc_event', function(data) {
   poppulate_left(data);
   pusher_fetchBhawanStats();
   pusher_fetchAvailabilityStats();
+  fetchPassedStats();
 });
 // RecnAcc Occupancy Channel
 var recnacc_occupancy_channel = pusher.subscribe('recnacc_occupancy_channel');
 recnacc_occupancy_channel.bind('recnacc_occupancy_event', function(data) {
   pusher_fetchBhawanStats();
   pusher_fetchAvailabilityStats();
+});
+
+// Below Fetch Passed Stats Update
+
+// Below Channel for Data from Controls Unconfirm Socket
+var controls_unconfirm_channel = pusher.subscribe('controls_unconfirm_channel');
+controls_unconfirm_channel.bind('controls_unconfirm_event', function(data) {
+  fetchPassedStats();
+});
+// Firewallz Unconfirm Channel
+var firewallz_unconfirm_channel = pusher.subscribe('firewallz_unconfirm_channel');
+firewallz_unconfirm_channel.bind('firewallz_unconfirm_event', function(data) {
+  fetchPassedStats();
+});
+// RecnAcc Channel to RecnReAcc Channel
+var recnacc_channel = pusher.subscribe('recnacc_channel');
+recnacc_channel.bind('recnacc_event', function(data) {
+  fetchPassedStats();
+});
+// RecnDeAcc Channel to RecnDeallocated Channel
+var recndeacc_channel = pusher.subscribe('recndeacc_channel');
+recndeacc_channel.bind('recndeacc_event', function(data) {
+  fetchPassedStats();
 });
 
 // Pusher Special Functions

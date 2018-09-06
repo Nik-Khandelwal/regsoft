@@ -426,7 +426,7 @@ def view_stats(request):
 	else:
 		return HttpResponseRedirect('/regsoft/')
 	data =[]
-	for tm in Team.objects.filter(activate=0).order_by(Lower('college')):
+	for tm in Team.objects.filter(activate=1).order_by(Lower('college')):
 		dat = []
 		da = []
 		for pl in Regplayer.objects.filter(college = tm.college):

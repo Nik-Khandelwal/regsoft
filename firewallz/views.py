@@ -161,7 +161,7 @@ def confirm_group(request):
 			Player = Regplayer.objects.get(pk=dt['pk'])
 			print(Player.name.name)
 			Player.entered = True
-			# Player.unbilled_amt = 1100-int(rp.name.pcramt)
+			Player.unbilled_amt = 1100-int(rp.name.pcramt)
 			Player.name.grp_leader = dt['groupleader']
 			Player.save()
 			pl = Enteredplayer()
@@ -171,7 +171,7 @@ def confirm_group(request):
 			if dt['groupleader'] == 1:
 				grp.group_leader = int(dt['pk'])
 				grp.save()
-		data = {"groupcode":grp.group_code}
+		data = {"groupcode":grp.group_code,"pk":grp.pk}
 		return HttpResponse(json.dumps(data), content_type='application/json')
 
 
@@ -332,16 +332,15 @@ def unconfirm_player(request):
 	if request.method=='POST':
 		data = json.loads( request.body.decode('utf-8') )
 		print(data)
-		dat = []
-		pl = Regplayer.objects.get(pk=data['data']['participant_id'])
-		pl.entered = 0
-		pl.save()
-		en = Enteredplayer.objects.get(regplayer=pl)
-		en.delete()
-
 		datss = []
-		b = {"name":pl.name.name,"gender":pl.gender,"college":pl.college,"city":pl.city,"mobile_no":pl.mobile_no,"email_id":pl.email_id,"sport":pl.sport,"entered":pl.entered,"unbilled_amt":pl.unbilled_amt}
-		datss.append({"pk":pl.pk,"fields":b})
+		gr = Group.objects.get(pk=data['data']['participant_id'])
+		for pl in gr.enteredplayer_set.filter(controls_passed=False):
+			rp = Regplayer.objects.get(pk=pl.regplayer.pk)
+			rp.entered = 0
+			rp.save()
+			pl.delete()
+			b = {"name":rp.name.name,"gender":rp.gender,"college":rp.college,"city":rp.city,"mobile_no":rp.mobile_no,"email_id":rp.email_id,"sport":rp.sport,"entered":rp.entered,"unbilled_amt":rp.unbilled_amt}
+			datss.append({"pk":rp.pk,"fields":b})
 		print("unconfirm_player pusher")
 		print(datss)
 		pusher_client.trigger('firewallz_unconfirm_channel', 'firewallz_unconfirm_event', datss)
@@ -442,3 +441,114 @@ def view_stats(request):
 			dat.append(da)
 			data.append(dat)
 	return JsonResponse({"data":data})
+
+def stats_excel(request):
+if request.user.is_authenticated():
+	if is_firewallz_admin(request.user):
+		pass
+	else:
+		logout(request)
+		return HttpResponseRedirect('/regsoft/')
+else:
+	return HttpResponseRedirect('/regsoft/')
+response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+response['Content-Disposition'] = 'attachment; filename=Firewallz_stats.xlsx'
+wb = openpyxl.Workbook()
+ws = wb.get_active_sheet()
+ws.title = "Firewallz Passed Stats"
+
+row_num = 0
+
+columns = [
+	(u"ID", 15),
+	(u"Name", 40),
+	(u"Group_code", 20),
+	(u"College",50),
+	(u"Phone", 20),
+	(u"Email", 50),
+	(u"Sport", 20),
+]
+
+for col_num in range(len(columns)):
+	c = ws.cell(row=row_num + 1, column=col_num + 1)
+	c.value = columns[col_num][0]
+	#c.style.font.bold = True
+	# set column width
+	ws.column_dimensions[get_column_letter(col_num+1)].width = columns[col_num][1]
+
+for obj in Enteredplayer.objects.all():
+	row_num += 1
+	row = [
+		obj.regplayer.pk,
+		obj.regplayer.name.name,
+		obj.group.group_code,
+		obj.regplayer.college,
+		obj.regplayer.mobile_no,
+		obj.regplayer.email_id,
+		obj.regplayer.sport,
+	]
+
+	for col_num in range(len(row)):
+			c = ws.cell(row=row_num + 1, column=col_num + 1)
+			c.value = row[col_num]
+
+wb.save(response)
+return response
+
+
+@login_required(login_url='/regsoft/')
+@user_passes_test(is_firewallz_admin, login_url='/regsoft/')
+def stats_csv(request):
+	if request.user.is_authenticated():
+		if is_firewallz_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	
+	response = HttpResponse(content_type='text/csv')
+	#decide the file name
+	response['Content-Disposition'] = 'attachment; filename="Firewallz_stats.csv"'
+
+	writer = csv.writer(response, csv.excel)
+	response.write(u'\ufeff'.encode('utf8'))
+
+	writer.writerow([
+		smart_str(u"ID"),
+		smart_str(u"Name"),
+		smart_str(u"Group_Code"),
+		smart_str(u"College"),
+		smart_str(u"Phone"),
+		smart_str(u"Email"),
+		smart_str(u"Sport"),
+	])
+
+	for obj in Enteredplayer.objects.all():
+		writer.writerow([
+			smart_str(obj.regplayer.pk),
+			smart_str(obj.regplayer.name.name),
+			smart_str(obj.group.group_code),
+			smart_str(obj.regplayer.college),
+			smart_str(obj.regplayer.mobile_no),
+			smart_str(obj.regplayer.email_id),
+			smart_str(obj.regplayer.sport),
+		])
+	return response
+
+
+def stats_html(request):
+if request.user.is_authenticated():
+	if is_firewallz_admin(request.user):
+		pass
+	else:
+		logout(request)
+		return HttpResponseRedirect('/regsoft/')
+else:
+	return HttpResponseRedirect('/regsoft/')
+data = []
+for obj in Enteredplayer.objects.all():
+	data.append({"pk":obj.regplayer.pk,"name":obj.regplayer.name.name,"group_code":obj.group.group_code,"college":obj.regplayer.college,"mobile_no":obj.regplayer.mobile_no,"email_id":obj.regplayer.email_id,"sport":obj.regplayer.sport})
+context = {"mylist":data}
+return render(request,'controls/controls_stats.html',context)

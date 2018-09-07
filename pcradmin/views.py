@@ -1932,6 +1932,8 @@ def docurl(request):
 				s.append(d)
 				s.append("")
 				s.append(0)
+				s.append("")
+				s.append(0)
 				d2.append(s)
 			if u.confirm1==2:
 				s.append(u.pk)
@@ -1940,8 +1942,18 @@ def docurl(request):
 					if u.sportid[sp.idno]>='2':
 						d.append(sp.sport)
 				s.append(d)
-				s.append(u.docs.url)
-				s.append(1)
+				if bool(u.docs):
+					s.append(u.docs.url)
+					s.append(1)
+				else:
+					s.append("")
+					s.append(0)
+				if bool(u.docs2):
+					s.append(u.docs2.url)
+					s.append(1)
+				else:
+					s.append("")
+					s.append(0)
 				d2.append(s)
 			if u.confirm1>=3:
 				s.append(u.pk)
@@ -1950,10 +1962,18 @@ def docurl(request):
 					if u.sportid[sp.idno]>='2':
 						d.append(sp.sport)
 				s.append(d)
-				if u.docs:
+				if bool(u.docs):
 					s.append(u.docs.url)
+					#s.append(1)
 				else:
 					s.append("")
+					#s.append(0)
+				if bool(u.docs2):
+					s.append(u.docs2.url)
+					#s.append(1)
+				else:
+					s.append("")
+					#s.append(0)
 				d3.append(s)
 		return JsonResponse({'unconfirmed':d2,'confirmed':d3})
 

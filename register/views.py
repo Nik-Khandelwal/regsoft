@@ -555,42 +555,66 @@ def playerview(request):
 			if request.user.confirm1>=3:
 				#return HttpResponseRedirect('/register/payments/')
 				return render(request,'register/error.html',{'error':'Your documents have been verified. You cannot upload documents.'})
-			request.user.docs=request.FILES['filename']
-			extension = os.path.splitext(str(request.FILES['filename']))[-1]
-			print((request.FILES['filename']).size)
-			if (extension == '.pdf' or extension=='.jpg'or extension=='.png') :
-				if (request.FILES['filename']).size< 5242880:
-					try:
-						request.user.save()
-					except:
-						pass
-					else:
-						request.user.confirm1=2#documents uploaded
-						request.user.save()
-						request.user.confirm1=2#documents uploaded
-						request.user.save()
-
-						update_data3 = [9,2]
-						pusher_client.trigger('dashboard-update', 'dashboard-update-event', update_data3)
-						# rp = Regplayer()
-						# rp.name = request.user.name
-						# rp.gender = request.user.gender
-						# rp.college = request.user.team.college
-						# rp.city = request.user.team.city
-						# rp.mobile_no = request.user.phone
-						# rp.email_id = request.user.email
-						# rp.sport=''
-						# for s in Sport.objects.all():
-						# 	if request.user.sportid[s.idno]=='2':
-						# 		rp.sport=rp.sport+s.sport+','
-						# try:
-						# 	rp.save()
-						# except:
-						# 	pass
-				else:
-					return render(request,'register/error.html',{'error':'File size has exceeded limit'})
+			error=""
+			#print(request.FILES['filename'])
+			try:
+				tdocs1=request.FILES['filename']
+			except:
+				pass
 			else:
-				return render(request,'register/error.html',{'error':'Incorrect file extension'})
+				extension = os.path.splitext(str(request.FILES['filename']))[-1]
+				#print((request.FILES['filename']).size)
+				if (extension == '.pdf' or extension=='.jpg'or extension=='.png') :
+					if (request.FILES['filename']).size< 5242880:
+						request.user.docs=request.FILES['filename']
+						try:
+							request.user.save()
+						except:
+							pass
+						else:
+							request.user.confirm1=2#documents uploaded
+							request.user.save()
+
+							update_data3 = [9,2]
+							pusher_client.trigger('dashboard-update', 'dashboard-update-event', update_data3)
+							
+					else:
+						error=error+str(request.FILES['filename'])+': File size has exceeded limit \n'
+						#return render(request,'register/error.html',{'error':'File size has exceeded limit'})
+				else:
+					error=error+str(request.FILES['filename'])+': Incorrect file extension \n'
+					#return render(request,'register/error.html',{'error':'Incorrect file extension'})
+			try:
+				tdocs2=request.FILES['filename2']
+			except:
+				pass
+			else:
+				extension = os.path.splitext(str(request.FILES['filename2']))[-1]
+				#print((request.FILES['filename']).size)
+				if (extension == '.pdf' or extension=='.jpg'or extension=='.png') :
+					if (request.FILES['filename2']).size< 5242880:
+						request.user.docs2=request.FILES['filename2']
+						try:
+							request.user.save()
+						except:
+							pass
+						else:
+							request.user.confirm1=2#documents uploaded
+							request.user.save()
+
+							update_data3 = [9,2]
+							pusher_client.trigger('dashboard-update', 'dashboard-update-event', update_data3)
+							
+					else:
+						error=error+str(request.FILES['filename2'])+': File size has exceeded limit \n'
+						#return render(request,'register/error.html',{'error':'File size has exceeded limit'})
+				else:
+					error=error+str(request.FILES['filename2'])+': Incorrect file extension \n'
+			if error=="":
+				pass
+			else:
+				return render(request,'register/error.html',{'error':error})
+
 
 			return HttpResponseRedirect('/register/register/player/')
 		else:
@@ -609,7 +633,6 @@ def playerview(request):
 					return render(request,'register/error2.html',{"error":"you have not been confirmed yet"})
 	else:
 		return HttpResponseRedirect('/register/')
-
 # def leadersport(request):
 # 	sp=Sport.objects.all()
 # 	s=[]
@@ -1085,3 +1108,107 @@ def sendpay(request):
 					d.append(s)
 
 		return render(request,'register/payment.html/',{'data':d})
+
+	
+@never_cache
+def docsview(request):
+	if request.user.is_authenticated:
+		if is_not_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/register/')
+	if request.method=='POST':
+		up=User.objects.get(pk=request.POST['pk'])
+		#up=User.objects.get(pk=2108)
+		if up.confirm1<1:
+			return render(request,'register/error.html',{'error':'Not confirmed. You cannot upload documents.'})
+		if up.confirm1>=3:
+			#return HttpResponseRedirect('/register/payments/')
+			return render(request,'register/error.html',{'error':'Documents have been verified. You cannot upload documents.'})
+		error=""
+		try:
+			tdoc1=request.FILES['filename']
+		except:
+			pass
+		else:
+
+			extension = os.path.splitext(str(request.FILES['filename']))[-1]
+			#print((request.FILES['filename']).size)
+			if (extension == '.pdf' or extension=='.jpg'or extension=='.png') :
+				if (request.FILES['filename']).size< 5242880:
+					up.docs=request.FILES['filename']
+					try:
+						up.save()
+					except:
+						pass
+					else:
+						up.confirm1=2#documents uploaded
+						up.save()
+
+						update_data3 = [9,2]
+						pusher_client.trigger('dashboard-update', 'dashboard-update-event', update_data3)
+						
+				else:
+					error=error+str(request.FILES['filename'])+': File size has exceeded limit \n'
+					#return render(request,'register/error.html',{'error':'File size has exceeded limit'})
+			else:
+				error=error+str(request.FILES['filename'])+': Incorrect file extension \n'
+				#return render(request,'register/error.html',{'error':'Incorrect file extension'})
+		try:
+			tdoc2=request.FILES['filename2']
+		except:
+			pass
+		else:
+			extension = os.path.splitext(str(request.FILES['filename2']))[-1]
+			#print((request.FILES['filename']).size)
+			if (extension == '.pdf' or extension=='.jpg'or extension=='.png') :
+				if (request.FILES['filename2']).size< 5242880:
+					up.docs2=request.FILES['filename2']
+					try:
+						up.save()
+					except:
+						pass
+					else:
+						up.confirm1=2#documents uploaded
+						up.save()
+
+						update_data3 = [9,2]
+						pusher_client.trigger('dashboard-update', 'dashboard-update-event', update_data3)
+						
+				else:
+					error=error+str(request.FILES['filename2'])+': File size has exceeded limit \n'
+					#return render(request,'register/error.html',{'error':'File size has exceeded limit'})
+			else:
+				error=error+str(request.FILES['filename2'])+': Incorrect file extension \n'
+		if error=="":
+			pass
+		else:
+			return render(request,'register/error.html',{'error':error})
+
+		return HttpResponseRedirect('/register/docs/')
+	else:
+		ulist=User.objects.filter(team=request.user.team, deleted=0).order_by(Lower('name'))	
+		d=[]
+		for i in ulist:
+			if i.confirm1>=1:
+				s=[]
+				s.append(i.pk)
+				s.append(i.name)
+				
+				if bool(i.docs):
+					s.append(1)
+				else:
+					s.append(0)
+				
+				if  bool(i.docs2):
+					s.append(1)
+				else:
+					s.append(0)
+				if request.user.grp_leader:
+					d.append(s)
+				elif request.user.captain and i.sportid[request.user.captain]>='2':
+					d.append(s)
+				else:
+					pass
+		return render(request,'register/docspage.html',{'data':d})

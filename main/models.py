@@ -46,6 +46,7 @@ class CustomUser(AbstractUser):#extending user model
 	confirm1=models.IntegerField(default=0)#1 for confirmed 2 for documents 4 all done
 	sport=models.ManyToManyField(Sport)
 	docs=fields.FileField(upload_to="documents/",null=True,blank=True)
+	docs2=fields.FileField(upload_to="documents/",null=True,blank=True)
 	deleted=models.IntegerField(default=0)
 	pcramt=models.IntegerField(default=0)
 	

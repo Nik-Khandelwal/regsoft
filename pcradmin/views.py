@@ -1991,6 +1991,10 @@ def docapprove(request):
 	if request.method=='POST':
 		data=json.loads(request.body.decode('utf-8'))
 		success=1
+		tm=User.objects.get(pk=data['id_arr'][0]).team
+		glmail=User.objects.get(team=tm,grp_leader=1,deleted=0).email
+		nmlist=[]
+		maillist=[]
 		for ppk in data['id_arr']:
 			u=User.objects.get(pk=ppk)
 			u.confirm1=3
@@ -1998,23 +2002,48 @@ def docapprove(request):
 				u.save()
 			except:
 				success=0
-			rp = Regplayer()
-			rp.name = User.objects.get(pk = u.pk)
-			rp.name = User.objects.get(pk=u.pk)
-			rp.gender = u.gender
-			rp.college = u.team.college
-			rp.city = u.team.city
-			rp.mobile_no = u.phone
-			rp.email_id = u.email
-			rp.uid = str(uuid.uuid3(uuid.NAMESPACE_DNS, str(u.name)+str(u.pk)))
-			rp.sport=''
-			for s in Sport.objects.all():
-				if u.sportid[s.idno]=='2':
-					rp.sport=rp.sport+s.sport+','
-			try:
-				rp.save()
-			except:
-				success=0
+			else:
+				nmlist.append(u.name)
+				mailist.append(u.email)
+				rp = Regplayer()
+				rp.name = User.objects.get(pk=u.pk)
+				rp.gender = u.gender
+				rp.college = u.team.college
+				rp.city = u.team.city
+				rp.mobile_no = u.phone
+				rp.email_id = u.email
+				rp.uid = str(uuid.uuid3(uuid.NAMESPACE_DNS, str(u.name)+str(u.pk)))
+				rp.sport=''
+				for s in Sport.objects.all():
+					if u.sportid[s.idno]=='2':
+						rp.sport=rp.sport+s.sport+','
+				try:
+					rp.save()
+				except:
+					success=0
+		message = render_to_string('pcradmin/msg7.html', {
+														'college':tm.college, 
+														
+														})
+		mail_subject = 'Documents Verified for BOSM \'18'
+		email = EmailMessage(mail_subject, message, to=maillist)
+		email.content_subtype = "html"
+		try:
+			email.send()
+		except:
+			pass
+		message = render_to_string('pcradmin/msg8.html', {
+														'nmlist':nmlist,
+														'college':tm.college, 
+														
+														})
+		mail_subject = 'Documents Verified for BOSM \'18'
+		email = EmailMessage(mail_subject, message, to=[glmail])
+		email.content_subtype = "html"
+		try:
+			email.send()
+		except:
+			pass
 		return JsonResponse({'success':success})
 
 

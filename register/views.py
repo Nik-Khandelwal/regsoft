@@ -564,7 +564,7 @@ def playerview(request):
 			else:
 				extension = os.path.splitext(str(request.FILES['filename']))[-1]
 				#print((request.FILES['filename']).size)
-				if (extension == '.pdf' or extension=='.jpg'or extension=='.png') :
+				if (extension == '.pdf' or extension=='.jpg' or extension=='.jpeg' or extension=='.png') :
 					if (request.FILES['filename']).size< 5242880:
 						request.user.docs=request.FILES['filename']
 						try:
@@ -591,7 +591,7 @@ def playerview(request):
 			else:
 				extension = os.path.splitext(str(request.FILES['filename2']))[-1]
 				#print((request.FILES['filename']).size)
-				if (extension == '.pdf' or extension=='.jpg'or extension=='.png') :
+				if (extension == '.pdf' or extension=='.jpg' or extension=='.jpeg' or extension=='.png') :
 					if (request.FILES['filename2']).size< 5242880:
 						request.user.docs2=request.FILES['filename2']
 						try:
@@ -1135,7 +1135,7 @@ def docsview(request):
 
 			extension = os.path.splitext(str(request.FILES['filename']))[-1]
 			#print((request.FILES['filename']).size)
-			if (extension == '.pdf' or extension=='.jpg'or extension=='.png') :
+			if (extension == '.pdf' or extension=='.jpg' or extension=='.jpeg' or extension=='.png') :
 				if (request.FILES['filename']).size< 5242880:
 					up.docs=request.FILES['filename']
 					try:
@@ -1162,7 +1162,7 @@ def docsview(request):
 		else:
 			extension = os.path.splitext(str(request.FILES['filename2']))[-1]
 			#print((request.FILES['filename']).size)
-			if (extension == '.pdf' or extension=='.jpg'or extension=='.png') :
+			if (extension == '.pdf' or extension=='.jpg' or extension=='.jpeg' or extension=='.png') :
 				if (request.FILES['filename2']).size< 5242880:
 					up.docs2=request.FILES['filename2']
 					try:

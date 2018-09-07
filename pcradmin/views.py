@@ -173,7 +173,7 @@ def index(request):
 			return HttpResponseRedirect('/regsoft/')
 	else:
 		return HttpResponseRedirect('/regsoft/')
-	return render(request,'pcradmin/pcrhome.html')
+	return render(request,'pcradmin/pcrhome1.html')
 
 
 @login_required(login_url='/regsoft/')

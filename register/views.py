@@ -171,8 +171,8 @@ def index(request):
 			return HttpResponseRedirect('/register/register/player/')
 		elif request.user.grp_leader==0:
 			s=Sport.objects.get(pk=request.user.captain)
-			return render(request,'register/index.html/',{'sport_name':s.sport,'sport_id':s.pk,'sport_gender':s.gender})
-		return render(request,'register/player.html/')
+			return render(request,'register/index1.html/',{'sport_name':s.sport,'sport_id':s.pk,'sport_gender':s.gender})
+		return render(request,'register/player1.html/')
 	else:
 		
 		return render(request,'register/loginfinal.html/')
@@ -625,7 +625,7 @@ def playerview(request):
 					if request.user.sportid[sp.idno]>='2':
 						sprt.append(sp.sport)
 				cl=request.user.team.college+", "+request.user.team.city+", "+request.user.team.state
-				return render(request,'register/playerview.html',{'status':request.user.confirm1-1,'username':request.user.username,'name':request.user.name,'college':cl,'sport':sprt,'phone':request.user.phone,'email':request.user.email,'gender':request.user.gender})
+				return render(request,'register/playerview1.html',{'status':request.user.confirm1-1,'username':request.user.username,'name':request.user.name,'college':cl,'sport':sprt,'phone':request.user.phone,'email':request.user.email,'gender':request.user.gender})
 			else:
 				if request.user.grp_leader or request.user.captain:
 					return render(request,'register/error.html',{"error":"you have not been confirmed yet"})

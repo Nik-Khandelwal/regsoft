@@ -2004,7 +2004,7 @@ def docapprove(request):
 				success=0
 			else:
 				nmlist.append(u.name)
-				mailist.append(u.email)
+				maillist.append(u.email)
 				rp = Regplayer()
 				rp.name = User.objects.get(pk=u.pk)
 				rp.gender = u.gender

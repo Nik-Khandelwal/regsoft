@@ -1,0 +1,18 @@
+{% autoescape off %}
+Congratulations, your documents have been verified! One final step remains before your participation is confirmed for BOSM, 2018.<br><br>
+
+The payment portal on your account has now been activated. You can pay the pre-registration amount in one of the following ways:
+<ul><li><b>Rs. 600</b> - The remaining Rs. 500 will be levied once you reach campus.</li></ul><br>
+<div style="width: 100%; text-align: center; font-weight: bold;">OR</div><br>
+<ul><li><b>Rs. 1100</b> - The entire amount can be paid online which will reduce your hassles after coming to BITS.</li></ul><br>
+
+Being the Group Leader, you can pay the amount for any participant from your contingent. Please find attached the list of participants whose documents have been approved. The payment should be made for the aforementioned participants only.<br><br>
+
+<ul>
+{% for nm in nmlist %}
+<li><b>{{nm}}</b></li><br>
+{% endfor %}
+</ul><br><br>
+ 
+Kindly note that your participation won't be approved unless you pay a minimum of <b>Rs. 600.</b>
+{% endautoescape %}

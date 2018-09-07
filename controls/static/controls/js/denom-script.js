@@ -33,8 +33,9 @@ function fetchDenoms() {
   ourRequest.onreadystatechange = function() {
     if (ourRequest.readyState === 4 && ourRequest.status === 200) {
       var recieve_json = JSON.parse(ourRequest.responseText);
-      var denoms_array = recieve_json.denoms;
+      var denoms_array = recieve_json;
       document.getElementById('denoms-form').innerHTML = '<div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-50" id="denom-50" value="'+denoms_array[0]+'"><label for="denom-50">50\'s</label></div></div><div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-100" id="denom-100" value="'+denoms_array[1]+'"><label for="denom-100">100\'s</label></div></div><div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-200" id="denom-200" value="'+denoms_array[2]+'"><label for="denom-200">200\'s</label></div></div><div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-500" id="denom-500" value="'+denoms_array[3]+'"><label for="denom-500">500\'s</label></div></div><div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-2000" id="denom-2000" value="'+denoms_array[4]+'"><label for="denom-2000">2000\'s</label></div></div>';
+      Materialize.updateTextFields();
     }
     else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
       Materialize.toast('Error while Updating!', 3000);
@@ -66,7 +67,7 @@ function fetchPassedStats() {
   }
   ourRequest.send('');
 }
-function updateDenoms(denom50, denom100, denom200, denom500, denom2000) {
+function sendUpdateDenoms(denom50, denom100, denom200, denom500, denom2000) {
   Materialize.toast('Updating!', 2000);
   var csrf_token = getCookie('csrftoken');
   send_obj={
@@ -89,7 +90,7 @@ function updateDenoms(denom50, denom100, denom200, denom500, denom2000) {
   if (ourRequest.status >= 200 && ourRequest.status < 400) {
     Materialize.toast('Updated!', 2000);
   }
-  else    
+  else
     Materialize.toast('Server Error!', 3000, "toast-fetch_error");  
   }
   ourRequest.onerror = function() {
@@ -108,11 +109,12 @@ function fetchUpdateDenoms() {
   ourRequest.onreadystatechange = function() {
     if (ourRequest.readyState === 4 && ourRequest.status === 200) {
       var recieve_json = JSON.parse(ourRequest.responseText);
-      var denoms_array = recieve_json.denoms;
+      var denoms_array = recieve_json;
       document.getElementById('denoms-form').innerHTML = '<div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-50" id="denom-50" value="'+denoms_array[0]+'"><label for="denom-50">50\'s</label></div></div><div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-100" id="denom-100" value="'+denoms_array[1]+'"><label for="denom-100">100\'s</label></div></div><div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-200" id="denom-200" value="'+denoms_array[2]+'"><label for="denom-200">200\'s</label></div></div><div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-500" id="denom-500" value="'+denoms_array[3]+'"><label for="denom-500">500\'s</label></div></div><div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-2000" id="denom-2000" value="'+denoms_array[4]+'"><label for="denom-2000">2000\'s</label></div></div>';
+      Materialize.updateTextFields();
     }
     else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
-      // Do nothing
+      Materialize.toast('Error while Updating!', 3000);
     }
   }
   ourRequest.send('');

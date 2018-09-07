@@ -195,7 +195,6 @@ function confirmGroup() {
       json = JSON.parse(ourRequest.responseText);
       var groupCode = json.groupcode;
       var grouppk = json.pk;
-      console.log(groupCode);
       showGroupCode(grouppk, groupCode);
       resetTables();
       fetchParticipants();
@@ -238,7 +237,7 @@ function addParticipant() {
   $('#add_participant_modal').modal('open');
 }
 function resetAddForm() {
-  document.getElementById('add_participant_modal').innerHTML = '<div class="row"> <form class="col s12" id="add_participant_form"> <div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">person</i> <input type="text" name="Indi_Captain_Name" id="indi_captain_name_field" class="validate" required="required"> <label for="indi_captain_name_field" data-error="Enter Name of Participant">Name of Participant</label> </div></div><div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">business</i> <select id="college_field" name="College"> <option value="" disabled="disabled" selected="selected"></option> </select> <label for="college_field" data-error="Select College Name">College</label> </div></div><div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">email</i> <input type="email" name="Indi_Captain_Email" id="indi_captain_email_field" class="validate" required="required"> <label for="indi_captain_email_field" data-error="Enter a Valid Email">E-Mail of Participant</label> </div></div><div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">local_phone</i> <input type="text" name="Indi_Captain_Phone" id="indi_captain_phone_field" class="validate" required="required" maxlength="10" data-length="10"> <label for="indi_captain_phone_field" data-error="Enter Phone Number">Participant Phone Number</label> </div></div><div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">directions_run</i> <select id="participant_sport_select" multiple="multiple"> <option value="" disabled="disabled" selected="selected"></option> </select> <label for="indi_sport_field" data-error="Enter Sport of Participant">Sport</label> </div></div><div class="row"> <div class="col s4 center"> Gender </div><div class="col s4 center"> <input type="radio" name="indi_gender" id="indi_male" value="Male"> <label for="indi_male">Male</label> </div><div class="col s4 center"> <input type="radio" name="indi_gender" id="indi_female" value="Female"> <label for="indi_female">Female</label> </div></div><div class="row" id="submit-indi-btn"> <div class="col s12 center"> <a class="waves-effect waves-light btn btn-large" onclick="addParticipantSubmit()"><i class="material-icons right">send</i>Submit</a> </div></div></form> </div>';
+  document.getElementById('add_participant_modal').innerHTML = '<div class="row"> <form class="col s12" id="add_participant_form"> <div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">person</i> <input type="text" name="Indi_Captain_Name" id="indi_captain_name_field" class="validate" required="required"> <label for="indi_captain_name_field" data-error="Enter Name of Participant">Name of Participant</label> </div></div><div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">business</i> <select id="college_field" name="College"> <option value="" disabled="disabled" selected="selected"></option> </select> <label for="college_field" data-error="Select College Name">College</label> </div></div><div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">email</i> <input type="email" name="Indi_Captain_Email" id="indi_captain_email_field" class="validate" required="required"> <label for="indi_captain_email_field" data-error="Enter a Valid Email">E-Mail of Participant</label> </div></div><div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">local_phone</i> <input type="text" name="Indi_Captain_Phone" id="indi_captain_phone_field" class="validate" required="required" maxlength="10" data-length="10"> <label for="indi_captain_phone_field" data-error="Enter Phone Number">Participant Phone Number</label> </div></div><div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">directions_run</i> <select id="participant_sport_select" name="participant_sport_select" multiple="multiple"> <option value="" disabled="disabled" selected="selected"></option> </select> <label for="indi_sport_field" data-error="Enter Sport of Participant">Sport</label> </div></div><div class="row"> <div class="col s4 center"> Gender </div><div class="col s4 center"> <input type="radio" name="indi_gender" id="indi_male" value="Male"> <label for="indi_male">Male</label> </div><div class="col s4 center"> <input type="radio" name="indi_gender" id="indi_female" value="Female"> <label for="indi_female">Female</label> </div></div><div class="row" id="submit-indi-btn"> <div class="col s12 center"> <a class="waves-effect waves-light btn btn-large" onclick="addParticipantSubmit()"><i class="material-icons right">send</i>Submit</a> </div></div></form> </div>';
   $('select').material_select();
   Materialize.updateTextFields();
   $("input#indi_captain_phone_field").characterCounter();
@@ -285,8 +284,8 @@ function fetchCollegeList() {
       collegeList = college.data;
       Materialize.toast('Updated College List!', 3000);
       document.getElementById('college_field').innerHTML = '<option value="" disabled="disabled" selected="selected"></option>';
-      for (var i = 0; i < college.length; i++) {
-        document.getElementById('college_field').innerHTML += '<option value="'+college[i].pk+'">'+college[i].college+'</option>';
+      for (var i = 0; i < collegeList.length; i++) {
+        document.getElementById('college_field').innerHTML += '<option value="'+collegeList[i].pk+'">'+collegeList[i].college+'</option>';
       }
       $('select').material_select();
       Materialize.updateTextFields();
@@ -317,7 +316,6 @@ function addParticipantSubmit() {
   if (formData[i] != undefined) {
     participant_gender = formData[i].value;
   }
-
   if (participant_gender == '') {
     Materialize.toast('Please Enter Participants Gender!', 3000);
   } else if (!validateEmail(participant_email) || !validatePhoneNumber(participant_phone)) {
@@ -592,7 +590,6 @@ function fetchStats() {
   ourRequest.onload = function() {
     if (ourRequest.status >= 200 && ourRequest.status < 400) {
       ourData = JSON.parse(ourRequest.responseText);
-      console.log(ourData);
       var data = ourData.data;
       for (var i = 0; i < data.length; i++) {
         var participants = '';
@@ -712,10 +709,10 @@ function pusher_updateLeftTable(data) {
   var lefttmp = document.getElementById('left-temp');
   for (var i = 0; i < data.length; i++) {
     document.getElementById("left-body").insertBefore(lefttmp.content.cloneNode(true), document.getElementById("left-body").childNodes[0]);
-    document.getElementsByClassName('left-table-name')[i].innerHTML = data[i].fields.name;
-    document.getElementsByClassName('left-table-college')[i].innerHTML = data[i].fields.college;
-    document.getElementsByClassName('left-table-sport')[i].innerHTML = data[i].fields.sport;
-    document.getElementsByClassName('left-table-gender')[i].innerHTML = data[i].fields.gender;
-    document.getElementsByClassName('left-table-id')[i].innerHTML = data[i].pk;
+    document.getElementsByClassName('left-table-name')[0].innerHTML = data[i].fields.name;
+    document.getElementsByClassName('left-table-college')[0].innerHTML = data[i].fields.college;
+    document.getElementsByClassName('left-table-sport')[0].innerHTML = data[i].fields.sport;
+    document.getElementsByClassName('left-table-gender')[0].innerHTML = data[i].fields.gender;
+    document.getElementsByClassName('left-table-id')[0].innerHTML = data[i].pk;
   }
 }

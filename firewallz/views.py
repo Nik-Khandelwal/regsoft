@@ -161,7 +161,7 @@ def confirm_group(request):
 			Player = Regplayer.objects.get(pk=dt['pk'])
 			print(Player.name.name)
 			Player.entered = True
-			Player.unbilled_amt = 1100-int(rp.name.pcramt)
+			Player.unbilled_amt = 1100-int(Player.name.pcramt)
 			Player.name.grp_leader = dt['groupleader']
 			Player.save()
 			pl = Enteredplayer()

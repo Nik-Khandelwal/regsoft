@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from main.models import Group,Regplayer,Enteredplayer,Billcontrols,Accorecnacc,Accomodation,Controlsystem,Singleroom,Acco_name
+from main.models import Note, Group,Regplayer,Enteredplayer,Billcontrols,Accorecnacc,Accomodation,Controlsystem,Singleroom,Acco_name
 from django.contrib.auth import logout
 from django.contrib.auth.models import User
 import json
@@ -813,43 +813,45 @@ def stats_excel(request):
 		ws.column_dimensions[get_column_letter(col_num+1)].width = columns[col_num][1]
 
 	for ac in Acco_name.objects.all():
-			for pl in Enteredplayer.objects.all():
-				row_num += 1
-				try:
-					pt = pl.accorecnacc
-					if pt.accomodation == ac.common_room:
-						row = [
-							pl.regplayer.pk,
-							ac.name,
-							"common_room",
-							pl.regplayer.name.name,
-							pl.regplayer.college,
-							pl.regplayer.mobile_no,
-							]
-					elif pt.accomodation == ac.tt_room:
-						row = [
-							pl.regplayer.pk,
-							ac.name,
-							"tt_room",
-							pl.regplayer.name.name,
-							pl.regplayer.college,
-							pl.regplayer.mobile_no,
-							]
-					elif pt.accomodation == ac.s_room:
-						row = [
-							pl.regplayer.pk,
-							ac.name,
-							pt.singleroom.name,
-							pl.regplayer.name.name,
-							pl.regplayer.college,
-							pl.regplayer.mobile_no,
-							]
-					else:
-						pass
+		for pl in Enteredplayer.objects.all():
+			row_num += 1
+			try:
+				pt = pl.accorecnacc
+				if pt.accomodation == ac.common_room:
+					row = [
+						pl.regplayer.pk,
+						ac.name,
+						"common_room",
+						pl.regplayer.name.name,
+						pl.regplayer.college,
+						pl.regplayer.mobile_no,
+						]
+				elif pt.accomodation == ac.tt_room:
+					row = [
+						pl.regplayer.pk,
+						ac.name,
+						"tt_room",
+						pl.regplayer.name.name,
+						pl.regplayer.college,
+						pl.regplayer.mobile_no,
+						]
+				elif pt.accomodation == ac.s_room:
+					row = [
+						pl.regplayer.pk,
+						ac.name,
+						pt.singleroom.name,
+						pl.regplayer.name.name,
+						pl.regplayer.college,
+						pl.regplayer.mobile_no,
+						]
+				else:
+					pass
+			except:
+				pass
 
-		for col_num in range(len(row)):
-				c = ws.cell(row=row_num + 1, column=col_num + 1)
-				c.value = row[col_num]
+	for col_num in range(len(row)):
+		c = ws.cell(row=row_num + 1, column=col_num + 1)
+		c.value = row[col_num]
 
 	wb.save(response)
 	return response
@@ -884,38 +886,40 @@ def stats_csv(request):
 	])
 
 	for ac in Acco_name.objects.all():
-	for pl in Enteredplayer.objects.all():
-		row_num += 1
-		try:
-			pt = pl.accorecnacc
-			if pt.accomodation == ac.common_room:
-				writer.writerow([
-					smart_str(pl.regplayer.pk),
-					smart_str(ac.name),
-					smart_str("common_room"),
-					smart_str(pl.regplayer.name.name),
-					smart_str(pl.regplayer.college),
-					smart_str(pl.regplayer.mobile_no),
-					])
-			elif pt.accomodation == ac.tt_room:
-				writer.writerow([
-					smart_str(pl.regplayer.pk),
-					smart_str(ac.name),
-					smart_str("tt_room"),
-					smart_str(pl.regplayer.name.name),
-					smart_str(pl.regplayer.college),
-					smart_str(pl.regplayer.mobile_no),
-					])
-			elif pt.accomodation == ac.s_room:
-				writer.writerow([
-					smart_str(pl.regplayer.pk),
-					smart_str(ac.name),
-					smart_str(pt.singleroom.name),
-					smart_str(pl.regplayer.name.name),
-					smart_str(pl.regplayer.college),
-					smart_str(pl.regplayer.mobile_no),
-					])
-			else:
+		for pl in Enteredplayer.objects.all():
+			row_num += 1
+			try:
+				pt = pl.accorecnacc
+				if pt.accomodation == ac.common_room:
+					writer.writerow([
+						smart_str(pl.regplayer.pk),
+						smart_str(ac.name),
+						smart_str("common_room"),
+						smart_str(pl.regplayer.name.name),
+						smart_str(pl.regplayer.college),
+						smart_str(pl.regplayer.mobile_no),
+						])
+				elif pt.accomodation == ac.tt_room:
+					writer.writerow([
+						smart_str(pl.regplayer.pk),
+						smart_str(ac.name),
+						smart_str("tt_room"),
+						smart_str(pl.regplayer.name.name),
+						smart_str(pl.regplayer.college),
+						smart_str(pl.regplayer.mobile_no),
+						])
+				elif pt.accomodation == ac.s_room:
+					writer.writerow([
+						smart_str(pl.regplayer.pk),
+						smart_str(ac.name),
+						smart_str(pt.singleroom.name),
+						smart_str(pl.regplayer.name.name),
+						smart_str(pl.regplayer.college),
+						smart_str(pl.regplayer.mobile_no),
+						])
+				else:
+					pass
+			except:
 				pass
 	return response
 

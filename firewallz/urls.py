@@ -35,5 +35,13 @@ urlpatterns = [
     url(r'^collegelist/$',views.collegelist,name='collegelist'),
 
     url(r'^view_stats/$',views.view_stats,name='view_stats'),
+    
+    url(r'^stats_excel/$',views.stats_excel,name='stats_excel'),
+
+    url(r'^stats_csv/$',views.stats_csv,name='stats_csv'),
+
+ #   url(r'^render_to_pdf/$',views.render_to_pdf,name='render_to_pdf'),
+
+    url(r'^stats_html/$',views.stats_html,name='stats_html'),
 
 ]

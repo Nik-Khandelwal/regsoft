@@ -459,7 +459,6 @@ function updateSelectBhawans(data, participants) {
       }
       document.getElementById("rooms-collection").innerHTML += '<li> <div class="collapsible-header center"> <span class="shift-btn-right"><a onclick="selectBhawanRooms('+data.fields[i].id+')" class="secondary-content waves-effect waves-light btn"><i class="material-icons right">done</i>Confirm</a></span> </div></ul> </li>';
       var no_select= document.getElementsByClassName("select_rooms");
-      console.log(data);
       for(var l = 0; l < no_select.length; l++) {
         each_select=no_select[l];
         var bhawan_id = document.getElementsByClassName('select_rooms')[l].getAttribute('bhawan-id');
@@ -505,8 +504,6 @@ function selectBhawan(index,option) {
     };
     
     var send_json = JSON.stringify(send_obj);
-    console.log(send_obj);
-    // alert(send_obj);
     // Obtain 
     ourRequest.onreadystatechange = function () {
       if (ourRequest.readyState === 4 && ourRequest.status === 200) {
@@ -565,7 +562,6 @@ function selectBhawanRooms(index) {
         }
       };
       var send_json = JSON.stringify(send_obj);
-      // console.log(send_obj);
       // Obtain 
       ourRequest.onreadystatechange = function () {
         if (ourRequest.readyState === 4 && ourRequest.status === 200) {
@@ -606,7 +602,6 @@ function createSingleGroup(num) {
       }
     };
     var send_json = JSON.stringify(send_obj);
-    // console.log(send_obj);
     // Obtain 
     ourRequest.onreadystatechange = function () {
       if (ourRequest.readyState === 4 && ourRequest.status === 200) {
@@ -773,7 +768,6 @@ function fetchStats() {
       ourData = JSON.parse(ourRequest.responseText);
       var data = ourData.data;
       document.getElementById('stats_ul').innerHTML = '';
-      console.log(data);
       for (var i = 0; i < data.length; i++) {
         var hostel_name = data[i].hostel_name;
         var list = data[i].list;
@@ -786,7 +780,6 @@ function fetchStats() {
         var single_room = '';
         var single_room_present = false;
         var single_room_list = '';
-        console.log(list);
         for (var j = 0; j < list.length; j++) {
           if (list[j].type=="common_room") {
             common_room_present=true;
@@ -915,13 +908,11 @@ var pusher = new Pusher('9b825df805e0b694cccc', {
 
 var channel = pusher.subscribe('my-channel');
 channel.bind('my-event', function(data) {
-  console.log(data);
   poppulate_left(data);
   fetchPassedStats();
 });
 var channel2 = pusher.subscribe('my-channel2');
 channel2.bind('my-event2', function(data) {
-  console.log(data);
   firewallzUpdates(data);
   fetchPassedStats();
 });
@@ -975,10 +966,6 @@ function pusher_fetchBhawanStats() {
     if (ourRequest.status >= 200 && ourRequest.status < 400) { // request sent and recieved
       ourData = JSON.parse(ourRequest.responseText);
       roomsData = ourData;
-    }
-    else
-    {
-      console.log("wassup");
     }
   } // server sent an error after connection
   ourRequest.onerror = function () { // error connecting to URL

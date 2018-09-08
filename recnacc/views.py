@@ -674,7 +674,7 @@ def edit_occupency(request):
 			data = json.loads( request.body.decode('utf-8') )
 			print(data)
 			ac = Accomodation.objects.get(pk=data['data']['pk'])
-			diff = data['data']['strength'] - ac.strength
+			diff = int(data['data']['strength']) - ac.strength
 			ac.strength = data['data']['strength']
 			ac.vacancy += diff
 			ac.save()
@@ -733,7 +733,7 @@ def fine_page(request):
 			for ar in ac.accorecnacc_set.all():
 				for pl in Enteredplayer.objects.all():
 					if pl.accorecnacc == ar:
-						pl.regplayer.unbilled_amt += (data['data']['amt']/cnt)
+						pl.regplayer.unbilled_amt += (int(data['data']['amt'])/cnt)
 						pl.save()
 			return HttpResponse(json.dumps({"success":"1"}), content_type='application/json')	
 		else:
@@ -758,7 +758,9 @@ def view_notes(request):
 		if is_recnacc_admin(request.user):
 			data = []
 			for n in Note.objects.all():
-				data.append({"time":n.time,"text":n.text})
+				print(n.time)
+				print(n.text)
+				data.append({"time":n.time.strftime('%d-%m-%Y %H:%M:%S UTC'),"text":n.text})
 			return HttpResponse(json.dumps({"data":data}), content_type='application/json')	
 		else:
 			logout(request)

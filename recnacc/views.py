@@ -162,12 +162,14 @@ def acco_details(request):
 			b=[]
 			for ho in Accomodation.objects.all():
 				if 'Single' not in ho.name:
-					b.append({"id":ho.pk, "name":ho.name, "no":ho.vacancy})
+					if ho.vacancy > 0:
+						b.append({"id":ho.pk, "name":ho.name, "no":ho.vacancy})
 				else:
 					c=[]
 					for sr in ho.singleroom.all():
 						c.append({"name":sr.name})
-					b.append({"id":ho.pk, "name":ho.name, "no":ho.vacancy,"rooms":c})
+					if ho.vacancy > 0:
+						b.append({"id":ho.pk, "name":ho.name, "no":ho.vacancy,"rooms":c})
 			data = {"fields":b}
 			return HttpResponse(json.dumps(data), content_type='application/json')
 		else:

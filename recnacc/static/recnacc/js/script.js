@@ -459,34 +459,28 @@ function updateSelectBhawans(data, participants) {
       }
       document.getElementById("rooms-collection").innerHTML += '<li> <div class="collapsible-header center"> <span class="shift-btn-right"><a onclick="selectBhawanRooms('+data.fields[i].id+')" class="secondary-content waves-effect waves-light btn"><i class="material-icons right">done</i>Confirm</a></span> </div></ul> </li>';
       var no_select= document.getElementsByClassName("select_rooms");
+      console.log(data);
       for(var l = 0; l < no_select.length; l++) {
         each_select=no_select[l];
-        for(var w = 0; w < data.fields[i].rooms.length; w++) {
-          var bhawan_id = document.getElementsByClassName('select_rooms')[l].getAttribute('bhawan-id');
-          // var bhawan_id = 21;
-          // console.log(bhawan_id);
-          // console.log(++count);
-          if (bhawan_id==data.fields[i].id) {
+        var bhawan_id = document.getElementsByClassName('select_rooms')[l].getAttribute('bhawan-id');
+        if (bhawan_id==data.fields[i].id) {
+          for(var w = 0; w < data.fields[i].rooms.length; w++) {
             each_select.innerHTML+="<option value="+data.fields[i].rooms[w].name+">"+data.fields[i].rooms[w].name+"</option>";
-            // console.log(each_select.innerHTML);
           }
         }
       }
-      
     } else {
-      document.getElementById("rooms-collection").innerHTML += '<li class="collection-item avatar search-class"> <i class="material-icons circle">hotel</i> <span class="title">'+data.fields[i].name+'</span> <p class="acco-avail">'+data.fields[i].no+'</p><a onclick="selectBhawan('+data.fields[i].id+')" class="secondary-content"><i class="material-icons">done</i></a> </li>';
+      document.getElementById("rooms-collection").innerHTML += '<li class="collection-item avatar search-class"> <i class="material-icons circle">hotel</i> <span class="title">'+data.fields[i].name+'</span> <p class="acco-avail">'+data.fields[i].no+'</p><a onclick="selectBhawan('+data.fields[i].id+',this)" class="secondary-content"><i class="material-icons">done</i></a> </li>';
     }
   }
-  $(document).ready(function(){
-    $('.collapsible').collapsible();
-    $('select').material_select();
-  });
+  $('.collapsible').collapsible();
+  $('select').material_select();
 }
 
-function selectBhawan(index) {
+function selectBhawan(index,option) {
   
   // Write Code to send selected bhawan to backend.
-  var acco_available = document.getElementsByClassName('acco-avail')[index-1].innerHTML;
+  var acco_available = parseInt(option.previousElementSibling.innerHTML);
   if (acco_available < id_arr.length) {
     Materialize.toast('Insufficient Space in this Hostel!', 4000);
   } else {
@@ -779,6 +773,7 @@ function fetchStats() {
       ourData = JSON.parse(ourRequest.responseText);
       var data = ourData.data;
       document.getElementById('stats_ul').innerHTML = '';
+      console.log(data);
       for (var i = 0; i < data.length; i++) {
         var hostel_name = data[i].hostel_name;
         var list = data[i].list;
@@ -791,10 +786,11 @@ function fetchStats() {
         var single_room = '';
         var single_room_present = false;
         var single_room_list = '';
+        console.log(list);
         for (var j = 0; j < list.length; j++) {
           if (list[j].type=="common_room") {
             common_room_present=true;
-            single_room_list+='<a class="collection-item">'+list[j].name+'<span class="right">'+list[j].mobile+'</span></a>';
+            common_room_list+='<a class="collection-item">'+list[j].name+'<span class="right">'+list[j].mobile+'</span></a>';
           } else if(list[j].type=="tt_room") {
             tt_room_present=true;
             tt_room_list+='<a class="collection-item">'+list[j].name+'<span class="right">'+list[j].mobile+'</span></a>';

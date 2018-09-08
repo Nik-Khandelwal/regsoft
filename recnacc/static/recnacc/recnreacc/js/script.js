@@ -67,7 +67,9 @@ function loaded() {
     }
   });
   $('select').material_select();
-  $('.modal').modal();
+  $('.modal').modal({
+    dismissible: false
+  });
   $('.coll-1').sideNav({
       menuWidth: 200, // Default is 300
       edge: 'right', // Choose the horizontal origin

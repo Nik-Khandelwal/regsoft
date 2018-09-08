@@ -44,7 +44,9 @@ function loaded(){
 $(".group").each(function(index) {
   // console.log( index + ": " + $( this ).text() );
 });
-$('.modal').modal();
+$('.modal').modal({
+	dismissible: false
+});
 $("#tools-info_outline-tapped").tapTarget('open');
 retrieve_left();
 $('.coll-1').sideNav({

@@ -13,51 +13,36 @@
     <script type="text/javascript" src="{% static 'firewallz/js/script.js' %}"></script>
   </head>
   <body>
-  <ul id="slide-out" class="side-nav">
-    <li>
+    <ul id="slide-out" class="side-nav">
+      <li>
+      <div class="user-view">
+        <div class="background" style="background-color: #3794e6"></div>
+        <a><span class="white-text name">FIREWALLZ PANEL</span></a>
+      </div></li>
+      <li><a class="waves-effect">Confirm groups</a></li>
+      <li><a class="waves-effect" href="/firewallz/unconfirm_grp/">Unconfirm groups</a></li>
+      <li><a class="waves-effect" onclick="stats()">Stats</a></li>
+      <li><div class="divider"></div></li>
+      <li><a class="waves-effect bottom" href="/regsoft/regsoft_logout/">Logout</a></li>
+    </ul>
+    <ul id="slide-out-1" class="side-nav">
+      <li>
         <div class="user-view">
-      <div class="background" style="background-color: #3794e6">
-        
-      </div>
-      
-      <a><span class="white-text name">FIREWALLZ PANEL</span></a>
-      
-    </div></li>
-    <li><a class="waves-effect">Confirm groups</a></li>
-    <li><a class="waves-effect" href="/firewallz/unconfirm_grp/">Unconfirm groups</a></li>
-    <li><a class="waves-effect" onclick="stats()">Stats</a></li>
-            <li><div class="divider"></div></li>
-    <li><a class="waves-effect bottom" href="/regsoft/regsoft_logout/">Logout</a></li>
-    
-    
-   
-  </ul>
-        <ul id="slide-out-1" class="side-nav">
-            <li>
-                <div class="user-view">
-              <div class="background" style="background-color: #3794e6">
-
-              </div>
-
-              <a><span class="white-text name">Present Stats</span></a>
-
-            </div></li>
-            <li><a class="waves-effect">Firewallz-Confirmed:</a></li>
-            <li><a id="fire_conf">1111</a></li>
-            <li><div class="divider"></div></li>
-            <li><a class="waves-effect" onclick="stats()">Controls Passed</a></li>
-            <li><a id="cont_conf">1111</a></li>
-            <li><div class="divider"></div></li>
-            <li><a class="waves-effect">RecNAcc Confirmed</a></li>
-            <li><a id="rec_conf">1111</a></li>
-                    
-          
-    
-    
-   
-  </ul>
-        <div class="ham"><a href="#" data-activates="slide-out" class="button-collapse coll-0"><i class="material-icons medium blue-text">menu</i></a></div>
-        <div class="ham1"><a href="#" data-activates="slide-out-1" class="button-collapse coll-1" onclick="fetchPassedStats();"><i class="material-icons medium blue-text">insert_chart</i></a></div>
+          <div class="background" style="background-color: #3794e6"></div>
+          <a><span class="white-text name">Present Stats</span></a>
+        </div>
+      </li>
+      <li><a class="waves-effect">Firewallz-Confirmed:</a></li>
+      <li><a id="fire_conf">1111</a></li>
+      <li><div class="divider"></div></li>
+      <li><a class="waves-effect" onclick="stats()">Controls Passed</a></li>
+      <li><a id="cont_conf">1111</a></li>
+      <li><div class="divider"></div></li>
+      <li><a class="waves-effect">RecNAcc Confirmed</a></li>
+      <li><a id="rec_conf">1111</a></li>
+    </ul>
+    <div class="ham"><a href="#" data-activates="slide-out" class="button-collapse coll-0"><i class="material-icons medium blue-text">menu</i></a></div>
+    <div class="ham1"><a href="#" data-activates="slide-out-1" class="button-collapse coll-1" onclick="fetchPassedStats();"><i class="material-icons medium blue-text">insert_chart</i></a></div>
     <a class="btn-floating btn btn-large waves-effect waves-light no_of_part tooltipped" data-position="left" data-delay="50" data-tooltip="No. of selected participants" id="no_of_part_text">0</a> 
     <a class="btn waves-effect waves-light firewallz_part tooltipped red darken-4" data-position="bottom" data-delay="50" data-tooltip="Firewallz Passed" id="firewallz_part_text"><i class="material-icons left">confirmation_number</i><span id="firewallz_passed_stats_text">0</span></a>
     <a class="btn waves-effect waves-light controls_part tooltipped green darken-4" data-position="bottom" data-delay="50" data-tooltip="Controls Passed" id="controls_part_text"><i class="material-icons left">monetization_on</i><span id="controls_passed_stats_text">0</span></a>
@@ -147,8 +132,8 @@
         <a class="waves-effect waves-light btn z-depth-5" onclick="closeConfirm()" style="display: none;" id="group_confirm_btn3"><span>Done</span></a>
       </div>
     </div>
-    <div class="modal" id="add_participant_modal">
-      <div class="row">
+    <div class="modal modal-fixed-footer" id="add_participant_modal">
+      <div class="modal-content row">
         <form class="col s12" id="add_participant_form">
           <div class="row">
             <div class="input-field col s12"> <i class="material-icons prefix">person</i> <input type="text" name="Indi_Captain_Name" id="indi_captain_name_field" class="validate" required="required"> <label for="indi_captain_name_field" data-error="Enter Name of Participant">Name of Participant</label> </div>
@@ -187,41 +172,40 @@
           </div>
         </form>
       </div>
+      <div class="modal-footer">
+        <a class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+      </div>
     </div>
     <div id="contacts" class="modal modal-fixed-footer">
-    <div class="modal-content">
-      <h4>Emergency Contacts</h4>
-      <p>Emergency Contacts Here</p>
+      <div class="modal-content">
+        <h4>Emergency Contacts</h4>
+        <p>Emergency Contacts Here</p>
+      </div>
+      <div class="modal-footer">
+        <a class="modal-action modal-close waves-effect waves-green btn-flat ">Close</a>
+      </div>
     </div>
-    <div class="modal-footer">
-      <a class="modal-action modal-close waves-effect waves-green btn-flat ">Close</a>
-    </div>
-  </div>
-  <div id="stat" class="stats teal center-align">
-            <a class="close white-text" id="close" onclick="close_stats()"><i class="material-icons medium">close</i></a>
-           
-            <a class="btn csv-btn" id="csv" href="/firewallz/stats_csv/" target="_blank">Download CSV</a>
-            <a class="btn csv-btn" id="pdf" href="/firewallz/stats_excel/" target="_blank">Download Excel</a>
-            <a class="btn csv-btn" id="excel" href="/firewallz/stats_html/" target="_blank">Download PDF</a>
-            
-            <div class="container" id="stat_data">
-            <ul class="collapsible popout center-align" data-collapsible="accordion" id="stats_ul">
-                <li>
-                  <div class="collapsible-header"><i class="material-icons">account_balance</i>College_1</div>
-                  <div class="collapsible-body center white">
-                      <div class="collection ">
-                            <a class="collection-item">Alvin<span id="phn_no" class="right">9929823984</span></a>
-                            <a class="collection-item">Alvin<span id="phn_no" class="right">9929823984</span></a>
-                            <a class="collection-item">Alvin<span id="phn_no" class="right">9929823984</span></a>
-                            <a class="collection-item">Alvin<span id="phn_no" class="right">9929823984</span></a>
-                            
-                          </div>
-                    </div>
-                </li>
-                
-              </ul>
+    <div id="stat" class="stats teal center-align">
+      <a class="close white-text" id="close" onclick="close_stats()"><i class="material-icons medium">close</i></a>
+      <a class="btn csv-btn" id="csv" href="/firewallz/stats_csv/" target="_blank">Download CSV</a>
+      <a class="btn csv-btn" id="pdf" href="/firewallz/stats_excel/" target="_blank">Download Excel</a>
+      <a class="btn csv-btn" id="excel" href="/firewallz/stats_html/" target="_blank">Download PDF</a>
+      <div class="container" id="stat_data">
+        <ul class="collapsible popout center-align" data-collapsible="accordion" id="stats_ul">
+          <li>
+            <div class="collapsible-header"><i class="material-icons">account_balance</i>College_1</div>
+            <div class="collapsible-body center white">
+              <div class="collection ">
+                <a class="collection-item">Alvin<span id="phn_no" class="right">9929823984</span></a>
+                <a class="collection-item">Alvin<span id="phn_no" class="right">9929823984</span></a>
+                <a class="collection-item">Alvin<span id="phn_no" class="right">9929823984</span></a>
+                <a class="collection-item">Alvin<span id="phn_no" class="right">9929823984</span></a>
+              </div>
             </div>
-        </div>
+          </li>
+        </ul>
+      </div>
+    </div>
     <footer class="page-footer blue darken-2">
       <div class="container">
         <div class="row">

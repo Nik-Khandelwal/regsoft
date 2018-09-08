@@ -68,7 +68,9 @@ function loaded() {
     $('.collapsible').collapsible();
   });
   $('select').material_select();
-  $('.modal').modal();
+  $('.modal').modal({
+    dismissible: false
+  });
   $('.coll-1').sideNav({
       menuWidth: 200, // Default is 300
       edge: 'right', // Choose the horizontal origin
@@ -799,14 +801,14 @@ function fetchStats() {
           tt_room = '<li class="bhawan-rooms-wrapper"> <div class="collapsible-header"><i class="material-icons">airline_seat_individual_suite</i>TT Room</div><div class="collapsible-body center white parts-wrapper"> <div class="collection" style="width: 100%;"> '+tt_room_list+' </div></div></li>';
         }
         if (single_room_present) {
-          single_room = '<li class="bhawan-rooms-wrapper"> <div class="collapsible-header"><i class="material-icons">airline_seat_individual_suite</i>Common Room</div><div class="collapsible-body center white parts-wrapper"> <div class="collection" style="width: 100%;"> '+single_room_list+' </div></div></li>';
+          single_room = '<li class="bhawan-rooms-wrapper"> <div class="collapsible-header"><i class="material-icons">airline_seat_individual_suite</i>Single Rooms</div><div class="collapsible-body center white parts-wrapper"> <div class="collection" style="width: 100%;"> '+single_room_list+' </div></div></li>';
         }
         document.getElementById('stats_ul').innerHTML += '<li class="bhawan-name-wrapper"> <div class="collapsible-header"><i class="material-icons">airline_seat_individual_suite</i>'+hostel_name+'</div><div class="collapsible-body center white bhawan-wrapper"> <ul class="collapsible popout center-align" data-collapsible="accordion" style="width: 100%;">'+common_room+tt_room+single_room+'</ul> </div></li>';
       }
       $('.collapsible').collapsible();
       statsReady = 1;
     } else {
-      Materialize.toast('Server Error!', 3000, "toast-fetch_error");  
+      Materialize.toast('Server Error!', 3000, "toast-fetch_error");
     }
   }
   ourRequest.onerror = function() {

@@ -758,8 +758,6 @@ def view_notes(request):
 		if is_recnacc_admin(request.user):
 			data = []
 			for n in Note.objects.all():
-				print(n.time)
-				print(n.text)
 				data.append({"time":n.time.strftime('%d-%m-%Y %H:%M:%S UTC'),"text":n.text})
 			return HttpResponse(json.dumps({"data":data}), content_type='application/json')	
 		else:

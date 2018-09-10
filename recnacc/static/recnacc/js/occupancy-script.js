@@ -43,7 +43,7 @@ function fetchOccupancy() {
       document.getElementById('acco-wrapper').innerHTML = '';
       var data = ourData.data;
       for (var i = 0; i < data.length; i++) {
-        document.getElementById('acco-wrapper').innerHTML+='<div class="row"> <div class="col s12 hostel-header">'+data[i][0]+'</div><div class="col s5 center rooms-header">Name</div><div class="col s5 center rooms-header">Strength</div><div class="col s2 center rooms-header">Edit</div><div class="col s5 center rooms-content">Common Room</div><div class="col s5 center rooms-content">'+data[i][1].strength+'</div><div class="col s2 center rooms-content change-cursor" onclick="editStrength('+data[i][1].pk+', this)"><i class="material-icons">edit</i></div><div class="col s5 center rooms-content">TT Room</div><div class="col s5 center rooms-content">'+data[i][2].strength+'</div><div class="col s2 center rooms-content change-cursor" onclick="editStrength('+data[i][2].pk+', this)"><i class="material-icons">edit</i></div><div class="col s5 center rooms-content">Single Room</div><div class="col s5 center rooms-content">'+data[i][3].strength+'</div><div class="col s2 center rooms-content">&nbsp</div></div>';
+        document.getElementById('acco-wrapper').innerHTML+='<div class="row"> <div class="col s12 hostel-header">'+data[i][0]+'</div><div class="col s5 center rooms-header">Name</div><div class="col s5 center rooms-header">Strength</div><div class="col s2 center rooms-header">Edit</div><div class="col s5 center rooms-content">Common Room</div><div class="col s5 center rooms-content">'+data[i][1].strength+'</div><div class="col s2 center rooms-content change-cursor" onclick="editStrength('+data[i][1].pk+', this)"><i class="material-icons">edit</i></div><div class="col s5 center rooms-content">TT Room</div><div class="col s5 center rooms-content">'+data[i][2].strength+'</div><div class="col s2 center rooms-content change-cursor" onclick="editStrength('+data[i][2].pk+', this)"><i class="material-icons">edit</i></div><div class="col s5 center rooms-content">Single Room</div><div class="col s5 center rooms-content">'+data[i][3].strength+'</div><div class="col s2 center rooms-content change-cursor" onclick="editStrength('+data[i][3].pk+', this)"><i class="material-icons">edit</i></div></div>';
       }
       Materialize.toast('Updated!', 2000);
     }
@@ -70,6 +70,7 @@ function updateStrength() {
   ourRequest.onload = function () {
     if (ourRequest.status >= 200 && ourRequest.status < 400) {
       Materialize.toast('Updated!', 2000);
+      fetchOccupancy();
     }
     else
       Materialize.toast('Server Error!', 2000, "toast-fetch_error");

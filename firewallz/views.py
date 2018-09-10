@@ -23,7 +23,10 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from random import choice
 from string import ascii_uppercase
 import re
-
+import openpyxl
+from openpyxl.utils import get_column_letter
+import csv
+from django.utils.encoding import smart_str
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404,HttpResponseRedirect, JsonResponse
 from main.models import CustomUser, Team
@@ -242,8 +245,9 @@ def add_participant(request):
 		pl = Regplayer()
 		pl.name = up
 		pl.gender = data['data'][0]['gender']
-		pl.college = data['data'][0]['college']
-		pl.city = data['data'][0]['city']
+		tm = Team.objects.get(pk=int(data['data'][0]['college']))
+		pl.college = tm.college
+		pl.city = tm.city
 		pl.mobile_no = str(data['data'][0]['phone'])
 		pl.email_id = data['data'][0]['email']
 		pl.sport=''
@@ -458,7 +462,11 @@ def view_stats(request):
 		da = []
 		for pl in Regplayer.objects.filter(college = tm.college):
 			d = []
-			if Enteredplayer.objects.get(regplayer=pl):
+			try:
+				en = Enteredplayer.objects.get(regplayer=pl)
+			except Enteredplayer.DoesNotExist:
+				en = None
+			if en != None:
 				d.append(pl.name.name)
 				d.append(pl.mobile_no)
 			if d:

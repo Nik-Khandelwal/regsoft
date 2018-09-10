@@ -670,7 +670,7 @@ def denomination_display(request):
 		return HttpResponseRedirect('/regsoft/')
 	money = Money.objects.get(pk=1)
 	data = []
-	data.apped(money.fifty)
+	data.append(money.fifty)
 	data.append(money.hundred)
 	data.append(money.twohundred)
 	data.append(money.fivehundred)

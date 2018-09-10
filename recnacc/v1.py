@@ -673,14 +673,9 @@ def edit_occupency(request):
 		if is_recnacc_admin(request.user):
 			data = json.loads( request.body.decode('utf-8') )
 			print(data)
-			yo = int(data['data']['strength'])
 			ac = Accomodation.objects.get(pk=data['data']['pk'])
-			diff = yo - ac.strength
-			ac.strength = yo
-
 			diff = int(data['data']['strength']) - ac.strength
 			ac.strength = data['data']['strength']
-
 			ac.vacancy += diff
 			ac.save()
 			data_update = [9]
@@ -738,11 +733,6 @@ def fine_page(request):
 			for ar in ac.accorecnacc_set.all():
 				for pl in Enteredplayer.objects.all():
 					if pl.accorecnacc == ar:
-
-						rp = Regplayer.objects.get(pk=pl.regplayer.pk)
-						rp.unbilled_amt += (data['data']['amt']/cnt)
-						rp.save()
-
 						pl.regplayer.unbilled_amt += (int(data['data']['amt'])/cnt)
 						pl.save()
 			return HttpResponse(json.dumps({"success":"1"}), content_type='application/json')	
@@ -887,8 +877,6 @@ def stats_csv(request):
 
 	writer = csv.writer(response, csv.excel)
 	response.write(u'\ufeff'.encode('utf8'))
-
-	row_num =0
 
 	writer.writerow([
 		smart_str(u"ID"),

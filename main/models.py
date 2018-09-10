@@ -71,7 +71,7 @@ class Regplayer(models.Model):
 	sport = models.CharField(max_length=10000000, null=True, blank=True)
 	entered = models.BooleanField(default=False)
 	unbilled_amt = models.IntegerField(default=1100)
-	uid = models.CharField(max_length=10000000000000000,default=" ")
+	# uid = models.CharField(max_length=10000000000000000,default=" ")
 
 	def __str__(self):
 		return self.name.name

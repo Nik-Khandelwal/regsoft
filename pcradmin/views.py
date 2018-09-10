@@ -2012,7 +2012,7 @@ def docapprove(request):
 				rp.city = u.team.city
 				rp.mobile_no = u.phone
 				rp.email_id = u.email
-				rp.uid = str(uuid.uuid3(uuid.NAMESPACE_DNS, str(u.name)+str(u.pk)))
+				# rp.uid = str(uuid.uuid3(uuid.NAMESPACE_DNS, str(u.name)+str(u.pk)))
 				rp.sport=''
 				for s in Sport.objects.all():
 					if u.sportid[s.idno]=='2':

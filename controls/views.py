@@ -738,6 +738,7 @@ def con_pan_spec_details(request):
 			return HttpResponseRedirect('/regsoft/')
 	else:
 		return HttpResponseRedirect('/regsoft/')
+	data = json.loads( request.body.decode('utf-8') )
 	t = Regplayer.objects.get(pk=data['data']['pk'])
 	data = {"pk":t.pk,"name":t.name.name,"sport":t.sport,"phone":t.mobile_no,"email":t.email_id,"blood_grp":t.blood_grp,"college":t.college,"city":t.city,"notes":t.notes}
 	return HttpResponse(json.dumps(data), content_type='application/json')
@@ -752,6 +753,7 @@ def con_pan_edit(request):
 			return HttpResponseRedirect('/regsoft/')
 	else:
 		return HttpResponseRedirect('/regsoft/')
+	data = json.loads( request.body.decode('utf-8') )
 	t = Regplayer.objects.get(pk=data['data']['pk'])
 	us = User.objects.get(pk=t.name.pk)
 	us.name = data['data']['name']

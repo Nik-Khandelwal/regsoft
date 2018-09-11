@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {% load staticfiles %}
+  <title>Controls</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'controls/css/font.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'controls/css/materialize.min.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'controls/css/con-pan.css' %}">
+  <script type="text/javascript" src="{% static 'controls/js/jquery.js' %}"></script>
+  <script type="text/javascript" src="{% static 'controls/js/materialize.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'controls/js/con-pan.js' %}"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" href="{% static 'main/favicon/favicon.ico' %}" type="image/x-icon"/>
+  <link rel="shortcut icon" href="{% static 'main/favicon/favicon.ico' %}" type="image/x-icon"/>
+</head>
+<body class="blue lighten-5">
+  <ul id="slide-out" class="side-nav center">
+    <li>
+      <div class="user-view">
+        <div class="background" style="background-color: #3794e6"></div>
+        <a><span class="white-text name">CONTROLS PANEL</span></a>
+      </div>
+    </li>
+    <li><a class="waves-effect" href="/controls/">Register</a></li>
+    <li><a class="waves-effect" href="/controls/unconfirm_grp/">Deregister</a></li>
+    <li><a class="waves-effect">Edit Panel</a></li>
+    <li><a class="waves-effect" href="/controls/denominations/">Denominations</a></li>
+    <li><div class="divider"></div></li>
+    <li><a class="waves-effect bottom" href="/regsoft/regsoft_logout/">Logout</a></li>
+  </ul>
+  <div class="ham"><a href="#" data-activates="slide-out" class="button-collapse coll-0"><i class="material-icons medium blue-text">menu</i></a></div>
+  <div class="container" id="wrap_searches">
+    <div class="row">
+      <div class="input-field col s12">
+        <input type="text" name="search" id="name-search" required="required" onkeyup="search()">
+        <label for="name-search">Search By Name</label>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="collection s12">
+        <a class="collection-item" id="details-wrapper">
+          <table>
+            <thead>
+              <tr class="flex-container">
+                <th class="center name-container">Name</th>
+                <th class="center mobile-container">Mobile</th>
+                <th class="center sports-container">Sports</th>
+                <th class="center edit-container">Edit</th>
+                <th class="center pk-container">PK</th>
+              </tr>
+            </thead>
+            <tbody id="part-body">
+              
+            </tbody>
+          </table>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="modal modal-fixed-footer grey lighten-3 custom-modals" id="edit-part-modal">
+    <div class="modal-content">
+      <h4 style="text-align: center;">Edit User</h4>
+      <form id="edit-part-form">
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">create</i>
+            <input type="text" name="part_name" id="part_name" class="validate" required="required">
+            <label for="part_name" data-error="Enter Name">Name</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">local_phone</i>
+            <input type="text" name="part_phone" id="part_phone" class="validate" required="required" maxlength="10" data-length="10">
+            <label for="part_phone" data-error="Enter Phone">Phone</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">mail_outline</i>
+            <input type="email" name="part_email" id="part_email" class="validate" required="required">
+            <label for="part_email" data-error="Enter Email">Email</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">local_hospital</i>
+            <input type="text" name="part_bloodgp" id="part_bloodgp" class="validate" required="required">
+            <label for="part_bloodgp" data-error="Enter Blood Group">Blood Group</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">location_city</i>
+            <input type="text" name="part_address" id="part_address" class="validate" required="required">
+            <label for="part_address" data-error="Enter Postal Address">Postal Address</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">school</i>
+            <input type="text" name="part_college" id="part_college" class="validate" required="required">
+            <label for="part_college" data-error="Enter College">College</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">directions_run</i>
+            <input id="part_sport" type="text" class="validate" required="required" name="part_sport"></select>
+            <label for="part_sport" data-error="Enter Sport">Sport</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">note</i>
+            <input type="text" name="part_notes" id="part_notes" class="validate" required="required">
+            <label for="part_notes" data-error="Enter Notes">Notes</label>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer grey lighten-2 center">
+      <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="sendEdit();">Send</btn>
+      <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="back();">Back</btn>
+    </div>
+  </div>
+  <footer class="page-footer blue darken-2">
+    <div class="container">
+      <div class="row">
+        <div class="col s12 center">
+          <span>Coding Club, BOSM 2018</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

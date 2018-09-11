@@ -426,7 +426,7 @@ def id_card(request,string):
 	dats = []
 	print(string)
 	for pl in Enteredplayer.objects.filter(group = Group.objects.get(group_code=string)):
-		dats.append({"pk":pl.regplayer.pk,"name":pl.regplayer.name.name,"college":pl.regplayer.college,"group_code":string,"group_id":pl.group_id,"sport":pl.regplayer.sport,"mobile_no":pl.regplayer.mobile_no})
+		dats.append({"uid":pl.regplayer.uid,"pk":pl.regplayer.pk,"name":pl.regplayer.name.name,"college":pl.regplayer.college,"group_code":string,"group_id":pl.group_id,"sport":pl.regplayer.sport,"mobile_no":pl.regplayer.mobile_no})
 	return render(request,'firewallz/id_template.html',{"data":dats})
 
 
@@ -587,3 +587,49 @@ def stats_html(request):
 		data.append({"pk":obj.regplayer.pk,"name":obj.regplayer.name.name,"group_code":obj.group.group_code,"college":obj.regplayer.college,"mobile_no":obj.regplayer.mobile_no,"email_id":obj.regplayer.email_id,"sport":obj.regplayer.sport})
 	context = {"mylist":data}
 	return render(request,'firewallz/firewallz_stats.html',context)
+
+def view_id_card(request):
+	if request.user.is_authenticated():
+		if is_firewallz_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	return render(request,'firewallz/id_index.html')
+
+def view_id_card_details(request):
+	if request.user.is_authenticated():
+		if is_firewallz_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	data = []
+	for gr in Group.objects.all():
+		if gr.enteredplayer_set.count() is not 0:
+			if Regplayer.objects.get(pk=gr.group_leader):
+				player = Regplayer.objects.get(pk=gr.group_leader)
+				data.append({"pk":gr.pk,"name": player.name.name, "college":player.college, "groupid":gr.group_code})
+	return HttpResponse(json.dumps(data), content_type='application/json')
+
+def view_id_card_show_details(request):
+	if request.user.is_authenticated():
+		if is_firewallz_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	if request.method=='POST':
+		data = 	json.loads( request.body.decode('utf-8') )
+		print(data)
+		dat = []
+		gr = Group.objects.get(group_code=data['data']['group_id'])
+		for pl in Enteredplayer.objects.filter(group=gr):
+			dat.append({"name":pl.regplayer.name.name,"college":pl.regplayer.college, "id":pl.regplayer.pk})
+		return HttpResponse(json.dumps(dat), content_type='application/json')

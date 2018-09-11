@@ -44,4 +44,10 @@ urlpatterns = [
 
     url(r'^stats_html/$',views.stats_html,name='stats_html'),
 
+    url(r'^view_id_card/$',views.view_id_card,name='view_id_card'),
+
+    url(r'^view_id_card_details/$',views.view_id_card_details,name='view_id_card_details'),
+
+    url(r'^view_id_card_show_details/$',views.view_id_card_show_details,name='view_id_card_show_details'),
+
 ]

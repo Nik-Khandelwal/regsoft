@@ -102,20 +102,19 @@ function getCookie(name) {
 function getGroups() {
   Materialize.toast('Fetching Group Leaders!', 3000);
   document.getElementById("table-ul").innerHTML='<div class="collapsible-body custom-collapsible-body blue lighten-5"> <span class="pk-col center" style="flex-basis: 10%;">Group No</span> <span class="group-code-col center" style="flex-basis: 10%;">Code</span> <span class="name center" style="flex-basis: 35%;">Name</span> <span class="coll-name center" style="flex-basis: 35%;">College</span> <span class="group-id-col center">Group ID</span> <i style="flex-basis: 10%;" class="material-icons">account_circle</i> </div>';
-  // var csrf_token = getCookie('csrftoken');
+  var csrf_token = getCookie('csrftoken');
   var ourRequest = new XMLHttpRequest();
   var url = "/firewallz/unconfirm_details/";
-  var url = ""
   ourRequest.open("POST", url, true);
   ourRequest.setRequestHeader("Content-type", "application/json");
   ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
   // POST
-  // send_obj = {
-  //   "csrftoken": {
-  //     "csrfmiddlewaretoken": csrf_token
-  //   }
-  // };
-  // var send_json = JSON.stringify(send_obj);
+  send_obj = {
+    "csrftoken": {
+      "csrfmiddlewaretoken": csrf_token
+    }
+  };
+  var send_json = JSON.stringify(send_obj);
   // Obtain 
   ourRequest.onreadystatechange = function () {
     if (ourRequest.readyState === 4 && ourRequest.status === 200) {
@@ -134,7 +133,7 @@ function getGroups() {
       // }
     }
   }
-  ourRequest.send("");
+  ourRequest.send(send_json);
 }
 function search() {
   var span_name;

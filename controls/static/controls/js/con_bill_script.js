@@ -19,11 +19,11 @@ $(document).ready(function() {
 function open_details(data){
   document.getElementById("det").style.height="100%";
   group_id = data.children[4].innerHTML;
-  document.getElementById("uncnfrm_grp").innerHTML='<div class="collapsible-body custom-collapsible-body blue lighten-5"> <span class="unconfirm-name center" style="flex-basis: 50%;">Name</span> <span class="unconfirm-coll-name center" style="flex-basis: 50%;">College</span> <span class="unconfirm-id-col center">ID</span> </div>';
+  document.getElementById("uncnfrm_grp").innerHTML='<div class="collapsible-body custom-collapsible-body blue lighten-5"> <span class="unconfirm-name center" style="flex-basis: 45%;">Name</span> <span class="unconfirm-coll-name center" style="flex-basis: 45%;">College</span> <span class="unconfirm-id-col center">ID</span> <i style="flex-basis: 10%;" class="material-icons">account_circle</i> </div>';
   Materialize.toast('Loading, Please Wait', 4000);
   var csrf_token = getCookie('csrftoken');
   var ourRequest = new XMLHttpRequest();
-  var url = "/firewallz/view_id_card_show_details/";
+  var url = "/firewallz/show_details_unconfirm/";
   ourRequest.open("POST", url, true);
   ourRequest.setRequestHeader("Content-type", "application/json");
   ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
@@ -40,10 +40,10 @@ function open_details(data){
   // Obtain 
   ourRequest.onreadystatechange = function () {
     if (ourRequest.readyState === 4 && ourRequest.status === 200) {
-      document.getElementById("uncnfrm_grp").innerHTML='<div class="collapsible-body custom-collapsible-body blue lighten-5"> <span class="unconfirm-name center" style="flex-basis: 50%;">Name</span> <span class="unconfirm-coll-name center" style="flex-basis: 50%;">College</span> <span class="unconfirm-id-col center">ID</span> </div>';
+      document.getElementById("uncnfrm_grp").innerHTML='<div class="collapsible-body custom-collapsible-body blue lighten-5"> <span class="unconfirm-name center" style="flex-basis: 45%;">Name</span> <span class="unconfirm-coll-name center" style="flex-basis: 45%;">College</span> <span class="unconfirm-id-col center">ID</span> <i style="flex-basis: 10%;" class="material-icons">account_circle</i> </div>';
       var recieve_json = JSON.parse(ourRequest.responseText);
       for (var i = 0; i < recieve_json.length; i++) {
-        document.getElementById("uncnfrm_grp").innerHTML+='<div class="collapsible-body custom-collapsible-body blue lighten-5"> <span class="unconfirm-name center" style="flex-basis: 50%;">'+recieve_json[i].name+'</span> <span class="unconfirm-coll-name center" style="flex-basis: 50%;">'+recieve_json[i].college+'</span> <span class="unconfirm-id-col center">'+recieve_json[i].id+'</span> </div>';
+        document.getElementById("uncnfrm_grp").innerHTML+='<div class="collapsible-body custom-collapsible-body blue lighten-5"> <span class="unconfirm-name center" style="flex-basis: 45%;">'+recieve_json[i].name+'</span> <span class="unconfirm-coll-name center" style="flex-basis: 45%;">'+recieve_json[i].college+'</span> <span class="unconfirm-id-col center">'+recieve_json[i].id+'</span> <i style="flex-basis: 10%;" class="material-icons change_cursor" onclick="uncnfrm(this)"><img src="/static/firewallz/firewallz_unconfirm/icons/del.svg" class="unconfirm_icon"></i> </div>';
       }
       Materialize.toast('Updated List!', 3000);
     }
@@ -101,10 +101,10 @@ function getCookie(name) {
 }
 function getGroups() {
   Materialize.toast('Fetching Group Leaders!', 3000);
-  document.getElementById("table-ul").innerHTML='<div class="collapsible-body custom-collapsible-body blue lighten-5"> <span class="pk-col center" style="flex-basis: 10%;">Group No</span> <span class="group-code-col center" style="flex-basis: 10%;">Code</span> <span class="name center" style="flex-basis: 40%;">Name</span> <span class="coll-name center" style="flex-basis: 40%;">College</span> <span class="group-id-col center">Group ID</span> </div>';
+  document.getElementById("table-ul").innerHTML='<div class="collapsible-body custom-collapsible-body blue lighten-5"> <span class="pk-col center" style="flex-basis: 15%;">Bill No</span> <span class="coll-name center" style="flex-basis: 75%;">College</span> <i style="flex-basis: 10%;" class="material-icons">account_circle</i> </div>';
   var csrf_token = getCookie('csrftoken');
   var ourRequest = new XMLHttpRequest();
-  var url = "/firewallz/view_id_card_details/";
+  var url = "/controls/bill_details/";
   ourRequest.open("POST", url, true);
   ourRequest.setRequestHeader("Content-type", "application/json");
   ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
@@ -118,10 +118,10 @@ function getGroups() {
   // Obtain 
   ourRequest.onreadystatechange = function () {
     if (ourRequest.readyState === 4 && ourRequest.status === 200) {
-      document.getElementById("table-ul").innerHTML='<div class="collapsible-body custom-collapsible-body blue lighten-5"> <span class="pk-col center" style="flex-basis: 10%;">Group No</span> <span class="group-code-col center" style="flex-basis: 10%;">Code</span> <span class="name center" style="flex-basis: 40%;">Name</span> <span class="coll-name center" style="flex-basis: 40%;">College</span> <span class="group-id-col center">Group ID</span> </div>';
+      document.getElementById("table-ul").innerHTML='<div class="collapsible-body custom-collapsible-body blue lighten-5"> <span class="pk-col center" style="flex-basis: 15%;">Bill No</span> <span class="coll-name center" style="flex-basis: 75%;">College</span> <i style="flex-basis: 10%;" class="material-icons">account_circle</i> </div>';
       var recieve_json = JSON.parse(ourRequest.responseText);
       for (var i = recieve_json.length-1; i >= 0; i--) {
-        document.getElementById("table-ul").innerHTML+='<div class="collapsible-body custom-collapsible-body blue lighten-5 change_cursor" onclick="open_details(this)"> <span class="pk-col center" style="flex-basis: 10%;">'+recieve_json[i].pk+'</span> <span class="group-code-col center" style="flex-basis: 10%;"><a href="/firewallz/id_card/'+recieve_json[i].groupid+'/" target="_blank">'+recieve_json[i].groupid+'</a></span> <span class="name center" style="flex-basis: 40%;">'+recieve_json[i].name+'</span> <span class="coll-name center" style="flex-basis: 40%;">'+recieve_json[i].college+'</span> <span class="group-id-col center">'+recieve_json[i].groupid+'</span> </div>';
+        document.getElementById("table-ul").innerHTML+='<div class="collapsible-body custom-collapsible-body blue lighten-5"> <span class="pk-col center" style="flex-basis: 15%;"><a href="/controls/bill_pdf/'+recieve_json[i].bill_pk+'" target="_blank">'+recieve_json[i].bill_pk+'</a></span> <span class="coll-name center" style="flex-basis: 75%;">'+recieve_json[i].college+'</span> <i style="flex-basis: 10%;" class="material-icons">account_circle</i> </div>';
       }
     }
     else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
@@ -141,7 +141,7 @@ function search() {
   var grplist = document.getElementById('table-ul');
   for (var i = 1; i < grplist.getElementsByTagName('div').length; i++) {
     var div = grplist.getElementsByTagName('div');
-    var span_name = grplist.getElementsByTagName('div')[i].getElementsByTagName('span')[2];
+    var span_name = grplist.getElementsByTagName('div')[i].getElementsByTagName('span')[1];
     if ((span_name && span_name.innerHTML.toUpperCase().indexOf(filter_name) > -1)) {
       div[i].style.display = "";
     } else {
@@ -157,20 +157,6 @@ function participant_search() {
     var div = grplist.getElementsByTagName('div');
     var span_name = grplist.getElementsByTagName('div')[i].getElementsByTagName('span')[0];
     if ((span_name && span_name.innerHTML.toUpperCase().indexOf(filter_name) > -1)) {
-      div[i].style.display = "";
-    } else {
-      div[i].style.display = "none";
-    }
-  }
-}
-function groupSearch() {
-  var span_group;
-  var filter_group = document.getElementById("group-search").value.toUpperCase();
-  var grplist = document.getElementById('table-ul');
-  for (var i = 1; i < grplist.getElementsByTagName('div').length; i++) {
-    var div = grplist.getElementsByTagName('div');
-    var span_group = grplist.getElementsByTagName('div')[i].getElementsByTagName('span')[1];
-    if ((span_group && span_group.innerHTML.toUpperCase().indexOf(filter_group) > -1)) {
       div[i].style.display = "";
     } else {
       div[i].style.display = "none";
@@ -299,10 +285,10 @@ function pusherGetGroups() {
   // Obtain 
   ourRequest.onreadystatechange = function () {
     if (ourRequest.readyState === 4 && ourRequest.status === 200) {
-      document.getElementById("table-ul").innerHTML='<div class="collapsible-body custom-collapsible-body blue lighten-5"> <span class="pk-col center" style="flex-basis: 10%;">Group No</span> <span class="group-code-col center" style="flex-basis: 10%;">Code</span> <span class="name center" style="flex-basis: 40%;">Name</span> <span class="coll-name center" style="flex-basis: 40%;">College</span> <span class="group-id-col center">Group ID</span> </div>';
+      document.getElementById("table-ul").innerHTML='<div class="collapsible-body custom-collapsible-body blue lighten-5"> <span class="pk-col center" style="flex-basis: 10%;">Group No</span> <span class="group-code-col center" style="flex-basis: 10%;">Code</span> <span class="name center" style="flex-basis: 35%;">Name</span> <span class="coll-name center" style="flex-basis: 35%;">College</span> <span class="group-id-col center">Group ID</span> <i style="flex-basis: 10%;" class="material-icons">account_circle</i> </div>';
       var recieve_json = JSON.parse(ourRequest.responseText);
       for (var i = recieve_json.length-1; i >= 0 ; i--) {
-        document.getElementById("table-ul").innerHTML+='<div class="collapsible-body custom-collapsible-body blue lighten-5 change_cursor" onclick="open_details(this)"> <span class="pk-col center" style="flex-basis: 10%;">'+recieve_json[i].pk+'</span> <span class="group-code-col center" style="flex-basis: 10%;"><a href="/firewallz/id_card/'+recieve_json[i].groupid+'/" target="_blank">'+recieve_json[i].groupid+'</a></span> <span class="name center" style="flex-basis: 40%;">'+recieve_json[i].name+'</span> <span class="coll-name center" style="flex-basis: 40%;">'+recieve_json[i].college+'</span> <span class="group-id-col center">'+recieve_json[i].groupid+'</span> </div>';
+        document.getElementById("table-ul").innerHTML+='<div class="collapsible-body custom-collapsible-body blue lighten-5 change_cursor" onclick="open_details(this)"> <span class="pk-col center" style="flex-basis: 10%;">'+recieve_json[i].pk+'</span> <span class="group-code-col center" style="flex-basis: 10%;"><a href="/firewallz/id_card/'+recieve_json[i].groupid+'/" target="_blank">'+recieve_json[i].groupid+'</a></span> <span class="name center" style="flex-basis: 35%;">'+recieve_json[i].name+'</span> <span class="coll-name center" style="flex-basis: 35%;">'+recieve_json[i].college+'</span> <span class="group-id-col center">'+recieve_json[i].groupid+'</span> <i style="flex-basis: 10%;" class="material-icons change_cursor" onclick="delete_group(this)">remove_circle</i> </div>';
       }
     }
     else if (ourRequest.readyState === 4 && ourRequest.status != 200) {

@@ -689,3 +689,76 @@ def denominations(request):
 		return HttpResponseRedirect('/regsoft/')
 	return render(request, 'controls/denominations.html')
 
+
+
+#Controls panel
+def con_pan(request):
+	if request.user.is_authenticated():
+		if is_controls_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	return render(request, 'controls/con_pan.html')
+
+def con_pan_details(request):
+	if request.user.is_authenticated():
+		if is_controls_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	data=[]
+	for gr in Group.objects.all():
+		pl = Enteredplayer.objects.filter(group=gr)
+		a=[]
+		for p in pl:
+			a.append(Regplayer.objects.get(pk=p.regplayer_id))
+		for t in a:
+			s=[]
+			s.append(t.pk)
+			s.append(t.name.name)
+			s.append(t.mobile_no)
+			s.append(t.sport)
+			if s:
+				data.append(s)
+	return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+def con_pan_spec_details(request):
+	if request.user.is_authenticated():
+		if is_controls_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	t = Regplayer.objects.get(pk=data['data']['pk'])
+	data = {"pk":t.pk,"name":t.name.name,"sport":t.sport,"phone":t.mobile_no,"email":t.email_id,"blood_grp":t.blood_grp,"college":t.college,"city":t.city,"notes":t.notes}
+	return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+def con_pan_edit(request):
+	if request.user.is_authenticated():
+		if is_controls_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	t = Regplayer.objects.get(pk=data['data']['pk'])
+	us = User.objects.get(pk=t.name.pk)
+	us.name = data['data']['name']
+	us.save()
+	t.mobile_no = data['data']['phone']
+	t.email_id = data['data']['email']
+	t.blood_grp = data['data']['blood_grp']
+	t.notes = data['data']['notes']
+	t.save()
+	return HttpResponse(json.dumps({"success":1}), content_type='application/json')

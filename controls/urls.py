@@ -48,5 +48,12 @@ urlpatterns = [
     url(r'^denominations/$',views.denominations,name='denominations'),    
 
    # url(r'^pdf/$',views.pdf,name='pdf'),
-    
+
+    url(r'^con_pan/$',views.con_pan,name='con_pan'),
+
+    url(r'^con_pan_details/$',views.con_pan_details,name='con_pan_details'),
+
+    url(r'^con_pan_spec_details/$',views.con_pan_spec_details,name='con_pan_spec_details'),
+
+    url(r'^con_pan_edit/$',views.con_pan_edit,name='con_pan_edit'),    
 ]

@@ -1084,7 +1084,7 @@ def sendpay(request):
 				s.append(0)
 			d.append(s)
 
-			return render(request,'register/payment.html/',{'data':d})
+			return render(request,'register/payment1.html/',{'data':d})
 		tm=request.user.team
 		ulist=User.objects.filter(team=tm,deleted=0,coach=0).order_by(Lower('name'))
 		if request.user.captain:
@@ -1107,7 +1107,7 @@ def sendpay(request):
 				elif request.user.grp_leader:
 					d.append(s)
 
-		return render(request,'register/payment.html/',{'data':d})
+		return render(request,'register/payment1.html/',{'data':d})
 
 	
 @never_cache

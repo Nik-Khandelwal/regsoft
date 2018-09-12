@@ -33,6 +33,10 @@ function switchRegPayment(option) {
   }
 }
 
+function openPolicy() {
+  $('#policy-modal').modal('open');
+}
+
 function submitPayParts() {
   var pre_reg = [];
   var reg = [];

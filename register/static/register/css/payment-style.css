@@ -59,7 +59,7 @@ body,html {
   transform: translate(-77%, -46%)
 }
 
-#instructions-modal,#transaction-modal {
+#instructions-modal,#transaction-modal,#policy-modal {
   width: 80%;
   height: 80%;
   max-height: 80%

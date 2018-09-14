@@ -64,6 +64,9 @@ urlpatterns = [
     url(r'^edit/team/modify/$',editName), 
 
     url(r'^dashboard/$',dashboard), 
+    
+    url(r'^paymentdetails/$',paydetails), 
+    url(r'^refresh/$',refresh), 
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

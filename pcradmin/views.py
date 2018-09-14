@@ -2068,7 +2068,25 @@ def dashboard(request):
 		d1=[]
 		d2=[]
 		d3=[]
-		d4=[[0,0,0,0],[0,0,0,0]]
+		d4=[]
+		x=[]
+		y=[]
+		a=upmale.filter(confirm1=4,pay1=1).count()
+		b=upfemale.filter(confirm1=4,pay1=1).count()
+		x.append(a+b)
+		x.append(a)
+		x.append(b)
+		x.append(a+b)
+		d4.append(x)
+		a=upmale.filter(confirm1=4,pay2=1).count()
+		b=upfemale.filter(confirm1=4,pay2=1).count()
+		a2=upmale.filter(confirm1=4,pay3=1).count()
+		b2=upfemale.filter(confirm1=4,pay3=1).count()
+		y.append(a+b+a2+b2)
+		y.append(a+a2)
+		y.append(b+b2)
+		y.append(a+b+a2+b2)
+		d4.append(y)
 		d1.append(upmale.count())
 		d1.append(upfemale.count())
 		d1.append(upmale.count()+upfemale.count())

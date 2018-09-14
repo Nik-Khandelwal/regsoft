@@ -1010,8 +1010,12 @@ def response(request):
 			upre=[]
 			ureg=[]
 			up2r=[]
+			premail=[]
+			regmail=[]
+			p2rmail=[]
 			for u in u1:
 				upre.append(u.name)
+				premail.append(u.email)
 				if request.POST['STATUS']=="TXN_SUCCESS":
 					u.pay1=1
 					u.pcramt+=prereg
@@ -1019,6 +1023,7 @@ def response(request):
 					u.save()
 			for u in u2:
 				ureg.append(u.name)
+				regmail.append(u.email)
 				if request.POST['STATUS']=="TXN_SUCCESS":
 					u.pay2=1
 					u.pcramt+=reg
@@ -1026,6 +1031,7 @@ def response(request):
 					u.save()
 			for u in u3:
 				up2r.append(u.name)
+				p2rmail.append(u.email)
 				if request.POST['STATUS']=="TXN_SUCCESS":
 					u.pay3=1
 					u.pcramt+=reg-prereg
@@ -1046,7 +1052,7 @@ def response(request):
 											
 											})
 			mail_subject = 'Your account details.'
-			email = EmailMessage(mail_subject, message, to=["bosmpayments@gmail.com"])
+			email = EmailMessage(mail_subject, message, to=["bosmpayments@gmail.com"]+[request.user.email]+premail+regmail+p2rmail)
 			email.content_subtype = "html"
 			email.send() 
 			return HttpResponseRedirect('/register/payments/')

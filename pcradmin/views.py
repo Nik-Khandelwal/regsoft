@@ -2230,6 +2230,52 @@ def refresh(request):
 			email = EmailMessage(mail_subject, message, to=["bosmpayments@gmail.com"]+[request.user.email]+premail+regmail+p2rmail)
 			email.content_subtype = "html"
 			email.send() 
+		if (response_data['STATUS']=='TXN_FAILURE'):
+			p.STATUS=response_data['STATUS']
+			p.BANKTXNID=response_data['BANKTXNID']
+			p.RESPCODE=response_data['RESPCODE']
+			p.RESPMSG=response_data['RESPMSG']
+			p.RESPMSG=response_data['RESPMSG']
+			p.BANKNAME=response_data['BANKNAME']
+			p.PAYMENTMODE=response_data['PAYMENTMODE']
+			p.save()
+			order_id=response_data['ORDERID']
+			u1=User.objects.filter(orderid1=order_id)
+			u2=User.objects.filter(orderid2=order_id)
+			u3=User.objects.filter(orderid3=order_id)
+			upre=[]
+			ureg=[]
+			up2r=[]
+			premail=[]
+			regmail=[]
+			p2rmail=[]
+			for u in u1:
+				upre.append(u.name)
+				premail.append(u.email)
+			for u in u2:
+				ureg.append(u.name)
+				regmail.append(u.email)
+			for u in u3:
+				up2r.append(u.name)
+				p2rmail.append(u.email)
+			gl=User.objects.get(pk=p.user)
+			message = render_to_string('register/msg6.html', {
+											'user':gl.name, 
+											'prereg':upre,
+											'reg':ureg,
+											'prereg2reg':up2r,
+											'college':gl.team.college,
+											'amount':p.TXNAMOUNT,
+											'TXNID':p.TXNID,
+											'timestamp':p.TXNDATE,
+											'status':p.STATUS,
+											'orderid':order_id,
+											
+											})
+			mail_subject = 'Your account details.'
+			email = EmailMessage(mail_subject, message, to=["bosmpayments@gmail.com"]+[request.user.email]+premail+regmail+p2rmail)
+			email.content_subtype = "html"
+			email.send() 
 	
 		return HttpResponseRedirect('/pcradmin/paymentdetails/')
 

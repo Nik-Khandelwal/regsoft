@@ -70,5 +70,7 @@ urlpatterns = [
  #   url(r'^render_to_pdf/$',views.render_to_pdf,name='render_to_pdf'),
 
     url(r'^stats_html/$',views.stats_html,name='stats_html'),
+
+    url(r'^redeaccomodate/$',views.redeaccomodate,name='redeaccomodate'),
     
 ]

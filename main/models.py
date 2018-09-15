@@ -71,6 +71,7 @@ class Regplayer(models.Model):
 	sport = models.CharField(max_length=10000000, null=True, blank=True)
 	entered = models.BooleanField(default=False)
 	unbilled_amt = models.IntegerField(default=1100)
+	fine = models.FloatField(default=0)
 	notes = models.CharField(max_length=10000, null=True, blank=True)
 	blood_grp = models.CharField(max_length=100,null=True,blank=True)
 	uid = models.CharField(max_length=100,default="18CB0000")
@@ -106,6 +107,8 @@ class Singleroom(models.Model):
 
 class Accomodation(models.Model):
 	name = models.CharField(max_length=10000)
+	mf = models.CharField(max_length=10, default="male")
+	fine = models.FloatField(default=0)
 	strength = models.IntegerField(default=10)
 	vacancy = models.IntegerField(default=10)
 	singleroom = models.ManyToManyField(Singleroom, blank=True)

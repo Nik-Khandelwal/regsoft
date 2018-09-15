@@ -163,13 +163,13 @@ def acco_details(request):
 			for ho in Accomodation.objects.all():
 				if 'Single' not in ho.name:
 					if ho.vacancy > 0:
-						b.append({"id":ho.pk, "name":ho.name, "no":ho.vacancy})
+						b.append({"id":ho.pk, "name":ho.name, "no":ho.vacancy,"mf":ho.mf})
 				else:
 					c=[]
 					for sr in ho.singleroom.all():
 						c.append({"name":sr.name})
 					if ho.vacancy > 0:
-						b.append({"id":ho.pk, "name":ho.name, "no":ho.vacancy,"rooms":c})
+						b.append({"id":ho.pk, "name":ho.name, "no":ho.vacancy,"rooms":c,"mf":ho.mf})
 			data = {"fields":b}
 			return HttpResponse(json.dumps(data), content_type='application/json')
 		else:
@@ -342,12 +342,16 @@ def unconfirm_acco_details(request):
 				#print(pl)
 				a=[]
 				for p in pl:
-					a.append(Regplayer.objects.get(pk=p.regplayer_id))
+					t = Regplayer.objects.get(pk=p.regplayer_id)
+					hos = str(p.accorecnacc.accomodation)
+					if p.accorecnacc.singleroom
+						hos+=str(p.accorecnacc.singleroom)
+					b.append({"hostel":hos,"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
 					p.recnacc_displayed = True
 					p.save()
 					#print(p)
-				for t in a:
-					b.append({"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
+				# for t in a:
+				# 	b.append({"hostel":,"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
 				if b:
 					data.append({"participants":b,"groupid":gr.group_code})
 				#print(data)
@@ -367,15 +371,28 @@ def deaccomodate(request):
 			print("deaccomodate")
 			if request.method=='POST':
 				data = json.loads( request.body.decode('utf-8') )
-				fine = 0
+				fne = 0
+				dats = []
 				for i in data['data']['id_arr']:
 					#print(data['data']['id_arr'])
-					rp = Regplayer.objects.get(pk=int(i))
+					rp = Regplayer.objects.get(pk=int())
 					pl = Enteredplayer.objects.get(regplayer=rp)
 					pl.all_done = True
 					pl.save()
-					fine += rp.unbilled_amt
-				dat = {"fine":fine}
+					dats.append({"name":rp.name,"fine":rp.fine})
+					fne += rp.fine
+					if pl.accorecnacc.accomodation is not None:
+						ac = Accomodation.objects.get(pk=pl.accorecnacc.accomodation.pk)
+						ac.vacancy += 1
+						ac.save()
+					elif pl.accorecnacc.singleroom is not None:
+						ac = Accomodation.objects.get(pk=pl.accorecnacc.singleroom.pk)
+						ac.vacancy += 1
+						ac.save()
+					else:
+						pass
+
+				dat = {"total":fne,"list":dats}
 				data_update = [7]
 				pusher_client.trigger('recndeacc_channel', 'recndeacc_event', data_update)
 				return HttpResponse(json.dumps(dat), content_type='application/json')
@@ -384,6 +401,38 @@ def deaccomodate(request):
 			return HttpResponseRedirect('/regsoft/')
 	else:
 		return HttpResponseRedirect('/regsoft/')
+
+
+@login_required(login_url='/regsoft/')
+@user_passes_test(is_recnacc_admin, login_url='/regsoft/')
+def redeaccomodate(request):
+	if request.user.is_authenticated():
+		if is_recnacc_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	data = json.loads( request.body.decode('utf-8') )
+	rp = Regplayer.objects.get(pk=int(data['data']['pk']))
+	pl = Enteredplayer.objects.get(regplayer=rp)
+	pl.all_done = False
+	pl.save()
+	if pl.accorecnacc.accomodation is not None:
+		ac = Accomodation.objects.get(pk=pl.accorecnacc.accomodation.pk)
+		ac.vacancy -= 1
+		ac.save()
+	elif pl.accorecnacc.singleroom is not None:
+		ac = Accomodation.objects.get(pk=pl.accorecnacc.singleroom.pk)
+		ac.vacancy -= 1
+		ac.save()
+	else:
+		pass
+	data_update = [4]
+	pusher_client.trigger('recnacc_channel', 'recnacc_event', data_update)
+	return HttpResponse(json.dumps({"success":1}), content_type='application/json')
+
 
 
 
@@ -458,12 +507,16 @@ def reconfirm_acco_details(request):
 				#print(pl)
 				a=[]
 				for p in pl:
-					a.append(Regplayer.objects.get(pk=p.regplayer_id))
+					t = Regplayer.objects.get(pk=p.regplayer_id)
+					hos = str(p.accorecnacc.accomodation)
+					if p.accorecnacc.singleroom
+						hos+=str(p.accorecnacc.singleroom)
+					b.append({"hostel":hos,"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
 					p.recnacc_displayed = True
 					p.save()
 					#print(p)
-				for t in a:
-					b.append({"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
+				# for t in a:
+				# 	b.append({"hostel":,"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
 				if b:
 					data.append({"participants":b,"groupid":gr.group_code})
 			return HttpResponse(json.dumps(data), content_type='application/json')
@@ -656,9 +709,9 @@ def disp_occupency(request):
 			for ac in Acco_name.objects.all():
 				dat = []
 				dat.append(ac.name)
-				dat.append({"pk":ac.common_room.pk,"strength":ac.common_room.strength})
-				dat.append({"pk":ac.tt_room.pk,"strength":ac.tt_room.strength})
-				dat.append({"pk":ac.s_room.pk,"strength":ac.s_room.strength})
+				dat.append({"pk":ac.common_room.pk,"strength":ac.common_room.strength,"fine":ac.common_room.fine})
+				dat.append({"pk":ac.tt_room.pk,"strength":ac.tt_room.strength,"fine":ac.tt_room.fine})
+				dat.append({"pk":ac.s_room.pk,"strength":ac.s_room.strength,"fine":ac.s_room.fine})
 				dats.append(dat)
 			return HttpResponse(json.dumps({"data":dats}), content_type='application/json')	
 		else:
@@ -712,6 +765,28 @@ def deallocated_page(request):
 			for pl in Enteredplayer.objects.filter(all_done=True):
 				data.append({"name":pl.regplayer.name.name,"college":pl.regplayer.college})
 			return HttpResponse(json.dumps({"data":data}), content_type='application/json')	
+
+
+			data=[]
+			for gr in Group.objects.all():
+				b=[]
+				pl = Enteredplayer.objects.filter(all_done=True)
+				#print(pl)
+				a=[]
+				for p in pl:
+					t = Regplayer.objects.get(pk=p.regplayer_id)
+					hos = str(p.accorecnacc.accomodation)
+					if p.accorecnacc.singleroom
+						hos+=str(p.accorecnacc.singleroom)
+					b.append({"hostel":hos,"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
+					p.recnacc_displayed = True
+					p.save()
+					#print(p)
+				# for t in a:
+				# 	b.append({"hostel":,"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
+				if b:
+					data.append({"participants":b,"groupid":gr.group_code})
+			return HttpResponse(json.dumps(data), content_type='application/json')
 		else:
 			logout(request)
 			return HttpResponseRedirect('/regsoft/')
@@ -733,18 +808,20 @@ def fine_page(request):
 	if request.user.is_authenticated():
 		if is_recnacc_admin(request.user):
 			data = json.loads( request.body.decode('utf-8') )
-			ac = Accomodation.objects.get(pk=data['data']['pk'])
+			ac = Accomodation.objects.get(pk=int(data['data']['pk']))
+			ac.fine = float(data['data']['amt'])
+			ac.save()
 			cnt = ac.accorecnacc_set.all().count()
 			for ar in ac.accorecnacc_set.all():
-				for pl in Enteredplayer.objects.all():
-					if pl.accorecnacc == ar:
+			 	for pl in Enteredplayer.objects.all():
+			 		if pl.accorecnacc == ar:
 
-						rp = Regplayer.objects.get(pk=pl.regplayer.pk)
-						rp.unbilled_amt += (data['data']['amt']/cnt)
-						rp.save()
+			 			rp = Regplayer.objects.get(pk=pl.regplayer.pk)
+			 			rp.fine += (float(data['data']['amt'])/cnt)
+			 			rp.save()
 
-						pl.regplayer.unbilled_amt += (int(data['data']['amt'])/cnt)
-						pl.save()
+			# 			pl.regplayer.unbilled_amt += (int(data['data']['amt'])/cnt)
+			# 			pl.save()
 			return HttpResponse(json.dumps({"success":"1"}), content_type='application/json')	
 		else:
 			logout(request)
@@ -952,3 +1029,4 @@ def stats_html(request):
 		data.append({"pk":obj.regplayer.pk,"name":obj.regplayer.name.name,"group_code":obj.group.group_code,"college":obj.regplayer.college,"mobile_no":obj.regplayer.mobile_no,"email_id":obj.regplayer.email_id,"sport":obj.regplayer.sport})
 	context = {"mylist":data}
 	return render(request,'recnacc/recnacc_stats.html',context)
+

@@ -220,7 +220,6 @@ body::-webkit-scrollbar-thumb, #left-table-ul::-webkit-scrollbar-thumb, #right-b
   width: 45vw;
   left: 5vw;
   top: 1vh;
-  max-height: 10vh;
 }
 .ham1{position: absolute;right: 0;bottom: 11vh;}
 .ham2{position: absolute;right: 0;top: 0;}

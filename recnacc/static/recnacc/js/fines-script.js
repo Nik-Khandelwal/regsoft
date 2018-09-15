@@ -18,7 +18,7 @@ $(document).ready(function(){
     draggable: true // Choose whether you can drag to open on touch screens
   });
   $('.modal').modal();
-  fetchOccupancyDetails();
+  // fetchOccupancyDetails();
   // document.getElementById('acco-wrapper').innerHTML = '';
 });
 var addpk;
@@ -43,7 +43,7 @@ function fetchOccupancyDetails() {
       document.getElementById('acco-wrapper').innerHTML = '';
       var data = ourData.data;
       for (var i = 0; i < data.length; i++) {
-        document.getElementById('acco-wrapper').innerHTML+='<div class="row"> <div class="col s12 hostel-header">'+data[i][0]+'</div><div class="col s10 center rooms-header">Name</div><div class="col s2 center rooms-header">Fine</div><div class="col s10 center rooms-content">Common Room</div><div class="col s2 center rooms-content change-cursor" onclick="addFine('+data[i][1].pk+')"><i class="material-icons">airline_seat_individual_suite</i></div><div class="col s10 center rooms-content">TT Room</div><div class="col s2 center rooms-content change-cursor" onclick="addFine('+data[i][2].pk+')"><i class="material-icons">airline_seat_individual_suite</i></div><div class="col s10 center rooms-content">Single Room</div><div class="col s2 center rooms-content change-cursor" onclick="addFine('+data[i][3].pk+')"><i class="material-icons">airline_seat_individual_suite</i></div></div>';
+        document.getElementById('acco-wrapper').innerHTML+='<div class="row"> <div class="col s12 hostel-header">'+data[i][0]+'</div><div class="col s10 center rooms-header">Name</div><div class="col s2 center rooms-header">Fine</div><div class="col s10 center rooms-content">Common Room</div><div class="col s2 center rooms-content change-cursor" onclick="addFine('+data[i][1].pk+')"><i class="material-icons">airline_seat_individual_suite</i></div><div class="col s10 center rooms-content">TT Room</div><div class="col s2 center rooms-content change-cursor" onclick="addFine('+data[i][2].pk+')"><i class="material-icons">airline_seat_individual_suite</i></div><div class="col s10 center rooms-content">Single Room</div><div class="col s2 center rooms-content change-cursor" onclick="addFine('+data[i][2].pk+')"><i class="material-icons">airline_seat_individual_suite</i></div></div>';
       }
       Materialize.toast('Updated!', 2000);
     }

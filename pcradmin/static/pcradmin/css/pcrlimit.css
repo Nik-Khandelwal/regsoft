@@ -1,0 +1,15 @@
+.limits{ position: fixed; top: 15vh; width: 100vw; max-width: 100vw; height: 77vh;}
+.footer-copyright{justify-content: center;}
+.page-footer{position: fixed; bottom:0%; left:0 ;width: 100% ;padding-top: 0; transition: bottom 0.8s; height: 8vh;}
+.table {border: 0; border-collapse: collapse;}    
+.table tr {display: flex;}    
+.table>tbody>tr>td{ padding: 2vmin 0; }
+.table td {flex: 1;}    
+.table thead tr {overflow-y: scroll; color: black;}    
+.table thead th {flex: 1; display: block; height: 8vh;}  
+.table tbody {display: block; overflow-y: scroll; height: 62vh;}
+i{cursor: pointer;}
+.modal {top: 20vh;}
+.modal-content{ overflow-y: auto;}
+.foot{text-align: center!important;}
+form{padding: 0 2vh;}

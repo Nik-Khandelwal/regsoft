@@ -59,11 +59,15 @@ function loaded() {
     $(".sel-text").innerHTML="Deselect All";
     }
   });
-  $('.collapsible').collapsible();
-  $('select').material_select();
-  $('.modal').modal({
-    dismissible: false
+  
+  $(document).ready(function(){
+    $('.collapsible').collapsible();
+    for (var i = 0; i < document.getElementsByClassName('collapsible').length; i++) {
+      $('.collapsible').collapsible('close', i);
+    }
   });
+  $('select').material_select();
+  $('.modal').modal();
   $('.coll-1').sideNav({
       menuWidth: 200, // Default is 300
       edge: 'right', // Choose the horizontal origin
@@ -481,6 +485,9 @@ function fetchStats() {
         document.getElementById('stats_ul').innerHTML += '<li class="bhawan-name-wrapper"> <div class="collapsible-header"><i class="material-icons">airline_seat_individual_suite</i>'+hostel_name+'</div><div class="collapsible-body center white bhawan-wrapper"> <ul class="collapsible popout center-align" data-collapsible="accordion" style="width: 100%;">'+common_room+tt_room+single_room+'</ul> </div></li>';
       }
       $('.collapsible').collapsible();
+      for (var i = 0; i < document.getElementsByClassName('collapsible').length; i++) {
+        $('.collapsible').collapsible('close', i);
+      }
       statsReady = 1;
     } else {
       Materialize.toast('Server Error!', 3000, "toast-fetch_error");  

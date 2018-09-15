@@ -2019,6 +2019,8 @@ def docapprove(request):
 						rp.sport=rp.sport+s.sport+','
 				try:
 					rp.save()
+					rp.uid = "18CB"+str(100000+rp.pk)[-4:]
+					rp.save()
 				except:
 					success=0
 		message = render_to_string('pcradmin/msg7.html', {

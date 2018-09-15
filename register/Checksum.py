@@ -3,10 +3,10 @@ import string
 import random
 import hashlib
 import crypto
-#import sys
-#sys.modules['Crypto'] = crypto
+# import sys
+# sys.modules['Crypto'] = crypto
 
-#from Crypto.Cipher import AES
+# from Crypto.Cipher import AES
 
 
 IV = "@@@@&&&&####$$$$"
@@ -100,8 +100,12 @@ def __encode__(to_encode, iv, key):
     # Pad
     to_encode = __pad__(to_encode)
     # Encrypt
-    c = AES.new(key, AES.MODE_CBC, iv)
+    c = AES.new(key.encode("utf8"), AES.MODE_CBC, iv.encode("utf8"))
     to_encode = c.encrypt(to_encode)
+
+
+    # obj = AES.new('This is a key123'.encode("utf8"), AES.MODE_CBC, 'This is an IV456'.encode("utf8"))
+
     # Encode
     to_encode = base64.b64encode(to_encode)
     return to_encode
@@ -111,7 +115,7 @@ def __decode__(to_decode, iv, key):
     # Decode
     to_decode = base64.b64decode(to_decode)
     # Decrypt
-    c = AES.new(key, AES.MODE_CBC, iv)
+    c = AES.new(key.encode("utf8"), AES.MODE_CBC, iv.encode("utf8"))
     to_decode = c.decrypt(to_decode)
     if type(to_decode) == bytes:
         # convert bytes array to str.

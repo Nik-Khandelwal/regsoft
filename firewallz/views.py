@@ -258,6 +258,8 @@ def add_participant(request):
 			up.save()
 			pl.sport=pl.sport+Sport.objects.get(idno=int(i)).sport+','
 		pl.save()
+		pl.uid = "18CB"+str(100000+pl.pk)[-4:]
+		pl.save()
 		to_email = up.email
 		message = render_to_string('register/msg2.html', {
 										'user':up.name, 

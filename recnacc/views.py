@@ -162,14 +162,12 @@ def acco_details(request):
 			b=[]
 			for ho in Accomodation.objects.all():
 				if 'Single' not in ho.name:
-					if ho.vacancy > 0:
-						b.append({"id":ho.pk, "name":ho.name, "no":ho.vacancy})
+					b.append({"id":ho.pk, "name":ho.name, "no":ho.vacancy})
 				else:
 					c=[]
 					for sr in ho.singleroom.all():
 						c.append({"name":sr.name})
-					if ho.vacancy > 0:
-						b.append({"id":ho.pk, "name":ho.name, "no":ho.vacancy,"rooms":c})
+					b.append({"id":ho.pk, "name":ho.name, "no":ho.vacancy,"rooms":c})
 			data = {"fields":b}
 			return HttpResponse(json.dumps(data), content_type='application/json')
 		else:
@@ -673,14 +671,9 @@ def edit_occupency(request):
 		if is_recnacc_admin(request.user):
 			data = json.loads( request.body.decode('utf-8') )
 			print(data)
-			yo = int(data['data']['strength'])
 			ac = Accomodation.objects.get(pk=data['data']['pk'])
-			diff = yo - ac.strength
-			ac.strength = yo
-
-			diff = int(data['data']['strength']) - ac.strength
+			diff = data['data']['strength'] - ac.strength
 			ac.strength = data['data']['strength']
-
 			ac.vacancy += diff
 			ac.save()
 			data_update = [9]
@@ -738,12 +731,7 @@ def fine_page(request):
 			for ar in ac.accorecnacc_set.all():
 				for pl in Enteredplayer.objects.all():
 					if pl.accorecnacc == ar:
-
-						rp = Regplayer.objects.get(pk=pl.regplayer.pk)
-						rp.unbilled_amt += (data['data']['amt']/cnt)
-						rp.save()
-
-						pl.regplayer.unbilled_amt += (int(data['data']['amt'])/cnt)
+						pl.regplayer.unbilled_amt += (data['data']['amt']/cnt)
 						pl.save()
 			return HttpResponse(json.dumps({"success":"1"}), content_type='application/json')	
 		else:
@@ -768,7 +756,7 @@ def view_notes(request):
 		if is_recnacc_admin(request.user):
 			data = []
 			for n in Note.objects.all():
-				data.append({"time":n.time.strftime('%d-%m-%Y %H:%M:%S UTC'),"text":n.text})
+				data.append({"time":n.time,"text":n.text})
 			return HttpResponse(json.dumps({"data":data}), content_type='application/json')	
 		else:
 			logout(request)
@@ -887,8 +875,6 @@ def stats_csv(request):
 
 	writer = csv.writer(response, csv.excel)
 	response.write(u'\ufeff'.encode('utf8'))
-
-	row_num =0
 
 	writer.writerow([
 		smart_str(u"ID"),

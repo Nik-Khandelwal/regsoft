@@ -55,5 +55,9 @@ urlpatterns = [
 
     url(r'^con_pan_spec_details/$',views.con_pan_spec_details,name='con_pan_spec_details'),
 
-    url(r'^con_pan_edit/$',views.con_pan_edit,name='con_pan_edit'),    
+    url(r'^con_pan_edit/$',views.con_pan_edit,name='con_pan_edit'),
+
+    url(r'^sportlist/$',views.sportlist,name='sportlist'),
+
+    url(r'^bill_details/$',views.bill_details,name='bill_details'),
 ]

@@ -742,7 +742,7 @@ def con_pan_spec_details(request):
 		return HttpResponseRedirect('/regsoft/')
 	data = json.loads( request.body.decode('utf-8') )
 	t = Regplayer.objects.get(pk=data['data']['pk'])
-	data = {"pk":t.pk,"name":t.name.name,"sport":t.sport,"phone":t.mobile_no,"email":t.email_id,"blood_grp":t.blood_grp,"college":t.college,"city":t.city,"notes":t.notes}
+	data = {"pk":t.pk,"name":t.name.name,"sport":t.sport,"phone":t.mobile_no,"email":t.email_id,"blood_grp":t.blood_grp,"college":t.college,"city":t.address,"notes":t.notes}
 	return HttpResponse(json.dumps(data), content_type='application/json')
 
 
@@ -765,6 +765,7 @@ def con_pan_edit(request):
 		us.sportid=replaceindex(up.sportid,int(idno),'2')
 	us.save()
 	t.mobile_no = data['data']['phone']
+	t.address = data['data']['city']
 	t.email_id = data['data']['email']
 	t.blood_grp = data['data']['blood_grp']
 	t.notes = data['data']['notes']
@@ -778,6 +779,14 @@ def con_pan_edit(request):
 
 
 def sportlist(request):
+	if request.user.is_authenticated():
+		if is_controls_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
 	sp=Sport.objects.all().order_by(Lower('sport'))	
 	d=[]
 	for st in sp:
@@ -786,4 +795,21 @@ def sportlist(request):
 			s.append(st.sport)
 			d.append(s)
 	return JsonResponse({'data':d})
+
+
+def bill_details(request):
+	if request.user.is_authenticated():
+		if is_controls_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	dat = []
+	for b in Billcontrols.objects.all():
+		t = b.enteredplayer_set.all()
+		if t:
+			dat.append({"bill_pk":b.pk,"college":t[0].regplayer.college,"group_id":t[0].group.group_code})
+	return HttpResponse(json.dumps(dat), content_type='application/json')
 

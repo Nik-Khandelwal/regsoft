@@ -75,7 +75,8 @@ class Regplayer(models.Model):
 	notes = models.CharField(max_length=10000, null=True, blank=True)
 	blood_grp = models.CharField(max_length=100,null=True,blank=True)
 	uid = models.CharField(max_length=100,default="18CB0000")
-
+	address = models.CharField(max_length=1000,null=True, blank=True)
+	
 	def __str__(self):
 		return self.name.name
 	

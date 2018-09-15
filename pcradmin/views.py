@@ -2020,6 +2020,7 @@ def docapprove(request):
 				for s in Sport.objects.all():
 					if u.sportid[s.idno]=='2':
 						rp.sport=rp.sport+s.sport+','
+				rp.sport = rp.sport[:-1]
 				try:
 					rp.save()
 					rp.uid = "18CB"+str(100000+rp.pk)[-4:]

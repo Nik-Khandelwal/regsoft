@@ -7,7 +7,7 @@ i {
 
 .left-one {
   position: fixed;
-  height: 70vh;
+  height: 60vh;
   width: 45vw;
   top: 11vh;
   left: 5vw;
@@ -54,7 +54,7 @@ i {
 
 .select_all-btn {
   position: fixed;
-  top: 84vh;
+  top: 74vh;
   left: 7vw;
   width: 15vw;
   padding: 0 1vmin;
@@ -63,7 +63,7 @@ i {
 
 .deselect_all-btn {
   position: fixed;
-  top: 84vh;
+  top: 74vh;
   left: 28vw;
   width: 15vw;
   padding: 0 1vmin;
@@ -78,7 +78,7 @@ i {
 
 .gen_bill-btn {
   position: fixed;
-  top: 84vh;
+  top: 74vh;
   left: 57.5vw;
   width: 15vw;
   padding: 0 1vmin;
@@ -86,7 +86,7 @@ i {
 }
 .stats_1{
     position: fixed;
-    top: 84vh;
+    top: 74vh;
     width:15vw;
     left: 77.5vw;
      padding: 0 1vmin;
@@ -134,7 +134,7 @@ i {
 
 .right-one {
   position: fixed;
-  height: 70vh;
+  height: 60vh;
   width: 40vw;
   top: 12vh;
   left: 55vw;
@@ -170,7 +170,7 @@ i {
 .right-one tbody {
   display: block;
   overflow-y: auto;
-  height: 62vh;
+  height: 52vh;
 }
 
 
@@ -308,6 +308,11 @@ body::-webkit-scrollbar-thumb, #left-table-ul::-webkit-scrollbar-thumb, #right-b
   top: 12vh;
   right: 0.5vw;
 }
+#undoAll {
+  position: fixed;
+  top: 24vh;
+  right: 0.5vw;
+}
 
 .modal {
   width: 85%;
@@ -363,8 +368,8 @@ body::-webkit-scrollbar-thumb, #left-table-ul::-webkit-scrollbar-thumb, #right-b
   left: 5vw;
   top: 1vh;
 }
-.ham1{position: absolute;right: 0;bottom: 11vh;}
-.ham2{position: absolute;right: 0;top: 0;}
+.ham2{position: absolute;right: 0;bottom: 21vh;}
+.ham1{position: absolute;right: 0;top: 0;}
 .stats{position: fixed;z-index: 1;width: 100vw;top: 0;left: 0;transition: 0.5s;}
 #close{;z-index: 5;display: none;cursor: pointer;}
 #stat_data{;z-index: 5;display: none;height:80vh;overflow-y: auto;}
@@ -401,3 +406,9 @@ html {
 .part_id {
   display: none;
 }
+.firewallz_part{position: fixed; top: 2vh; left: 54vw;}
+.controls_part{position: fixed; top: 2vh; left: 71vw;}
+.recnacc_part{position: fixed; top: 2vh; left: 88vw;}
+.ham1{display: none}
+#notes-container{position: fixed; bottom: 1vh; max-height: 15vh; overflow: auto; margin: 0; text-align: center; left: 15vw; max-width: 70vw;}
+.custom-collapsible-body,.bhawan-gender-pref{display: none;}

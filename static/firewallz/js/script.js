@@ -1,6 +1,8 @@
 $(document).ready(function() {
   fetchParticipants();
-  $('.modal').modal();
+  $('.modal').modal({
+    dismissible: false
+  });
   $('.coll-1').sideNav({
       menuWidth: 200, // Default is 300
       edge: 'right', // Choose the horizontal origin
@@ -15,6 +17,7 @@ $(document).ready(function() {
       draggable: true // Choose whether you can drag to open on touch screens
     }
   );
+  fetchPassedStats();
 });
 function fetchParticipants() {
   Materialize.toast('Updating Participants List!', 4000, "toast-fetch");
@@ -193,14 +196,14 @@ function confirmGroup() {
     if (ourRequest.readyState === 4 && ourRequest.status === 200) {
       json = JSON.parse(ourRequest.responseText);
       var groupCode = json.groupcode;
-      console.log(groupCode);
-      showGroupCode(groupCode);
+      var grouppk = json.pk;
+      showGroupCode(grouppk, groupCode);
       resetTables();
       fetchParticipants();
       sendPusherUpdate(JSON.stringify(myObj));
     } else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
       Materialize.toast('There was some error connecting to the server!', 3000);
-      showGroupCode('ERROR');
+      showGroupCode(0,'ERROR');
       resetTables();
       fetchParticipants();
     }
@@ -222,8 +225,8 @@ function getCookie(name) {
   var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
   return v ? v[2] : null;
 }
-function showGroupCode(code) {
-  document.getElementById('confirm_text').innerHTML = 'GROUPCODE<br><br><b>'+code+'</b><br><br><a class="waves-effect waves-light btn z-depth-3" href="/firewallz/id_card/'+code+'/" target="_blank"><span>Print ID Cards</span></a>';
+function showGroupCode(pk, code) {
+  document.getElementById('confirm_text').innerHTML = 'GROUP NO.&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;GROUPCODE<br><br><b>'+pk+'&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;'+code+'</b><br><br><a class="waves-effect waves-light btn z-depth-3" href="/firewallz/id_card/'+code+'/" target="_blank"><span>Print ID Cards</span></a>';
   document.getElementById('group_confirm_btn1').style.display = 'none';
   document.getElementById('group_confirm_btn2').style.display = 'none';
   document.getElementById('group_confirm_btn3').style.display = 'inline-block';
@@ -236,7 +239,7 @@ function addParticipant() {
   $('#add_participant_modal').modal('open');
 }
 function resetAddForm() {
-  document.getElementById('add_participant_modal').innerHTML = '<div class="row"> <form class="col s12" id="add_participant_form"> <div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">person</i> <input type="text" name="Indi_Captain_Name" id="indi_captain_name_field" class="validate" required="required"> <label for="indi_captain_name_field" data-error="Enter Name of Participant">Name of Participant</label> </div></div><div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">business</i> <select id="college_field" name="College"> <option value="" disabled="disabled" selected="selected"></option> </select> <label for="college_field" data-error="Select College Name">College</label> </div></div><div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">email</i> <input type="email" name="Indi_Captain_Email" id="indi_captain_email_field" class="validate" required="required"> <label for="indi_captain_email_field" data-error="Enter a Valid Email">E-Mail of Participant</label> </div></div><div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">local_phone</i> <input type="text" name="Indi_Captain_Phone" id="indi_captain_phone_field" class="validate" required="required" maxlength="10" data-length="10"> <label for="indi_captain_phone_field" data-error="Enter Phone Number">Participant Phone Number</label> </div></div><div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">directions_run</i> <select id="participant_sport_select" multiple="multiple"> <option value="" disabled="disabled" selected="selected"></option> </select> <label for="indi_sport_field" data-error="Enter Sport of Participant">Sport</label> </div></div><div class="row"> <div class="col s4 center"> Gender </div><div class="col s4 center"> <input type="radio" name="indi_gender" id="indi_male" value="Male"> <label for="indi_male">Male</label> </div><div class="col s4 center"> <input type="radio" name="indi_gender" id="indi_female" value="Female"> <label for="indi_female">Female</label> </div></div><div class="row" id="submit-indi-btn"> <div class="col s12 center"> <a class="waves-effect waves-light btn btn-large" onclick="addParticipantSubmit()"><i class="material-icons right">send</i>Submit</a> </div></div></form> </div>';
+  document.getElementById('add_participant_modal').innerHTML = '<div class="modal-content row"> <form class="col s12" id="add_participant_form"> <div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">person</i> <input type="text" name="Indi_Captain_Name" id="indi_captain_name_field" class="validate" required="required"> <label for="indi_captain_name_field" data-error="Enter Name of Participant">Name of Participant</label> </div></div><div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">business</i> <select id="college_field" name="College"> <option value="" disabled="disabled" selected="selected"></option> </select> <label for="college_field" data-error="Select College Name">College</label> </div></div><div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">email</i> <input type="email" name="Indi_Captain_Email" id="indi_captain_email_field" class="validate" required="required"> <label for="indi_captain_email_field" data-error="Enter a Valid Email">E-Mail of Participant</label> </div></div><div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">local_phone</i> <input type="text" name="Indi_Captain_Phone" id="indi_captain_phone_field" class="validate" required="required" maxlength="10" data-length="10"> <label for="indi_captain_phone_field" data-error="Enter Phone Number">Participant Phone Number</label> </div></div><div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">directions_run</i> <select id="participant_sport_select" name="participant_sport_select" multiple="multiple"> <option value="" disabled="disabled" selected="selected"></option> </select> <label for="indi_sport_field" data-error="Enter Sport of Participant">Sport</label> </div></div><div class="row"> <div class="col s4 center"> Gender </div><div class="col s4 center"> <input type="radio" name="indi_gender" id="indi_male" value="Male"> <label for="indi_male">Male</label> </div><div class="col s4 center"> <input type="radio" name="indi_gender" id="indi_female" value="Female"> <label for="indi_female">Female</label> </div></div><div class="row" id="submit-indi-btn"> <div class="col s12 center"> <a class="waves-effect waves-light btn btn-large" onclick="addParticipantSubmit()"><i class="material-icons right">send</i>Submit</a> </div></div></form> </div><div class="modal-footer"> <a class="modal-action modal-close waves-effect waves-green btn-flat">Close</a> </div>';
   $('select').material_select();
   Materialize.updateTextFields();
   $("input#indi_captain_phone_field").characterCounter();
@@ -283,8 +286,8 @@ function fetchCollegeList() {
       collegeList = college.data;
       Materialize.toast('Updated College List!', 3000);
       document.getElementById('college_field').innerHTML = '<option value="" disabled="disabled" selected="selected"></option>';
-      for (var i = 0; i < college.length; i++) {
-        document.getElementById('college_field').innerHTML += '<option value="'+college[i].pk+'">'+college[i].college+'</option>';
+      for (var i = 0; i < collegeList.length; i++) {
+        document.getElementById('college_field').innerHTML += '<option value="'+collegeList[i].pk+'">'+collegeList[i].college+'</option>';
       }
       $('select').material_select();
       Materialize.updateTextFields();
@@ -315,7 +318,6 @@ function addParticipantSubmit() {
   if (formData[i] != undefined) {
     participant_gender = formData[i].value;
   }
-
   if (participant_gender == '') {
     Materialize.toast('Please Enter Participants Gender!', 3000);
   } else if (!validateEmail(participant_email) || !validatePhoneNumber(participant_phone)) {
@@ -590,7 +592,6 @@ function fetchStats() {
   ourRequest.onload = function() {
     if (ourRequest.status >= 200 && ourRequest.status < 400) {
       ourData = JSON.parse(ourRequest.responseText);
-      console.log(ourData);
       var data = ourData.data;
       for (var i = 0; i < data.length; i++) {
         var participants = '';
@@ -625,8 +626,11 @@ function fetchPassedStats() {
       document.getElementById('fire_conf').innerHTML = ourData.fire_conf;
       document.getElementById('cont_conf').innerHTML = ourData.cont_conf;
       document.getElementById('rec_conf').innerHTML = ourData.rec_conf;
+      document.getElementById('firewallz_passed_stats_text').innerHTML = ourData.fire_conf;
+      document.getElementById('controls_passed_stats_text').innerHTML = ourData.cont_conf;
+      document.getElementById('recnacc_passed_stats_text').innerHTML = ourData.rec_conf;
     } else {
-      Materialize.toast('Server Error!', 4000, "toast-fetch_error");  
+      Materialize.toast('Couldn\'t update stats!', 3000, "toast-fetch_error");  
     }
   }
   ourRequest.onerror = function() {
@@ -642,9 +646,39 @@ var pusher = new Pusher('9b825df805e0b694cccc', {
 
 var firewallz_unconfirm_channel = pusher.subscribe('firewallz_unconfirm_channel');
 firewallz_unconfirm_channel.bind('firewallz_unconfirm_event', function(data) {
-  console.log(data);
   pusher_updateLeftTable(data);
+  fetchPassedStats();
   // Data Format - Same as Firewallz Details View
+});
+// Controls to RecnAcc Channel
+var channel = pusher.subscribe('my-channel');
+channel.bind('my-event', function(data) {
+  fetchPassedStats();
+});
+// Below Channel for Data from Controls Unconfirm Socket
+var controls_unconfirm_channel = pusher.subscribe('controls_unconfirm_channel');
+controls_unconfirm_channel.bind('controls_unconfirm_event', function(data) {
+  fetchPassedStats();
+});
+// Firewallz to Controls Channel
+var channel2 = pusher.subscribe('my-channel2');
+channel2.bind('my-event2', function(data) {
+  fetchPassedStats();
+});
+// RecnReAcc Channel to RecnAcc Channel
+var recnreacc_channel = pusher.subscribe('recnreacc_channel');
+recnreacc_channel.bind('recnreacc_event', function(data) {
+  fetchPassedStats();
+});
+// RecnAcc Channel to RecnReAcc Channel
+var recnacc_channel = pusher.subscribe('recnacc_channel');
+recnacc_channel.bind('recnacc_event', function(data) {
+  fetchPassedStats();
+});
+// RecnDeAcc Channel to RecnDeallocated Channel
+var recndeacc_channel = pusher.subscribe('recndeacc_channel');
+recndeacc_channel.bind('recndeacc_event', function(data) {
+  fetchPassedStats();
 });
 
 function sendPusherUpdate(stringObj) {
@@ -677,10 +711,10 @@ function pusher_updateLeftTable(data) {
   var lefttmp = document.getElementById('left-temp');
   for (var i = 0; i < data.length; i++) {
     document.getElementById("left-body").insertBefore(lefttmp.content.cloneNode(true), document.getElementById("left-body").childNodes[0]);
-    document.getElementsByClassName('left-table-name')[i].innerHTML = data[i].fields.name;
-    document.getElementsByClassName('left-table-college')[i].innerHTML = data[i].fields.college;
-    document.getElementsByClassName('left-table-sport')[i].innerHTML = data[i].fields.sport;
-    document.getElementsByClassName('left-table-gender')[i].innerHTML = data[i].fields.gender;
-    document.getElementsByClassName('left-table-id')[i].innerHTML = data[i].pk;
+    document.getElementsByClassName('left-table-name')[0].innerHTML = data[i].fields.name;
+    document.getElementsByClassName('left-table-college')[0].innerHTML = data[i].fields.college;
+    document.getElementsByClassName('left-table-sport')[0].innerHTML = data[i].fields.sport;
+    document.getElementsByClassName('left-table-gender')[0].innerHTML = data[i].fields.gender;
+    document.getElementsByClassName('left-table-id')[0].innerHTML = data[i].pk;
   }
 }

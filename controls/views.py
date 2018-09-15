@@ -433,6 +433,7 @@ def unconfirm_player(request):
 		return HttpResponseRedirect('/regsoft/')
 	if request.method=='POST':
 		data = json.loads( request.body.decode('utf-8') )
+		fne = 0
 		for i in data['data']['id_arr']:
 			rp = Regplayer.objects.get(pk=int(i))
 			rp.unbilled_amt = 1100-int(rp.name.pcramt)
@@ -441,7 +442,8 @@ def unconfirm_player(request):
 			pl.controls_passed = False
 			pl.billcontrols = None
 			pl.save()
-		dat = {"success":1}
+			fne += rp.unbilled_amt
+		dat = {"unbilled_amt":fne}
 		return HttpResponse(json.dumps(dat), content_type='application/json')
 
 
@@ -757,10 +759,31 @@ def con_pan_edit(request):
 	t = Regplayer.objects.get(pk=data['data']['pk'])
 	us = User.objects.get(pk=t.name.pk)
 	us.name = data['data']['name']
+	for idno in data['data']['sport_id']:
+		sp=Sport.objects.get(pk=int(idno))
+		us.sport.add(sp)
+		us.sportid=replaceindex(up.sportid,int(idno),'2')
 	us.save()
 	t.mobile_no = data['data']['phone']
 	t.email_id = data['data']['email']
 	t.blood_grp = data['data']['blood_grp']
 	t.notes = data['data']['notes']
+	t.sport=''
+	for s in Sport.objects.all():
+		if us.sportid[s.idno]=='2':
+			t.sport=t.sport+s.sport+','
+	t.sport = t.sport[:-1]
 	t.save()
 	return HttpResponse(json.dumps({"success":1}), content_type='application/json')
+
+
+def sportlist(request):
+	sp=Sport.objects.all().order_by(Lower('sport'))	
+	d=[]
+	for st in sp:
+			s=[]
+			s.append(st.idno)
+			s.append(st.sport)
+			d.append(s)
+	return JsonResponse({'data':d})
+

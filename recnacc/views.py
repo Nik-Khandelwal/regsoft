@@ -344,7 +344,7 @@ def unconfirm_acco_details(request):
 				for p in pl:
 					t = Regplayer.objects.get(pk=p.regplayer_id)
 					hos = str(p.accorecnacc.accomodation)
-					if p.accorecnacc.singleroom
+					if p.accorecnacc.singleroom:
 						hos+=str(p.accorecnacc.singleroom)
 					b.append({"hostel":hos,"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
 					p.recnacc_displayed = True
@@ -509,7 +509,7 @@ def reconfirm_acco_details(request):
 				for p in pl:
 					t = Regplayer.objects.get(pk=p.regplayer_id)
 					hos = str(p.accorecnacc.accomodation)
-					if p.accorecnacc.singleroom
+					if p.accorecnacc.singleroom:
 						hos+=str(p.accorecnacc.singleroom)
 					b.append({"hostel":hos,"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
 					p.recnacc_displayed = True
@@ -776,7 +776,7 @@ def deallocated_page(request):
 				for p in pl:
 					t = Regplayer.objects.get(pk=p.regplayer_id)
 					hos = str(p.accorecnacc.accomodation)
-					if p.accorecnacc.singleroom
+					if p.accorecnacc.singleroom:
 						hos+=str(p.accorecnacc.singleroom)
 					b.append({"hostel":hos,"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
 					p.recnacc_displayed = True

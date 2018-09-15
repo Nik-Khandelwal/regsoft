@@ -340,7 +340,7 @@ def unconfirm_player(request):
 		print(data)
 		dat = []
 		pl = Regplayer.objects.get(pk=data['data']['participant_id'])
-		pl.entered = 0
+		pl.entered = False
 		pl.save()
 		en = Enteredplayer.objects.get(regplayer=pl)
 		en.delete()
@@ -369,7 +369,7 @@ def unconfirm_player_grp(request):
 		gr = Group.objects.get(pk=data['data']['group_id'])
 		for pl in gr.enteredplayer_set.filter(controls_passed=False):
 			rp = Regplayer.objects.get(pk=pl.regplayer.pk)
-			rp.entered = 0
+			rp.entered = False
 			rp.save()
 			pl.delete()
 			b = {"name":rp.name.name,"gender":rp.gender,"college":rp.college,"city":rp.city,"mobile_no":rp.mobile_no,"email_id":rp.email_id,"sport":rp.sport,"entered":rp.entered,"unbilled_amt":rp.unbilled_amt}

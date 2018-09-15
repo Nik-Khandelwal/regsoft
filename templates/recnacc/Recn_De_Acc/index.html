@@ -23,7 +23,7 @@
     <!-- DESELECT ALL BUTTON -->
     <a class="waves-effect waves-light btn deselect_all-btn tooltipped z-depth-5" data-position="bottom" data-delay="50" data-tooltip="Deselect all of the participants" onclick="sel_all_all(1)"><i class="material-icons left" id="desel-icon">check_box_outline_blank</i><span class="desel-text">Deselect All</span></a>
     <!-- Deaccomodate BUTTON-->
-    <a  class="waves-effect waves-light btn gen_bill-btn tooltipped z-depth-5 modal-trigger red darken-4" data-position="bottom" data-delay="50" data-tooltip="De-Accomodate selected participants" onclick="openFines()"><i class="material-icons left" id="bill-icon">receipt</i><span class="bill-text">De-Accomodate</span></a>
+    <a  class="waves-effect waves-light btn gen_bill-btn tooltipped z-depth-5 modal-trigger red darken-4" data-position="bottom" data-delay="50" data-tooltip="De-Accomodate selected participants" onclick="openFines()"><i class="material-icons left" id="bill-icon">receipt</i><span class="bill-text">Check Out</span></a>
     <a class="waves-effect waves-light btn stats_1 z-depth-5" data-position="bottom" style=""><span id="stats">Selected: 0</span></a>
     <ul class="collapsible left-one blue lighten-5" data-collapsible="expandable" id="left-table-ul">
     </ul>
@@ -91,10 +91,13 @@
         <td style="display: none;" class="right-hostel-alloc">Hostel Name</td>
       </tr>
     </template>
-    <div id="due" class="modal">
+    <div id="due" class="modal modal-fixed-footer">
       <div class="modal-content center">
-        <h5>Amount Fined to the participant</h5>
+        <h5>Total Amount Fined </h5>
         <p id="amount_fine">Rs. 99999</p>
+        <ul class="collection" id="parts-list">
+          <li class="collection-item"><div>Arpit Anshuman<a class="secondary-content">Rs 100</a></div></li>
+        </ul>
       </div>
       <div class="modal-footer">
         <a class="modal-action modal-close waves-effect waves-green btn-flat">Completed</a>

@@ -15,6 +15,7 @@
   <body onload="loaded();">
     <!-- Notification Button -->
     <a href="#updates-modal" class="btn-floating btn-large waves-effect waves-light cyan z-depth-4 modal-trigger" onclick="disablePulse()" id="notification"><i class="material-icons">alarm</i></a>
+    <a class="btn-floating btn-large waves-effect waves-light cyan z-depth-4 tooltipped" data-position="left" data-delay="50" data-tooltip="Undo All" onclick="undoAll()" id="undoAll"><i class="material-icons">undo</i></a>
     <!-- BUTTONS -->
     <!-- ADD ALL SELECTED BUTTON -->
     <a class="btn-floating btn-large waves-effect waves-light add_all-btn tooltipped z-depth-3" data-position="right" data-delay="50" data-tooltip="Add all selected participants" onclick="add_all_sel();"><i class="material-icons">add</i></a>
@@ -256,10 +257,10 @@
         </div>
       </li>
       <li><a class="waves-effect" >Accomodate</a></li>
-      <li><a class="waves-effect" href="/recnacc/reconfirm_acco/">Re Accomodate</a></li>
-      <li><a class="waves-effect" href="/recnacc/unconfirm_acco/">De Accomodate</a></li>
+      <li><a class="waves-effect" href="/recnacc/reconfirm_acco/">Change Acco</a></li>
+      <li><a class="waves-effect" href="/recnacc/unconfirm_acco/">Checkout</a></li>
       <li><a class="waves-effect" onclick="stats()">Stats</a></li>
-      <li><a class="waves-effect" href="/recnacc/acco_strength/">Acco Strength</a></li>
+      <li><a class="waves-effect" href="/recnacc/acco_strength/">Acco Capacity</a></li>
       <li><a class="waves-effect" href="/recnacc/notes/">Add Notes</a></li>
       <li><a class="waves-effect" href="/recnacc/deallocated/">De Allocated</a></li>
       <li><a class="waves-effect" href="/recnacc/fines/">Add Fines</a></li>
@@ -436,7 +437,7 @@
         </ul>
       </div>
     </div>
-    <footer class="page-footer blue darken-2">
+    <!-- <footer class="page-footer blue darken-2">
       <div class="container">
         <div class="row">
           <div class="col s12 center">
@@ -444,6 +445,10 @@
           </div>
         </div>
       </div>
-    </footer>
+    </footer> -->
+    <div class="container" id="notes-container">
+      <ul class="collection" id="notes-collection">
+      </ul>
+    </div>
   </body>
 </html>

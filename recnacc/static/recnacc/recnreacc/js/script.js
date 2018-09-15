@@ -59,15 +59,11 @@ function loaded() {
     $(".sel-text").innerHTML="Deselect All";
     }
   });
-  
-  $(document).ready(function(){
-    $('.collapsible').collapsible();
-    for (var i = 0; i < document.getElementsByClassName('collapsible').length; i++) {   
-      $('.collapsible').collapsible('close', i);    
-    }
-  });
+  $('.collapsible').collapsible();
   $('select').material_select();
-  $('.modal').modal();
+  $('.modal').modal({
+    dismissible: false
+  });
   $('.coll-1').sideNav({
       menuWidth: 200, // Default is 300
       edge: 'right', // Choose the horizontal origin
@@ -149,6 +145,7 @@ function l_to_r(elem) {
   indiv_gender = next.getElementsByClassName("gender")[0].innerHTML;
   indiv_group = next.getElementsByClassName("group-id")[0].innerHTML;
   indiv_id = next.getElementsByClassName("indiv-id")[0].innerHTML;
+  indiv_hostel = next.getElementsByClassName("hostel-alloc")[0].innerHTML;
   // add to right
   var tmp = document.getElementById("right-indiv-temp"); //template
   var rightbody = document.getElementById("right-body");
@@ -164,6 +161,7 @@ function l_to_r(elem) {
   up.getElementsByClassName("right-indiv-gender")[0].innerHTML = indiv_gender;
   up.getElementsByClassName("right-indiv-group")[0].innerHTML = indiv_group;
   up.getElementsByClassName("right-indiv-id")[0].innerHTML = indiv_id;
+  up.getElementsByClassName("right-hostel-alloc")[0].innerHTML = indiv_hostel;
   // set to unchecked at left for group header
   elem.parentElement.firstElementChild.firstElementChild.innerHTML = "check_box_outline_blank";
   // remove from left || display none 
@@ -185,6 +183,7 @@ function r_to_l(elem) {
   indiv_group = elem.getElementsByClassName("right-indiv-group")[0].innerHTML;
   indiv_gender = elem.getElementsByClassName("right-indiv-gender")[0].innerHTML;
   indiv_id = elem.getElementsByClassName("right-indiv-id")[0].innerHTML;
+  indiv_hostel = elem.getElementsByClassName("right-hostel-alloc")[0].innerHTML;
   // Search group for element in left table/expandable
   find = 0;
     total--;
@@ -214,6 +213,7 @@ function add_to_left(l_index) {
   update.getElementsByClassName("group-id")[0].innerHTML = indiv_group;
   update.getElementsByClassName("gender")[0].innerHTML = indiv_gender;
   update.getElementsByClassName("indiv-id")[0].innerHTML = indiv_id;
+  update.getElementsByClassName("hostel-alloc")[0].innerHTML = indiv_hostel;
 }
 var net_gender;
 var id_arr;
@@ -302,6 +302,7 @@ function poppulate_left(ourData) {
       indiv_group = ourData[ind].groupid;
       indiv_gender = ourData[ind].participants[j].indiv_gender;
       indiv_id = ourData[ind].participants[j].indiv_id;
+      indiv_hostel = ourData[ind].participants[j].indiv_hostel;
       add_to_left(document.getElementsByClassName("list-ind")[0]); // insert participant to group 0 || first li of ul
     }
   }
@@ -767,9 +768,6 @@ function fetchStats() {
         document.getElementById('stats_ul').innerHTML += '<li class="bhawan-name-wrapper"> <div class="collapsible-header"><i class="material-icons">airline_seat_individual_suite</i>'+hostel_name+'</div><div class="collapsible-body center white bhawan-wrapper"> <ul class="collapsible popout center-align" data-collapsible="accordion" style="width: 100%;">'+common_room+tt_room+single_room+'</ul> </div></li>';
       }
       $('.collapsible').collapsible();
-      for (var i = 0; i < document.getElementsByClassName('collapsible').length; i++) {
-        $('.collapsible').collapsible('close', i);
-      }
       statsReady = 1;
     } else {
       Materialize.toast('Server Error!', 3000, "toast-fetch_error");  
@@ -924,6 +922,7 @@ function pusher_poppulate_left(ourData) {
       indiv_group = ourData[ind].groupid;
       indiv_gender = ourData[ind].participants[j].indiv_gender;
       indiv_id = ourData[ind].participants[j].indiv_id;
+      indiv_hostel = ourData[ind].participants[j].indiv_hostel;
       add_to_left(document.getElementsByClassName("list-ind")[0]); // insert participant to group 0 || first li of ul
     }
   }

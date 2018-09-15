@@ -23,7 +23,7 @@
     <!-- DESELECT ALL BUTTON -->
     <a class="waves-effect waves-light btn deselect_all-btn tooltipped z-depth-5" data-position="bottom" data-delay="50" data-tooltip="Deselect all of the participants" onclick="sel_all_all(1)"><i class="material-icons left" id="desel-icon">check_box_outline_blank</i><span class="desel-text">Deselect All</span></a>
     <!-- Deaccomodate BUTTON-->
-    <a  class="waves-effect waves-light btn gen_bill-btn tooltipped z-depth-5 modal-trigger" data-position="bottom" data-delay="50" data-tooltip="De-Accomodate selected participants" onclick="deacc()"><i class="material-icons left" id="bill-icon">receipt</i><span class="bill-text">De-Accomodate</span></a>
+    <a  class="waves-effect waves-light btn gen_bill-btn tooltipped z-depth-5 modal-trigger red darken-4" data-position="bottom" data-delay="50" data-tooltip="De-Accomodate selected participants" onclick="openFines()"><i class="material-icons left" id="bill-icon">receipt</i><span class="bill-text">De-Accomodate</span></a>
     <a class="waves-effect waves-light btn stats_1 z-depth-5" data-position="bottom" style=""><span id="stats">Selected: 0</span></a>
     <ul class="collapsible left-one blue lighten-5" data-collapsible="expandable" id="left-table-ul">
     </ul>
@@ -56,12 +56,12 @@
       <template id="left-indiv-temp">
         <div class="collapsible-body blue lighten-5">
           <i style="flex-basis: 10%;" class="material-icons indiv-icon-check tooltipped" data-position="right" data-delay="50" data-tooltip="Select/Deselect this participant" onclick="click_indiv(this);">check_box_outline_blank</i>
-          <span class="name center" style="flex-basis: 35%;">Name Name</span>
+          <span class="name center" style="flex-basis: 30%;">Name Name</span>
           <span class="coll-name center" style="flex-basis: 30%;">Indian Institute Of Technology, Delhi</span>
           <span class="group-id" style="display: none">PQR123</span>
           <span class="gender center" style="flex-basis: 15%;">Male</span>
           <span class="indiv-id" style="display: none">123</span>
-          <i style="flex-basis: 10%;" class="material-icons">account_circle</i>
+          <span class="hostel-alloc" style="flex-basis: 15%;">Hostel Name</span>
         </div>
       </template>
     </template>
@@ -88,6 +88,7 @@
         <td style="display: none;" class="right-indiv-group">$0.87</td>
         <td style="display: none;" class="right-indiv-id">$0.87</td>
         <td style="flex-basis: 20%;" class="right-indiv-undo" onclick="undo_this(this.parentElement);"><i class="material-icons tooltipped" data-position="left" data-delay="50" data-tooltip="Undo selection of this participant">undo</i></td>
+        <td style="display: none;" class="right-hostel-alloc">Hostel Name</td>
       </tr>
     </template>
     <div id="due" class="modal">
@@ -97,6 +98,54 @@
       </div>
       <div class="modal-footer">
         <a class="modal-action modal-close waves-effect waves-green btn-flat">Completed</a>
+      </div>
+    </div>
+    <div id="fines-div" class="modal modal-fixed-footer">
+      <div class="modal-content">
+        <div class="container blue lighten-5" id="fines-wrapper">
+          <div class="row" id="acco-wrapper">
+            <div class="row">
+              <div class="col s12 hostel-header">BUDH</div>
+              <div class="col s8 center rooms-header">Name</div>
+              <div class="col s2 center rooms-header">Fine</div>
+              <div class="col s2 center rooms-header">Current</div>
+              <div class="col s8 center rooms-content">Common Room</div>
+              <div class="col s2 center rooms-content change-cursor" onclick="addFine(12)"><i class="material-icons">airline_seat_individual_suite</i></div>
+              <div class="col s2 center rooms-content">1000</div>
+              <div class="col s8 center rooms-content">TT Room</div>
+              <div class="col s2 center rooms-content change-cursor" onclick="addFine(23)"><i class="material-icons">airline_seat_individual_suite</i></div>
+              <div class="col s2 center rooms-content">1000</div>
+              <div class="col s8 center rooms-content">Single Room</div>
+              <div class="col s2 center rooms-content change-cursor" onclick="addFine(32)"><i class="material-icons">airline_seat_individual_suite</i></div>
+              <div class="col s2 center rooms-content">1000</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a class="modal-action modal-close waves-effect waves-green btn-flat" onclick="deacc()">Check Out</a>
+        <a class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+      </div>
+    </div>
+    <div id="edit-fine-modal" class="modal bottom-sheet blue lighten-2">
+      <div class="modal-content">
+        <div class="row">
+          <div class="col s12" id="edit-fine-header">Edit Strength</div>
+        </div>
+        <div class="row">
+          <form class="col s12" id="edit-fine-form">
+            <div class="row">
+              <div class="input-field col s12" id="edit-fine-field">
+                <input type="number" name="add-fine" id="add-fine" value="0">
+                <label for="add-fine">Add Fine</label>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer blue lighten-2 center">
+        <a onclick="updateFine()" class="modal-action modal-close waves-effect waves-green btn-flat change-cursor">Add Fine</a>
+        <a class="modal-action modal-close waves-effect waves-green btn-flat change-cursor">Close</a>
       </div>
     </div>
     <ul id="slide-out" class="side-nav">
@@ -110,10 +159,10 @@
       
     </div></li>
     <li><a class="waves-effect" href="/recnacc/">Accomodate</a></li>
-    <li><a class="waves-effect" href="/recnacc/reconfirm_acco/">Re Accomodate</a></li>
-    <li><a class="waves-effect" href="/recnacc/unconfirm_acco/">De Accomodate</a></li>
+    <li><a class="waves-effect" href="/recnacc/reconfirm_acco/">Change Acco</a></li>
+    <li><a class="waves-effect" href="/recnacc/unconfirm_acco/">Checkout</a></li>
     <li><a class="waves-effect" onclick="stats()">Stats</a></li>
-    <li><a class="waves-effect" href="/recnacc/acco_strength/">Acco Strength</a></li>
+    <li><a class="waves-effect" href="/recnacc/acco_strength/">Acco Capacity</a></li>
     <li><a class="waves-effect" href="/recnacc/notes/">Add Notes</a></li>
     <li><a class="waves-effect" href="/recnacc/deallocated/">De Allocated</a></li>
     <li><a class="waves-effect" href="/recnacc/fines/">Add Fines</a></li>

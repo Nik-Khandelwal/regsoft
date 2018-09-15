@@ -34,7 +34,7 @@ function fetchParticipants() {
       var ourData = JSON.parse(ourRequest.responseText);
       var data = ourData.data;
       for (var i = 0; i < data.length; i++) {
-        document.getElementById('table-ul').innerHTML+='<div class="collapsible-body blue lighten-5"> <span class="name center" style="flex-basis: 45%;">'+data[i].name+'</span> <span class="coll-name center" style="flex-basis: 45%;">'+data[i].college+'</span> <i style="flex-basis: 10%;" class="material-icons">account_circle</i> </div>';
+        document.getElementById('table-ul').innerHTML+='<div class="collapsible-body blue lighten-5"> <span class="name center" style="flex-basis: 45%;">'+data[i].name+'</span> <span class="coll-name center" style="flex-basis: 45%;">'+data[i].college+'</span> <i style="flex-basis: 10%;" class="material-icons hover" onclick="addBack('+data[i].pk+')">add_circle</i> </div>';
       }
       Materialize.toast('Updated Participants!', 3000);
     } else {
@@ -141,7 +141,7 @@ function pusher_fetchParticipants() {
       var ourData = JSON.parse(ourRequest.responseText);
       var data = ourData.data;
       for (var i = 0; i < data.length; i++) {
-        document.getElementById('table-ul').innerHTML+='<div class="collapsible-body blue lighten-5"> <span class="name center" style="flex-basis: 45%;">'+data[i].name+'</span> <span class="coll-name center" style="flex-basis: 45%;">'+data[i].college+'</span> <i style="flex-basis: 10%;" class="material-icons">account_circle</i> </div>';
+        document.getElementById('table-ul').innerHTML+='<div class="collapsible-body blue lighten-5"> <span class="name center" style="flex-basis: 45%;">'+data[i].name+'</span> <span class="coll-name center" style="flex-basis: 45%;">'+data[i].college+'</span> <i style="flex-basis: 10%;" class="material-icons hover" onclick="addBack('+data[i].pk+')">add_circle</i> </div>';
       }
       // Nothing
     } else {
@@ -152,4 +152,33 @@ function pusher_fetchParticipants() {
     // Nothing
   }
   ourRequest.send('');
+}
+
+/////// RecnAcc Changes
+
+function addBack(id) {
+  var pk = parseInt(id);
+  var send_obj = {
+    "pk": pk
+  };
+  var string_obj = JSON.stringify(send_obj);
+  Materialize.toast('Adding Back!', 3000);
+  var csrf_token = getCookie('csrftoken');
+  var ourRequest = new XMLHttpRequest();
+  ourRequest.open("POST", "/recnacc/add_deallocated_page/", true);
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onload = function() {
+    if (ourRequest.status >= 200 && ourRequest.status < 400) {
+      var ourData = JSON.parse(ourRequest.responseText);
+      fetchParticipants();
+      Materialize.toast('Done!', 3000);
+    } else {
+      Materialize.toast('Error while connecting!', 3000);
+    }
+  }
+  ourRequest.onerror = function() {
+    Materialize.toast('Error while connecting!', 3000);
+  }
+  ourRequest.send(string_obj);
 }

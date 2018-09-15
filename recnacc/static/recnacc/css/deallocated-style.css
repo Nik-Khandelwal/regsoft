@@ -5,6 +5,15 @@ body, html {
 html {
   background-color: rgba(104, 168, 224, 0.3);
 }
+.hover {
+  cursor: pointer;
+}
+#wrap_searches {
+  position: fixed;
+  width: 45vw;
+  left: 5vw;
+  top: 1vh;
+}
 #head-deallocated-wrapper {
   padding: 5vh 0;
   font-variant: small-caps;

@@ -44,7 +44,7 @@ function loaded() {
   $(".group").each(function (index) {
   });
   retrieve_left();
-  // fetchBhawanStats();
+  fetchBhawanStats();
   fetchStats();
   fetchAvailabilityStats();
   
@@ -145,6 +145,7 @@ function l_to_r(elem) {
   indiv_gender = next.getElementsByClassName("gender")[0].innerHTML;
   indiv_group = next.getElementsByClassName("group-id")[0].innerHTML;
   indiv_id = next.getElementsByClassName("indiv-id")[0].innerHTML;
+  indiv_hostel = next.getElementsByClassName("hostel-alloc")[0].innerHTML;
   // add to right
   var tmp = document.getElementById("right-indiv-temp"); //template
   var rightbody = document.getElementById("right-body");
@@ -160,6 +161,7 @@ function l_to_r(elem) {
   up.getElementsByClassName("right-indiv-gender")[0].innerHTML = indiv_gender;
   up.getElementsByClassName("right-indiv-group")[0].innerHTML = indiv_group;
   up.getElementsByClassName("right-indiv-id")[0].innerHTML = indiv_id;
+  up.getElementsByClassName("right-hostel-alloc")[0].innerHTML = indiv_hostel;
   // set to unchecked at left for group header
   elem.parentElement.firstElementChild.firstElementChild.innerHTML = "check_box_outline_blank";
   // remove from left || display none 
@@ -181,6 +183,7 @@ function r_to_l(elem) {
   indiv_group = elem.getElementsByClassName("right-indiv-group")[0].innerHTML;
   indiv_gender = elem.getElementsByClassName("right-indiv-gender")[0].innerHTML;
   indiv_id = elem.getElementsByClassName("right-indiv-id")[0].innerHTML;
+  indiv_hostel = elem.getElementsByClassName("right-hostel-alloc")[0].innerHTML;
   // Search group for element in left table/expandable
   find = 0;
     total--;
@@ -210,6 +213,7 @@ function add_to_left(l_index) {
   update.getElementsByClassName("group-id")[0].innerHTML = indiv_group;
   update.getElementsByClassName("gender")[0].innerHTML = indiv_gender;
   update.getElementsByClassName("indiv-id")[0].innerHTML = indiv_id;
+  update.getElementsByClassName("hostel-alloc")[0].innerHTML = indiv_hostel;
 }
 var net_gender;
 var id_arr;
@@ -298,6 +302,7 @@ function poppulate_left(ourData) {
       indiv_group = ourData[ind].groupid;
       indiv_gender = ourData[ind].participants[j].indiv_gender;
       indiv_id = ourData[ind].participants[j].indiv_id;
+      indiv_hostel = ourData[ind].participants[j].hostel;
       add_to_left(document.getElementsByClassName("list-ind")[0]); // insert participant to group 0 || first li of ul
     }
   }
@@ -363,6 +368,50 @@ function showRequestStatus(success) {
   }
 }
 
+function reaccomodate_people() {
+  var csrf_token = getCookie('csrftoken');
+  // add id's of selected participants to json
+  id_arr = [];
+  gender_arr = [];
+  participants_arr = [];
+  send_obj = {
+    "data": {
+      "id_arr": id_arr
+    },
+    "csrftoken": {
+      "csrfmiddlewaretoken": csrf_token
+    }
+  };
+  i = 0;
+  accoLength = 0
+  elem_acco = document.getElementById("right-body").getElementsByClassName("right-indiv")[0];
+  if (elem_acco == undefined)
+    Materialize.toast('No participant added!', 4000, "toast-none_add");
+  else {
+    while (elem_acco) {
+      id_arr.push(elem_acco.getElementsByClassName("right-indiv-id")[0].innerHTML);
+      gender_arr.push(elem_acco.getElementsByClassName("right-indiv-gender")[0].innerHTML);
+      participants_arr.push(elem_acco.getElementsByClassName("right-indiv-name")[0].innerHTML);
+      i++;
+      elem_acco = document.getElementsByClassName("right-indiv")[i];
+    }
+    send_obj = {
+      "data": {
+        "id_arr": id_arr
+      },
+      "csrftoken": {
+        "csrfmiddlewaretoken": csrf_token
+      }
+    };
+    accoLength = i;
+    document.getElementById("select_bhawan").style.display = "block";
+    setTimeout('bhawan_open()', 10);
+    updateSelectBhawans(roomsData, id_arr);
+    createGroup();
+    reacc();
+  }
+}
+
 function reacc() {
   var csrf_token = getCookie('csrftoken');
   // add id's of selected participants to json
@@ -398,7 +447,7 @@ function reacc() {
     };
     accoLength = i;
     // $('#due').modal('open');
-    document.getElementById('amount_fine').innerHTML = 'Loading...';
+    // document.getElementById('amount_fine').innerHTML = 'Loading...';
     var ourRequest = new XMLHttpRequest();
     var url = "/recnacc/reaccomodate/";
     ourRequest.open("POST", url, true);
@@ -412,12 +461,12 @@ function reacc() {
         // var recieve_json = JSON.parse(ourRequest.responseText);
         // var fine = recieve_json.fine;
         // document.getElementById('amount_fine').innerHTML = 'Rs: ' + fine;
-        Materialize.toast('Updated', 4000);
-        showRequestStatus(1);
+        // Materialize.toast('Updated', 4000);
+        // showRequestStatus(1);
         sendPusherUpdate(JSON.stringify(send_obj));
       }
       else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
-        Materialize.toast('Error Fetching Fine!', 3000);
+        // Materialize.toast('Error Fetching Fine!', 3000);
         showRequestStatus(2);
       }
     }
@@ -425,239 +474,241 @@ function reacc() {
   }
 }
 //Opening Bhawan Select Modal
-// function bhawan_open(){
-//   document.getElementById('select_bhawan').style.height="100%";
-//   document.getElementById('select_bhawan').style.overflowY='auto';
-// }
-// function bhawan_close(){
-//   document.getElementById('select_bhawan').style.height="0";
-//   setTimeout(function() {
-//     document.getElementById('select_bhawan').style.display = 'none';
-//   }, 900);
-// }
+function bhawan_open(){
+  document.getElementById('select_bhawan').style.height="100%";
+  document.getElementById('select_bhawan').style.overflowY='auto';
+}
+function bhawan_close(){
+  document.getElementById('select_bhawan').style.height="0";
+  setTimeout(function() {
+    document.getElementById('select_bhawan').style.display = 'none';
+  }, 900);
+}
 
-// function fetchBhawanStats() {
-//   Materialize.toast('Fetching Bhawans Stats!', 4000, "toast-fetch");
-//   //GET Left List
-//   var csrf_token = getCookie('csrftoken');
-//   var ourRequest = new XMLHttpRequest();
-//   ourRequest.open("POST", "/recnacc/acco_details/", true); // method and url
-//   ourRequest.setRequestHeader("Content-type", "application/json");
-//   ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
-//   ourRequest.onload = function () {
-//     if (ourRequest.status >= 200 && ourRequest.status < 400) { // request sent and recieved
-//       ourData = JSON.parse(ourRequest.responseText);
-//       Materialize.toast('Updated Bhawans Stats!', 4000, "toast-fetch_fetched");
-//       roomsData = ourData;
-//     }
-//     else
-//       Materialize.toast('Server Error!', 4000, "toast-fetch_error");
-//   } // server sent an error after connection
-//   ourRequest.onerror = function () { // error connecting to URL
-//     Materialize.toast('Could not connect to server!', 4000, "toast-fetch_no_connect");
-//   }
-//   ourRequest.send(); // sending request
-// }
-// function updateSelectBhawans(data, participants) {
-//   // Update Bhawans Data displayed in Modal
-//   document.getElementById("datas").innerHTML = '<ul class="collection" id="rooms-collection"></ul>';
-//   var collection_size = 0;
-//   var participants_size = participants.length;
-//   for(var i = 0; i < data.fields.length; i++) {
-//     if (data.fields[i].rooms != undefined) {
-//       // Collapsible Template
-//       document.getElementById("rooms-collection").innerHTML += '<li class="collection-item search-class"> <ul class="collapsible" data-collapsible="expandable"> <li> <div class="collapsible-header"><i class="material-icons">hotel</i><span>'+data.fields[i].name+'</span></div><div class="collapsible-body custom-collapsible-body"></div></li>';
-//       collection_size++;
-//       var count=0;
-//       participants_size = participants.length;
-//       for (var j = 0; participants_size--; j++) {
-//         document.getElementsByClassName("custom-collapsible-body")[collection_size-1].innerHTML += '<div class="container"> <div class="row"> <div class="col s6 center participant_name"> <h5 class="participant-name-wrapper">'+participants_arr[j]+'</h5> </div><div class="input-field col s6"> <select class="select_rooms" id="Participant_'+data.fields[i].id+'_'+j+'" bhawan-id='+data.fields[i].id+'> <option value="" selected>Room No.</option> </select> </div></div></div>';
-//       }
-//       document.getElementById("rooms-collection").innerHTML += '<li> <div class="collapsible-header center"> <span class="shift-btn-right"><a onclick="selectBhawanRooms('+data.fields[i].id+')" class="secondary-content waves-effect waves-light btn"><i class="material-icons right">done</i>Confirm</a></span> </div></ul> </li>';
-//       var no_select= document.getElementsByClassName("select_rooms");
-//       for(var l = 0; l < no_select.length; l++) {
-//         each_select=no_select[l];
-//         for(var w = 0; w < data.fields[i].rooms.length; w++) {
-//           var bhawan_id = document.getElementsByClassName('select_rooms')[l].getAttribute('bhawan-id');
-//           // var bhawan_id = 21;
-//           // console.log(bhawan_id);
-//           // console.log(++count);
-//           if (bhawan_id==data.fields[i].id) {
-//             each_select.innerHTML+="<option value="+data.fields[i].rooms[w].name+">"+data.fields[i].rooms[w].name+"</option>";
-//             // console.log(each_select.innerHTML);
-//           }
-//         }
-//       }
-      
-//     } else {
-//       document.getElementById("rooms-collection").innerHTML += '<li class="collection-item avatar search-class"> <i class="material-icons circle">hotel</i> <span class="title">'+data.fields[i].name+'</span> <p class="acco-avail">'+data.fields[i].no+'</p><a onclick="selectBhawan('+data.fields[i].id+')" class="secondary-content"><i class="material-icons">done</i></a> </li>';
-//     }
-//   }
-//   $(document).ready(function(){
-//     $('.collapsible').collapsible();
-//     $('select').material_select();
-//   });
-// }
+function fetchBhawanStats() {
+  Materialize.toast('Fetching Bhawans Stats!', 4000, "toast-fetch");
+  //GET Left List
+  var csrf_token = getCookie('csrftoken');
+  var ourRequest = new XMLHttpRequest();
+  ourRequest.open("POST", "/recnacc/acco_details/", true); // method and url
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onload = function () {
+    if (ourRequest.status >= 200 && ourRequest.status < 400) { // request sent and recieved
+      ourData = JSON.parse(ourRequest.responseText);
+      Materialize.toast('Updated Bhawans Stats!', 4000, "toast-fetch_fetched");
+      roomsData = ourData;
+    }
+    else
+      Materialize.toast('Server Error!', 4000, "toast-fetch_error");
+  } // server sent an error after connection
+  ourRequest.onerror = function () { // error connecting to URL
+    Materialize.toast('Could not connect to server!', 4000, "toast-fetch_no_connect");
+  }
+  ourRequest.send(); // sending request
+}
+function updateSelectBhawans(data, participants) {
+  // Update Bhawans Data displayed in Modal
+  document.getElementById("datas").innerHTML = '<ul class="collection" id="rooms-collection"></ul>';
+  var collection_size = 0;
+  var participants_size = participants.length;
+  for(var i = 0; i < data.fields.length; i++) {
+    if (data.fields[i].rooms != undefined) {
+      // Collapsible Template
+      document.getElementById("rooms-collection").innerHTML += '<li class="collection-item search-class"> <ul class="collapsible" data-collapsible="expandable"> <li> <div class="collapsible-header"><i class="material-icons">hotel</i><span>'+data.fields[i].name+'</span></div><div class="collapsible-body custom-collapsible-body"></div></li>';
+      collection_size++;
+      var count=0;
+      participants_size = participants.length;
+      for (var j = 0; participants_size--; j++) {
+        document.getElementsByClassName("custom-collapsible-body")[collection_size-1].innerHTML += '<div class="container"> <div class="row"> <div class="col s6 center participant_name"> <h5 class="participant-name-wrapper">'+participants_arr[j]+'</h5> </div><div class="input-field col s6"> <select class="select_rooms" id="Participant_'+data.fields[i].id+'_'+j+'" bhawan-id='+data.fields[i].id+'> <option value="" selected>Room No.</option> </select> </div></div></div>';
+      }
+      document.getElementById("rooms-collection").innerHTML += '<li> <div class="collapsible-header center"> <span style="display: none" class="male-female-'+data.fields[i].id+'">'+data.fields[i].mf+'</span> <span class="shift-btn-right"><a onclick="selectBhawanRooms('+data.fields[i].id+')" class="secondary-content waves-effect waves-light btn"><i class="material-icons right">done</i>Confirm</a></span> </div></ul> </li>';
+      var no_select= document.getElementsByClassName("select_rooms");
+      for(var l = 0; l < no_select.length; l++) {
+        each_select=no_select[l];
+        var bhawan_id = document.getElementsByClassName('select_rooms')[l].getAttribute('bhawan-id');
+        if (bhawan_id==data.fields[i].id) {
+          for(var w = 0; w < data.fields[i].rooms.length; w++) {
+            each_select.innerHTML+="<option value="+data.fields[i].rooms[w].name+">"+data.fields[i].rooms[w].name+"</option>";
+          }
+        }
+      }
+    } else {
+      document.getElementById("rooms-collection").innerHTML += '<li class="collection-item avatar search-class"> <i class="material-icons circle">hotel</i> <span class="title">'+data.fields[i].name+'</span> <p class="acco-avail">'+data.fields[i].no+'</p><p class="bhawan-gender-pref">'+data.fields[i].mf+'</p><a onclick="selectBhawan('+data.fields[i].id+',this)" class="secondary-content"><i class="material-icons">done</i></a> </li>';
+    }
+  }
+  $('.collapsible').collapsible();
+  $('select').material_select();
+}
 
-// function selectBhawan(index) {
+function selectBhawan(index) {
   
-//   // Write Code to send selected bhawan to backend.
-//   var acco_available = document.getElementsByClassName('acco-avail')[index-1].innerHTML;
-//   if (acco_available < id_arr.length) {
-//     Materialize.toast('Insufficient Space in this Hostel!', 4000);
-//   } else {
-//     Materialize.toast('Sending data to server!', 4000, "toast-post");
-//     //Post to backend
+  // Write Code to send selected bhawan to backend.
+  var acco_available = document.getElementsByClassName('acco-avail')[index-1].innerHTML;
+  if (acco_available < id_arr.length) {
+    Materialize.toast('Insufficient Space in this Hostel!', 4000);
+  } else {
+    Materialize.toast('Sending data to server!', 4000, "toast-post");
+    //Post to backend
     
-//     var csrf_token = getCookie('csrftoken');
-//     var ourRequest = new XMLHttpRequest();
-//     var url = "/recnacc/accomodate/";
-//     ourRequest.open("POST", url, true);
-//     ourRequest.setRequestHeader("Content-type", "application/json");
-//     ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
-//     // POST
-//     send_obj = {
-//       "data": {
-//         "id_arr": id_arr,
-//         "bhawan_select": index
-//       },
-//       "csrftoken": {
-//         "csrfmiddlewaretoken": csrf_token
-//       }
-//     };
+    var csrf_token = getCookie('csrftoken');
+    var ourRequest = new XMLHttpRequest();
+    var url = "/recnacc/accomodate/";
+    ourRequest.open("POST", url, true);
+    ourRequest.setRequestHeader("Content-type", "application/json");
+    ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+    // POST
+    send_obj = {
+      "data": {
+        "id_arr": id_arr,
+        "bhawan_select": index
+      },
+      "csrftoken": {
+        "csrfmiddlewaretoken": csrf_token
+      }
+    };
     
-//     var send_json = JSON.stringify(send_obj);
-//     console.log(send_obj);
-//     // alert(send_obj);
-//     // Obtain 
-//     ourRequest.onreadystatechange = function () {
-//       if (ourRequest.readyState === 4 && ourRequest.status === 200) {
-//         var recieve_json = JSON.parse(ourRequest.responseText);
-//         var status = recieve_json.success;
-//         showRequestStatus(status)
-//         // either 1 or 0
-//         //json object received
-//       }
-//       else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
-//         showRequestStatus(2);
-//       }
-//     }
-//     ourRequest.send(send_json);
-//     bhawan_close();
-//     //return 1 if successfull
-//     // return 0; //return 0 if unsuccesfull i.e. backend sent failure [could connect || but not match net unbilled_gender]
-//     // return 2, //return anything else [connection error || could not fetch data]
-//   }
-// }
+    var send_json = JSON.stringify(send_obj);
+    console.log(send_obj);
+    // alert(send_obj);
+    // Obtain 
+    ourRequest.onreadystatechange = function () {
+      if (ourRequest.readyState === 4 && ourRequest.status === 200) {
+        var recieve_json = JSON.parse(ourRequest.responseText);
+        var status = recieve_json.success;
+        showRequestStatus(status)
+        // either 1 or 0
+        //json object received
+      }
+      else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
+        showRequestStatus(2);
+      }
+    }
+    ourRequest.send(send_json);
+    bhawan_close();
+    //return 1 if successfull
+    // return 0; //return 0 if unsuccesfull i.e. backend sent failure [could connect || but not match net unbilled_gender]
+    // return 2, //return anything else [connection error || could not fetch data]
+  }
+}
 
-// function selectBhawanRooms(index) {
-//   // Selected Individual Rooms for Participants. Send Data to Backend
-//   var rooms_arr = [];
-//   for (var i = 0; i < id_arr.length; i++) {
-//     rooms_arr[i] = $('#Participant_'+index+'_'+i+'').val();
-//   }
-//   var filled_all = true;
-//   for (var i = 0; i < id_arr.length; i++) {
-//     if (rooms_arr[i] == '') {
-//       filled_all = false;
-//       break;
-//     }
-//   }
-//   if (filled_all) {
-//     createSingleGroup(id_arr.length);
-//     // Send Data to Backend
-//     Materialize.toast('Sending data to server!', 4000, "toast-post");
-//     bhawan_close();
-//     setTimeout(function(){
-//       //Post to backend
-//       var csrf_token = getCookie('csrftoken');
-//       var ourRequest = new XMLHttpRequest();
-//       var url = "/recnacc/accomodate_singleroom/";
-//       ourRequest.open("POST", url, true);
-//       ourRequest.setRequestHeader("Content-type", "application/json");
-//       ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
-//       // POST
-//       send_obj = {
-//         "data": {
-//           "id_arr": id_arr,
-//           "bhawan_select": rooms_arr
-//         },
-//         "csrftoken": {
-//           "csrfmiddlewaretoken": csrf_token
-//         }
-//       };
-//       var send_json = JSON.stringify(send_obj);
-//       // console.log(send_obj);
-//       // Obtain 
-//       ourRequest.onreadystatechange = function () {
-//         if (ourRequest.readyState === 4 && ourRequest.status === 200) {
-//           var recieve_json = JSON.parse(ourRequest.responseText);
-//           var status = recieve_json.success;
-//           showRequestStatus(status)
-//           // either 1 or 0
-//           //json object received
-//         }
-//         else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
-//           showRequestStatus(2);
-//         }
-//       }
-//       ourRequest.send(send_json);
-//       //return 1 if successfull
-//       // return 0; //return 0 if unsuccesfull i.e. backend sent failure [could connect || but not match net unbilled_gender]
-//       // return 2, //return anything else [connection error || could not fetch data]
-//     }, 2000);
-//   } else {
-//     Materialize.toast('Please Allocate rooms to all Participants Selected!', 4000);
-//   }
-// }
+function selectBhawanRooms(index) {
+  // Selected Individual Rooms for Participants. Send Data to Backend
+  var rooms_arr = [];
+  for (var i = 0; i < id_arr.length; i++) {
+    rooms_arr[i] = $('#Participant_'+index+'_'+i+'').val();
+  }
+  var filled_all = true;
+  for (var i = 0; i < id_arr.length; i++) {
+    if (rooms_arr[i] == '') {
+      filled_all = false;
+      break;
+    }
+  }
+  if (filled_all) {
+    var gender_pref=document.getElementsByClassName('male-female-'+index+'')[0].innerHTML;
+    var can_occupy = true;
+    for (var i = 0; i < id_arr.length; i++) {
+      if (gender_arr[i] != gender_pref)
+        can_occupy = false;
+    }
+    if (!can_occupy) {
+      Materialize.toast('Gender Requirements not meant!', 3000);
+    } else {
+      createSingleGroup(id_arr.length);
+      // Send Data to Backend
+      Materialize.toast('Sending data to server!', 4000, "toast-post");
+      bhawan_close();
+      setTimeout(function(){
+        //Post to backend
+        var csrf_token = getCookie('csrftoken');
+        var ourRequest = new XMLHttpRequest();
+        var url = "/recnacc/accomodate_singleroom/";
+        ourRequest.open("POST", url, true);
+        ourRequest.setRequestHeader("Content-type", "application/json");
+        ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+        // POST
+        send_obj = {
+          "data": {
+            "id_arr": id_arr,
+            "bhawan_select": rooms_arr
+          },
+          "csrftoken": {
+            "csrfmiddlewaretoken": csrf_token
+          }
+        };
+        var send_json = JSON.stringify(send_obj);
+        // Obtain 
+        ourRequest.onreadystatechange = function () {
+          if (ourRequest.readyState === 4 && ourRequest.status === 200) {
+            var recieve_json = JSON.parse(ourRequest.responseText);
+            var status = recieve_json.success;
+            showRequestStatus(status);
+            // either 1 or 0
+            //json object received
+          }
+          else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
+            showRequestStatus(2);
+          }
+        }
+        ourRequest.send(send_json);
+        //return 1 if successfull
+        // return 0; //return 0 if unsuccesfull i.e. backend sent failure [could connect || but not match net unbilled_gender]
+        // return 2, //return anything else [connection error || could not fetch data]
+      }, 2000);
+    }
+  } else {
+    Materialize.toast('Please Allocate rooms to all Participants Selected!', 4000);
+  }
+}
 
-// function createSingleGroup(num) {
-//   var csrf_token = getCookie('csrftoken');
-//     var ourRequest = new XMLHttpRequest();
-//     var url = "/recnacc/satyavrat/";
-//     ourRequest.open("POST", url, true);
-//     ourRequest.setRequestHeader("Content-type", "application/json");
-//     ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
-//     // POST
-//     send_obj = {
-//       "data": {
-//         "num": num
-//       },
-//       "csrftoken": {
-//         "csrfmiddlewaretoken": csrf_token
-//       }
-//     };
-//     var send_json = JSON.stringify(send_obj);
-//     // console.log(send_obj);
-//     // Obtain 
-//     ourRequest.onreadystatechange = function () {
-//       if (ourRequest.readyState === 4 && ourRequest.status === 200) {
-//         // Yippee
-//       }
-//       else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
-//         showRequestStatus(2);
-//       }
-//     }
-//     ourRequest.send(send_json);
-// }
-// function createGroup() {
-//   var csrf_token = getCookie('csrftoken');
-//   var ourRequest = new XMLHttpRequest();
-//   ourRequest.open("POST", "/recnacc/srivatsa/");  // method and url
-//   ourRequest.setRequestHeader("Content-type", "application/json");
-//   ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
-//   ourRequest.onload = function() {
-//   if (ourRequest.status >= 200 && ourRequest.status < 400) {    // request sent and recieved
-//     // Success Yaaaayyyy
-//   }
-//   else    
-//     Materialize.toast('Server Error!', 4000, "toast-fetch_error");  
-//   }                               // server sent an error after connection
-//   ourRequest.onerror = function() {               // error connecting to URL
-//   Materialize.toast('Could not connect to server!', 4000, "toast-fetch_no_connect");
-//   }
-//   ourRequest.send();
-// }
+function createSingleGroup(num) {
+  var csrf_token = getCookie('csrftoken');
+    var ourRequest = new XMLHttpRequest();
+    var url = "/recnacc/satyavrat/";
+    ourRequest.open("POST", url, true);
+    ourRequest.setRequestHeader("Content-type", "application/json");
+    ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+    // POST
+    send_obj = {
+      "data": {
+        "num": num
+      },
+      "csrftoken": {
+        "csrfmiddlewaretoken": csrf_token
+      }
+    };
+    var send_json = JSON.stringify(send_obj);
+    // console.log(send_obj);
+    // Obtain 
+    ourRequest.onreadystatechange = function () {
+      if (ourRequest.readyState === 4 && ourRequest.status === 200) {
+        // Yippee
+      }
+      else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
+        showRequestStatus(2);
+      }
+    }
+    ourRequest.send(send_json);
+}
+function createGroup() {
+  var csrf_token = getCookie('csrftoken');
+  var ourRequest = new XMLHttpRequest();
+  ourRequest.open("POST", "/recnacc/srivatsa/");  // method and url
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onload = function() {
+  if (ourRequest.status >= 200 && ourRequest.status < 400) {    // request sent and recieved
+    // Success Yaaaayyyy
+  }
+  else    
+    Materialize.toast('Server Error!', 4000, "toast-fetch_error");  
+  }                               // server sent an error after connection
+  ourRequest.onerror = function() {               // error connecting to URL
+  Materialize.toast('Could not connect to server!', 4000, "toast-fetch_no_connect");
+  }
+  ourRequest.send();
+}
 function search() {
   var span_name, span_college, span_groupid;
   var filter_name = document.getElementById("name-search").value.toUpperCase();
@@ -917,6 +968,7 @@ function pusher_poppulate_left(ourData) {
       indiv_group = ourData[ind].groupid;
       indiv_gender = ourData[ind].participants[j].indiv_gender;
       indiv_id = ourData[ind].participants[j].indiv_id;
+      indiv_hostel = ourData[ind].participants[j].hostel;
       add_to_left(document.getElementsByClassName("list-ind")[0]); // insert participant to group 0 || first li of ul
     }
   }

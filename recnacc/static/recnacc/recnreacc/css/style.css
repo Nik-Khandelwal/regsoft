@@ -250,3 +250,29 @@ html {
   font-size: 3vh;
   vertical-align: middle;
 }
+#bhawan-search {
+  color: white;
+  border-bottom: 1px solid white;
+}
+#bhawan-search-label {
+  color: white;
+}
+#select_bhawan {
+  height: 0;
+  width: 100vw;
+  transition: 0.8s;
+  position: fixed;
+  z-index: 5;
+  bottom: 0;
+  left: 0;
+  display: none;
+}
+
+.close:hover {
+  cursor: pointer
+}
+
+#confirm-bhawan {
+  margin-top: 15px;
+}
+.custom-collapsible-body,.bhawan-gender-pref{display: none;}

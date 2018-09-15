@@ -463,7 +463,7 @@ function updateSelectBhawans(data, participants) {
       for (var j = 0; participants_size--; j++) {
         document.getElementsByClassName("custom-collapsible-body")[collection_size-1].innerHTML += '<div class="container"> <div class="row"> <div class="col s6 center participant_name"> <h5 class="participant-name-wrapper">'+participants_arr[j]+'</h5> </div><div class="input-field col s6"> <select class="select_rooms" id="Participant_'+data.fields[i].id+'_'+j+'" bhawan-id='+data.fields[i].id+'> <option value="" selected>Room No.</option> </select> </div></div></div>';
       }
-      document.getElementById("rooms-collection").innerHTML += '<li> <div class="collapsible-header center"> <span class="shift-btn-right"><a onclick="selectBhawanRooms('+data.fields[i].id+')" class="secondary-content waves-effect waves-light btn"><i class="material-icons right">done</i>Confirm</a></span> </div></ul> </li>';
+      document.getElementById("rooms-collection").innerHTML += '<li> <div class="collapsible-header center"> <span style="display: none" class="male-female-'+data.fields[i].id+'">'+data.fields[i].mf+'</span> <span class="shift-btn-right"><a onclick="selectBhawanRooms('+data.fields[i].id+')" class="secondary-content waves-effect waves-light btn"><i class="material-icons right">done</i>Confirm</a></span> </div></ul> </li>';
       var no_select= document.getElementsByClassName("select_rooms");
       for(var l = 0; l < no_select.length; l++) {
         each_select=no_select[l];
@@ -475,7 +475,7 @@ function updateSelectBhawans(data, participants) {
         }
       }
     } else {
-      document.getElementById("rooms-collection").innerHTML += '<li class="collection-item avatar search-class"> <i class="material-icons circle">hotel</i> <span class="title">'+data.fields[i].name+'</span> <p class="acco-avail">'+data.fields[i].no+'</p><p class="bhawan-gender-pref">male</p><a onclick="selectBhawan('+data.fields[i].id+',this)" class="secondary-content"><i class="material-icons">done</i></a> </li>';
+      document.getElementById("rooms-collection").innerHTML += '<li class="collection-item avatar search-class"> <i class="material-icons circle">hotel</i> <span class="title">'+data.fields[i].name+'</span> <p class="acco-avail">'+data.fields[i].no+'</p><p class="bhawan-gender-pref">'+data.fields[i].mf+'</p><a onclick="selectBhawan('+data.fields[i].id+',this)" class="secondary-content"><i class="material-icons">done</i></a> </li>';
     }
   }
   $('.collapsible').collapsible();
@@ -556,47 +556,57 @@ function selectBhawanRooms(index) {
     }
   }
   if (filled_all) {
-    createSingleGroup(id_arr.length);
-    // Send Data to Backend
-    Materialize.toast('Sending data to server!', 4000, "toast-post");
-    bhawan_close();
-    setTimeout(function(){
-      //Post to backend
-      var csrf_token = getCookie('csrftoken');
-      var ourRequest = new XMLHttpRequest();
-      var url = "/recnacc/accomodate_singleroom/";
-      ourRequest.open("POST", url, true);
-      ourRequest.setRequestHeader("Content-type", "application/json");
-      ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
-      // POST
-      send_obj = {
-        "data": {
-          "id_arr": id_arr,
-          "bhawan_select": rooms_arr
-        },
-        "csrftoken": {
-          "csrfmiddlewaretoken": csrf_token
+    var gender_pref=document.getElementsByClassName('male-female-'+index+'')[0].innerHTML;
+    var can_occupy = true;
+    for (var i = 0; i < id_arr.length; i++) {
+      if (gender_arr[i] != gender_pref)
+        can_occupy = false;
+    }
+    if (!can_occupy) {
+      Materialize.toast('Gender Requirements not meant!', 3000);
+    } else {
+      createSingleGroup(id_arr.length);
+      // Send Data to Backend
+      Materialize.toast('Sending data to server!', 4000, "toast-post");
+      bhawan_close();
+      setTimeout(function(){
+        //Post to backend
+        var csrf_token = getCookie('csrftoken');
+        var ourRequest = new XMLHttpRequest();
+        var url = "/recnacc/accomodate_singleroom/";
+        ourRequest.open("POST", url, true);
+        ourRequest.setRequestHeader("Content-type", "application/json");
+        ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+        // POST
+        send_obj = {
+          "data": {
+            "id_arr": id_arr,
+            "bhawan_select": rooms_arr
+          },
+          "csrftoken": {
+            "csrfmiddlewaretoken": csrf_token
+          }
+        };
+        var send_json = JSON.stringify(send_obj);
+        // Obtain 
+        ourRequest.onreadystatechange = function () {
+          if (ourRequest.readyState === 4 && ourRequest.status === 200) {
+            var recieve_json = JSON.parse(ourRequest.responseText);
+            var status = recieve_json.success;
+            showRequestStatus(status);
+            // either 1 or 0
+            //json object received
+          }
+          else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
+            showRequestStatus(2);
+          }
         }
-      };
-      var send_json = JSON.stringify(send_obj);
-      // Obtain 
-      ourRequest.onreadystatechange = function () {
-        if (ourRequest.readyState === 4 && ourRequest.status === 200) {
-          var recieve_json = JSON.parse(ourRequest.responseText);
-          var status = recieve_json.success;
-          showRequestStatus(status);
-          // either 1 or 0
-          //json object received
-        }
-        else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
-          showRequestStatus(2);
-        }
-      }
-      ourRequest.send(send_json);
-      //return 1 if successfull
-      // return 0; //return 0 if unsuccesfull i.e. backend sent failure [could connect || but not match net unbilled_gender]
-      // return 2, //return anything else [connection error || could not fetch data]
-    }, 2000);
+        ourRequest.send(send_json);
+        //return 1 if successfull
+        // return 0; //return 0 if unsuccesfull i.e. backend sent failure [could connect || but not match net unbilled_gender]
+        // return 2, //return anything else [connection error || could not fetch data]
+      }, 2000);
+    }
   } else {
     Materialize.toast('Please Allocate rooms to all Participants Selected!', 4000);
   }

@@ -260,7 +260,7 @@ function poppulate_left(ourData) {
       indiv_group = ourData[ind].groupid;
       indiv_gender = ourData[ind].participants[j].indiv_gender;
       indiv_id = ourData[ind].participants[j].indiv_id;
-      indiv_hostel = ourData[ind].participants[j].indiv_hostel;
+      indiv_hostel = ourData[ind].participants[j].hostel;
       add_to_left(document.getElementsByClassName("list-ind")[0]); // insert participant to group 0 || first li of ul
     }
   }
@@ -346,7 +346,7 @@ function fetchFinesDetails() {
       document.getElementById('acco-wrapper').innerHTML = '';
       var data = ourData.data;
       for (var i = 0; i < data.length; i++) {
-        document.getElementById('acco-wrapper').innerHTML+='<div class="row"> <div class="col s12 hostel-header">'+data[i][0]+'</div><div class="col s8 center rooms-header">Name</div><div class="col s2 center rooms-header">Fine</div><div class="col s2 center rooms-header">Current</div><div class="col s8 center rooms-content">Common Room</div><div class="col s2 center rooms-content change-cursor" onclick="addFine('+data[i][1].pk+')"><i class="material-icons">airline_seat_individual_suite</i></div><div class="col s2 center rooms-content">1000</div><div class="col s8 center rooms-content">TT Room</div><div class="col s2 center rooms-content change-cursor" onclick="addFine('+data[i][2].pk+')"><i class="material-icons">airline_seat_individual_suite</i></div><div class="col s2 center rooms-content">1000</div><div class="col s8 center rooms-content">Single Room</div><div class="col s2 center rooms-content change-cursor" onclick="addFine('+data[i][3].pk+')"><i class="material-icons">airline_seat_individual_suite</i></div><div class="col s2 center rooms-content">1000</div></div>';
+        document.getElementById('acco-wrapper').innerHTML+='<div class="row"> <div class="col s12 hostel-header">'+data[i][0]+'</div><div class="col s8 center rooms-header">Name</div><div class="col s2 center rooms-header">Fine</div><div class="col s2 center rooms-header">Current</div><div class="col s8 center rooms-content">Common Room</div><div class="col s2 center rooms-content change-cursor" onclick="addFine('+data[i][1].pk+')"><i class="material-icons">airline_seat_individual_suite</i></div><div class="col s2 center rooms-content">'+data[i][1].fine+'</div><div class="col s8 center rooms-content">TT Room</div><div class="col s2 center rooms-content change-cursor" onclick="addFine('+data[i][2].pk+')"><i class="material-icons">airline_seat_individual_suite</i></div><div class="col s2 center rooms-content">'+data[i][2].fine+'</div><div class="col s8 center rooms-content">Single Room</div><div class="col s2 center rooms-content change-cursor" onclick="addFine('+data[i][3].pk+')"><i class="material-icons">airline_seat_individual_suite</i></div><div class="col s2 center rooms-content">'+data[i][3].fine+'</div></div>';
       }
       Materialize.toast('Updated!', 2000);
     }
@@ -428,19 +428,23 @@ function deacc() {
     accoLength = i;
     $('#due').modal('open');
     document.getElementById('amount_fine').innerHTML = 'Loading...';
+    document.getElementById('parts-list').innerHTML = '';
     var ourRequest = new XMLHttpRequest();
     var url = "/recnacc/deaccomodate/";
     ourRequest.open("POST", url, true);
     ourRequest.setRequestHeader("Content-type", "application/json");
     ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
-    
     var send_json = JSON.stringify(send_obj);
     // Obtain 
     ourRequest.onreadystatechange = function () {
       if (ourRequest.readyState === 4 && ourRequest.status === 200) {
         var recieve_json = JSON.parse(ourRequest.responseText);
         var fine = recieve_json.fine;
+        var list = recieve_json.list;
         document.getElementById('amount_fine').innerHTML = 'Rs: ' + fine;
+        for (var i = 0; i < list.length; i++) {
+          document.getElementById('parts-list').innerHTML+='<li class="collection-item"><div>'+list[i].name+'<a class="secondary-content">Rs '+list[i].fine+'</a></div></li>';
+        }
         Materialize.toast('Updated', 4000);
         showRequestStatus(1);
       }
@@ -706,7 +710,7 @@ function pusher_poppulate_left(ourData) {
       indiv_group = ourData[ind].groupid;
       indiv_gender = ourData[ind].participants[j].indiv_gender;
       indiv_id = ourData[ind].participants[j].indiv_id;
-      indiv_hostel = ourData[ind].participants[j].indiv_hostel;
+      indiv_hostel = ourData[ind].participants[j].hostel;
       add_to_left(document.getElementsByClassName("list-ind")[0]); // insert participant to group 0 || first li of ul
     }
   }

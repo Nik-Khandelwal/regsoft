@@ -23,7 +23,7 @@
     <!-- DESELECT ALL BUTTON -->
     <a class="waves-effect waves-light btn deselect_all-btn tooltipped z-depth-5" data-position="bottom" data-delay="50" data-tooltip="Deselect all of the participants" onclick="sel_all_all(1)"><i class="material-icons left" id="desel-icon">check_box_outline_blank</i><span class="desel-text">Deselect All</span></a>
     <!-- Deaccomodate BUTTON-->
-    <a  class="waves-effect waves-light btn gen_bill-btn tooltipped z-depth-5 modal-trigger" data-position="bottom" data-delay="50" data-tooltip="De-Accomodate selected participants" onclick="reacc()"><i class="material-icons left" id="bill-icon">receipt</i><span class="bill-text">Re-Accomodate</span></a>
+    <a  class="waves-effect waves-light btn gen_bill-btn tooltipped z-depth-5 modal-trigger" data-position="bottom" data-delay="50" data-tooltip="De-Accomodate selected participants" onclick="reaccomodate_people()"><i class="material-icons left" id="bill-icon">receipt</i><span class="bill-text">Change Acco</span></a>
     <a class="waves-effect waves-light btn stats_1 z-depth-5" data-position="bottom" style=""><span id="stats">Selected: 0</span></a>
     <ul class="collapsible left-one blue lighten-5" data-collapsible="expandable" id="left-table-ul">
     </ul>
@@ -91,6 +91,93 @@
         <td style="display: none;" class="right-hostel-alloc">Hostel Name</td>
       </tr>
     </template>
+    <div class="blue darken-4 center-align" id="select_bhawan">
+      <a class="close white-text" onclick="bhawan_close()"><i class="material-icons medium">close</i></a>
+      <div class="container">
+        <div class="row">
+          <div class="input-field col s12">
+          <input type="text" name="bhawan-search" id="bhawan-search" required="required" onkeyup="bhawanSearch()">
+          <label for="bhawan-search" id="bhawan-search-label">Search</label>
+        </div>
+        </div>
+      </div>
+      <div class="container  collection " style="border:none">
+        <div id="datas">
+          <!-- Accomodation Bhawan Select Here -->
+          <!-- Template Commented Below -->
+          <!-- <ul class="collection">
+            <li class="collection-item avatar">
+              <i class="material-icons circle">hotel</i>
+              <span class="title">BD-L</span>
+              <p class="acco-avail">250</p>
+              <a onclick="selectBhawan(0)" class="secondary-content"><i class="material-icons">done</i></a>
+            </li>
+            <li class="collection-item">
+              <ul class="collapsible" data-collapsible="expandable">
+                <li>
+                  <div class="collapsible-header"><i class="material-icons">hotel</i>BD - Single Rooms</div>
+                  <div class="collapsible-body custom-collapsible-body">
+                    <div class="container">
+                      <div class='row'>
+                        <div class='col s6 center indi-add-extra-name'>
+                          <h5 class="participant-name-wrapper">Participant Name</h5>
+                        </div>
+                        <div class='input-field col s6'>
+                          <select class='add_extra' id='part_num_"+(tot_part++)+"'>
+                            <option value='' selected>Room No.</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="container">
+                    <div class='row'>
+                      <div class='col s6 center indi-add-extra-name'>
+                        <h5 class="participant-name-wrapper">Participant Name</h5>
+                      </div>
+                      <div class='input-field col s6'>
+                        <select class='add_extra' id='part_num_"+(tot_part++)+"'>
+                          <option value='' selected>Room No.</option>
+                        </select>
+                      </div>
+                    </div>
+                    </div>
+                    <div class="container">
+                    <div class='row'>
+                      <div class='col s6 center indi-add-extra-name'>
+                        <h5 class="participant-name-wrapper">Participant Name</h5>
+                      </div>
+                      <div class='input-field col s6'>
+                        <select class='add_extra' id='part_num_"+(tot_part++)+"'>
+                          <option value='' selected>Room No.</option>
+                        </select>
+                      </div>
+                    </div>
+                    </div>
+                    <div class="container">
+                    <div class='row'>
+                      <div class='col s6 center indi-add-extra-name'>
+                        <h5 class="participant-name-wrapper">Participant Name</h5>
+                      </div>
+                      <div class='input-field col s6'>
+                        <select class='add_extra' id='part_num_"+(tot_part++)+"'>
+                          <option value='' selected>Room No.</option>
+                        </select>
+                      </div>
+                    </div>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div class="collapsible-header center">
+                    <span class="shift-btn-right"><a onclick="selectBhawan(0)" class="secondary-content waves-effect waves-light btn"><i class="material-icons right">done</i>Confirm</a></span>
+                  </div>
+              </ul>
+            </li>
+          </ul> -->
+        </div>
+        <!-- <a class="waves-effect waves-light btn" id="confirm-bhawan" onclick="submitList()"><i class="material-icons right">done</i>Confirm</a> -->
+      </div>
+    </div>
     <div id="due" class="modal">
       <div class="modal-content center">
         <h5>Amount Fined to the participant</h5>

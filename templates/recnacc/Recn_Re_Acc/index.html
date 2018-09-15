@@ -56,12 +56,12 @@
       <template id="left-indiv-temp">
         <div class="collapsible-body blue lighten-5">
           <i style="flex-basis: 10%;" class="material-icons indiv-icon-check tooltipped" data-position="right" data-delay="50" data-tooltip="Select/Deselect this participant" onclick="click_indiv(this);">check_box_outline_blank</i>
-          <span class="name center" style="flex-basis: 35%;">Name Name</span>
+          <span class="name center" style="flex-basis: 30%;">Name Name</span>
           <span class="coll-name center" style="flex-basis: 30%;">Indian Institute Of Technology, Delhi</span>
           <span class="group-id" style="display: none">PQR123</span>
           <span class="gender center" style="flex-basis: 15%;">Male</span>
           <span class="indiv-id" style="display: none">123</span>
-          <i style="flex-basis: 10%;" class="material-icons">account_circle</i>
+          <span class="hostel-alloc" style="flex-basis: 15%;">Hostel Name</span>
         </div>
       </template>
     </template>
@@ -88,6 +88,7 @@
         <td style="display: none;" class="right-indiv-group">$0.87</td>
         <td style="display: none;" class="right-indiv-id">$0.87</td>
         <td style="flex-basis: 20%;" class="right-indiv-undo" onclick="undo_this(this.parentElement);"><i class="material-icons tooltipped" data-position="left" data-delay="50" data-tooltip="Undo selection of this participant">undo</i></td>
+        <td style="display: none;" class="right-hostel-alloc">Hostel Name</td>
       </tr>
     </template>
     <div id="due" class="modal">
@@ -110,10 +111,10 @@
       
     </div></li>
     <li><a class="waves-effect" href="/recnacc/">Accomodate</a></li>
-    <li><a class="waves-effect" href="/recnacc/reconfirm_acco/">Re Accomodate</a></li>
-    <li><a class="waves-effect" href="/recnacc/unconfirm_acco/">De Accomodate</a></li>
+    <li><a class="waves-effect" href="/recnacc/reconfirm_acco/">Change Acco</a></li>
+    <li><a class="waves-effect" href="/recnacc/unconfirm_acco/">Checkout</a></li>
     <li><a class="waves-effect" onclick="stats()">Stats</a></li>
-    <li><a class="waves-effect" href="/recnacc/acco_strength/">Acco Strength</a></li>
+    <li><a class="waves-effect" href="/recnacc/acco_strength/">Acco Capacity</a></li>
     <li><a class="waves-effect" href="/recnacc/notes/">Add Notes</a></li>
     <li><a class="waves-effect" href="/recnacc/deallocated/">De Allocated</a></li>
     <li><a class="waves-effect" href="/recnacc/fines/">Add Fines</a></li>

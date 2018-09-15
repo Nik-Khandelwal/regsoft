@@ -145,6 +145,7 @@ function l_to_r(elem) {
   indiv_gender = next.getElementsByClassName("gender")[0].innerHTML;
   indiv_group = next.getElementsByClassName("group-id")[0].innerHTML;
   indiv_id = next.getElementsByClassName("indiv-id")[0].innerHTML;
+  indiv_hostel = next.getElementsByClassName("hostel-alloc")[0].innerHTML;
   // add to right
   var tmp = document.getElementById("right-indiv-temp"); //template
   var rightbody = document.getElementById("right-body");
@@ -160,6 +161,7 @@ function l_to_r(elem) {
   up.getElementsByClassName("right-indiv-gender")[0].innerHTML = indiv_gender;
   up.getElementsByClassName("right-indiv-group")[0].innerHTML = indiv_group;
   up.getElementsByClassName("right-indiv-id")[0].innerHTML = indiv_id;
+  up.getElementsByClassName("right-hostel-alloc")[0].innerHTML = indiv_hostel;
   // set to unchecked at left for group header
   elem.parentElement.firstElementChild.firstElementChild.innerHTML = "check_box_outline_blank";
   // remove from left || display none 
@@ -181,6 +183,7 @@ function r_to_l(elem) {
   indiv_group = elem.getElementsByClassName("right-indiv-group")[0].innerHTML;
   indiv_gender = elem.getElementsByClassName("right-indiv-gender")[0].innerHTML;
   indiv_id = elem.getElementsByClassName("right-indiv-id")[0].innerHTML;
+  indiv_hostel = elem.getElementsByClassName("right-hostel-alloc")[0].innerHTML;
   // Search group for element in left table/expandable
   find = 0;
     total--;
@@ -210,6 +213,7 @@ function add_to_left(l_index) {
   update.getElementsByClassName("group-id")[0].innerHTML = indiv_group;
   update.getElementsByClassName("gender")[0].innerHTML = indiv_gender;
   update.getElementsByClassName("indiv-id")[0].innerHTML = indiv_id;
+  update.getElementsByClassName("hostel-alloc")[0].innerHTML = indiv_hostel;
 }
 var net_gender;
 var id_arr;
@@ -256,6 +260,7 @@ function poppulate_left(ourData) {
       indiv_group = ourData[ind].groupid;
       indiv_gender = ourData[ind].participants[j].indiv_gender;
       indiv_id = ourData[ind].participants[j].indiv_id;
+      indiv_hostel = ourData[ind].participants[j].indiv_hostel;
       add_to_left(document.getElementsByClassName("list-ind")[0]); // insert participant to group 0 || first li of ul
     }
   }
@@ -319,6 +324,72 @@ function showRequestStatus(success) {
     fetchStats();
     fetchAvailabilityStats();
   }
+}
+
+function openFines() {
+  fetchFinesDetails();
+  $('#fines-div').modal('open');
+}
+
+function fetchFinesDetails() {
+  document.getElementById('acco-wrapper').innerHTML = '';
+  Materialize.toast('Updating list!', 2000, "toast-fetch");
+  var csrf_token = getCookie('csrftoken');
+  var ourRequest = new XMLHttpRequest();
+  var url = '/recnacc/disp_occupency/';
+  ourRequest.open("POST", url, true);
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onload = function () {
+    if (ourRequest.status >= 200 && ourRequest.status < 400) {
+      ourData = JSON.parse(ourRequest.responseText);
+      document.getElementById('acco-wrapper').innerHTML = '';
+      var data = ourData.data;
+      for (var i = 0; i < data.length; i++) {
+        document.getElementById('acco-wrapper').innerHTML+='<div class="row"> <div class="col s12 hostel-header">'+data[i][0]+'</div><div class="col s8 center rooms-header">Name</div><div class="col s2 center rooms-header">Fine</div><div class="col s2 center rooms-header">Current</div><div class="col s8 center rooms-content">Common Room</div><div class="col s2 center rooms-content change-cursor" onclick="addFine('+data[i][1].pk+')"><i class="material-icons">airline_seat_individual_suite</i></div><div class="col s2 center rooms-content">1000</div><div class="col s8 center rooms-content">TT Room</div><div class="col s2 center rooms-content change-cursor" onclick="addFine('+data[i][2].pk+')"><i class="material-icons">airline_seat_individual_suite</i></div><div class="col s2 center rooms-content">1000</div><div class="col s8 center rooms-content">Single Room</div><div class="col s2 center rooms-content change-cursor" onclick="addFine('+data[i][3].pk+')"><i class="material-icons">airline_seat_individual_suite</i></div><div class="col s2 center rooms-content">1000</div></div>';
+      }
+      Materialize.toast('Updated!', 2000);
+    }
+    else
+      Materialize.toast('Server Error!', 2000, "toast-fetch_error");
+  }
+  ourRequest.onerror = function () {
+    Materialize.toast('Could not connect to server!', 2000, "toast-fetch_no_connect");
+  }
+  ourRequest.send('');
+}
+
+var addpk;
+function addFine(pk) {
+  addpk = parseInt(pk);
+  document.getElementById('edit-fine-field').innerHTML='<input type="number" name="add-fine" id="add-fine" value="0"> <label for="add-fine">Add Fine</label>';
+  Materialize.updateTextFields();
+  $('#edit-fine-modal').modal('open');
+}
+
+function updateFine() {
+  Materialize.toast('Updating!', 3000);
+  var csrf_token = getCookie('csrftoken');
+  var ourRequest = new XMLHttpRequest();
+  var url = '/recnacc/fine_page/';
+  var formData = serializeArray(document.getElementById('edit-fine-form'));
+  var fine = formData[0].value;
+  var send_obj = {"data":{"amt":fine, "pk":addpk}};
+  var string_obj = JSON.stringify(send_obj);
+  ourRequest.open("POST", url, true);
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onload = function () {
+    if (ourRequest.status >= 200 && ourRequest.status < 400) {
+      Materialize.toast('Updated!', 2000);
+    }
+    else
+      Materialize.toast('Server Error!', 2000, "toast-fetch_error");
+  }
+  ourRequest.onerror = function () {
+    Materialize.toast('Could not connect to server!', 2000, "toast-fetch_no_connect");
+  }
+  ourRequest.send(string_obj);
 }
 
 function deacc() {
@@ -635,6 +706,7 @@ function pusher_poppulate_left(ourData) {
       indiv_group = ourData[ind].groupid;
       indiv_gender = ourData[ind].participants[j].indiv_gender;
       indiv_id = ourData[ind].participants[j].indiv_id;
+      indiv_hostel = ourData[ind].participants[j].indiv_hostel;
       add_to_left(document.getElementsByClassName("list-ind")[0]); // insert participant to group 0 || first li of ul
     }
   }

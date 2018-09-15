@@ -73,7 +73,7 @@ i {
 .add_all-btn {
   position: fixed;
   top: 11vh;
-  left: 0.4vw;
+  left: 50.5vw;
 }
 
 .gen_bill-btn {
@@ -173,17 +173,17 @@ i {
 }
 
 
-body::-webkit-scrollbar-track, #left-table-ul::-webkit-scrollbar-track, #right-body::-webkit-scrollbar-track {
+*::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
   background-color: #F5F5F5;
 }
-body::-webkit-scrollbar, #left-table-ul::-webkit-scrollbar, #right-body::-webkit-scrollbar {
+*::-webkit-scrollbar {
   width: 8px;
   height: 7px;
   background-color: #F5F5F5;
 }
-body::-webkit-scrollbar-thumb, #left-table-ul::-webkit-scrollbar-thumb, #right-body::-webkit-scrollbar-thumb {
+*::-webkit-scrollbar-thumb {
   border-radius: 10px;
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   background-color: #888;
@@ -249,4 +249,45 @@ html {
   top: -1vh;
   font-size: 3vh;
   vertical-align: middle;
+}
+#fines-wrapper {
+  padding: 5vh 5vw;
+  position: relative;
+  max-height: 70vh;
+  overflow: auto;
+}
+.hostel-header {
+  font-weight: 300;
+  font-size: 2vw;
+  letter-spacing: 0.3vw;
+  margin-bottom: 2vh;
+  border-bottom: 1px solid black;
+}
+.rooms-header {
+  font-weight: 100;
+  font-size: 1.5vw;
+  letter-spacing: 0.2vw;
+  margin-bottom: 2vh;
+  font-variant: small-caps;
+}
+.rooms-content {
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 0.2vw;
+  margin-bottom: 1vh;
+}
+.change-cursor {cursor: pointer;}
+#edit-fines-header {
+  font-size: 1.5vw;
+  letter-spacing: 0.2vw;
+  font-variant: small-caps;
+}
+label {
+  color: black !important;
+  text-transform: uppercase;
+  font-size: 1.2vw !important;
+  letter-spacing: 0.1vw !important;
+}
+input[type=number]:not(.browser-default) {
+  border-bottom: 1px solid black;
 }

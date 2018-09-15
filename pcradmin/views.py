@@ -1,5 +1,9 @@
 #from __future__ import unicode_literals
 import re
+import requests
+import json
+from django.conf import settings
+import urllib
 import uuid 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404,HttpResponseRedirect, JsonResponse
@@ -81,7 +85,7 @@ from rest_framework import status
 
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from main.models import Group,Regplayer,Enteredplayer,Sport,Team
+from main.models import Group,Regplayer,Enteredplayer,Sport,Team, PaytmHistory, Amounts
 from django.contrib.auth import logout
 from django.contrib.auth.models import User
 import json
@@ -93,7 +97,7 @@ import pusher
 from django.conf import settings
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.shortcuts import render
-from django.views.decorators.cache import cache_page
+from django.views.decorators.cache import cache_page, never_cache
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -2070,7 +2074,25 @@ def dashboard(request):
 		d1=[]
 		d2=[]
 		d3=[]
-		d4=[[0,0,0,0],[0,0,0,0]]
+		d4=[]
+		x=[]
+		y=[]
+		a=upmale.filter(confirm1=4,pay1=1).count()
+		b=upfemale.filter(confirm1=4,pay1=1).count()
+		x.append(a+b)
+		x.append(a)
+		x.append(b)
+		x.append(a+b)
+		d4.append(x)
+		a=upmale.filter(confirm1=4,pay2=1).count()
+		b=upfemale.filter(confirm1=4,pay2=1).count()
+		a2=upmale.filter(confirm1=4,pay3=1).count()
+		b2=upfemale.filter(confirm1=4,pay3=1).count()
+		y.append(a+b+a2+b2)
+		y.append(a+a2)
+		y.append(b+b2)
+		y.append(a+b+a2+b2)
+		d4.append(y)
 		d1.append(upmale.count())
 		d1.append(upfemale.count())
 		d1.append(upmale.count()+upfemale.count())
@@ -2131,3 +2153,173 @@ def logoutView(request):
 #utilities
 def replaceindex(text,index=0,replacement=''):
 	return '%s%s%s'%(text[:index],replacement,text[index+1:])
+
+
+@never_cache
+def refresh(request):
+	if request.user.is_authenticated():
+		if is_pcradmin_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	if request.method=='POST':
+		p=PaytmHistory.objects.get(pk=request.POST['id'],STATUS='PENDING')
+		prereg=Amounts.objects.get(name='pre').amount
+		reg=Amounts.objects.get(name='reg').amount
+		#p=PaytmHistory.objects.get(pk=3)
+		URL = "https://pguat.paytm.com/oltp/HANDLER_INTERNAL/TXNSTATUS"
+		URL += '?JsonData={"MID":"%s","ORDERID":"%s"}'%(p.MID,p.ORDERID)
+		print(requests.get(URL),requests.get(URL).text)
+		response_data = json.loads(requests.get(URL).text)
+		if (response_data['STATUS']=='TXN_SUCCESS'):
+			p.STATUS=response_data['STATUS']
+			p.BANKTXNID=response_data['BANKTXNID']
+			p.RESPCODE=response_data['RESPCODE']
+			p.RESPMSG=response_data['RESPMSG']
+			p.RESPMSG=response_data['RESPMSG']
+			p.BANKNAME=response_data['BANKNAME']
+			p.PAYMENTMODE=response_data['PAYMENTMODE']
+			p.save()
+			order_id=response_data['ORDERID']
+			u1=User.objects.filter(orderid1=order_id)
+			u2=User.objects.filter(orderid2=order_id)
+			u3=User.objects.filter(orderid3=order_id)
+			upre=[]
+			ureg=[]
+			up2r=[]
+			premail=[]
+			regmail=[]
+			p2rmail=[]
+			for u in u1:
+				upre.append(u.name)
+				premail.append(u.email)
+				u.pay1=1
+				u.pcramt=prereg
+				u.confirm1=4
+				u.save()
+			for u in u2:
+				ureg.append(u.name)
+				regmail.append(u.email)
+				u.pay2=1
+				u.pcramt=reg
+				u.confirm1=4
+				u.save()
+			for u in u3:
+				up2r.append(u.name)
+				p2rmail.append(u.email)
+				u.pay3=1
+				u.pcramt=reg
+				u.confirm1=4
+				u.save()
+			gl=User.objects.get(pk=p.user)
+			message = render_to_string('register/msg6.html', {
+											'user':gl.name, 
+											'prereg':upre,
+											'reg':ureg,
+											'prereg2reg':up2r,
+											'college':gl.team.college,
+											'amount':p.TXNAMOUNT,
+											'TXNID':p.TXNID,
+											'timestamp':p.TXNDATE,
+											'status':p.STATUS,
+											'orderid':order_id,
+											
+											})
+			mail_subject = 'Your account details.'
+			email = EmailMessage(mail_subject, message, to=["bosmpayments@gmail.com"]+[request.user.email]+premail+regmail+p2rmail)
+			email.content_subtype = "html"
+			email.send() 
+		if (response_data['STATUS']=='TXN_FAILURE'):
+			p.STATUS=response_data['STATUS']
+			p.BANKTXNID=response_data['BANKTXNID']
+			p.RESPCODE=response_data['RESPCODE']
+			p.RESPMSG=response_data['RESPMSG']
+			p.RESPMSG=response_data['RESPMSG']
+			p.BANKNAME=response_data['BANKNAME']
+			p.PAYMENTMODE=response_data['PAYMENTMODE']
+			p.save()
+			order_id=response_data['ORDERID']
+			u1=User.objects.filter(orderid1=order_id)
+			u2=User.objects.filter(orderid2=order_id)
+			u3=User.objects.filter(orderid3=order_id)
+			upre=[]
+			ureg=[]
+			up2r=[]
+			premail=[]
+			regmail=[]
+			p2rmail=[]
+			for u in u1:
+				upre.append(u.name)
+				premail.append(u.email)
+			for u in u2:
+				ureg.append(u.name)
+				regmail.append(u.email)
+			for u in u3:
+				up2r.append(u.name)
+				p2rmail.append(u.email)
+			gl=User.objects.get(pk=p.user)
+			message = render_to_string('register/msg6.html', {
+											'user':gl.name, 
+											'prereg':upre,
+											'reg':ureg,
+											'prereg2reg':up2r,
+											'college':gl.team.college,
+											'amount':p.TXNAMOUNT,
+											'TXNID':p.TXNID,
+											'timestamp':p.TXNDATE,
+											'status':p.STATUS,
+											'orderid':order_id,
+											
+											})
+			mail_subject = 'Your account details.'
+			email = EmailMessage(mail_subject, message, to=["bosmpayments@gmail.com"]+[request.user.email]+premail+regmail+p2rmail)
+			email.content_subtype = "html"
+			email.send() 
+	
+		return HttpResponseRedirect('/pcradmin/paymentdetails/')
+
+@never_cache
+def paydetails(request):
+	if request.user.is_authenticated():
+		if is_pcradmin_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	plist1=PaytmHistory.objects.filter(STATUS='PENDING')
+	plist2=PaytmHistory.objects.filter(STATUS='TXN_SUCCESS')
+	plist3=PaytmHistory.objects.filter(STATUS='TXN_FAILURE')
+	d=[]
+	for i in plist1:
+		s=[]
+		u=User.objects.get(pk=i.user)
+		s.append(i.pk)
+		s.append(i.TXNID)
+		s.append(i.TXNAMOUNT)
+		s.append(u.name)
+		d.append(s)
+		s.append(i.STATUS)
+	for i in plist2:
+		s=[]
+		u=User.objects.get(pk=i.user)
+		s.append(i.pk)
+		s.append(i.TXNID)
+		s.append(i.TXNAMOUNT)
+		s.append(u.name)
+		d.append(s)
+		s.append(i.STATUS)
+	for i in plist3:
+		s=[]
+		u=User.objects.get(pk=i.user)
+		s.append(i.pk)
+		s.append(i.TXNID)
+		s.append(i.TXNAMOUNT)
+		s.append(u.name)
+		d.append(s)
+		s.append(i.STATUS)
+	return render(request,'pcradmin/paydetails.html',{'data':d})

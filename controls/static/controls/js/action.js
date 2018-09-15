@@ -5,6 +5,7 @@ function elem_selected(elem){
 function elem_deselected(elem){
 	elem.firstChild.innerHTML="check_box_outline_blank";
 }
+var left_count = 0;
 function over_header(elem){
 	i=0; //select all
 	// console.log("clicked");
@@ -28,6 +29,16 @@ function sel_this_all(elem,i,resist){
 		// console.log(next);
 		count++;
 	}
+	if(i==0) {
+		left_count+=count;
+		document.getElementById('no_of_left_part_text').innerHTML=left_count;
+	} else {
+		left_count-=count;
+		if (left_count<0) {
+			left_count=0;
+		}
+		document.getElementById('no_of_left_part_text').innerHTML=left_count;
+	}
 	// console.log(count);
 }
 
@@ -36,8 +47,17 @@ function click_indiv(elem){
 	if(elem.innerHTML=="check_box"){
 		i=1;
 		elem.parentElement.parentElement.firstElementChild.firstElementChild.innerHTML=a[1];
+		left_count-=1;
+		if (left_count<0) {
+			left_count=0;
+		}
+		document.getElementById('no_of_left_part_text').innerHTML=left_count;
 	}
 	elem.innerHTML=a[i];
+	if(elem.innerHTML=="check_box") {
+		left_count+=1;
+		document.getElementById('no_of_left_part_text').innerHTML=left_count;
+	}
 }
 
 function loaded(){
@@ -420,6 +440,8 @@ function retrieve_left(){
 		Materialize.toast('Obtained list, preparing for you!', 4000, "toast-fetch_fetched");
 		document.getElementsByClassName("left-one")[0].innerHTML='';
 		poppulate_left(ourData);
+		left_count=0;
+		document.getElementById('no_of_left_part_text').innerHTML=left_count;
 	}
 	else 		
 		Materialize.toast('Server Error!', 4000, "toast-fetch_error");	

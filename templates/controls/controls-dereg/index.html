@@ -74,7 +74,7 @@
         <!-- DESELECT ALL BUTTON -->
         <a class="waves-effect waves-light btn deselect_all-btn tooltipped" data-position="bottom" data-delay="50" data-tooltip="Deselect all of the participants" onclick="sel_all_all(1)"><i class="material-icons left" id="desel-icon">check_box_outline_blank</i><span class="desel-text">Deselect All</span></a>
         <!-- GENERATE BILL BUTTON-->
-        <a class="waves-effect waves-light btn gen_bill-btn tooltipped" data-position="bottom" data-delay="50" data-tooltip="De-Register Participants" onclick="gen_bill();"><span class="bill-text">De-Register</span></a>
+        <a class="waves-effect waves-light btn gen_bill-btn tooltipped" data-position="bottom" data-delay="50" data-tooltip="De-Register Participants" onclick="deregisterParts();"><span class="bill-text">De-Register</span></a>
         <div id="wrap_searches">
           <div class="row">
             <div class="input-field col m4 s4">
@@ -152,7 +152,7 @@
         <div id="modalpay" class="modal pay blue lighten-5 modal-fixed-footer">
           <div class="modal-content">
             <h4 id="bill_head">Generate Bill</h4>
-              <p>Amount Returned:</p>
+              <p>Amount Returned: <span id="amt_return">0</span></p>
             <form onSubmit="return false;" id="bill_form">
               <!-- <div class="input-field" id="input_field">
                 <input id="input_amt" type="number" class="validate" min="1">

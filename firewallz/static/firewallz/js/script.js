@@ -55,12 +55,27 @@ function updateLeftTable(data) {
   }
 }
 function toggleSelection(elem) {
-  if (elem.innerHTML == "check_box") {
-    elem.innerHTML = "check_box_outline_blank";
-    elem.parentElement.parentElement.setAttribute('class', 'left-table-rows');
+  if(document.getElementsByClassName('selectedLeftRow').length==0) {
+    if (elem.innerHTML == "check_box") {
+      elem.innerHTML = "check_box_outline_blank";
+      elem.parentElement.parentElement.setAttribute('class', 'left-table-rows');
+    } else {
+      elem.innerHTML = "check_box";
+      elem.parentElement.parentElement.setAttribute('class', 'left-table-rows selectedLeftRow');
+    }
   } else {
-    elem.innerHTML = "check_box";
-    elem.parentElement.parentElement.setAttribute('class', 'left-table-rows selectedLeftRow');
+    var clgName = document.getElementsByClassName('selectedLeftRow')[0].getElementsByTagName('td')[2].innerHTML;
+    if (elem.parentElement.parentElement.getElementsByTagName('td')[2].innerHTML!=clgName) {
+      Materialize.toast('Participants from different colleges being added!', 3000);
+    } else {
+      if (elem.innerHTML == "check_box") {
+        elem.innerHTML = "check_box_outline_blank";
+        elem.parentElement.parentElement.setAttribute('class', 'left-table-rows');
+      } else {
+        elem.innerHTML = "check_box";
+        elem.parentElement.parentElement.setAttribute('class', 'left-table-rows selectedLeftRow');
+      }
+    }
   }
 }
 function toggleRightSelection(elem) {

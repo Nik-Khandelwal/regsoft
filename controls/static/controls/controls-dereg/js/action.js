@@ -188,11 +188,12 @@ function add_to_left(l_index){
 var net_amt; 
 var id_arr;
 var send_obj;
-function gen_bill(){
+function gen_bill(amt){
 	var csrf_token = getCookie('csrftoken');
 	// calculate net_amt (initially zero)
 	// add id's of selected participants to json
-	net_amt=0;
+	net_amt=amt;
+	document.getElementById('amt_return').innerHTML=amt;
 	id_arr=[];
 	send_obj={
 		"data": {
@@ -496,6 +497,9 @@ function deregisterParts() {
   ourRequest.onload = function() {
     if (ourRequest.status >= 200 && ourRequest.status < 400) {
       Materialize.toast('Deregistered!', 3000);
+      var ourData = JSON.parse(ourRequest.responseText);
+      var returnamt = parseInt(ourData.unbilled_amt);
+      gen_bill(returnamt);
       sendPusherUpdate(send_json);
     } else {
       Materialize.toast('Server Error!', 4000, "toast-fetch_error");  

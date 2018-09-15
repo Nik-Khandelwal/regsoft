@@ -86,3 +86,7 @@ html {
   max-height: 57vh;
   overflow: auto;
 }
+pre {
+  margin: 0;
+  margin-bottom: 15px;
+}

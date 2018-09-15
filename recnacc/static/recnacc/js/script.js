@@ -66,12 +66,11 @@ function loaded() {
   
   $(document).ready(function(){
     $('.collapsible').collapsible();
-    for (var i = 0; i < document.getElementsByClassName('collapsible').length; i++) {
-      $('.collapsible').collapsible('close', i);
-    }
   });
   $('select').material_select();
-  $('.modal').modal();
+  $('.modal').modal({
+    dismissible: false
+  });
   $('.coll-1').sideNav({
       menuWidth: 200, // Default is 300
       edge: 'right', // Choose the horizontal origin
@@ -464,32 +463,25 @@ function updateSelectBhawans(data, participants) {
       var no_select= document.getElementsByClassName("select_rooms");
       for(var l = 0; l < no_select.length; l++) {
         each_select=no_select[l];
-        for(var w = 0; w < data.fields[i].rooms.length; w++) {
-          var bhawan_id = document.getElementsByClassName('select_rooms')[l].getAttribute('bhawan-id');
-          // var bhawan_id = 21;
-          // console.log(bhawan_id);
-          // console.log(++count);
-          if (bhawan_id==data.fields[i].id) {
+        var bhawan_id = document.getElementsByClassName('select_rooms')[l].getAttribute('bhawan-id');
+        if (bhawan_id==data.fields[i].id) {
+          for(var w = 0; w < data.fields[i].rooms.length; w++) {
             each_select.innerHTML+="<option value="+data.fields[i].rooms[w].name+">"+data.fields[i].rooms[w].name+"</option>";
-            // console.log(each_select.innerHTML);
           }
         }
       }
-      
     } else {
-      document.getElementById("rooms-collection").innerHTML += '<li class="collection-item avatar search-class"> <i class="material-icons circle">hotel</i> <span class="title">'+data.fields[i].name+'</span> <p class="acco-avail">'+data.fields[i].no+'</p><a onclick="selectBhawan('+data.fields[i].id+')" class="secondary-content"><i class="material-icons">done</i></a> </li>';
+      document.getElementById("rooms-collection").innerHTML += '<li class="collection-item avatar search-class"> <i class="material-icons circle">hotel</i> <span class="title">'+data.fields[i].name+'</span> <p class="acco-avail">'+data.fields[i].no+'</p><a onclick="selectBhawan('+data.fields[i].id+',this)" class="secondary-content"><i class="material-icons">done</i></a> </li>';
     }
   }
-  $(document).ready(function(){
-    $('.collapsible').collapsible();
-    $('select').material_select();
-  });
+  $('.collapsible').collapsible();
+  $('select').material_select();
 }
 
-function selectBhawan(index) {
+function selectBhawan(index,option) {
   
   // Write Code to send selected bhawan to backend.
-  var acco_available = document.getElementsByClassName('acco-avail')[index-1].innerHTML;
+  var acco_available = parseInt(option.previousElementSibling.innerHTML);
   if (acco_available < id_arr.length) {
     Materialize.toast('Insufficient Space in this Hostel!', 4000);
   } else {
@@ -514,8 +506,6 @@ function selectBhawan(index) {
     };
     
     var send_json = JSON.stringify(send_obj);
-    console.log(send_obj);
-    // alert(send_obj);
     // Obtain 
     ourRequest.onreadystatechange = function () {
       if (ourRequest.readyState === 4 && ourRequest.status === 200) {
@@ -574,7 +564,6 @@ function selectBhawanRooms(index) {
         }
       };
       var send_json = JSON.stringify(send_obj);
-      // console.log(send_obj);
       // Obtain 
       ourRequest.onreadystatechange = function () {
         if (ourRequest.readyState === 4 && ourRequest.status === 200) {
@@ -615,7 +604,6 @@ function createSingleGroup(num) {
       }
     };
     var send_json = JSON.stringify(send_obj);
-    // console.log(send_obj);
     // Obtain 
     ourRequest.onreadystatechange = function () {
       if (ourRequest.readyState === 4 && ourRequest.status === 200) {
@@ -797,7 +785,7 @@ function fetchStats() {
         for (var j = 0; j < list.length; j++) {
           if (list[j].type=="common_room") {
             common_room_present=true;
-            single_room_list+='<a class="collection-item">'+list[j].name+'<span class="right">'+list[j].mobile+'</span></a>';
+            common_room_list+='<a class="collection-item">'+list[j].name+'<span class="right">'+list[j].mobile+'</span></a>';
           } else if(list[j].type=="tt_room") {
             tt_room_present=true;
             tt_room_list+='<a class="collection-item">'+list[j].name+'<span class="right">'+list[j].mobile+'</span></a>';
@@ -813,17 +801,14 @@ function fetchStats() {
           tt_room = '<li class="bhawan-rooms-wrapper"> <div class="collapsible-header"><i class="material-icons">airline_seat_individual_suite</i>TT Room</div><div class="collapsible-body center white parts-wrapper"> <div class="collection" style="width: 100%;"> '+tt_room_list+' </div></div></li>';
         }
         if (single_room_present) {
-          single_room = '<li class="bhawan-rooms-wrapper"> <div class="collapsible-header"><i class="material-icons">airline_seat_individual_suite</i>Common Room</div><div class="collapsible-body center white parts-wrapper"> <div class="collection" style="width: 100%;"> '+single_room_list+' </div></div></li>';
+          single_room = '<li class="bhawan-rooms-wrapper"> <div class="collapsible-header"><i class="material-icons">airline_seat_individual_suite</i>Single Rooms</div><div class="collapsible-body center white parts-wrapper"> <div class="collection" style="width: 100%;"> '+single_room_list+' </div></div></li>';
         }
         document.getElementById('stats_ul').innerHTML += '<li class="bhawan-name-wrapper"> <div class="collapsible-header"><i class="material-icons">airline_seat_individual_suite</i>'+hostel_name+'</div><div class="collapsible-body center white bhawan-wrapper"> <ul class="collapsible popout center-align" data-collapsible="accordion" style="width: 100%;">'+common_room+tt_room+single_room+'</ul> </div></li>';
       }
       $('.collapsible').collapsible();
-      for (var i = 0; i < document.getElementsByClassName('collapsible').length; i++) {
-        $('.collapsible').collapsible('close', i);
-      }
       statsReady = 1;
     } else {
-      Materialize.toast('Server Error!', 3000, "toast-fetch_error");  
+      Materialize.toast('Server Error!', 3000, "toast-fetch_error");
     }
   }
   ourRequest.onerror = function() {
@@ -925,13 +910,11 @@ var pusher = new Pusher('9b825df805e0b694cccc', {
 
 var channel = pusher.subscribe('my-channel');
 channel.bind('my-event', function(data) {
-  console.log(data);
   poppulate_left(data);
   fetchPassedStats();
 });
 var channel2 = pusher.subscribe('my-channel2');
 channel2.bind('my-event2', function(data) {
-  console.log(data);
   firewallzUpdates(data);
   fetchPassedStats();
 });
@@ -985,10 +968,6 @@ function pusher_fetchBhawanStats() {
     if (ourRequest.status >= 200 && ourRequest.status < 400) { // request sent and recieved
       ourData = JSON.parse(ourRequest.responseText);
       roomsData = ourData;
-    }
-    else
-    {
-      console.log("wassup");
     }
   } // server sent an error after connection
   ourRequest.onerror = function () { // error connecting to URL

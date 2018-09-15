@@ -58,7 +58,7 @@ function fetchNotes() {
       var ourData = JSON.parse(ourRequest.responseText);
       var data = ourData.data;
       for (var i = 0; i < data.length; i++) {
-        document.getElementById('notes-collection').innerHTML+='<li class="collection-item avatar dismissable"> <i class="material-icons circle red">note</i> <span class="title">'+data[i].text+'</span> <p class="date-stamp">Date: '+data[i].time+'</p></li>';
+        document.getElementById('notes-collection').innerHTML+='<li class="collection-item avatar dismissable"> <i class="material-icons circle red">note</i> <span class="title"><pre>'+data[i].text+'</pre></span> <p class="date-stamp">Date: '+data[i].time+'</p></li>';
       }
       Materialize.toast('Updated Notes!', 3000);
     } else {

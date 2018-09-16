@@ -71,6 +71,7 @@ class Regplayer(models.Model):
 	sport = models.CharField(max_length=10000000, null=True, blank=True)
 	entered = models.BooleanField(default=False)
 	unbilled_amt = models.IntegerField(default=1100)
+	bitsian = models.BooleanField(default=False)
 	fine = models.FloatField(default=0)
 	notes = models.CharField(max_length=10000, null=True, blank=True)
 	blood_grp = models.CharField(max_length=100,null=True,blank=True)

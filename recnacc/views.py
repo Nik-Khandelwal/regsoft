@@ -709,9 +709,18 @@ def disp_occupency(request):
 			for ac in Acco_name.objects.all():
 				dat = []
 				dat.append(ac.name)
-				dat.append({"pk":ac.common_room.pk,"strength":ac.common_room.strength,"fine":ac.common_room.fine})
-				dat.append({"pk":ac.tt_room.pk,"strength":ac.tt_room.strength,"fine":ac.tt_room.fine})
-				dat.append({"pk":ac.s_room.pk,"strength":ac.s_room.strength,"fine":ac.s_room.fine})
+				if(ac.common_room):
+					dat.append({"pk":ac.common_room.pk,"strength":ac.common_room.strength,"fine":ac.common_room.fine})
+				else:
+					dat.append({"pk":0,"strength":0,"fine":0})
+				if(ac.tt_room):
+					dat.append({"pk":ac.tt_room.pk,"strength":ac.tt_room.strength,"fine":ac.tt_room.fine})
+				else:
+					dat.append({"pk":0,"strength":0,"fine":0})
+				if(ac.s_room):
+					dat.append({"pk":ac.s_room.pk,"strength":ac.s_room.strength,"fine":ac.s_room.fine})
+				else:
+					dat.append({"pk":0,"strength":0,"fine":0})
 				dats.append(dat)
 			return HttpResponse(json.dumps({"data":dats}), content_type='application/json')	
 		else:
@@ -845,7 +854,7 @@ def view_notes(request):
 		if is_recnacc_admin(request.user):
 			data = []
 			for n in Note.objects.all():
-				data.append({"time":n.time.strftime('%d-%m-%Y %H:%M:%S UTC'),"text":n.text})
+				data.append({"pk":n.pk,"time":n.time.strftime('%d-%m-%Y %H:%M:%S UTC'),"text":n.text})
 			return HttpResponse(json.dumps({"data":data}), content_type='application/json')	
 		else:
 			logout(request)
@@ -1030,3 +1039,65 @@ def stats_html(request):
 	context = {"mylist":data}
 	return render(request,'recnacc/recnacc_stats.html',context)
 
+
+def delete_note(request):
+	if request.user.is_authenticated():
+		if is_recnacc_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	data = json.loads( request.body.decode('utf-8') )
+	n = Note.objects.get(pk=data['data']['pk'])
+	n.delete()
+	return HttpResponse(json.dumps({"success":"1"}), content_type='application/json')	
+
+
+def add_bhawan(request):
+	if request.user.is_authenticated():
+		if is_recnacc_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	data = json.loads( request.body.decode('utf-8') )
+	acn = Acco_name()
+	acn.name = data['data']['hostel']
+	acn.save()
+	return HttpResponse(json.dumps({"success":"1"}), content_type='application/json')
+
+
+def add_acco(request):
+	if request.user.is_authenticated():
+		if is_recnacc_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	data = json.loads( request.body.decode('utf-8') )
+	acn = Acco_name.objects.get(pk=data['data']['pk'])
+	ac = Accomodation()
+	ac.name = data['data']['ac_name']
+	ac.strength = data['data']['ac_strength']
+	ac.vacancy = data['data']['ac_strength']
+	ac.save()
+	if(int(data['data']['type']) == 0):
+		acn.common_room = ac
+	elif(int(data['data']['type']) == 1):
+		acn.tt_room = ac
+	elif(int(data['data']['type']) == 2):
+		sr = Singleroom()
+		sr.name = data['data']['sr_name']
+		sr.vacancy = data['data']['sr_vacancy']
+		sr.save()
+		ac.singleroom.add(sr)
+		ac.save()
+		acn.s_room = ac
+	acn.save()
+	return HttpResponse(json.dumps({"success":"1"}), content_type='application/json')

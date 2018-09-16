@@ -72,5 +72,7 @@ urlpatterns = [
     url(r'^stats_html/$',views.stats_html,name='stats_html'),
 
     url(r'^redeaccomodate/$',views.redeaccomodate,name='redeaccomodate'),
+
+    url(r'^delete_note/$',views.delete_note,name='delete_note'),
     
 ]

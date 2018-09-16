@@ -250,6 +250,8 @@ def add_participant(request):
 		pl.city = tm.city
 		pl.mobile_no = str(data['data'][0]['phone'])
 		pl.email_id = data['data'][0]['email']
+		pl.bitsian = data['data'][0]['bitsian']
+		pl.entered = False
 		pl.sport=''
 		for i in data['data'][0]['sport']: 
 			up.sportid=replaceindex(up.sportid,int(i),'2')
@@ -260,6 +262,11 @@ def add_participant(request):
 		pl.save()
 		pl.uid = "18CB"+str(100000+pl.pk)[-4:]
 		pl.save()
+
+		if(pl.bitsian == True):
+			pl.unbilled_amt = 0
+		pl.save()
+		
 		to_email = up.email
 		message = render_to_string('register/msg2.html', {
 										'user':up.name, 
@@ -442,7 +449,7 @@ def collegelist(request):
 	else:
 		return HttpResponseRedirect('/regsoft/')
 	data = []
-	for tm in Team.objects.filter(activate=0).order_by(Lower('college')):
+	for tm in Team.objects.order_by(Lower('college')):
 		data.append({"pk":tm.pk,"college":tm.college})
 	return JsonResponse({"data":data})
 

@@ -444,7 +444,7 @@ def unconfirm_player(request):
 			pl.save()
 			fne += rp.unbilled_amt
 		dat = {"unbilled_amt":fne}
-		return HttpResponse(json.dumps(dat), content_type='application/json')
+	return HttpResponse(json.dumps(dat), content_type='application/json')
 
 
 def unconfirm_player_pusher(request):

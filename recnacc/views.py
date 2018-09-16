@@ -761,10 +761,10 @@ def deallocated(request):
 def deallocated_page(request):
 	if request.user.is_authenticated():
 		if is_recnacc_admin(request.user):
-			data = []
-			for pl in Enteredplayer.objects.filter(all_done=True):
-				data.append({"name":pl.regplayer.name.name,"college":pl.regplayer.college})
-			return HttpResponse(json.dumps({"data":data}), content_type='application/json')	
+			# data = []
+			# for pl in Enteredplayer.objects.filter(all_done=True):
+			# 	data.append({"name":pl.regplayer.name.name,"college":pl.regplayer.college})
+			# return HttpResponse(json.dumps({"data":data}), content_type='application/json')	
 
 
 			data=[]

@@ -242,7 +242,8 @@ function gen_bill(){
 			"deno_200": 0,
 			"deno_100": 0,
 			"deno_50": 0,
-			"id_arr": id_arr
+			"id_arr": id_arr,
+			"amt_arr": part_amt_arr
 		},
 		"csrftoken": {
 			"csrfmiddlewaretoken": csrf_token
@@ -259,7 +260,7 @@ function gen_bill(){
 			// console.log(elem_pay);
 			net_amt+=parseFloat(elem_pay.getElementsByClassName("right-indiv-amt")[0].getElementsByTagName("input")[0].getAttribute('value'));
 			// console.log(id_arr);
-			part_amt_arr.push(parseFLoat(elem.getElementsByClassName("right-indiv-amt")[0].getElementsByTagName('input')[0].getAttribute('value')));
+			part_amt_arr.push(parseFloat(elem_pay.getElementsByClassName("right-indiv-amt")[0].getElementsByTagName('input')[0].getAttribute('value')));
 			id_arr.push(elem_pay.getElementsByClassName("right-indiv-id")[0].innerHTML);
 			i++;
 			elem_pay=document.getElementsByClassName("right-indiv")[i];
@@ -326,7 +327,8 @@ function confirm_bill(){
 					"deno_200": deno_200,
 					"deno_100": deno_100,
 					"deno_50": deno_50,
-					"id_arr": id_arr
+					"id_arr": id_arr,
+					"amt_arr": part_amt_arr
 				}
 			};
 			post_backend();
@@ -351,7 +353,8 @@ function confirm_bill(){
 					"data": {
 						"paid_amt": paid_amt,
 						"dd_num": ddNum,
-						"id_arr":id_arr
+						"id_arr":id_arr,
+						"amt_arr": part_amt_arr
 					},
 					"csrftoken": {
 						"csrfmiddlewaretoken": csrf_token
@@ -407,6 +410,7 @@ function post_backend(){
 	ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
 	// POST 
 	var send_json = JSON.stringify(send_obj);
+	console.log(send_obj);
 	// alert(data);
 	// Obtain 
 	ourRequest.onreadystatechange = function() {
@@ -453,6 +457,9 @@ function retrieve_left(){
 		poppulate_left(ourData);
 		left_count=0;
 		document.getElementById('no_of_left_part_text').innerHTML=left_count;
+		document.getElementById('tot_amount_text').getElementsByTagName('input')[0].setAttribute('value',0);
+	    $("#tot_amount_num").val(0);
+	    Materialize.updateTextFields();
 	}
 	else 		
 		Materialize.toast('Server Error!', 4000, "toast-fetch_error");	

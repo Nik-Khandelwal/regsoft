@@ -781,37 +781,37 @@ def deallocated(request):
 def deallocated_page(request):
 	if request.user.is_authenticated():
 		if is_recnacc_admin(request.user):
-			# data = []
-			# for pl in Enteredplayer.objects.filter(all_done=True):
-			# 	data.append({"name":pl.regplayer.name.name,"college":pl.regplayer.college})
-			# return HttpResponse(json.dumps({"data":data}), content_type='application/json')	
-
-
-			data=[]
-			for gr in Group.objects.all():
-				b=[]
-				pl = Enteredplayer.objects.filter(all_done=True)
-				#print(pl)
-				a=[]
-				for p in pl:
-					t = Regplayer.objects.get(pk=p.regplayer_id)
-					hos = str(p.accorecnacc.accomodation)
-					if p.accorecnacc.singleroom:
-						hos+=str(p.accorecnacc.singleroom)
-					b.append({"hostel":hos,"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
-					p.recnacc_displayed = True
-					p.save()
-					#print(p)
-				# for t in a:
-				# 	b.append({"hostel":,"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
-				if b:
-					data.append({"participants":b,"groupid":gr.group_code})
-			return HttpResponse(json.dumps(data), content_type='application/json')
+			pass
 		else:
 			logout(request)
 			return HttpResponseRedirect('/regsoft/')
 	else:
 		return HttpResponseRedirect('/regsoft/')
+	# data = []
+	# for pl in Enteredplayer.objects.filter(all_done=True):
+	# 	data.append({"name":pl.regplayer.name.name,"college":pl.regplayer.college})
+	# return HttpResponse(json.dumps({"data":data}), content_type='application/json')	
+	data=[]
+	for gr in Group.objects.all():
+		b=[]
+		pl = gr.enteredplayer_set.filter(all_done=True)
+		#print(pl)
+		a=[]
+		for p in pl:
+			t = Regplayer.objects.get(pk=p.regplayer.pk)
+			hos = str(p.accorecnacc.accomodation)
+			if p.accorecnacc.singleroom:
+				hos+=str(p.accorecnacc.singleroom)
+			b.append({"hostel":hos,"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
+			p.recnacc_displayed = True
+			p.save()
+			#print(p)
+		#for t in a:
+		# 	b.append({"hostel":,"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
+		if b:
+			data.append({"participants":b,"groupid":gr.group_code})
+	return HttpResponse(json.dumps(data), content_type='application/json')
+		
 
 def fines(request):
 	if request.user.is_authenticated():
@@ -1093,24 +1093,33 @@ def add_acco(request):
 			return HttpResponseRedirect('/regsoft/')
 	else:
 		return HttpResponseRedirect('/regsoft/')
+	success = 1
 	data = json.loads( request.body.decode('utf-8') )
 	acn = Acco_name.objects.get(pk=data['data']['pk'])
 	if(int(data['data']['type']) == 0):
-		ac = Accomodation()
-		ac.name = data['data']['ac_name']
-		ac.strength = data['data']['ac_strength']
-		ac.vacancy = data['data']['ac_strength']
-		ac.save()
-		acn.common_room = ac
-		acn.save()
+		if(acn.common_room):
+			success = 0
+		else:
+			ac = Accomodation()
+			ac.name = data['data']['ac_name']
+			ac.strength = data['data']['ac_strength']
+			ac.mf = data['data']['gender']
+			ac.vacancy = data['data']['ac_strength']
+			ac.save()
+			acn.common_room = ac
+			acn.save()
 	elif(int(data['data']['type']) == 1):
-		ac = Accomodation()
-		ac.name = data['data']['ac_name']
-		ac.strength = data['data']['ac_strength']
-		ac.vacancy = data['data']['ac_strength']
-		ac.save()
-		acn.tt_room = ac
-		acn.save()
+		if(ac.tt_room):
+			success = 0
+		else:
+			ac = Accomodation()
+			ac.name = data['data']['ac_name']
+			ac.strength = data['data']['ac_strength']
+			ac.mf = data['data']['gender']
+			ac.vacancy = data['data']['ac_strength']
+			ac.save()
+			acn.tt_room = ac
+			acn.save()
 	elif(int(data['data']['type']) == 2):
 		if(acn.s_room):
 			ac = acn.s_room
@@ -1120,6 +1129,7 @@ def add_acco(request):
 		else:
 			ac = Accomodation()
 			ac.name = data['data']['ac_name']
+			ac.mf = data['data']['gender']
 			ac.strength = data['data']['sr_vacancy']
 			ac.vacancy = data['data']['sr_vacancy']
 			ac.save()
@@ -1133,4 +1143,4 @@ def add_acco(request):
 		ac.save()
 		acn.s_room = ac
 	acn.save()
-	return HttpResponse(json.dumps({"success":"1"}), content_type='application/json')
+	return HttpResponse(json.dumps({"success":success}), content_type='application/json')

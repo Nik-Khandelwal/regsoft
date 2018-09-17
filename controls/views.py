@@ -23,6 +23,7 @@ from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from io import StringIO
+from django.db.models.functions import Lower
 #import cStringIO as StringIO
 from xhtml2pdf import pisa
 from django.template.loader import get_template
@@ -175,12 +176,22 @@ def generate_bill(request):
 		data = json.loads( request.body.decode('utf-8') )
 		sums = 0
 		print(data['data']['id_arr'])
-		for i in data['data']['id_arr']:
+
+		for i,j in zip(data['data']['id_arr'], data['data']['amt_arr']):
 			rp = Regplayer.objects.get(pk=int(i))
+			rp.unbilled_amt = j
+			rp.save()
 			pl = Enteredplayer.objects.get(regplayer = rp)
 			pl.controls_passed = True
 			pl.billcontrols = Billcontrols.objects.filter(unbilled_amt=0).first()
 			pl.save()
+		# for i in data['data']['id_arr']:
+		# 	rp = Regplayer.objects.get(pk=int(i))
+		# 	pl.unbilled_amt = data['data']['amt_arr'][]
+		# 	pl = Enteredplayer.objects.get(regplayer = rp)
+		# 	pl.controls_passed = True
+		# 	pl.billcontrols = Billcontrols.objects.filter(unbilled_amt=0).first()
+		# 	pl.save()
 		bil = Billcontrols.objects.filter(unbilled_amt=0).first()
 		bil.unbilled_amt = data['data']['net_amt']
 		bil.amt_received = int(data['data']['deno_2000'])*2000 + int(data['data']['deno_500'])*500 + int(data['data']['deno_200'])*200 + int(data['data']['deno_100'])*100 + int(data['data']['deno_50'])*50

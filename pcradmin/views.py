@@ -2002,31 +2002,25 @@ def docapprove(request):
 		for ppk in data['id_arr']:
 			u=User.objects.get(pk=ppk)
 			u.confirm1=3
-			try:
-				u.save()
-			except:
-				success=0
-			else:
-				nmlist.append(u.name)
-				maillist.append(u.email)
-				rp = Regplayer()
-				rp.name = User.objects.get(pk=u.pk)
-				rp.gender = u.gender
-				rp.college = u.team.college
-				rp.city = u.team.city
-				rp.mobile_no = u.phone
-				rp.email_id = u.email
-				rp.sport=''
-				for s in Sport.objects.all():
-					if u.sportid[s.idno]=='2':
-						rp.sport=rp.sport+s.sport+','
-				rp.sport = rp.sport[:-1]
-				try:
-					rp.save()
-					rp.uid = "18CB"+str(100000+rp.pk)[-4:]
-					rp.save()
-				except:
-					success=0
+			u.save()
+			nmlist.append(u.name)
+			maillist.append(u.email)
+			rp = Regplayer()
+			rp.name = User.objects.get(pk=u.pk)
+			rp.gender = u.gender
+			rp.college = u.team.college
+			rp.city = u.team.city
+			rp.mobile_no = u.phone
+			rp.email_id = u.email
+			rp.sport=''
+			for s in Sport.objects.all():
+				if u.sportid[s.idno]=='2':
+					rp.sport=rp.sport+s.sport+','
+			rp.sport = rp.sport[:-1]
+			rp.save()
+			rp.uid = "18CB"+str(100000+rp.pk)[-4:]
+			rp.save()
+			
 		message = render_to_string('pcradmin/msg7.html', {
 														'college':tm.college, 
 														
@@ -2034,11 +2028,11 @@ def docapprove(request):
 		mail_subject = 'Documents Verified for BOSM \'18'
 		email = EmailMessage(mail_subject, message, to=maillist)
 		email.content_subtype = "html"
-		try:
-			pass
-			# email.send()
-		except:
-			pass
+		# try:
+		# 	#pass
+		# 	email.send()
+		# except:
+		# 	pass
 		message = render_to_string('pcradmin/msg8.html', {
 														'nmlist':nmlist,
 														'college':tm.college, 
@@ -2047,11 +2041,11 @@ def docapprove(request):
 		mail_subject = 'Documents Verified for BOSM \'18'
 		email = EmailMessage(mail_subject, message, to=[glmail])
 		email.content_subtype = "html"
-		try:
-			email.send()
-		except:
-			pass
-		return JsonResponse({'success':success})
+		# try:
+		# 	email.send()
+		# except:
+		# 	pass
+		return JsonResponse({'success':1})
 
 
 

@@ -119,6 +119,10 @@ def details(request):
 	if request.method=='POST':
 		dat=[]
 		for rp in Regplayer.objects.filter(entered=False):
+			rp.sport = rp.sport[:-1]
+			rp.save()
+
+		for rp in Regplayer.objects.filter(entered=False):
 			# rp.unbilled_amt = 1100-int(rp.name.pcramt)
 			b = {"name":rp.name.name,"gender":rp.gender,"college":rp.college,"city":rp.city,"mobile_no":rp.mobile_no,"email_id":rp.email_id,"sport":rp.sport,"entered":rp.entered,"unbilled_amt":rp.unbilled_amt}
 			dat.append({"pk":rp.pk,"fields":b})

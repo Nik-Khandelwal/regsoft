@@ -489,6 +489,7 @@ function deregisterParts() {
       "id_arr": id_arr
     }
   };
+  console.log(send_obj);
   var send_json = JSON.stringify(send_obj);
   var ourRequest = new XMLHttpRequest();
   ourRequest.open("POST", "/controls/unconfirm_player/", true);

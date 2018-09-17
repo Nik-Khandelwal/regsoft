@@ -425,6 +425,7 @@ function deacc() {
         "csrfmiddlewaretoken": csrf_token
       }
     };
+    console.log(send_obj);
     accoLength = i;
     $('#due').modal('open');
     document.getElementById('amount_fine').innerHTML = 'Loading...';
@@ -439,11 +440,12 @@ function deacc() {
     ourRequest.onreadystatechange = function () {
       if (ourRequest.readyState === 4 && ourRequest.status === 200) {
         var recieve_json = JSON.parse(ourRequest.responseText);
+        console.log(recieve_json);
         var fine = recieve_json.fine;
         var list = recieve_json.list;
-        document.getElementById('amount_fine').innerHTML = 'Rs: ' + fine;
+        document.getElementById('amount_fine').innerHTML = 'Rs: ' + Math.round(fine);
         for (var i = 0; i < list.length; i++) {
-          document.getElementById('parts-list').innerHTML+='<li class="collection-item"><div>'+list[i].name+'<a class="secondary-content">Rs '+list[i].fine+'</a></div></li>';
+          document.getElementById('parts-list').innerHTML+='<li class="collection-item"><div>'+list[i].name+'<a class="secondary-content">Rs '+list[i].fine.toFixed(2)+'</a></div></li>';
         }
         Materialize.toast('Updated', 4000);
         showRequestStatus(1);

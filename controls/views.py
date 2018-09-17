@@ -433,6 +433,7 @@ def unconfirm_player(request):
 		return HttpResponseRedirect('/regsoft/')
 	if request.method=='POST':
 		data = json.loads( request.body.decode('utf-8') )
+		print(data)
 		fne = 0
 		for i in data['data']['id_arr']:
 			rp = Regplayer.objects.get(pk=int(i))

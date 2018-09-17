@@ -371,15 +371,16 @@ def deaccomodate(request):
 			print("deaccomodate")
 			if request.method=='POST':
 				data = json.loads( request.body.decode('utf-8') )
+				print(data)
 				fne = 0
 				dats = []
 				for i in data['data']['id_arr']:
 					#print(data['data']['id_arr'])
-					rp = Regplayer.objects.get(pk=int())
+					rp = Regplayer.objects.get(pk=int(i))
 					pl = Enteredplayer.objects.get(regplayer=rp)
 					pl.all_done = True
 					pl.save()
-					dats.append({"name":rp.name,"fine":rp.fine})
+					dats.append({"name":rp.name.name,"fine":rp.fine})
 					fne += rp.fine
 					if pl.accorecnacc.accomodation is not None:
 						ac = Accomodation.objects.get(pk=pl.accorecnacc.accomodation.pk)
@@ -447,7 +448,7 @@ def fine_amount(request):
 				for i in data['data']['id_arr']:
 					#print(data['data']['id_arr'])
 					rp = Regplayer.objects.get(pk=int(i))
-					rp.unbilled_amt += data['data']['fine_amount']
+					rp.fine += data['data']['fine_amount']
 					rp.save()
 				dat = {"success":1}
 				return HttpResponse(json.dumps(dat), content_type='application/json')
@@ -820,17 +821,19 @@ def fine_page(request):
 			ac = Accomodation.objects.get(pk=int(data['data']['pk']))
 			ac.fine = float(data['data']['amt'])
 			ac.save()
-			cnt = ac.accorecnacc_set.all().count()
+			cnt = 0
 			for ar in ac.accorecnacc_set.all():
-			 	for pl in Enteredplayer.objects.all():
+			 	for pl in Enteredplayer.objects.filter(all_done=False):
 			 		if pl.accorecnacc == ar:
+						cnt+=1
 
-			 			rp = Regplayer.objects.get(pk=pl.regplayer.pk)
+			for ar in ac.accorecnacc_set.all():
+			 	for pl in Enteredplayer.objects.filter(all_done=False):
+			 		if pl.accorecnacc == ar:
+						rp = Regplayer.objects.get(pk=pl.regplayer.pk)
 			 			rp.fine += (float(data['data']['amt'])/cnt)
 			 			rp.save()
 
-			# 			pl.regplayer.unbilled_amt += (int(data['data']['amt'])/cnt)
-			# 			pl.save()
 			return HttpResponse(json.dumps({"success":"1"}), content_type='application/json')	
 		else:
 			logout(request)

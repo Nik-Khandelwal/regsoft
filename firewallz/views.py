@@ -250,7 +250,7 @@ def add_participant(request):
 		pl.city = tm.city
 		pl.mobile_no = str(data['data'][0]['phone'])
 		pl.email_id = data['data'][0]['email']
-		pl.bitsian = data['data'][0]['bitsian']
+		#pl.bitsian = data['data'][0]['bitsian']
 		pl.entered = False
 		pl.sport=''
 		for i in data['data'][0]['sport']: 
@@ -276,8 +276,8 @@ def add_participant(request):
 										})
 		mail_subject = 'Your account details.'
 		email = EmailMessage(mail_subject, message, to=[to_email])
-		email.send()
-		dat = {"pk":pl.pk}
+		#email.send()
+		dat = {"pk":pl.pk,"college":pl.college}
 		return HttpResponse(json.dumps(dat), content_type='application/json')
 
 

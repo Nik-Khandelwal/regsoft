@@ -2035,7 +2035,8 @@ def docapprove(request):
 		email = EmailMessage(mail_subject, message, to=maillist)
 		email.content_subtype = "html"
 		try:
-			email.send()
+			pass
+			# email.send()
 		except:
 			pass
 		message = render_to_string('pcradmin/msg8.html', {

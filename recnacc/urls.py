@@ -74,5 +74,9 @@ urlpatterns = [
     url(r'^redeaccomodate/$',views.redeaccomodate,name='redeaccomodate'),
 
     url(r'^delete_note/$',views.delete_note,name='delete_note'),
+
+    url(r'^add_bhawan/$',views.add_bhawan,name='add_bhawan'),
+
+    url(r'^add_acco/$',views.add_acco,name='add_acco'),
     
 ]

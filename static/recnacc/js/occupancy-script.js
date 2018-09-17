@@ -20,6 +20,8 @@ $(document).ready(function(){
   $('.modal').modal();
   fetchOccupancy();
   document.getElementById('acco-wrapper').innerHTML = '';
+  $('select').material_select();
+  Materialize.updateTextFields();
 });
 var editpk;
 function editStrength(pk, option) {
@@ -43,7 +45,17 @@ function fetchOccupancy() {
       document.getElementById('acco-wrapper').innerHTML = '';
       var data = ourData.data;
       for (var i = 0; i < data.length; i++) {
-        document.getElementById('acco-wrapper').innerHTML+='<div class="row"> <div class="col s12 hostel-header">'+data[i][0]+'</div><div class="col s5 center rooms-header">Name</div><div class="col s5 center rooms-header">Strength</div><div class="col s2 center rooms-header">Edit</div><div class="col s5 center rooms-content">Common Room</div><div class="col s5 center rooms-content">'+data[i][1].strength+'</div><div class="col s2 center rooms-content change-cursor" onclick="editStrength('+data[i][1].pk+', this)"><i class="material-icons">edit</i></div><div class="col s5 center rooms-content">TT Room</div><div class="col s5 center rooms-content">'+data[i][2].strength+'</div><div class="col s2 center rooms-content change-cursor" onclick="editStrength('+data[i][2].pk+', this)"><i class="material-icons">edit</i></div><div class="col s5 center rooms-content">Single Room</div><div class="col s5 center rooms-content">'+data[i][3].strength+'</div><div class="col s2 center rooms-content change-cursor" onclick="editStrength('+data[i][3].pk+', this)"><i class="material-icons">edit</i></div></div>';
+        var temp = '';
+        if(data[i][1].pk!=0) {
+          temp+='<div class="col s5 center rooms-content">Common Room</div><div class="col s5 center rooms-content">'+data[i][1].strength+'</div><div class="col s2 center rooms-content change-cursor" onclick="editStrength('+data[i][1].pk+', this)"><i class="material-icons">edit</i></div>';
+        }
+        if(data[i][2].pk!=0) {
+          temp+='<div class="col s5 center rooms-content">TT Room</div><div class="col s5 center rooms-content">'+data[i][2].strength+'</div><div class="col s2 center rooms-content change-cursor" onclick="editStrength('+data[i][2].pk+', this)"><i class="material-icons">edit</i></div>';
+        }
+        if(data[i][3].pk!=0) {
+          temp+='<div class="col s5 center rooms-content">Single Room</div><div class="col s5 center rooms-content">'+data[i][3].strength+'</div><div class="col s2 center rooms-content change-cursor" onclick="editStrength('+data[i][3].pk+', this)"><i class="material-icons">edit</i></div>';
+        }
+        document.getElementById('acco-wrapper').innerHTML+='<div class="row"> <div class="col s12 hostel-header">'+data[i][0]+'</div><div class="col s5 center rooms-header">Name</div><div class="col s5 center rooms-header">Strength</div><div class="col s2 center rooms-header">Edit</div>'+temp+'</div>';
       }
       Materialize.toast('Updated!', 2000);
     }
@@ -164,4 +176,56 @@ function serializeArray(form) {
     }
   }
   return s;
+}
+
+function changeForm() {
+  if($('#type_select').val() == "single") {
+    document.getElementById('single-room-name').removeAttribute('disabled');
+  } else {
+    document.getElementById('single-room-name').setAttribute('disabled', 'disabled');
+  }
+}
+
+function addRoom() {
+  Materialize.toast('Processing', 3000);
+  var send_obj;
+  if($('#type_select').val() != "") {
+    if($('#type_select').val() != "single") {
+      send_obj = {
+        "data": {
+          "type": $('#type_select').val()
+        }
+      }
+    } else {
+      send_obj = {
+        "data": {
+          "type": $('#type_select').val(),
+          "room": $('#single-room-name').val()
+        }
+      }
+    }
+  }
+  var string_obj = JSON.stringify('send_obj');
+  var csrf_token = getCookie('csrftoken');
+  var ourRequest = new XMLHttpRequest();
+  ourRequest.open("POST", "/recnacc/availability_stats/", true);
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onload = function() {
+    if (ourRequest.status >= 200 && ourRequest.status < 400) {
+      var ourData = JSON.parse(ourRequest.responseText);
+      var data = ourData.data;
+      if(data.success==1) {
+        Materialize.toast('Successfully Added!', 3000);
+      } else {
+        Materialize.toast('Room Already Exists!', 3000);
+      }
+    } else {
+      Materialize.toast('Server Error!', 3000, "toast-fetch_error");  
+    }
+  }
+  ourRequest.onerror = function() {
+    Materialize.toast('Could not connect to server!', 3000, "toast-fetch_no_connect");
+  }
+  ourRequest.send(string_obj);
 }

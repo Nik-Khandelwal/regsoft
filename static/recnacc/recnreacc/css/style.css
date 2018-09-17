@@ -276,3 +276,8 @@ html {
   margin-top: 15px;
 }
 .custom-collapsible-body,.bhawan-gender-pref{display: none;}
+#undoAll {
+  position: fixed;
+  top: 24vh;
+  right: 0.5vw;
+}

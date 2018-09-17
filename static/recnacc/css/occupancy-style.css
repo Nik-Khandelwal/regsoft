@@ -85,3 +85,8 @@ label {
 input[type=number]:not(.browser-default) {
   border-bottom: 1px solid black;
 }
+.add_room-btn {
+  position: fixed;
+  top: 15vh;
+  left: 0.5vw;
+}

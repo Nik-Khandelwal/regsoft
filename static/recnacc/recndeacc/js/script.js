@@ -346,7 +346,17 @@ function fetchFinesDetails() {
       document.getElementById('acco-wrapper').innerHTML = '';
       var data = ourData.data;
       for (var i = 0; i < data.length; i++) {
-        document.getElementById('acco-wrapper').innerHTML+='<div class="row"> <div class="col s12 hostel-header">'+data[i][0]+'</div><div class="col s8 center rooms-header">Name</div><div class="col s2 center rooms-header">Fine</div><div class="col s2 center rooms-header">Current</div><div class="col s8 center rooms-content">Common Room</div><div class="col s2 center rooms-content change-cursor" onclick="addFine('+data[i][1].pk+')"><i class="material-icons">airline_seat_individual_suite</i></div><div class="col s2 center rooms-content">'+data[i][1].fine+'</div><div class="col s8 center rooms-content">TT Room</div><div class="col s2 center rooms-content change-cursor" onclick="addFine('+data[i][2].pk+')"><i class="material-icons">airline_seat_individual_suite</i></div><div class="col s2 center rooms-content">'+data[i][2].fine+'</div><div class="col s8 center rooms-content">Single Room</div><div class="col s2 center rooms-content change-cursor" onclick="addFine('+data[i][3].pk+')"><i class="material-icons">airline_seat_individual_suite</i></div><div class="col s2 center rooms-content">'+data[i][3].fine+'</div></div>';
+        var temp = '';
+        if(data[i][1].pk!=0) {
+          temp+='<div class="col s8 center rooms-content">Common Room</div><div class="col s2 center rooms-content change-cursor" onclick="addFine('+data[i][1].pk+')"><i class="material-icons">airline_seat_individual_suite</i></div><div class="col s2 center rooms-content">'+data[i][1].fine+'</div>';
+        }
+        if(data[i][2].pk!=0) {
+          temp+='<div class="col s8 center rooms-content">TT Room</div><div class="col s2 center rooms-content change-cursor" onclick="addFine('+data[i][2].pk+')"><i class="material-icons">airline_seat_individual_suite</i></div><div class="col s2 center rooms-content">'+data[i][2].fine+'</div>';
+        }
+        if(data[i][3].pk!=0) {
+          temp+='<div class="col s8 center rooms-content">Single Room</div><div class="col s2 center rooms-content change-cursor" onclick="addFine('+data[i][3].pk+')"><i class="material-icons">airline_seat_individual_suite</i></div><div class="col s2 center rooms-content">'+data[i][3].fine+'</div>';
+        }
+        document.getElementById('acco-wrapper').innerHTML+='<div class="row"> <div class="col s12 hostel-header">'+data[i][0]+'</div><div class="col s8 center rooms-header">Name</div><div class="col s2 center rooms-header">Fine</div><div class="col s2 center rooms-header">Current</div>'+temp+'</div>';
       }
       Materialize.toast('Updated!', 2000);
     }
@@ -439,11 +449,12 @@ function deacc() {
     ourRequest.onreadystatechange = function () {
       if (ourRequest.readyState === 4 && ourRequest.status === 200) {
         var recieve_json = JSON.parse(ourRequest.responseText);
+        console.log(recieve_json);
         var fine = recieve_json.fine;
         var list = recieve_json.list;
-        document.getElementById('amount_fine').innerHTML = 'Rs: ' + fine;
+        document.getElementById('amount_fine').innerHTML = 'Rs: ' + Math.round(fine);
         for (var i = 0; i < list.length; i++) {
-          document.getElementById('parts-list').innerHTML+='<li class="collection-item"><div>'+list[i].name+'<a class="secondary-content">Rs '+list[i].fine+'</a></div></li>';
+          document.getElementById('parts-list').innerHTML+='<li class="collection-item"><div>'+list[i].name+'<a class="secondary-content">Rs '+list[i].fine.toFixed(2)+'</a></div></li>';
         }
         Materialize.toast('Updated', 4000);
         showRequestStatus(1);
@@ -746,4 +757,10 @@ function pusher_fetchAvailabilityStats() {
     // var jsonResponse = {"data": [["Ram", ["Common Room", 90, "Single Rooms", 40, "TT Room", 80]],["Budh", ["Common Room", 120, "Single Rooms", 50]],["Meera", ["Common Room", 190, "Single Rooms", 100]],["MAL-A", ["Common Room", 90, "Single Rooms", 20, "TT Room", 10]],["Ram", ["Common Room", 90, "Single Rooms", 40, "TT Room", 80]]]};
   }
   ourRequest.send('');
+}
+
+function undoAll() {
+  for (var i = document.getElementsByClassName('right-indiv').length-1; i >= 0; i--) {
+    undo_this(document.getElementsByClassName('right-indiv')[i]);
+  }
 }

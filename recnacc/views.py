@@ -819,7 +819,7 @@ def fine_page(request):
 		if is_recnacc_admin(request.user):
 			data = json.loads( request.body.decode('utf-8') )
 			ac = Accomodation.objects.get(pk=int(data['data']['pk']))
-			ac.fine = float(data['data']['amt'])
+			ac.fine = +float(data['data']['amt'])
 			ac.save()
 			cnt = 0
 			for ar in ac.accorecnacc_set.all():

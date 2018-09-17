@@ -246,11 +246,12 @@ def add_participant(request):
 		pl.name = up
 		pl.gender = data['data'][0]['gender']
 		tm = Team.objects.get(pk=int(data['data'][0]['college']))
+		if(int(data['data'][0]['college']) == 16):
+			pl.bitsian = True
 		pl.college = tm.college
 		pl.city = tm.city
 		pl.mobile_no = str(data['data'][0]['phone'])
 		pl.email_id = data['data'][0]['email']
-		#pl.bitsian = data['data'][0]['bitsian']
 		pl.entered = False
 		pl.sport=''
 		for i in data['data'][0]['sport']: 
@@ -264,8 +265,11 @@ def add_participant(request):
 		pl.save()
 
 		if(pl.bitsian == True):
+			up.pcramt = 1100
+			up.save()
 			pl.unbilled_amt = 0
-		pl.save()
+			pl.uid = "18BP"+str(100000+pl.pk)[-4:]
+			pl.save()
 		
 		to_email = up.email
 		message = render_to_string('register/msg2.html', {

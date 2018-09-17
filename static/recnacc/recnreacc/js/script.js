@@ -1027,3 +1027,9 @@ function sendPusherUpdate(stringObj) {
   }
   ourRequest.send(string_obj);
 }
+
+function undoAll() {
+  for (var i = document.getElementsByClassName('right-indiv').length-1; i >= 0; i--) {
+    undo_this(document.getElementsByClassName('right-indiv')[i]);
+  }
+}

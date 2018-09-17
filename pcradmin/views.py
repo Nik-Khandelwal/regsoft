@@ -230,10 +230,10 @@ def modify_pcrmail(request):
 		to_email = data['email_arr']
 		for mail in to_email:
 			email = EmailMessage(mail_subject, message, to=[mail])
-			try:
-				email.send()
-			except:
-				resp={'success':0}
+			#try:
+			email.send()
+			#except:
+			#	resp={'success':0}
 		return JsonResponse(resp)
 
 @login_required(login_url='/regsoft/')

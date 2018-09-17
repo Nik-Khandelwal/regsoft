@@ -58,7 +58,7 @@ function fetchNotes() {
       var ourData = JSON.parse(ourRequest.responseText);
       var data = ourData.data;
       for (var i = data.length-1; i >= 0 ; i--) {
-        document.getElementById('notes-collection').innerHTML+='<li class="collection-item avatar dismissable"> <i class="material-icons circle red">note</i> <span class="title"><pre>'+data[i].text+'</pre></span> <p class="date-stamp">Date: '+data[i].time+'</p></li>';
+        document.getElementById('notes-collection').innerHTML+='<li class="collection-item avatar dismissable"> <i class="material-icons circle red">note</i> <span class="title"><pre>'+data[i].text+'</pre></span> <p class="date-stamp">Date: '+data[i].time+'</p><a class="secondary-content hover" onclick="deleteNote('+data[i].pk+')"><i class="material-icons">delete_forever</i></a></li>';
       }
       Materialize.toast('Updated Notes!', 3000);
     } else {
@@ -69,6 +69,33 @@ function fetchNotes() {
     Materialize.toast('Could not connect to server!', 3000, "toast-fetch_no_connect");
   }
   ourRequest.send('');
+}
+function deleteNote(id) {
+  var pk = parseInt(id);
+  Materialize.toast('Deleting Note!', 3000);
+  var send_obj = {
+    "data": {
+      "pk": pk
+    }
+  }
+  var string_obj = JSON.stringify(send_obj);
+  var csrf_token = getCookie('csrftoken');
+  var ourRequest = new XMLHttpRequest();
+  ourRequest.open("POST", "/recnacc/del_note/", true);
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onload = function() {
+    if (ourRequest.status >= 200 && ourRequest.status < 400) {
+      Materialize.toast('Deleted Note!', 3000);
+      fetchNotes();
+    } else {
+      Materialize.toast('Server Error!', 3000, "toast-fetch_error");  
+    }
+  }
+  ourRequest.onerror = function() {
+    Materialize.toast('Could not connect to server!', 3000, "toast-fetch_no_connect");
+  }
+  ourRequest.send(string_obj);
 }
 function fetchPassedStats() {
   document.getElementById('fire_conf').innerHTML = 'Loading';

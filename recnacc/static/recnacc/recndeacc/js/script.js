@@ -392,6 +392,7 @@ function updateFine() {
   ourRequest.onload = function () {
     if (ourRequest.status >= 200 && ourRequest.status < 400) {
       Materialize.toast('Updated!', 2000);
+      fetchFinesDetails();
     }
     else
       Materialize.toast('Server Error!', 2000, "toast-fetch_error");
@@ -763,4 +764,31 @@ function undoAll() {
   for (var i = document.getElementsByClassName('right-indiv').length-1; i >= 0; i--) {
     undo_this(document.getElementsByClassName('right-indiv')[i]);
   }
+}
+function serializeArray(form) {
+  var field, l, s = [];
+  if (typeof form == 'object' && form.nodeName == "FORM") {
+    var len = form.elements.length;
+    for (var i = 0; i < len; i++) {
+      field = form.elements[i];
+      if (field.name && !field.disabled && field.type != 'file' && field.type != 'reset' && field.type != 'submit' && field.type != 'button') {
+        if (field.type == 'select-multiple') {
+          l = form.elements[i].options.length;
+          for (j = 0; j < l; j++) {
+            if (field.options[j].selected)
+              s[s.length] = {
+                name: field.name,
+                value: field.options[j].value
+              };
+          }
+        } else if ((field.type != 'checkbox' && field.type != 'radio') || field.checked) {
+          s[s.length] = {
+            name: field.name,
+            value: field.value
+          };
+        }
+      }
+    }
+  }
+  return s;
 }

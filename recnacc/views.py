@@ -622,11 +622,20 @@ def availability_stats(request):
 				das.append(ac.name)
 				dat = []
 				dat.append("Common Room")
-				dat.append(ac.common_room.vacancy)
+				if(ac.common_room):
+					dat.append(ac.common_room.vacancy)
+				else:
+					dat.append(0)
 				dat.append("Single Rooms")
-				dat.append(ac.s_room.vacancy)
+				if(ac.s_room):
+					dat.append(ac.s_room.vacancy)
+				else:
+					dat.append(0)
 				dat.append("TT Room")
-				dat.append(ac.tt_room.vacancy)
+				if(ac.tt_room):
+					dat.append(ac.tt_room.vacancy)
+				else:
+					dat.append(0)
 				das.append(dat)
 				data.append(das)
 

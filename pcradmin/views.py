@@ -2323,3 +2323,36 @@ def paydetails(request):
 		d.append(s)
 		s.append(i.STATUS)
 	return render(request,'pcradmin/paydetails.html',{'data':d})
+
+def teammail(request):
+	if request.user.is_authenticated():
+		if is_pcradmin_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	if request.method=='POST':
+		data=json.loads(request.body.decode('utf-8'))
+		tm=Team.objects.get(pk=data['id'])
+		gl=User.objects.get(team=tm,grp_leader=1,deleted=0)
+		ulist=User.objects.filter(team=tm,deleted=0).order_by(Lower('name'))
+		nmlist=[]
+		for i in ulist:
+			if i.confirm1>=1:
+				nmlist.append(i.name)
+		message = render_to_string('register/msg6.html', {
+								'college':tm.college, 
+								'nmlist':nmlist, 
+								})
+		mail_subject = 'Your account details.'
+		email = EmailMessage(mail_subject, message, to=gl.email)
+		email.content_subtype = "html"
+		success=0
+		try:
+			email.send() 
+		except:
+			success=1
+		return JsonResponse({'success':success})
+	

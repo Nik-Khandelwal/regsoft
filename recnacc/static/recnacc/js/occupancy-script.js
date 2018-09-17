@@ -239,7 +239,8 @@ function addRoom() {
         "type": $('#type_select').val(),
         "pk": $('#bhawan_select').val(),
         "ac_name": hostel_name,
-        "ac_strength": acco_strength
+        "ac_strength": acco_strength,
+        "gender": $("input[name='bhawan_gender']:checked").val()
       }
     }
   } else {
@@ -249,7 +250,8 @@ function addRoom() {
         "pk": $('#bhawan_select').val(),
         "ac_name": hostel_name,
         "sr_name": sr_name,
-        "sr_vacancy": sr_vacancy
+        "sr_vacancy": sr_vacancy,
+        "gender": $("input[name='bhawan_gender']:checked").val()
       }
     }
   }
@@ -281,7 +283,7 @@ function addRoom() {
 }
 var hostels;
 function updateList() {
-  document.getElementById('add-room-form').innerHTML='<div class="row"> <div class="input-field col s12"> <select id="bhawan_select"> <option value="" disabled="disabled" selected="selected"></option> </select> <label for="bhawan_select" data-error="Select Bhawan">Bhawan</label> </div></div><div class="row"> <div class="input-field col s12"> <select id="type_select" onchange="changeForm()"> <option value="" disabled="disabled" selected="selected"></option> <option value="0">Common Room</option> <option value="1">TT Room</option> <option value="2">Single Room</option> </select> <label for="type_select" data-error="Select Type of Room">Type</label> </div></div><div class="row"> <div class="input-field col s12" id="single-room-field"> <input type="number" name="acco-strength" id="acco-strength" value="0"> <label for="acco-strength">Strength</label> </div></div><div class="row"> <div class="input-field col s12" id="single-room-field"> <input type="text" name="single-room-name" id="single-room-name" disabled="disabled" value=""> <label for="single-room-name">Room Name</label> </div></div><div class="row"> <div class="input-field col s12" id="single-room-vacancy-field"> <input type="number" name="single-room-vacancy" id="single-room-vacancy" disabled="disabled" value=""> <label for="single-room-vacancy">Single Room Vacancy</label> </div></div>';
+  document.getElementById('add-room-form').innerHTML='<div class="row"> <div class="input-field col s12"> <select id="bhawan_select"> <option value="" disabled="disabled" selected="selected"></option> </select> <label for="bhawan_select" data-error="Select Bhawan">Bhawan</label> </div></div><div class="row"> <div class="input-field col s12"> <select id="type_select" onchange="changeForm()"> <option value="" disabled="disabled" selected="selected"></option> <option value="0">Common Room</option> <option value="1">TT Room</option> <option value="2">Single Room</option> </select> <label for="type_select" data-error="Select Type of Room">Type</label> </div></div><div class="row"> <div class="input-field col s12" id="single-room-field"> <input type="number" name="acco-strength" id="acco-strength" value="0"> <label for="acco-strength">Strength</label> </div></div><div class="row"> <div class="input-field col s12" id="single-room-field"> <input type="text" name="single-room-name" id="single-room-name" disabled="disabled" value=""> <label for="single-room-name">Room Name</label> </div></div><div class="row"> <div class="input-field col s12" id="single-room-vacancy-field"> <input type="number" name="single-room-vacancy" id="single-room-vacancy" disabled="disabled" value=""> <label for="single-room-vacancy">Single Room Vacancy</label> </div></div><div class="row"> <div class="col s4 center"> Gender </div><div class="col s4 center"> <input type="radio" name="bhawan_gender" id="bhawan_male" value="male" checked="checked"> <label for="bhawan_male">Male</label> </div><div class="col s4 center"> <input type="radio" name="bhawan_gender" id="bhawan_female" value="female"> <label for="bhawan_female">Female</label> </div></div>';
   Materialize.toast('Updating Bhawan list!', 2000, "toast-fetch");
   var csrf_token = getCookie('csrftoken');
   var ourRequest = new XMLHttpRequest();

@@ -2229,7 +2229,7 @@ def refresh(request):
 											'orderid':order_id,
 											
 											})
-			mail_subject = 'Your account details.'
+			mail_subject = 'Your Payment Details | BOSM 2018'
 			email = EmailMessage(mail_subject, message, to=["bosmpayments@gmail.com"]+[request.user.email]+premail+regmail+p2rmail)
 			email.content_subtype = "html"
 			email.send() 
@@ -2275,7 +2275,7 @@ def refresh(request):
 											'orderid':order_id,
 											
 											})
-			mail_subject = 'Your account details.'
+			mail_subject = 'Your Payment Details | BOSM 2018'
 			email = EmailMessage(mail_subject, message, to=["bosmpayments@gmail.com"]+[request.user.email]+premail+regmail+p2rmail)
 			email.content_subtype = "html"
 			email.send() 

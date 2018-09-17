@@ -35,6 +35,7 @@
       height: 249px;
       overflow: hidden;
       display: inline-block;
+      border-bottom: 1px solid black;
     }
     .bosm-logo-img {
       height: 55px;
@@ -100,7 +101,7 @@
       bottom: 0px;
       font-size: 11px;
     }
-    .card-no-text, .name-text, .college-text, .accomodation-text {
+    .card-no-text, .name-text, .college-text, .accomodation-text, .sport-text {
       width: 236.19px;
       text-transform: uppercase;
       font-weight: bold;
@@ -179,6 +180,7 @@
         "college": '{{participant.college}}',
         "group_id": '{{participant.group_id}}',
         "group_code": '{{participant.group_code}}',
+        "sport": '{{participant.sport}}',
         "pk": '{{participant.pk}}',
         "uid": '{{participant.uid}}'
       }
@@ -191,9 +193,9 @@
       var pages = '';
       for (var j = i; j < data.length && j<(i+8); j++) {
         if (j%2==0) {
-          pages+='<div class="custom-col-left"> <div class="img-banner-wrapper"> <img src="/static/firewallz/icons/bosm-logo.png" class="bosm-logo-img"> <div class="bosm-head-wrapper"> <div class="bosm-head-text">BOSM</div><div class="bosm-slogan-text">GRIT|GUTS|GLORY</div></div><div class="bosm-dates-wrapper"> <div class="bosm-dates-year">2018</div><div class="bosm-dates">19th - 23rd September</div></div></div><div class="participant-card-text">Participant Card</div><div class="photo-holder"></div><div class="firewallz-text">Firewallz&nbsp&nbsp</div><div class="card-no-text">Card No. : <span>'+data[j].uid+'</span></div><div class="name-text">Name : <span>'+data[j].name+'</span></div><div class="college-text">College : <span>'+data[j].college+'</span></div><div class="qrcode-wrapper"><div class="uid">'+data[j].uid+'</div><div class="qrcode-div"></div></div></div>';
+          pages+='<div class="custom-col-left"> <div class="img-banner-wrapper"> <img src="/static/firewallz/icons/bosm-logo.png" class="bosm-logo-img"> <div class="bosm-head-wrapper"> <div class="bosm-head-text">BOSM</div><div class="bosm-slogan-text">GRIT|GUTS|GLORY</div></div><div class="bosm-dates-wrapper"> <div class="bosm-dates-year">2018</div><div class="bosm-dates">19th - 23rd September</div></div></div><div class="participant-card-text">Participant Card</div><div class="photo-holder"></div><div class="firewallz-text">Firewallz&nbsp&nbsp</div><div class="card-no-text">Card No. : <span>'+data[j].uid+'</span></div><div class="name-text">Name : <span>'+data[j].name+'</span></div><div class="sport-text">Sport : <span>'+data[j].sport+'</span></div><div class="college-text">College : <span>'+data[j].college+'</span></div><div class="qrcode-wrapper"><div class="uid">'+data[j].uid+'</div><div class="qrcode-div"></div></div></div>';
         } else if(j%2==1) {
-          pages+='<div class="custom-col-right"> <div class="img-banner-wrapper"> <img src="/static/firewallz/icons/bosm-logo.png" class="bosm-logo-img"> <div class="bosm-head-wrapper"> <div class="bosm-head-text">BOSM</div><div class="bosm-slogan-text">GRIT|GUTS|GLORY</div></div><div class="bosm-dates-wrapper"> <div class="bosm-dates-year">2018</div><div class="bosm-dates">19th - 23rd September</div></div></div><div class="participant-card-text">Participant Card</div><div class="photo-holder"></div><div class="firewallz-text">Firewallz&nbsp&nbsp</div><div class="card-no-text">Card No. : <span>'+data[j].uid+'</span></div><div class="name-text">Name : <span>'+data[j].name+'</span></div><div class="college-text">College : <span>'+data[j].college+'</span></div><div class="qrcode-wrapper"><div class="uid">'+data[j].uid+'</div><div class="qrcode-div"></div></div></div><div class="margin-gap-div"></div>';
+          pages+='<div class="custom-col-right"> <div class="img-banner-wrapper"> <img src="/static/firewallz/icons/bosm-logo.png" class="bosm-logo-img"> <div class="bosm-head-wrapper"> <div class="bosm-head-text">BOSM</div><div class="bosm-slogan-text">GRIT|GUTS|GLORY</div></div><div class="bosm-dates-wrapper"> <div class="bosm-dates-year">2018</div><div class="bosm-dates">19th - 23rd September</div></div></div><div class="participant-card-text">Participant Card</div><div class="photo-holder"></div><div class="firewallz-text">Firewallz&nbsp&nbsp</div><div class="card-no-text">Card No. : <span>'+data[j].uid+'</span></div><div class="name-text">Name : <span>'+data[j].name+'</span></div><div class="sport-text">Sport : <span>'+data[j].sport+'</span></div><div class="college-text">College : <span>'+data[j].college+'</span></div><div class="qrcode-wrapper"><div class="uid">'+data[j].uid+'</div><div class="qrcode-div"></div></div></div><div class="margin-gap-div"></div>';
         }
       }
       onepage += '<div class="one-page">'+pages+'</div>';

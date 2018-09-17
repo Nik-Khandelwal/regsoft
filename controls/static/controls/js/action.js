@@ -225,12 +225,14 @@ function add_to_left(l_index){
 var net_amt; 
 var id_arr;
 var send_obj;
+var part_amt_arr;
 function gen_bill(){
 	var csrf_token = getCookie('csrftoken');
 	// calculate net_amt (initially zero)
 	// add id's of selected participants to json
 	net_amt=0;
 	id_arr=[];
+	part_amt_arr=[];
 	send_obj={
 		"data": {
 			"net_amt": net_amt,
@@ -257,10 +259,13 @@ function gen_bill(){
 			// console.log(elem_pay);
 			net_amt+=parseFloat(elem_pay.getElementsByClassName("right-indiv-amt")[0].getElementsByTagName("input")[0].getAttribute('value'));
 			// console.log(id_arr);
+			part_amt_arr.push(parseFLoat(elem.getElementsByClassName("right-indiv-amt")[0].getElementsByTagName('input')[0].getAttribute('value')));
 			id_arr.push(elem_pay.getElementsByClassName("right-indiv-id")[0].innerHTML);
 			i++;
 			elem_pay=document.getElementsByClassName("right-indiv")[i];
 		}
+		document.getElementById("unbill_amt").innerHTML= parseFloat(document.getElementById('tot_amount_text').getElementsByTagName('input')[0].getAttribute('value'));
+		net_amt=parseFloat(document.getElementById('tot_amount_text').getElementsByTagName('input')[0].getAttribute('value'));
 		send_obj={
 			"data": {
 				"net_amt": net_amt,
@@ -270,14 +275,13 @@ function gen_bill(){
 				"deno_200": 0,
 				"deno_100": 0,
 				"deno_50": 0,
-				"id_arr": id_arr
+				"id_arr": id_arr,
+				"amt_arr": part_amt_arr
 			},
 			"csrftoken": {
 				"csrfmiddlewaretoken": csrf_token
 			}
 		};
-		document.getElementById("unbill_amt").innerHTML= parseFloat(document.getElementById('tot_amount_text').getElementsByTagName('input')[0].getAttribute('value'));
-		net_amt=parseFloat(document.getElementById('tot_amount_text').getElementsByTagName('input')[0].getAttribute('value'));
 		document.getElementById("modalpay").style.display="block";
 		document.getElementById('bill_form').style.display='block';
 		document.getElementById('dd_bill_form').style.display='block';

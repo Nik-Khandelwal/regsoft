@@ -210,7 +210,7 @@
       }
       twopage += '<div class="one-page">'+twopages+'</div>';
     }
-    document.getElementsByTagName('body')[0].innerHTML = onepage+twopage;
+    document.getElementsByTagName('body')[0].innerHTML = onepage;
     for (var i = 0; i < document.getElementsByClassName('qrcode-div').length; i++) {
       var qr = document.getElementsByClassName('qrcode-div')[i];
       var qrcode = qr.previousSibling.innerHTML;

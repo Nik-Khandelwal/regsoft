@@ -2347,7 +2347,7 @@ def teammail(request):
 								'nmlist':nmlist, 
 								})
 		mail_subject = 'Your account details.'
-		email = EmailMessage(mail_subject, message, to=gl.email)
+		email = EmailMessage(mail_subject, message, to=[gl.email])
 		email.content_subtype = "html"
 		success=0
 		try:

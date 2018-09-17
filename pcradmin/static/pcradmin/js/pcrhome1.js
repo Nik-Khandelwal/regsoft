@@ -1854,3 +1854,27 @@ function updateDashboardData() {
   };
   ourRequest.send('');
 }
+var send_id = 129;
+function sendMailFinal() {
+Materialize.toast('Sending Mail!',3000);
+  csrf_token = getCookie('csrftoken');
+  var ourRequest = new XMLHttpRequest();
+  var url = 'teammail/';
+  var send_obj = {
+  "id": send_id
+  }
+  var string_obj=JSON.stringify(send_obj);
+  ourRequest.open("POST", url, true);
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onreadystatechange = function() {
+    if (ourRequest.readyState === 4 && ourRequest.status === 200) {
+      var jsonResponse = JSON.parse(ourRequest.responseText);
+      Materialize.toast('Success!',3000);
+      closeAllModals();
+    } else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
+      Materialize.toast('There was some error connecting to the server!', 3000);
+    }
+  };
+  ourRequest.send(string_obj);
+}

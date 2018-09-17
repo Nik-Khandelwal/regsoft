@@ -1401,6 +1401,9 @@ body {
     font-family: "kanji";
     color: white;
 }
+.text1e{
+	font-size: 6vh;
+}
 .text2,.text3{
 
     font-size: 5vh;
@@ -2142,7 +2145,9 @@ position: absolute;
   .text1,.text1e{
 		font-size: 5.5vh;
 	}
-
+.text1e{
+	font-size: 4vh;
+}
 }
 #fp-nav{
 	transform: translateY(-45vh)
@@ -2205,6 +2210,9 @@ position: absolute;
   .text1,.text1e{
 		font-size: 5.5vh;
 	}
+	.text1e{
+	font-size: 4vh;
+}
 		.comefrntfrmrit
 {
 	animation: rotright 1s linear forwards;
@@ -2276,7 +2284,12 @@ position: absolute;
 	width: calc(65vw - 4.5vh);
 	height: 45.5vh;
 }
+.event-cont{
+	width: calc(30vw - 4.5vh);
+	height: 65.5vh;
+}
 	.por,.pore
+}
 {
 	height: 18vh;
 	width: calc(55vw - 2vh);
@@ -2303,6 +2316,9 @@ position: absolute;
 .text1,.text1e{
 		font-size: 6vh;
 	  }
+	  .text1e{
+	font-size: 4vh;
+}
 }
 /*
   ##Device = Tablets, Ipads (landscape)
@@ -2360,6 +2376,10 @@ position: absolute;
 	width: calc(50vw - 4.5vh);
 	height: 55.5vh;
 }
+.event-cont{
+	width: calc(30vw - 4.5vh);
+	height: 65.5vh;
+}
 	.por,.pore
 {
 	height: 18vh;
@@ -2387,6 +2407,9 @@ position: absolute;
 .text1,.text1e{
 		font-size: 6vh;
 	}
+	.text1e{
+	font-size: 4vh;
+}
 	.text2,.text3{
 		font-size: 4vh;
 	}
@@ -2445,6 +2468,10 @@ position: absolute;
 	width: calc(70vw - 4.5vh);
 	height: 50.5vh;
 }
+.event-cont{
+	width: calc(30vw - 4.5vh);
+	height: 65.5vh;
+}
 	.por,.pore
 {
 	height: 16vh;
@@ -2491,7 +2518,7 @@ position: absolute;
 .event-cont{
 	position: absolute;
 	top: 5vh;
-	left: 30vw;
+	left: 35vw;
 	height: 70vh;
 	width: 40vw;
 	border-radius: 1vw;
@@ -2529,6 +2556,10 @@ position: absolute;
 {
 	width: calc(55vw - 4.5vh);
 	height: 55.5vh;
+}
+.event-cont{
+	width: calc(30vw - 4.5vh);
+	height: 65.5vh;
 }
 	.por,.pore
 {

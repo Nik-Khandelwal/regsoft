@@ -2342,7 +2342,7 @@ def teammail(request):
 		for i in ulist:
 			if i.confirm1>=1:
 				nmlist.append(i.name)
-		message = render_to_string('register/msg6.html', {
+		message = render_to_string('pcradmin/msg1.html', {
 								'college':tm.college, 
 								'nmlist':nmlist, 
 								})

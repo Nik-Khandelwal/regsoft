@@ -291,3 +291,8 @@ label {
 input[type=number]:not(.browser-default) {
   border-bottom: 1px solid black;
 }
+#undoAll {
+  position: fixed;
+  top: 24vh;
+  right: 0.5vw;
+}

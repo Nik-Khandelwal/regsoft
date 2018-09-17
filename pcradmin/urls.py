@@ -66,7 +66,8 @@ urlpatterns = [
     url(r'^dashboard/$',dashboard), 
     
     url(r'^paymentdetails/$',paydetails), 
-    url(r'^refresh/$',refresh), 
+    url(r'^refresh/$',refresh),
+    url(r'^teammail/$',teammail), 
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

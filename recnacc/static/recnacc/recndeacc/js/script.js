@@ -451,7 +451,7 @@ function deacc() {
       if (ourRequest.readyState === 4 && ourRequest.status === 200) {
         var recieve_json = JSON.parse(ourRequest.responseText);
         console.log(recieve_json);
-        var fine = recieve_json.fine;
+        var fine = recieve_json.total;
         var list = recieve_json.list;
         document.getElementById('amount_fine').innerHTML = 'Rs: ' + Math.round(fine);
         for (var i = 0; i < list.length; i++) {

@@ -814,3 +814,14 @@ def bill_details(request):
 			dat.append({"bill_pk":b.pk,"college":t[0].regplayer.college,"group_id":t[0].group.group_code})
 	return HttpResponse(json.dumps(dat), content_type='application/json')
 
+
+def bill_details_html(request):
+	if request.user.is_authenticated():
+		if is_controls_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	return render(request, 'controls/bill_controls.html')

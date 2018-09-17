@@ -55,12 +55,27 @@ function updateLeftTable(data) {
   }
 }
 function toggleSelection(elem) {
-  if (elem.innerHTML == "check_box") {
-    elem.innerHTML = "check_box_outline_blank";
-    elem.parentElement.parentElement.setAttribute('class', 'left-table-rows');
+  if(document.getElementsByClassName('selectedLeftRow').length==0) {
+    if (elem.innerHTML == "check_box") {
+      elem.innerHTML = "check_box_outline_blank";
+      elem.parentElement.parentElement.setAttribute('class', 'left-table-rows');
+    } else {
+      elem.innerHTML = "check_box";
+      elem.parentElement.parentElement.setAttribute('class', 'left-table-rows selectedLeftRow');
+    }
   } else {
-    elem.innerHTML = "check_box";
-    elem.parentElement.parentElement.setAttribute('class', 'left-table-rows selectedLeftRow');
+    var clgName = document.getElementsByClassName('selectedLeftRow')[0].getElementsByTagName('td')[2].innerHTML;
+    if (elem.parentElement.parentElement.getElementsByTagName('td')[2].innerHTML!=clgName) {
+      Materialize.toast('Participants from different colleges being added!', 3000);
+    } else {
+      if (elem.innerHTML == "check_box") {
+        elem.innerHTML = "check_box_outline_blank";
+        elem.parentElement.parentElement.setAttribute('class', 'left-table-rows');
+      } else {
+        elem.innerHTML = "check_box";
+        elem.parentElement.parentElement.setAttribute('class', 'left-table-rows selectedLeftRow');
+      }
+    }
   }
 }
 function toggleRightSelection(elem) {
@@ -363,18 +378,28 @@ function addParticipantSubmit() {
             }
           }
         }
-        var details = [];
-        var data = {
-          "fields": {
-            "name": participant_name,
-            "college": participant_college,
-            "sport": sportsNames,
-            "gender": participant_gender
-          },
-          "pk": json.pk
-        }
-        details.push(data);
-        addToRight(details);
+        // var details = [];
+        // var data = {
+        //   "fields": {
+        //     "name": participant_name,
+        //     "college": participant_college,
+        //     "sport": sportsNames,
+        //     "gender": participant_gender
+        //   },
+        //   "pk": json.pk
+        // }
+        // details.push(data);
+        //addToRight(details);
+
+        var lefttmp = document.getElementById('left-temp');
+        document.getElementById("left-body").insertBefore(lefttmp.content.cloneNode(true), document.getElementById("left-body").childNodes[0]);
+        document.getElementsByClassName('left-table-name')[0].innerHTML = participant_name;
+        document.getElementsByClassName('left-table-college')[0].innerHTML = json.college;
+        document.getElementsByClassName('left-table-sport')[0].innerHTML = sportsNames;
+        document.getElementsByClassName('left-table-gender')[0].innerHTML = participant_gender;
+        document.getElementsByClassName('left-table-id')[0].innerHTML = json.pk;
+
+
         Materialize.toast('Succesfully Added Participant!', 3000);
       } else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
         Materialize.toast('There was some error connecting to the server!', 3000);

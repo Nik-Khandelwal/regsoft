@@ -118,10 +118,11 @@ function getGroups() {
   // Obtain 
   ourRequest.onreadystatechange = function () {
     if (ourRequest.readyState === 4 && ourRequest.status === 200) {
-      document.getElementById("table-ul").innerHTML='<div class="collapsible-body custom-collapsible-body blue lighten-5"> <span class="pk-col center" style="flex-basis: 15%;">Bill No</span> <span class="coll-name center" style="flex-basis: 75%;">College</span> <i style="flex-basis: 10%;" class="material-icons">account_circle</i> </div>';
-      var recieve_json = JSON.parse(ourRequest.responseText);
+      document.getElementById("table-ul").innerHTML='<div class="collapsible-body custom-collapsible-body blue lighten-5"> <span class="pk-col center" style="flex-basis: 15%;">Bill No</span> <span class="coll-name center" style="flex-basis: 45%;">College</span> <span class="group-name center" style="flex-basis: 30%;">Group ID</span> <i style="flex-basis: 10%;" class="material-icons">account_circle</i> </div>';
+      var recieve_json1 = JSON.parse(ourRequest.responseText);
+      var recieve_json = recieve_json1.data;
       for (var i = recieve_json.length-1; i >= 0; i--) {
-        document.getElementById("table-ul").innerHTML+='<div class="collapsible-body custom-collapsible-body blue lighten-5"> <span class="pk-col center" style="flex-basis: 15%;"><a href="/controls/bill_pdf/'+recieve_json[i].bill_pk+'" target="_blank">'+recieve_json[i].bill_pk+'</a></span> <span class="coll-name center" style="flex-basis: 75%;">'+recieve_json[i].college+'</span> <i style="flex-basis: 10%;" class="material-icons">account_circle</i> </div>';
+        document.getElementById("table-ul").innerHTML+='<div class="collapsible-body custom-collapsible-body blue lighten-5"> <span class="pk-col center" style="flex-basis: 15%;"><a href="/controls/bill_pdf/'+recieve_json[i].bill_pk+'" target="_blank">'+recieve_json[i].bill_pk+'</a></span> <span class="coll-name center" style="flex-basis: 45%;">'+recieve_json[i].college+'</span> <span class="group-name center" style="flex-basis: 30%;">'+recieve_json[i].group_id+'</span> <i style="flex-basis: 10%;" class="material-icons">account_circle</i> </div>';
       }
     }
     else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
@@ -285,10 +286,11 @@ function pusherGetGroups() {
   // Obtain 
   ourRequest.onreadystatechange = function () {
     if (ourRequest.readyState === 4 && ourRequest.status === 200) {
-      document.getElementById("table-ul").innerHTML='<div class="collapsible-body custom-collapsible-body blue lighten-5"> <span class="pk-col center" style="flex-basis: 10%;">Group No</span> <span class="group-code-col center" style="flex-basis: 10%;">Code</span> <span class="name center" style="flex-basis: 35%;">Name</span> <span class="coll-name center" style="flex-basis: 35%;">College</span> <span class="group-id-col center">Group ID</span> <i style="flex-basis: 10%;" class="material-icons">account_circle</i> </div>';
-      var recieve_json = JSON.parse(ourRequest.responseText);
-      for (var i = recieve_json.length-1; i >= 0 ; i--) {
-        document.getElementById("table-ul").innerHTML+='<div class="collapsible-body custom-collapsible-body blue lighten-5 change_cursor" onclick="open_details(this)"> <span class="pk-col center" style="flex-basis: 10%;">'+recieve_json[i].pk+'</span> <span class="group-code-col center" style="flex-basis: 10%;"><a href="/firewallz/id_card/'+recieve_json[i].groupid+'/" target="_blank">'+recieve_json[i].groupid+'</a></span> <span class="name center" style="flex-basis: 35%;">'+recieve_json[i].name+'</span> <span class="coll-name center" style="flex-basis: 35%;">'+recieve_json[i].college+'</span> <span class="group-id-col center">'+recieve_json[i].groupid+'</span> <i style="flex-basis: 10%;" class="material-icons change_cursor" onclick="delete_group(this)">remove_circle</i> </div>';
+      document.getElementById("table-ul").innerHTML='<div class="collapsible-body custom-collapsible-body blue lighten-5"> <span class="pk-col center" style="flex-basis: 15%;">Bill No</span> <span class="coll-name center" style="flex-basis: 45%;">College</span> <span class="group-name center" style="flex-basis: 30%;">Group ID</span> <i style="flex-basis: 10%;" class="material-icons">account_circle</i> </div>';
+      var recieve_json1 = JSON.parse(ourRequest.responseText);
+      var recieve_json = recieve_json1.data;
+      for (var i = recieve_json.length-1; i >= 0; i--) {
+        document.getElementById("table-ul").innerHTML+='<div class="collapsible-body custom-collapsible-body blue lighten-5"> <span class="pk-col center" style="flex-basis: 15%;"><a href="/controls/bill_pdf/'+recieve_json[i].bill_pk+'" target="_blank">'+recieve_json[i].bill_pk+'</a></span> <span class="coll-name center" style="flex-basis: 45%;">'+recieve_json[i].college+'</span> <span class="group-name center" style="flex-basis: 30%;">'+recieve_json[i].group_id+'</span> <i style="flex-basis: 10%;" class="material-icons">account_circle</i> </div>';
       }
     }
     else if (ourRequest.readyState === 4 && ourRequest.status != 200) {

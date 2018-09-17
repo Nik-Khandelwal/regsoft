@@ -958,6 +958,12 @@ recnacc_occupancy_channel.bind('recnacc_occupancy_event', function(data) {
   pusher_fetchAvailabilityStats();
 });
 
+//RecnAcc Notes Channel
+var recnacc_notes_channel = pusher.subscribe('recnacc_notes_channel');
+recnacc_notes_channel.bind('recnacc_notes_event', function(data) {
+  fetchNotes();
+});
+
 // Below Fetch Passed Stats Update
 
 // Below Channel for Data from Controls Unconfirm Socket

@@ -13,8 +13,9 @@ i{cursor: pointer;}
 /* buttons */
 .select_all-btn{position: fixed; top: 73vh; left:7vw; width: 15vw; padding: 0 1vmin; justify-content: space-between;}
 .deselect_all-btn{position: fixed; top: 73vh; left:28vw; width: 15vw; padding: 0 1vmin; justify-content: space-around;}
-.add_all-btn{position: fixed; top: 11vh; left: 1vw;}
+.add_all-btn{position: fixed; top: 11vh; left: 50.5vw;}
 .no_of_part{position: fixed; top: 11vh; right: 0.5vw;}
+.no_of_left_part{position: fixed; top: 11vh; left: 0.5vw;}
 .gen_bill-btn{position: fixed; top: 73vh; left: 67.5vw; width: 15vw; padding: 0 1vmin; justify-content: space-around;}
 #tools-info_outline{position: fixed; top: 73vh; right: 2vw;}
 @media only screen and (max-width: 800px) {.select_all-btn{width: 17vw;} .deselect_all-btn{width: 17vw; left: 26vw;}}
@@ -83,3 +84,7 @@ html{background-color: rgba(104, 168, 224, 0.3);}
   font-size: 3vh;
   vertical-align: middle;
 }
+.firewallz_part{position: fixed; top: 2vh; left: 54.5vw;}
+.controls_part{position: fixed; top: 2vh; left: 71.5vw;}
+.recnacc_part{position: fixed; top: 2vh; left: 88.5vw;}
+.ham1{display: none}

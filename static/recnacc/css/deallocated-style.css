@@ -8,12 +8,12 @@ html {
 .hover {
   cursor: pointer;
 }
-#wrap_searches {
+/*#wrap_searches {
   position: fixed;
   width: 45vw;
   left: 5vw;
   top: 1vh;
-}
+}*/
 #head-deallocated-wrapper {
   padding: 5vh 0;
   font-variant: small-caps;
@@ -32,6 +32,8 @@ html {
 #wrap_searches {
   width: 85vw;
   padding: 0 5vw;
+  position: relative;
+  /*left: 7.5vw;*/
 }
 #wrap_searches>.row {
   margin-bottom: 0;

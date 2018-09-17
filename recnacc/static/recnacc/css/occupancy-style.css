@@ -90,3 +90,8 @@ input[type=number]:not(.browser-default) {
   top: 15vh;
   left: 0.5vw;
 }
+.add_acco-btn {
+  position: fixed;
+  top: 25vh;
+  left: 0.5vw;
+}

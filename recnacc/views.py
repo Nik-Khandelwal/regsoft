@@ -1085,22 +1085,41 @@ def add_acco(request):
 		return HttpResponseRedirect('/regsoft/')
 	data = json.loads( request.body.decode('utf-8') )
 	acn = Acco_name.objects.get(pk=data['data']['pk'])
-	ac = Accomodation()
-	ac.name = data['data']['ac_name']
-	ac.strength = data['data']['ac_strength']
-	ac.vacancy = data['data']['ac_strength']
-	ac.save()
 	if(int(data['data']['type']) == 0):
+		ac = Accomodation()
+		ac.name = data['data']['ac_name']
+		ac.strength = data['data']['ac_strength']
+		ac.vacancy = data['data']['ac_strength']
+		ac.save()
 		acn.common_room = ac
+		acn.save()
 	elif(int(data['data']['type']) == 1):
+		ac = Accomodation()
+		ac.name = data['data']['ac_name']
+		ac.strength = data['data']['ac_strength']
+		ac.vacancy = data['data']['ac_strength']
+		ac.save()
 		acn.tt_room = ac
+		acn.save()
 	elif(int(data['data']['type']) == 2):
+		if(acn.s_room):
+			ac = acn.s_room
+			ac.strength += data['data']['sr_vacancy']
+			ac.vacancy += data['data']['sr_vacancy']
+			ac.save()
+		else:
+			ac = Accomodation()
+			ac.name = data['data']['ac_name']
+			ac.strength = data['data']['sr_vacancy']
+			ac.vacancy = data['data']['sr_vacancy']
+			ac.save()
+			acn.s_room = ac
+			acn.save()
 		sr = Singleroom()
 		sr.name = data['data']['sr_name']
 		sr.vacancy = data['data']['sr_vacancy']
 		sr.save()
 		ac.singleroom.add(sr)
 		ac.save()
-		acn.s_room = ac
 	acn.save()
 	return HttpResponse(json.dumps({"success":"1"}), content_type='application/json')

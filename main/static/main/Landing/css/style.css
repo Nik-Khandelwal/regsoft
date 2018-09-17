@@ -1293,6 +1293,15 @@ body {
 	border-radius: 1vw;
 	overflow: hidden;
 }
+.event-cont{
+	position: absolute;
+	top: 15vh;
+	left: 35vw;
+	height: 70vh;
+	width: 30vw;
+	border-radius: 1vw;
+	overflow: hidden;
+}
 .leftcont{
 	width: 15vw;
 	left: 10vw;
@@ -1331,6 +1340,15 @@ body {
 	border: .25vh solid white;
 	width: calc(40vw - 4.5vh);
 	height: 40.5vh;
+	border-radius: 1vw;
+}
+.event-detail{
+	position: relative;
+	left:2vh;
+	top:2vh;
+	border: .25vh solid white;
+	width: calc(30vw - 4.5vh);
+	height: 65.5vh;
 	border-radius: 1vw;
 }
 .por,.pore
@@ -2215,6 +2233,16 @@ position: absolute;
 	left: 18.5vw;
 	top: 25vh;
 }
+.event-cont{
+	position: absolute;
+	top: 15vh;
+	left: 30vw;
+	height: 70vh;
+	width: 40vw;
+	border-radius: 1vw;
+	overflow: hidden;
+}
+
 	  @keyframes rotatengoleft
             {
                 0% { transform: rotate(0deg);
@@ -2289,6 +2317,15 @@ position: absolute;
 	width: 50vw;
 	left: 25vw;
 	top: 20vh;
+}
+.event-cont{
+	position: absolute;
+	top: 15vh;
+	left: 35vw;
+	height: 70vh;
+	width: 30vw;
+	border-radius: 1vw;
+	overflow: hidden;
 }
 	@keyframes rotatengoleft
             {
@@ -2366,6 +2403,15 @@ position: absolute;
 	left: 15vw;
 	top: 22.5vh;
 }
+.event-cont{
+	position: absolute;
+	top: 15vh;
+	left: 35vw;
+	height: 70vh;
+	width: 30vw;
+	border-radius: 1vw;
+	overflow: hidden;
+}
 	@keyframes rotatengoleft
             {
                 0% { transform: rotate(0deg);
@@ -2441,6 +2487,15 @@ position: absolute;
 	width: 55vw;
 	left: 22.5vw;
 	top: 20vh;
+}
+.event-cont{
+	position: absolute;
+	top: 5vh;
+	left: 30vw;
+	height: 70vh;
+	width: 40vw;
+	border-radius: 1vw;
+	overflow: hidden;
 }
 	@keyframes rotatengoleft
             {

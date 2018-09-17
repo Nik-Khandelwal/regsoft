@@ -80,6 +80,7 @@ function updateFine() {
   ourRequest.onload = function () {
     if (ourRequest.status >= 200 && ourRequest.status < 400) {
       Materialize.toast('Updated!', 2000);
+      fetchOccupancyDetails();
     }
     else
       Materialize.toast('Server Error!', 2000, "toast-fetch_error");

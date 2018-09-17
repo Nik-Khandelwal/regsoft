@@ -5,10 +5,11 @@ i{cursor: pointer;}
 .collbody{display: flex; justify-content: space-between; padding: 1vmin;}
 #coll-head{padding-left: 1vw; padding-right: 0vw; justify-content: space-between;}
 #coll-body{display: flex; justify-content: space-between; padding: 1vmin;}
-.name,.group-id,.coll-name{text-align: center;}
-.name{flex-basis: 30%;}
-.group-id{flex-basis: 20%;}
-.coll-name{flex-basis: 30%;}
+.name,.group-id,.coll-name,.sport-list{text-align: center;}
+.name{flex-basis: 25%;}
+.group-id{display: none;}
+.coll-name{flex-basis: 25%;}
+.sport-list{flex-basis: 40%;}
 .collapsible-body>i,.group>i{text-align: center;}
 /* buttons */
 .select_all-btn{position: fixed; top: 73vh; left:7vw; width: 15vw; padding: 0 1vmin; justify-content: space-between;}

@@ -116,6 +116,7 @@ function l_to_r(elem){
 	indiv_college=next.getElementsByClassName("coll-name")[0].innerHTML;
 	indiv_amt=next.getElementsByClassName("amt")[0].innerHTML;
 	indiv_group=next.getElementsByClassName("group-id")[0].innerHTML;
+	indiv_sport=next.getElementsByClassName("sport-list")[0].innerHTML;
 	indiv_id=next.getElementsByClassName("indiv-id")[0].innerHTML;
     total_amt+=parseInt(indiv_amt);
         
@@ -132,6 +133,7 @@ function l_to_r(elem){
 	up.getElementsByClassName("right-indiv-college")[0].innerHTML=indiv_college;
 	up.getElementsByClassName("right-indiv-amt")[0].innerHTML=indiv_amt;
 	up.getElementsByClassName("right-indiv-group")[0].innerHTML=indiv_group;
+	up.getElementsByClassName("right-indiv-sport")[0].innerHTML=indiv_sport;
 	up.getElementsByClassName("right-indiv-id")[0].innerHTML=indiv_id;
 // set to unchecked at left for group header
 	elem.parentElement.firstElementChild.firstElementChild.innerHTML="check_box_outline_blank";
@@ -154,6 +156,7 @@ function r_to_l(elem){
 	indiv_college=elem.getElementsByClassName("right-indiv-college")[0].innerHTML;
 	indiv_group=elem.getElementsByClassName("right-indiv-group")[0].innerHTML;
 	indiv_amt=elem.getElementsByClassName("right-indiv-amt")[0].innerHTML;
+	indiv_sport=elem.getElementsByClassName("right-indiv-sport")[0].innerHTML;
 	indiv_id=elem.getElementsByClassName("right-indiv-id")[0].innerHTML;
     total_amt-=indiv_amt;
 	// Search group for element in left table/expandable
@@ -183,6 +186,7 @@ function add_to_left(l_index){
 	update.getElementsByClassName("coll-name")[0].innerHTML=indiv_college;
 	update.getElementsByClassName("group-id")[0].innerHTML=indiv_group;
 	update.getElementsByClassName("amt")[0].innerHTML=indiv_amt;
+	update.getElementsByClassName("sport-list").innerHTML=indiv_sport;
 	update.getElementsByClassName("indiv-id")[0].innerHTML=indiv_id;
 }
 var net_amt; 
@@ -280,6 +284,7 @@ function poppulate_left(ourData){
 			indiv_college=ourData[ind].participants[j][5];
 			indiv_group=ourData[ind].groupid;
 			indiv_amt=ourData[ind].participants[j][4];
+			indiv_sport=ourData[ind].participants[j][8];
 			indiv_id=ourData[ind].participants[j][9];
 			add_to_left(document.getElementsByClassName("list-ind")[0]); // insert participant to group 0 || first li of ul
 		}
@@ -484,12 +489,24 @@ function search() {
 function deregisterParts() {
   Materialize.toast('Deregistering!', 3000);
   var csrf_token = getCookie('csrftoken');
+  id_arr=[];
+  i=0;
+  elem_pay=document.getElementById("right-body").getElementsByClassName("right-indiv")[0];
+  if(elem_pay==undefined)
+  	Materialize.toast('No participant added!', 4000, "toast-none_add");
+  else{
+  	while(elem_pay){
+  		net_amt+=parseFloat(elem_pay.getElementsByClassName("right-indiv-amt")[0].innerHTML);
+  		id_arr.push(elem_pay.getElementsByClassName("right-indiv-id")[0].innerHTML);
+  		i++;
+  		elem_pay=document.getElementsByClassName("right-indiv")[i];
+  	}
+  }
   send_obj={
       "data": {
       "id_arr": id_arr
     }
   };
-  console.log(send_obj);
   var send_json = JSON.stringify(send_obj);
   var ourRequest = new XMLHttpRequest();
   ourRequest.open("POST", "/controls/unconfirm_player/", true);
@@ -595,6 +612,7 @@ function pusher_poppulate_left(ourData){
 			indiv_college=ourData[ind].participants[j][5];
 			indiv_group=ourData[ind].groupid;
 			indiv_amt=ourData[ind].participants[j][4];
+			indiv_sport=ourData[ind].participants[j][8];
 			indiv_id=ourData[ind].participants[j][9];
 			add_to_left(document.getElementsByClassName("list-ind")[0]); // insert participant to group 0 || first li of ul
 		}

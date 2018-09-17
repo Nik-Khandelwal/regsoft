@@ -2342,12 +2342,14 @@ def teammail(request):
 		for i in ulist:
 			if i.confirm1>=1:
 				nmlist.append(i.name)
-		message = render_to_string('pcradmin/msg1.html', {
+		message = render_to_string('pcradmin/msg9.html', {
 								'college':tm.college, 
 								'nmlist':nmlist, 
 								})
-		mail_subject = 'Your account details.'
+		mail_subject = 'Final Confirmation for BOSM, 2018'
 		email = EmailMessage(mail_subject, message, to=[gl.email])
+		email.attach_file('Travel Rate List BOSM 2018.pdf')
+		email.attach_file('Checklist.pdf')
 		email.content_subtype = "html"
 		success=0
 		try:

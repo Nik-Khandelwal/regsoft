@@ -2,27 +2,30 @@
 This is an automated generated mail for tracking Payments!<br><br>
 
 <b>{{user}}</b> paid <b>{{amount}}</b> at <b>{{timestamp}}</b> for the college : <b>{{college}}</b> :<br><br>
-
+{% if prereg %}
 Pre-Reg Paid Users :<br>
 <ul>
 {% for name in prereg %}
 <li><b>{{name}}</b></li><br>
 {% endfor %}
 </ul><br><br>
-
+{% endif %}
+{% if reg %}
 Reg Paid Users :<br>
 <ul>
 {% for unm in reg %}
 <li><b>{{unm}}</b></li><br>
 {% endfor %}
 </ul><br><br>
-
+{% endif %}
+{% if prereg2reg %}
 Pre-Reg Paid earlier to currently Reg Paid Users :<br>
 <ul>
 {% for uname in prereg2reg %}
 <li><b>{{uname}}</b></li><br>
 {% endfor %}
 </ul><br><br>
+{% endif %}
 
 The following are the details :<br><br>
 <ul>

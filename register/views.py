@@ -980,7 +980,7 @@ def getpay(request):
 				'MID':MERCHANT_ID,
 				'ORDER_ID':order_id,
 				'TXN_AMOUNT': bill_amount,
-				'CUST_ID':'harish@pickrr.com',
+				'CUST_ID':'sfc.bitspilani@gmail.com',
 				'INDUSTRY_TYPE_ID':'Retail',
 				'WEBSITE': settings.PAYTM_WEBSITE,
 				'CHANNEL_ID':'WEB',

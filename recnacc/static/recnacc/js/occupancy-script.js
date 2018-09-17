@@ -192,19 +192,19 @@ function changeForm() {
 
 function addRoom() {
   var send_obj;
-  if($('#type_select').val() == "") {
+  if($('#type_select').val() == null) {
     Materialize.toast('Select Room Type!', 3000);
     return;
   }
-  if($('#bhawan_select').val() == "") {
+  if(parseInt($('#bhawan_select').val()) == 0) {
     Materialize.toast('Select Bhawan!', 3000);
     return;
   }
-  if($('#acco-strength').val() == "" && (($('#type_select').val() != "")||($('#type_select').val() != 2))) {
+  if(parseInt($('#acco-strength').val()) == 0 && ((parseInt($('#type_select').val() != 0))||(parseInt($('#type_select').val()) != 2))) {
     Materialize.toast('Enter Strength!', 3000);
     return;
   }
-  if($('#type_select').val() == 2 && ($('#single-room-name').val() == "")||($('#single-room-vacancy').val() == "")) {
+  if(parseInt($('#type_select').val()) == 2 && ($('#single-room-name').val() == null)||(parseInt($('#single-room-vacancy').val()) == 0)) {
     Materialize.toast('Enter Missing Fields!', 3000);
     return;
   }
@@ -263,9 +263,10 @@ function addRoom() {
   ourRequest.onload = function() {
     if (ourRequest.status >= 200 && ourRequest.status < 400) {
       var ourData = JSON.parse(ourRequest.responseText);
-      var data = ourData.data;
+      var data = ourData;
       if(data.success==1) {
         Materialize.toast('Successfully Added!', 3000);
+        fetchOccupancy();
       } else {
         Materialize.toast('Room Already Exists!', 3000);
       }
@@ -331,6 +332,7 @@ function addAcco() {
     if (ourRequest.status >= 200 && ourRequest.status < 400) {
       data = JSON.parse(ourRequest.responseText).data;
       Materialize.toast('Updated!', 2000);
+      fetchOccupancy();
     }
     else
       Materialize.toast('Server Error!', 2000, "toast-fetch_error");

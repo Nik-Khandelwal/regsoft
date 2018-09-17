@@ -60,4 +60,6 @@ urlpatterns = [
     url(r'^sportlist/$',views.sportlist,name='sportlist'),
 
     url(r'^bill_details/$',views.bill_details,name='bill_details'),
+
+    url(r'^bill_details_html/$',views.bill_details_html,name='bill_details_html'),
 ]

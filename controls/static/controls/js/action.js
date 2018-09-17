@@ -136,8 +136,11 @@ function add_all_sel(){
 	}
 	if(part_no==0)
 		Materialize.toast('No participant selected in all groups!', 4000, "toast-none_sel");
-	else
+	else {
 		Materialize.toast(part_no+' participants added from all groups!', 4000, "toast-none_sel");
+    left_count=0;
+    document.getElementById('no_of_left_part_text').innerHTML=left_count;
+  }
 }
 
 function l_to_r(elem){
@@ -147,8 +150,9 @@ function l_to_r(elem){
 	indiv_group=next.getElementsByClassName("group-id")[0].innerHTML;
 	indiv_id=next.getElementsByClassName("indiv-id")[0].innerHTML;
 	// console.log(indiv_name+indiv_amt+indiv_college);
-	var tot_amt = parseInt(document.getElementById('tot_amount_text').innerHTML);
-	document.getElementById('tot_amount_text').innerHTML = (tot_amt + parseInt(indiv_amt));
+	var tot_amt = parseInt(document.getElementById('tot_amount_text').getElementsByTagName('input')[0].getAttribute('value'));
+	document.getElementById('tot_amount_text').getElementsByTagName('input')[0].setAttribute('value',(tot_amt + parseInt(indiv_amt)));
+  Materialize.updateTextFields();
 // add to right
 	var tmp = document.getElementById("right-indiv-temp"); //template
 	var rightbody = document.getElementById("right-body"); 
@@ -159,7 +163,8 @@ function l_to_r(elem){
 	var up =rightbody.firstElementChild; //element to be updated
 	up.getElementsByClassName("right-indiv-name")[0].innerHTML=indiv_name;
 	up.getElementsByClassName("right-indiv-college")[0].innerHTML=indiv_college;
-	up.getElementsByClassName("right-indiv-amt")[0].innerHTML=indiv_amt;
+	up.getElementsByClassName("right-indiv-amt")[0].innerHTML='<input type="text" value="'+indiv_amt+'" class="center" onkeyup="updateTotal(this)" id="amt-'+indiv_id+'">';
+  	Materialize.updateTextFields();
 	up.getElementsByClassName("right-indiv-group")[0].innerHTML=indiv_group;
 	up.getElementsByClassName("right-indiv-id")[0].innerHTML=indiv_id;
 // set to unchecked at left for group header
@@ -182,7 +187,7 @@ function r_to_l(elem){
 	indiv_name=elem.getElementsByClassName("right-indiv-name")[0].innerHTML;
 	indiv_college=elem.getElementsByClassName("right-indiv-college")[0].innerHTML;
 	indiv_group=elem.getElementsByClassName("right-indiv-group")[0].innerHTML;
-	indiv_amt=elem.getElementsByClassName("right-indiv-amt")[0].innerHTML;
+	indiv_amt=parseInt(elem.getElementsByClassName("right-indiv-amt")[0].getElementsByTagName('input')[0].getAttribute('value'));
 	indiv_id=elem.getElementsByClassName("right-indiv-id")[0].innerHTML;
 	// console.log(indiv_name+indiv_college+indiv_group+indiv_amt);
 	// Search group for element in left table/expandable
@@ -198,8 +203,9 @@ function r_to_l(elem){
 	}
 	removeElement(elem);
 	document.getElementById('no_of_part_text').innerHTML = parseInt(document.getElementById('no_of_part_text').innerHTML)-1;
-	var tot_amt = parseInt(document.getElementById('tot_amount_text').innerHTML);
-	document.getElementById('tot_amount_text').innerHTML = (tot_amt - indiv_amt);
+	var tot_amt = parseInt(document.getElementById('tot_amount_text').getElementsByTagName('input')[0].getAttribute('value'));
+	document.getElementById('tot_amount_text').getElementsByTagName('input')[0].setAttribute('value',(tot_amt - parseInt(indiv_amt)));
+  Materialize.updateTextFields();
 }
 
 function add_to_left(l_index){
@@ -249,7 +255,7 @@ function gen_bill(){
 		while(elem_pay){
 			// console.log(i);
 			// console.log(elem_pay);
-			net_amt+=parseFloat(elem_pay.getElementsByClassName("right-indiv-amt")[0].innerHTML);
+			net_amt+=parseFloat(elem_pay.getElementsByClassName("right-indiv-amt")[0].getElementsByTagName("input")[0].getAttribute('value'));
 			// console.log(id_arr);
 			id_arr.push(elem_pay.getElementsByClassName("right-indiv-id")[0].innerHTML);
 			i++;
@@ -270,7 +276,8 @@ function gen_bill(){
 				"csrfmiddlewaretoken": csrf_token
 			}
 		};
-		document.getElementById("unbill_amt").innerHTML= net_amt;
+		document.getElementById("unbill_amt").innerHTML= parseFloat(document.getElementById('tot_amount_text').getElementsByTagName('input')[0].getAttribute('value'));
+		net_amt=parseFloat(document.getElementById('tot_amount_text').getElementsByTagName('input')[0].getAttribute('value'));
 		document.getElementById("modalpay").style.display="block";
 		document.getElementById('bill_form').style.display='block';
 		document.getElementById('dd_bill_form').style.display='block';
@@ -548,7 +555,8 @@ function remove_right_all(){
 	console.log(remove);*/
 	document.getElementById("right-body").innerHTML="";
 	document.getElementById("no_of_part_text").innerHTML=0;
-	document.getElementById('tot_amount_text').innerHTML = 0;
+	document.getElementById('tot_amount_text').getElementsByTagName('input')[0].setAttribute('value',0);
+  Materialize.updateTextFields();
 }
 
 function remove_left_all(){
@@ -855,4 +863,19 @@ function sendPusherUpdate() {
     // Nothing
   }
   ourRequest.send(string_obj);
+}
+function updateTotal(option) {
+  option.setAttribute('value',parseInt($("#"+option.getAttribute('id')).val()));
+  var amt=0;
+  for(var i=0; i<document.getElementsByClassName('right-indiv').length;i++) {
+    amt+=parseFloat(document.getElementsByClassName('right-indiv')[i].getElementsByTagName('td')[1].getElementsByTagName('input')[0].getAttribute('value'));
+  }
+  document.getElementById('tot_amount_text').getElementsByTagName('input')[0].setAttribute('value',amt);
+  var amount = $("#tot_amount_num").val(amt);
+  Materialize.updateTextFields();
+}
+function updateTotalText() {
+  var amount = $("#tot_amount_num").val();
+  document.getElementById('tot_amount_text').getElementsByTagName('input')[0].setAttribute('value',amount);
+  Materialize.updateTextFields();
 }

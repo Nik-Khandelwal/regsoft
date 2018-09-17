@@ -119,8 +119,7 @@ function getGroups() {
   ourRequest.onreadystatechange = function () {
     if (ourRequest.readyState === 4 && ourRequest.status === 200) {
       document.getElementById("table-ul").innerHTML='<div class="collapsible-body custom-collapsible-body blue lighten-5"> <span class="pk-col center" style="flex-basis: 15%;">Bill No</span> <span class="coll-name center" style="flex-basis: 45%;">College</span> <span class="group-name center" style="flex-basis: 30%;">Group ID</span> <i style="flex-basis: 10%;" class="material-icons">account_circle</i> </div>';
-      var recieve_json1 = JSON.parse(ourRequest.responseText);
-      var recieve_json = recieve_json1.data;
+      var recieve_json = JSON.parse(ourRequest.responseText);
       for (var i = recieve_json.length-1; i >= 0; i--) {
         document.getElementById("table-ul").innerHTML+='<div class="collapsible-body custom-collapsible-body blue lighten-5"> <span class="pk-col center" style="flex-basis: 15%;"><a href="/controls/bill_pdf/'+recieve_json[i].bill_pk+'" target="_blank">'+recieve_json[i].bill_pk+'</a></span> <span class="coll-name center" style="flex-basis: 45%;">'+recieve_json[i].college+'</span> <span class="group-name center" style="flex-basis: 30%;">'+recieve_json[i].group_id+'</span> <i style="flex-basis: 10%;" class="material-icons">account_circle</i> </div>';
       }

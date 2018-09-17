@@ -26,6 +26,7 @@
         <li><a class="waves-effect" onclick="stats()">Stats</a></li>
         <li><a class="waves-effect" href="/controls/con_pan/">Edit Panel</a></li>
         <li><a class="waves-effect" href="/controls/denominations/">Denominations</a></li>
+        <li><a class="waves-effect" href="/controls/bill_details_html/">Bill History</a></li>
         <li><div class="divider"></div></li>
         <li><a class="waves-effect bottom" href="/regsoft/regsoft_logout/">Logout</a></li>
       </ul>
@@ -62,7 +63,7 @@
       <a class="waves-effect waves-light btn deselect_all-btn tooltipped" data-position="bottom" data-delay="50" data-tooltip="Deselect all of the participants" onclick="sel_all_all(1)"><i class="material-icons left" id="desel-icon">check_box_outline_blank</i><span class="desel-text">Deselect All</span></a>
       <!-- GENERATE BILL BUTTON-->
       <a class="waves-effect waves-light btn gen_bill-btn tooltipped" data-position="bottom" data-delay="50" data-tooltip="Generate Bill for added participants" onclick="gen_bill();"><i class="material-icons left" id="bill-icon">receipt</i><span class="bill-text">Generate Bill</span></a>
-      <a class="waves-effect waves-light btn total" ><span id="tot">Total: <span id="tot_amount_text">0</span></span></a>
+      <a class="waves-effect waves-light btn total" ><span id="tot"><span id="tot_amount_text"><input type="text" value="0" class="center" onkeyup="updateTotalText()" id="tot_amount_num"></span></span></a>
       <div id="wrap_searches">
         <div class="row">
           <div class="input-field col m4 s4">
@@ -110,8 +111,8 @@
         <thead class="blue lighten-3">
           <tr>
               <th style="flex-basis: 30%;">Name</th>
-              <th style="flex-basis: 30%;">College</th>
               <th style="flex-basis: 20%;">Amount Left</th>
+              <th style="flex-basis: 30%;">College</th>
               <th style="flex-basis: 20%;">Undo</th>
           </tr>
         </thead>
@@ -123,8 +124,8 @@
       <template id="right-indiv-temp">
             <tr class="right-indiv">
               <td style="flex-basis: 30%;" class="right-indiv-name">Satyavrat Sharma</td>
+              <td style="flex-basis: 20%;" class="right-indiv-amt"><input type="text" class="center" value="1100" onkeyup="updateTotal(this)"></td>
               <td style="flex-basis: 30%;" class="right-indiv-college">Birla Institute of Technology</td>
-              <td style="flex-basis: 20%;" class="right-indiv-amt">$0.87</td>
               <td style="display: none;" class="right-indiv-sport">Basketball (Boys)</td>
               <td style="display: none;" class="right-indiv-group">$0.87</td>
               <td style="display: none;" class="right-indiv-id">$0.87</td>

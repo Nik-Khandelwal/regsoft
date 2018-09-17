@@ -824,16 +824,16 @@ def fine_page(request):
 			ac.save()
 			cnt = 0
 			for ar in ac.accorecnacc_set.all():
-			 	for pl in Enteredplayer.objects.filter(all_done=False):
-			 		if pl.accorecnacc == ar:
+				for pl in Enteredplayer.objects.filter(all_done=False):
+					if pl.accorecnacc == ar:
 						cnt+=1
 
 			for ar in ac.accorecnacc_set.all():
-			 	for pl in Enteredplayer.objects.filter(all_done=False):
-			 		if pl.accorecnacc == ar:
+				for pl in Enteredplayer.objects.filter(all_done=False):
+					if pl.accorecnacc == ar:
 						rp = Regplayer.objects.get(pk=pl.regplayer.pk)
-			 			rp.fine += (float(data['data']['amt'])/cnt)
-			 			rp.save()
+						rp.fine += (float(data['data']['amt'])/cnt)
+						rp.save()
 
 			return HttpResponse(json.dumps({"success":"1"}), content_type='application/json')	
 		else:

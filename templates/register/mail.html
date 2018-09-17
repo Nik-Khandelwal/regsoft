@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>List</title>
+</head>
+<body>
+<table>
+	{% for dat in college %}
+	{% if dat.8 != 0 %}
+	<tr>
+		<td>{{dat.1}}</td>
+		<td>{{dat.8}}</td>
+	</tr>
+	{% endif %}
+	{% endfor %}
+</table>
+</body>
+</html>

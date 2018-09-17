@@ -43,7 +43,17 @@ function fetchOccupancyDetails() {
       document.getElementById('acco-wrapper').innerHTML = '';
       var data = ourData.data;
       for (var i = 0; i < data.length; i++) {
-        document.getElementById('acco-wrapper').innerHTML+='<div class="row"> <div class="col s12 hostel-header">'+data[i][0]+'</div><div class="col s8 center rooms-header">Name</div><div class="col s2 center rooms-header">Fine</div><div class="col s2 center rooms-header">Current</div><div class="col s8 center rooms-content">Common Room</div><div class="col s2 center rooms-content change-cursor" onclick="addFine('+data[i][1].pk+')"><i class="material-icons">airline_seat_individual_suite</i></div><div class="col s2 center rooms-content">'+data[i][1].fine+'</div><div class="col s8 center rooms-content">TT Room</div><div class="col s2 center rooms-content change-cursor" onclick="addFine('+data[i][2].pk+')"><i class="material-icons">airline_seat_individual_suite</i></div><div class="col s2 center rooms-content">'+data[i][2].fine+'</div><div class="col s8 center rooms-content">Single Room</div><div class="col s2 center rooms-content change-cursor" onclick="addFine('+data[i][3].pk+')"><i class="material-icons">airline_seat_individual_suite</i></div><div class="col s2 center rooms-content">'+data[i][3].fine+'</div></div>';
+        var temp = '';
+        if(data[i][1].pk!=0) {
+          temp+='<div class="col s8 center rooms-content">Common Room</div><div class="col s2 center rooms-content change-cursor" onclick="addFine('+data[i][1].pk+')"><i class="material-icons">airline_seat_individual_suite</i></div><div class="col s2 center rooms-content">'+data[i][1].fine+'</div>';
+        }
+        if(data[i][2].pk!=0) {
+          temp+='<div class="col s8 center rooms-content">TT Room</div><div class="col s2 center rooms-content change-cursor" onclick="addFine('+data[i][2].pk+')"><i class="material-icons">airline_seat_individual_suite</i></div><div class="col s2 center rooms-content">'+data[i][2].fine+'</div>';
+        }
+        if(data[i][3].pk!=0) {
+          temp+='<div class="col s8 center rooms-content">Single Room</div><div class="col s2 center rooms-content change-cursor" onclick="addFine('+data[i][3].pk+')"><i class="material-icons">airline_seat_individual_suite</i></div><div class="col s2 center rooms-content">'+data[i][3].fine+'</div>';
+        }
+        document.getElementById('acco-wrapper').innerHTML+='<div class="row"> <div class="col s12 hostel-header">'+data[i][0]+'</div><div class="col s8 center rooms-header">Name</div><div class="col s2 center rooms-header">Fine</div><div class="col s2 center rooms-header">Current</div>'+temp+'</div>';
       }
       Materialize.toast('Updated!', 2000);
     }

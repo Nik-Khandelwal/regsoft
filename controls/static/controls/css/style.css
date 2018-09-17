@@ -13,7 +13,7 @@ i{cursor: pointer;}
 /* buttons */
 .select_all-btn{position: fixed; top: 73vh; left:7vw; width: 15vw; padding: 0 1vmin; justify-content: space-between;}
 .deselect_all-btn{position: fixed; top: 73vh; left:28vw; width: 15vw; padding: 0 1vmin; justify-content: space-around;}
-.add_all-btn{position: fixed; top: 11vh; left: 1vw;}
+.add_all-btn{position: fixed; top: 11vh; left: 50.5vw;}
 .no_of_part{position: fixed; top: 11vh; right: 0.5vw;}
 .no_of_left_part{position: fixed; top: 11vh; left: 0.5vw;}
 .gen_bill-btn{position: fixed; top: 73vh; left: 67.5vw; width: 15vw; padding: 0 1vmin; justify-content: space-around;}

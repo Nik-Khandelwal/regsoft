@@ -1,0 +1,44 @@
+{% autoescape off %}
+Congratulations! The following players from your respective teams have been confirmed for BOSM, 2018. You're required to carry this mail with the attached list of participants with you when you reach the campus.<br><br>
+
+Every participant has to carry a refundable <b>security caution of Rs. 300 in cash.</b><br><br>
+
+The remaining amount(out of Rs.1100) has to be strictly paid before on campus registration or immediately after reaching campus.<br><br>
+
+This mail is sent out only to the Group Leaders.<br><br>
+
+<b>The following participants are selected to participate this BOSM.<br><br>
+
+<ul>
+{% for nm in nmlist %}
+<li><b>{{nm}}</b></li><br>
+{% endfor %}
+</ul><br><br>
+
+
+<b>>To assist your travel and to ease the on-campus followings please fill in this attached <a href="">Google Form.</a></b><br><br>
+
+<b>Terms and conditions:</b><br><br>
+
+<ul>
+<li>Cabs and Buses are available only on a first come, first serve basis. Filling up this form <b>DOES NOT CONFIRM booking.</b></li><br>
+
+<li>All bookings shall be <b>confirmed only after online payment.</b> Payment link will be sent via mail to the respective Group Leaders.</li><br>
+
+<li>Rates mentioned in the attached "Rate Sheet" are tentative. The organizers reserve all rights to change the rates if required, without prior notification.</li><br>
+
+<li>Toll tax and parking charges (if any) shall be borne by the passengers.</li><br>
+
+<li>The type of vehicle allotted is solely at the discretion of the organizers.</li><br>
+</ul>
+For queries related to travel, contact:<br>
+Devashish: +91 - 8779091634 : recnacc@bits-bosm.org<br><br><br>
+
+
+Regards,<br>
+Devansh Ghatak<br>
+CoSSAcn (Head)<br>
+Dept. of Publications & Correspondence, BOSM 2018<br>
+BITS Pilani<br>
+<a href="mailto:pcr@bits-bosm.org">pcr@bits-bosm.org</a></span>
+{% endautoescape %}

@@ -18,6 +18,7 @@
     <!-- BUTTONS -->
     <!-- ADD ALL SELECTED BUTTON -->
     <a class="btn-floating btn-large waves-effect waves-light add_all-btn tooltipped z-depth-3" data-position="right" data-delay="50" data-tooltip="Add all selected participants" onclick="add_all_sel();"><i class="material-icons">add</i></a>
+    <a class="btn-floating btn-large waves-effect waves-light cyan z-depth-4 tooltipped" data-position="left" data-delay="50" data-tooltip="Undo All" onclick="undoAll()" id="undoAll"><i class="material-icons">undo</i></a>
     <!-- SELECT ALL BUTTON -->
     <a class="waves-effect waves-light btn select_all-btn tooltipped z-depth-5" data-position="bottom" data-delay="50" data-tooltip="Select all of the participants" onclick="sel_all_all(0)"><i class="material-icons left" id="sel-icon">check_box</i><span class="sel-text">Select All</span></a>
     <!-- DESELECT ALL BUTTON -->
@@ -133,7 +134,7 @@
     <div id="edit-fine-modal" class="modal bottom-sheet blue lighten-2">
       <div class="modal-content">
         <div class="row">
-          <div class="col s12" id="edit-fine-header">Edit Strength</div>
+          <div class="col s12" id="edit-fine-header">Add Fine</div>
         </div>
         <div class="row">
           <form class="col s12" id="edit-fine-form">

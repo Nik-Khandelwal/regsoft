@@ -33,7 +33,7 @@ html {
   width: 85vw;
   padding: 0 5vw;
   position: relative;
-  left: 7.5vw;
+  /*left: 7.5vw;*/
 }
 #wrap_searches>.row {
   margin-bottom: 0;

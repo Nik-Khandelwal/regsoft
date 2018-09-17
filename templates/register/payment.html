@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% load staticfiles %}
+    <title>BOSM 2018 Registrations</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'register/css/font.css' %}">
+    <link type="text/css" rel="stylesheet" href="{% static 'register/css/materialize.min.css' %}" media="screen,projection"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'register/css/payment-style.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="theme-color" content="black">
+    <meta name="description" content="Payment Page for BOSM 2018">
+    <script type="text/javascript" src="{% static 'register/js/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'register/js/payment-script.js' %}"></script>
+    <script type="text/javascript" src="{% static 'register/js/materialize.min.js' %}"></script>
+    <link rel="icon" href="{% static 'main/favicon/favicon.ico' %}" type="image/x-icon"/>
+    <link rel="shortcut icon" href="{% static 'main/favicon/favicon.ico' %}" type="image/x-icon"/>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120495963-11"></script> <script>window.dataLayer=window.dataLayer || []; function gtag(){dataLayer.push(arguments);}gtag('js', new Date()); gtag('config', 'UA-120495963-11'); </script>
+  </head>
+  <body>
+    <nav>
+      <div class="nav-wrapper">
+        <a class="brand-logo center" style="font-family: 'Montserrat'">BOSM 2018</a> 
+        <ul class="right">
+          <li><a href="/register/"><i class="material-icons left">home</i>Home</a></li>
+          <li><a href="/register/logout/"><i class="material-icons left">exit_to_app</i>Logout</a></li>
+        </ul>
+        <ul class="left">
+          <li>
+            <a class="waves-effect waves-light btn-floating btn-large cyan modal-trigger" href="#instructions-modal" id="tap_info"><i class="large material-icons">info_outline</i></a> 
+            <div class="tap-target cyan" data-activates="tap_info">
+              <div class="tap-target-content">
+                <h5>Instructions</h5>
+                <span>Please read the instructions</span> 
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div id="cover"></div>
+    <div id="cover-overlay"></div>
+    <div class="container center" id="participants-container">
+      <div class="row">
+        <div class="col s12">
+          <span id="select-parts-text">Select Participants whose Payment is to be done</span>
+        </div>
+      </div>
+      <div class="row" id="reg-parts-list">
+        <div class="col s12 center">
+          <ul class="collection" id="reg-parts-head">
+            <li class="collection-item table-top-header-item">
+              <table class="table-top-header centered">
+                <tr class="table-top-header-row">
+                  <td id="top-pk-col">ID No.</td>
+                  <td id="top-name-col">Name</td>
+                  <td id="top-gender-col">Gender</td>
+                  <td id="top-pre-reg-col">Pre-Reg</td>
+                  <td id="top-reg-col">Reg</td>
+                </tr>
+              </table>
+            </li>
+          </ul>
+          <ul class="collection" id="reg-parts-ul">
+            <li class="collection-item participant-list-item">
+              <table class="table-top-header centered">
+                {% for d in data %}
+                {% if d.3 == 1 %}
+                <tr class="table-row disabled-pre-reg">
+                  <td class="pk-col">{{d.0}}</td>
+                  <td class="name-col">{{d.1}}</td>
+                  <td class="gender-col">{{d.2}}</td>
+                  <td class="pre-reg-col"><i class="material-icons hover-effect selected-previously" onclick="switchPreRegPayment(this)">check_box</i></td>
+                  <td class="reg-col"><i class="material-icons hover-effect" onclick="switchRegPayment(this)">check_box_outline_blank</i></td>
+                </tr>
+                {% elif d.3 == 2 %}
+                <tr class="table-row disabled-pre-reg disabled-reg disabled-both">
+                  <td class="pk-col">{{d.0}}</td>
+                  <td class="name-col">{{d.1}}</td>
+                  <td class="gender-col">{{d.2}}</td>
+                  <td class="pre-reg-col"><i class="material-icons hover-effect selected-previously" onclick="switchPreRegPayment(this)">check_box</i></td>
+                  <td class="reg-col"><i class="material-icons hover-effect selected-previously" onclick="switchRegPayment(this)">check_box</i></td>
+                </tr>
+                {% else %}
+                <tr class="table-row">
+                  <td class="pk-col">{{d.0}}</td>
+                  <td class="name-col">{{d.1}}</td>
+                  <td class="gender-col">{{d.2}}</td>
+                  <td class="pre-reg-col"><i class="material-icons hover-effect" onclick="switchPreRegPayment(this)">check_box_outline_blank</i></td>
+                  <td class="reg-col"><i class="material-icons hover-effect" onclick="switchRegPayment(this)">check_box_outline_blank</i></td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+              </table>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="container center" id="pay-part-div">
+      <div class="row">
+        <div class="col s12">
+          <a class="waves-effect waves-light btn custom-btn z-depth-5" id="pay-part-btn" onclick="openPolicy()" style="display: inline-block;"><i class="material-icons right">send</i>Pay</a>
+        </div>
+      </div>
+    </div>
+    <div id="instructions-modal" class="modal modal-fixed-footer">
+      <div class="modal-content center">
+        <h4>INSTRUCTIONS</h4>
+        <p> 
+        <ul class="collection">
+          <li class="collection-item">Total amount payable is &nbsp &#8377; 1100</li>
+          <li class="collection-item">Participant can choose to pay either the pre-reg amount &nbsp &#8377; 600 or the full amount by selecting reg</li>
+          <li class="collection-item">Participants can only pay for themselves</li>
+          <li class="collection-item">Captains can pay for themselves as well as members of the team</li>
+          <li class="collection-item">Groupleader can pay for all the participants and captains as well as for self</li>
+          <li class="collection-item">Option for Pre-Reg payment is only available till 10th September after that only Reg payment is allowed</li>
+          <li class="collection-item">In case of any issues/queries contact : <a href="mailto:pcr@bits-bosm.org?Subject=Query%20regarding%20payment">pcr@bits-bosm.org</a> or <a href="mailto:register@bits-bosm.org?Subject=Query%20regarding%20payment">register@bits-bosm.org</a></li>
+        </ul>
+        </p>
+      </div>
+      <div class="modal-footer"> <a class="modal-action modal-close waves-effect waves-green btn-flat">Done</a> </div>
+    </div>
+    <div id="policy-modal" class="modal modal-fixed-footer">
+      <div class="modal-content">
+        <h5><u>DISCLAMER</u></h5>
+        <p>Every effort has been made by the website administrator to provide accurate, up-to-date information. However, the academic world is dynamic and errors can occur.</p>
+        <p>All precautions have been taken by the website administrator to include the updated fees structure of the BOSM 2018. In case of any discrepancy, the amount of fees for BOSM 2018 entered in the official records of the Fest will be final.</p>
+        <p>All information provided in <a href="https://www.bits-bosm.org">https://www.bits-bosm.org</a> site is provided for information purposes only and is subject to change without prior notice.</p>
+        <p>The BOSM 2018 does not control, monitor or guarantee the information contained in the sites or information contained in links to other external web sites, and does not endorse any views expressed or products or services offered therein. In no event shall the BOSM 2018 CoSSAc Body be responsible or liable, directly or indirectly, for any damage or loss caused or alleged to be caused by or in connection with the use of or reliance on any such content, goods, or services available on or through any such site or resource.</p>
+        <div class="divider"></div>
+        <h5><u>TERMS & CONDITIONS</u></h5>
+        <p>This website is designed, developed and maintained by Coding Club, BITS Pilani</p>
+        <p>Though all efforts have been made to ensure the accuracy of the content on this website, the same should not be construed as a statement of law or used for any legal purposes. In case of any ambiguity or doubts, users are advised to verify/check with the Department(s) and/or other source(s), and to obtain appropriate professional advice.</p>
+        <p>Under no circumstances will this Service Provider be liable for any expense, loss or damage including, without limitation, indirect or consequential loss or damage, or any expense, loss or damage whatsoever arising from use, or loss of use, of data, arising out of or in connection with the use of this website. These terms and conditions shall be governed by and construed in accordance with the Indian Laws. Any dispute arising under these terms and conditions shall be subject to the jurisdiction of the courts of India.</p>
+        <p>All of the content and Information brought to you by Coding Club, BITS Pilani</p>
+        <p>Please refer following Policies related Privacy, Copyright and Hyperlinking Policy of this Portal, If you need any more information than please visit following or feel free to Contact us.</p>
+        <div class="divider"></div>
+        <h5><u>PRIVACY POLICY</u></h5>
+        <p>Thanks for visiting website of <a href="https://www.bits-bosm.org">https://www.bits-bosm.org</a>, and reviewing our privacy policy.</p>
+        <p>We collect no personal information, like names or addresses, when you visit our website. If you choose to provide that information to us, it is only used to fulfill your request for information.</p>
+        <p>We do collect some technical information when you visit to make your visit seamless. The section below explains how we handle and collect technical information when you visit our website.</p>
+        <p>Information collected and stored automatically:</p>
+        <p>When you browse, read pages, or download information on this website, we automatically gather and store certain technical information about your visit. This information never identifies who you are. The information we collect and store about your visit is listed below:</p>
+        <p>The Internet domain of your service provider (e.g. mtnl.net.in) and IP address (an IP address is a number that is automatically assigned to your computer whenever you are surfing the web) from which you access our website. The type of browser (such as Firefox, Netscape, or Internet Explorer) and operating system (Windows, Linux) used to access our site.</p>
+        <p>The date and time you accessed our site.</p>
+        <p>The pages/URLs you have visited and If you reached this website from another website, the address of that referring website.</p>
+        <p>This information is only used to help us make the site more useful for you. With this data, we learn about the number of visitors to our site and the types of technology our visitors use. We never track or record information about individuals and their visits.</p>
+        <div class="divider"></div>
+        <h5><u>COOKIES</u></h5>
+        <p>When you visit some websites, they may download small pieces of software known as cookies on your computer/browsing device. Some cookies collect personal information to Recognize your computer in the future. We only use non-persistent cookies or “per- session cookies”.</p>
+        <p>Per-session cookies serve technical purposes, like providing seamless navigation through this website. These cookies do not collect personal information of users and they are deleted as soon as you leave our website. The cookies do not permanently record data and they are not stored on your computer’s hard drive. The cookies are stored in memory and are only available during an active browser session. Again, once you close your browser, the cookie disappears.</p>
+        <p>If you send us personal information:</p>
+        <p>We do not collect personal information for any purpose other than to respond to you (for example, to respond to your questions or provide subscriptions you have chosen). If you choose to provide us with personal information— like filling out a Contact Us form, with an e-mail address or postal address, and submitting it to us through the website—we use that information to respond to your message, and to help you get the information you’ve requested. We only share the information you give us with another Government agency if your question relates to that agency, or as otherwise required by law.</p>
+        <p>Our website never collects information or creates individual profiles for commercial marketing. While you must provide an e-mail address for a Localised response to any incoming questions or comments to us, we recommend that you do NOT include any other personal information.</p>
+        <div class="divider"></div>
+        <h5><u>SITE SECURITY</u></h5>
+        <p>For site security purposes and to ensure that this service remains available to all users, the Government computer system employs commercial software programs to monitor network traffic to identify unauthorized attempts to upload or change information, or otherwise cause damage.</p>
+        <p>Except for Authorised law enforcement investigations, no other attempts are made to identify individual users or their usage habits. Raw data logs are used for no other purposes and are scheduled for regular deletion.</p>
+        <p>Unauthorised attempts to upload information or change information on this service are strictly prohibited and may be punishable under the Indian IT Act.</p>
+        <div class="divider"></div>
+        <h5><u>COPYRIGHT POLICY</u></h5>
+        <p>Material on this site is subject to copyright protection unless otherwise indicated. The material in form of file or printable matter may be downloaded without requiring specific prior permission. Any other proposed use of the material is subject to the approval of BOSM 2018 CoSSAc Body</p>
+        <p>Application for obtaining permission should be made to BOSM 2018 CoSSAc Body</p>
+        <div class="divider"></div>
+        <h5><u>HYPERLINKING POLICY</u></h5>
+        <p>Prior permission is required before Hyperlinks are directed from any website to this site. Permission for the same, stating the nature of the content on the pages from where the link has to be given and the exact language of the Hyperlink should be obtained by sending a request at <a href="mailto:webmaster@bits-bosm.org">webmaster@bits-bosm.org</a></p>
+        <div class="divider"></div>
+        <h5><u>REFUND POLICY</u></h5>
+        <p>In case of any technical issue found in online fee payment, such as: </p>
+        <p>During the online payment through credit/debit card if the payment gets debited and the internet goes down due to some external server malfunction or any other similar happening.</p>
+        <p>The system fails to generate the required acknowledgment due to internet malfunction.</p>
+        <p>The payment gets deducted from the payer's account and does not reach BOSM 2018 account or payment gets debited twice due to server error.</p>
+        <p>We shall not be responsible in any case until the fee paid by student or parent is credited in to the Bank Account of the BOSM 2018. If credited into our account, the refund policy will be applicable as per the institute norms.</p>
+      </div>
+      <div class="modal-footer"> <a class="waves-effect waves-light btn z-depth-5" onclick="submitPayParts()" style="display: inline-block;"><i class="material-icons right">send</i>Pay</a><a class="modal-action modal-close waves-effect waves-green btn-flat">Close</a> </div>
+    </div>
+    <div class="container" id="form-holder">
+      <form id="payment-form" method="POST" action="/register/paytm/payment/">
+        {% csrf_token %}
+        <input type="text" name="data" value="{'pre-reg':[],'reg':[]}" id="data-field">
+      </form>
+    </div>
+  </body>
+</html>

@@ -152,6 +152,7 @@ function l_to_r(elem){
 	// console.log(indiv_name+indiv_amt+indiv_college);
 	var tot_amt = parseInt(document.getElementById('tot_amount_text').getElementsByTagName('input')[0].getAttribute('value'));
 	document.getElementById('tot_amount_text').getElementsByTagName('input')[0].setAttribute('value',(tot_amt + parseInt(indiv_amt)));
+	$("#tot_amount_num").val((tot_amt + parseInt(indiv_amt)));
   Materialize.updateTextFields();
 // add to right
 	var tmp = document.getElementById("right-indiv-temp"); //template
@@ -205,6 +206,7 @@ function r_to_l(elem){
 	document.getElementById('no_of_part_text').innerHTML = parseInt(document.getElementById('no_of_part_text').innerHTML)-1;
 	var tot_amt = parseInt(document.getElementById('tot_amount_text').getElementsByTagName('input')[0].getAttribute('value'));
 	document.getElementById('tot_amount_text').getElementsByTagName('input')[0].setAttribute('value',(tot_amt - parseInt(indiv_amt)));
+	$("#tot_amount_num").val((tot_amt - parseInt(indiv_amt)));
   Materialize.updateTextFields();
 }
 

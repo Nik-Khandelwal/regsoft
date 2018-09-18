@@ -86,6 +86,7 @@ function editForm(name, clg, phn, email, bg, addr, notes, sport) {
   document.getElementById("sport_select").innerHTML = '<option value="" disabled="disabled" selected="selected"></option>';
   a=sportsArr;
   for (var o = 0; o < a.length; o++) document.getElementById("sport_select").innerHTML += '<option value="' + a[o][0] + '">' + a[o][1] + "</option>";
+  $('select').material_select();
   Materialize.updateTextFields();
   $('#edit-part-modal').modal('open');
 }

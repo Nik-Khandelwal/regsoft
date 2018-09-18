@@ -130,7 +130,7 @@ def participant_details(request):
 			data=[]
 			for gr in Group.objects.all():
 				b=[]
-				pl = Enteredplayer.objects.filter(controls_passed=True).filter(group=gr).filter(recnacc_passed=False)
+				pl = Enteredplayer.objects.filter(group=gr).filter(recnacc_passed=False)
 				#print(pl)
 				a=[]
 				for p in pl:
@@ -296,7 +296,7 @@ def check_updates(request):
 			data=[]
 			for gr in Group.objects.all():
 				b=[]
-				pl = Enteredplayer.objects.filter(controls_passed=True).filter(group=gr).filter(recnacc_displayed=False)
+				pl = Enteredplayer.objects.filter(group=gr).filter(recnacc_displayed=False)
 				a=[]
 				for p in pl:
 					a.append(Regplayer.objects.get(pk=p.regplayer_id))
@@ -338,7 +338,7 @@ def unconfirm_acco_details(request):
 			data=[]
 			for gr in Group.objects.all():
 				b=[]
-				pl = Enteredplayer.objects.filter(controls_passed=True).filter(group=gr).filter(recnacc_passed=True).filter(all_done=False)
+				pl = Enteredplayer.objects.filter(group=gr).filter(recnacc_passed=True).filter(all_done=False)
 				#print(pl)
 				a=[]
 				for p in pl:
@@ -504,7 +504,7 @@ def reconfirm_acco_details(request):
 			data=[]
 			for gr in Group.objects.all():
 				b=[]
-				pl = Enteredplayer.objects.filter(controls_passed=True).filter(group=gr).filter(recnacc_passed=True).filter(all_done=False)
+				pl = Enteredplayer.objects.filter(group=gr).filter(recnacc_passed=True).filter(all_done=False)
 				#print(pl)
 				a=[]
 				for p in pl:

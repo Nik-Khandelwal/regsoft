@@ -46,9 +46,9 @@ function loaded() {
   });
   // $("#tools-info_outline-tapped").tapTarget('open');
   retrieve_left();
-  fetchBhawanStats();
-  fetchStats();
-  fetchAvailabilityStats();
+  setTimeout(function(){fetchBhawanStats()},1000);
+  setTimeout(function(){fetchStats()},6000);
+  setTimeout(function(){fetchAvailabilityStats()},2000);
   // timedCheck();
   // checkPerformance();
   
@@ -92,7 +92,7 @@ function loaded() {
       draggable: true // Choose whether you can drag to open on touch screens
     }
   );
-  fetchPassedStats();
+  setTimeout(function(){fetchPassedStats()},4000);
 }
 var indiv;
 
@@ -383,25 +383,25 @@ function showRequestStatus(success) {
   if (success == 1) {
     Materialize.toast('Operation Successfull!', 4000, "toast-post_success");
     retrieve_left();
-    fetchBhawanStats();
-    fetchStats();
-    fetchAvailabilityStats();
+    setTimeout(function(){fetchBhawanStats()},4000);
+    setTimeout(function(){fetchStats()},6000);
+    setTimeout(function(){fetchAvailabilityStats()},2000);
     removeFirewallzUpdates();
   }
   //failure||nothing||return failure
   else if (success == 0) {
     Materialize.toast('Operation Failed!', 4000, "toast-post_failed");
     retrieve_left();
-    fetchBhawanStats();
-    fetchStats();
-    fetchAvailabilityStats();
+    setTimeout(function(){fetchBhawanStats()},4000);
+    setTimeout(function(){fetchStats()},6000);
+    setTimeout(function(){fetchAvailabilityStats()},2000);
   }
   else {
     Materialize.toast('Could not connect to server!', 4000, "toast-post_unusual");
     retrieve_left();
-    fetchBhawanStats();
-    fetchStats();
-    fetchAvailabilityStats();
+    setTimeout(function(){fetchBhawanStats()},4000);
+    setTimeout(function(){fetchStats()},6000);
+    setTimeout(function(){fetchAvailabilityStats()},2000);
   }
 }
 //Opening Bhawan Select Modal

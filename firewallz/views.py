@@ -58,7 +58,7 @@ from django.contrib.auth import get_user_model
 User=get_user_model()
  
 
-#CACHE_TTL = getattr(settings, '#CACHE_TTL', DEFAULT_TIMEOUT)
+CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
 
 pusher_client = pusher.Pusher(
@@ -90,7 +90,7 @@ def group_code_generator(size=5, chars=string.ascii_uppercase + string.digits):
 	return str
 
 
-#@cache_page(#CACHE_TTL)
+@cache_page(CACHE_TTL)
 @login_required(login_url = '/regsoft/')
 @user_passes_test(is_firewallz_admin, login_url='/regsoft/')
 def main(request):
@@ -118,9 +118,9 @@ def details(request):
 		return HttpResponseRedirect('/regsoft/')
 	if request.method=='POST':
 		dat=[]
-		for rp in Regplayer.objects.filter(entered=False):
-			rp.sport = rp.sport[:-1]
-			rp.save()
+		# for rp in Regplayer.objects.filter(entered=False):
+		# 	rp.sport = rp.sport[:-1]
+		# 	rp.save()
 
 		for rp in Regplayer.objects.filter(entered=False):
 			# rp.unbilled_amt = 1100-int(rp.name.pcramt)
@@ -289,7 +289,7 @@ def add_participant(request):
 		return HttpResponse(json.dumps(dat), content_type='application/json')
 
 
-#@cache_page(#CACHE_TTL)
+@cache_page(CACHE_TTL)
 @login_required(login_url = '/regsoft/')
 @user_passes_test(is_firewallz_admin, login_url='/regsoft/')
 def unconfirm_grp(request):
@@ -605,6 +605,8 @@ def stats_html(request):
 	context = {"mylist":data}
 	return render(request,'firewallz/firewallz_stats.html',context)
 
+
+@cache_page(CACHE_TTL)
 def view_id_card(request):
 	if request.user.is_authenticated():
 		if is_firewallz_admin(request.user):

@@ -71,7 +71,7 @@ User=get_user_model()
  
  
 
-#CACHE_TTL = getattr(settings, '#CACHE_TTL', DEFAULT_TIMEOUT)
+CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
 pusher_client = pusher.Pusher(
   app_id='499153',
@@ -88,7 +88,7 @@ def is_controls_admin(user):
 	return False
 
 
-#@cache_page(#CACHE_TTL)
+@cache_page(CACHE_TTL)
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_controls_admin, login_url='/regsoft/')
 def main(request):
@@ -342,7 +342,7 @@ def piyali(request):
 		return HttpResponse(json.dumps(dat), content_type='application/json')
 
 
-#@cache_page(#CACHE_TTL)
+@cache_page(CACHE_TTL)
 @login_required(login_url = '/regsoft/')
 @user_passes_test(is_controls_admin, login_url='/regsoft/')
 def unconfirm_grp(request):
@@ -692,6 +692,7 @@ def denomination_display(request):
 	return HttpResponse(json.dumps(data), content_type='application/json')
 
 
+@cache_page(CACHE_TTL)
 def denominations(request):
 	if request.user.is_authenticated():
 		if is_controls_admin(request.user):
@@ -706,6 +707,7 @@ def denominations(request):
 
 
 #Controls panel
+@cache_page(CACHE_TTL)
 def con_pan(request):
 	if request.user.is_authenticated():
 		if is_controls_admin(request.user):
@@ -826,6 +828,7 @@ def bill_details(request):
 	return HttpResponse(json.dumps(dat), content_type='application/json')
 
 
+@cache_page(CACHE_TTL)
 def bill_details_html(request):
 	if request.user.is_authenticated():
 		if is_controls_admin(request.user):

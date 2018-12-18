@@ -246,7 +246,7 @@ function fetchPassedStats() {
   }
   ourRequest.send('');
 }
-/*Pusher.logToConsole = false;
+Pusher.logToConsole = false;
 var pusher = new Pusher('9b825df805e0b694cccc', {
   cluster: 'ap2',
   encrypted: true
@@ -267,7 +267,7 @@ var controls_unconfirm_channel = pusher.subscribe('controls_unconfirm_channel');
 controls_unconfirm_channel.bind('controls_unconfirm_event', function(data) {
   // Same Data Format as details view.
   pusherGetGroups();
-});*/
+});
 function pusherGetGroups() {
   var csrf_token = getCookie('csrftoken');
   var ourRequest = new XMLHttpRequest();

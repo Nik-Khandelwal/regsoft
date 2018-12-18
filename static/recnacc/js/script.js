@@ -927,7 +927,7 @@ function fetchAvailabilityStats() {
   }
   ourRequest.send('');
 }
-/*Pusher.logToConsole = false;
+Pusher.logToConsole = false;
 var pusher = new Pusher('9b825df805e0b694cccc', {
   cluster: 'ap2',
   encrypted: true
@@ -985,7 +985,7 @@ recnacc_channel.bind('recnacc_event', function(data) {
 var recndeacc_channel = pusher.subscribe('recndeacc_channel');
 recndeacc_channel.bind('recndeacc_event', function(data) {
   fetchPassedStats();
-});*/
+});
 
 // Pusher Special Functions
 function pusher_fetchBhawanStats() {

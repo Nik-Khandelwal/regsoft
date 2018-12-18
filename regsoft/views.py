@@ -19,7 +19,7 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from __future__ import unicode_literals
+#from __future__ import unicode_literals
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from main.models import Note, Group,Regplayer,Enteredplayer,Billcontrols,Accorecnacc,Accomodation,Controlsystem,Singleroom,Acco_name
@@ -115,9 +115,11 @@ CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
 @cache_page(CACHE_TTL)
 def main(request):
-	return render(request,'index.html')
+	return render(request,'index1.html')
 
+#def tet(request):
+#	return HttpResponse("loaderio-95d5988255f245b1c030872bd19be2ec")
 
 @cache_page(CACHE_TTL)
 def adminpanels(request):
-	return render(request, 'main/index.html')
+	return render(request,'main/index.html')

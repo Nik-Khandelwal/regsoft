@@ -138,3 +138,10 @@ def regloginuser(request):
 def regsoft_logout(request):
 	logout(request)
 	return HttpResponseRedirect('/')
+
+
+def team_list(request):
+	dat = []
+	for t in Team.objects.all():
+		dat.append({"college":t.college,"pk":t.pk})
+	return JsonResponse({"data":dat})

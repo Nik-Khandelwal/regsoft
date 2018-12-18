@@ -137,12 +137,14 @@ function addNewTeam(sport_name, sport_id, gender, lower, upper) {
   var avail_sport =[];
   var avail_sport_id = [];
   var j = 0;
+  console.log(sportsJSON);
   for (var i = 0; i < sportsJSON.length; i++) {
-    if (sportsJSON[i].fields.idno != sport_id) {
+    if (sportsJSON[i].pk != sport_id) {
       if (gender == sportsJSON[i].fields.gender) {
         if (sportsJSON[i].fields.upper == sportsJSON[i].fields.lower == 1) {
           avail_sport[j] = sportsJSON[i].fields.sport;
-          avail_sport_id[j++] = sportsJSON[i].fields.idno;
+          avail_sport_id[j++] = sportsJSON[i].pk;
+          console.log(sportsJSON[i].pk);
         }
       }
     }
@@ -162,11 +164,11 @@ function addNewSportParticipant(sport_name, sport_id, gender) {
   var avail_sport_id = [];
   var j = 0;
   for (var i = 0; i < sportsJSON.length; i++) {
-    if (sportsJSON[i].fields.idno != sport_id) {
+    if (sportsJSON[i].pk != sport_id) {
       if (gender == sportsJSON[i].fields.gender) {
         if (sportsJSON[i].fields.upper == sportsJSON[i].fields.lower == 1) {
           avail_sport[j] = sportsJSON[i].fields.sport;
-          avail_sport_id[j++] = sportsJSON[i].fields.idno;
+          avail_sport_id[j++] = sportsJSON[i].pk;
         }
       }
     }
@@ -190,11 +192,11 @@ function addNewParticipant() {
   var avail_sport_id = [];
   var j = 0;
   for (var i = 0; i < sportsJSON.length; i++) {
-    if (sportsJSON[i].fields.idno != sport_id) {
+    if (sportsJSON[i].pk != sport_id) {
       if (gender == sportsJSON[i].fields.gender) {
         if (sportsJSON[i].fields.upper == sportsJSON[i].fields.lower == 1) {
           avail_sport[j] = sportsJSON[i].fields.sport;
-          avail_sport_id[j++] = sportsJSON[i].fields.idno;
+          avail_sport_id[j++] = sportsJSON[i].pk;
         }
       }
     }
@@ -489,11 +491,11 @@ function addNewTeamParticipant(sport_id, gender) {
   var avail_sport_id = [];
   var j = 0;
   for (var i = 0; i < sportsJSON.length; i++) {
-    if (sportsJSON[i].fields.idno != sport_id) {
+    if (sportsJSON[i].pk != sport_id) {
       if (gender == '\''+sportsJSON[i].fields.gender+'\'') {
         if (sportsJSON[i].fields.upper == sportsJSON[i].fields.lower == 1) {
           avail_sport[j] = sportsJSON[i].fields.sport;
-          avail_sport_id[j++] = sportsJSON[i].fields.idno;
+          avail_sport_id[j++] = sportsJSON[i].pk;
         }
       }
     }

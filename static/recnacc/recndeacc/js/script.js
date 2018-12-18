@@ -45,8 +45,8 @@ function loaded() {
   });
   retrieve_left();
   // fetchBhawanStats();
-  fetchStats();
-  fetchAvailabilityStats();
+  setTimeout(function(){fetchStats()},6000);
+  setTimeout(function(){fetchAvailabilityStats()},3000);
   
   $(window).resize(function() {
     // This will execute whenever the window is resized
@@ -306,23 +306,23 @@ function showRequestStatus(success) {
     Materialize.toast('Operation Successfull!', 4000, "toast-post_success");
     retrieve_left();
     // fetchBhawanStats();
-    fetchStats();
-    fetchAvailabilityStats();
+    setTimeout(function(){fetchStats()},6000);
+    setTimeout(function(){fetchAvailabilityStats()},3000);
   }
   //failure||nothing||return failure
   else if (success == 0) {
     Materialize.toast('Operation Failed!', 4000, "toast-post_failed");
     retrieve_left();
     // fetchBhawanStats();
-    fetchStats();
-    fetchAvailabilityStats();
+    setTimeout(function(){fetchStats()},6000);
+    setTimeout(function(){fetchAvailabilityStats()},3000);
   }
   else {
     Materialize.toast('Could not connect to server!', 4000, "toast-post_unusual");
     retrieve_left();
     // fetchBhawanStats();
-    fetchStats();
-    fetchAvailabilityStats();
+    setTimeout(function(){fetchStats()},6000);
+    setTimeout(function(){fetchAvailabilityStats()},3000);
   }
 }
 

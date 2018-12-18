@@ -187,6 +187,7 @@ def srivatsa(request):
 		if is_recnacc_admin(request.user):
 			print("srivatsa")
 			bill = Accorecnacc()
+			bill.acco_no=Accorecnacc.objects.all().last().pk +1
 			bill.save()
 			dat = {"success":1}
 			return HttpResponse(json.dumps(dat), content_type='application/json')
@@ -208,6 +209,7 @@ def satyavrat(request):
 				#print(data)
 				for i in range(0,int(data['data']['num'])-1):
 					bill = Accorecnacc()
+					bill.acco_no=Accorecnacc.objects.all().last().pk +1
 					bill.save()
 				dat = {"success":1}
 				return HttpResponse(json.dumps(dat), content_type='application/json')
@@ -543,8 +545,10 @@ def reaccomodate(request):
 					pl = Enteredplayer.objects.get(regplayer=rp)
 					if pl.accorecnacc.accomodation is not None:
 						pl.accorecnacc.accomodation.vacancy += 1
+						pl.accorecnacc.accomodation.save()
 					elif pl.accorecnacc.singleroom is not None:
 						pl.accorecnacc.singleroom.vacancy += 1
+						pl.accorecnacc.singleroom.save()
 					else:
 						pass
 
@@ -674,28 +678,63 @@ def availability_stats(request):
 # 		return HttpResponse(json.dumps({"data":data}), content_type='application/json')
 
 
+#def view_stats(request):
+#	print("view_stats")
+#	data = []
+#	for ac in Acco_name.objects.all():
+#		dat = []
+#		for pl in Enteredplayer.objects.all():
+#			dic = {}
+#			try:
+#				pt = pl.accorecnacc
+#				if pt.accomodation == ac.common_room:
+#					dic = {"type":"common_room","name":pl.regplayer.name.name,"mobile":pl.regplayer.mobile_no}
+#				elif pt.accomodation == ac.tt_room:
+#					dic = {"type":"tt_room","name":pl.regplayer.name.name,"mobile":pl.regplayer.mobile_no}
+#				elif pt.accomodation == ac.s_room:
+#					dic = {"type":"s_room","room_no":pt.singleroom.name,"name":pl.regplayer.name.name,"mobile":pl.regplayer.mobile_no}
+#				else:
+#					pass
+#				dat.append(dic)
+#			except:
+#				pass	
+#		data.append({"hostel_name":ac.name,"list":dat})
+#	return HttpResponse(json.dumps({"data":data}), content_type='application/json')
+
+
+
 def view_stats(request):
-	print("view_stats")
+	if request.user.is_authenticated():
+		if is_recnacc_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
 	data = []
 	for ac in Acco_name.objects.all():
 		dat = []
-		for pl in Enteredplayer.objects.all():
-			dic = {}
-			try:
-				pt = pl.accorecnacc
-				if pt.accomodation == ac.common_room:
-					dic = {"type":"common_room","name":pl.regplayer.name.name,"mobile":pl.regplayer.mobile_no}
-				elif pt.accomodation == ac.tt_room:
-					dic = {"type":"tt_room","name":pl.regplayer.name.name,"mobile":pl.regplayer.mobile_no}
-				elif pt.accomodation == ac.s_room:
-					dic = {"type":"s_room","room_no":pt.singleroom.name,"name":pl.regplayer.name.name,"mobile":pl.regplayer.mobile_no}
-				else:
-					pass
+		for pt in Accorecnacc.objects.filter(accomodation=ac.common_room):
+			for pl in pt.enteredplayer_set.all():
+				dic = {"type":"common_room","name":pl.regplayer.name.name,"mobile":pl.regplayer.mobile_no}
 				dat.append(dic)
-			except:
-				pass	
+		for pt in Accorecnacc.objects.filter(accomodation=ac.tt_room):
+			for pl in pt.enteredplayer_set.all():
+				dic = {"type":"tt_room","name":pl.regplayer.name.name,"mobile":pl.regplayer.mobile_no}
+				dat.append(dic)
+		if(ac.s_room):
+			for sr in ac.s_room.singleroom.all():
+				for pt in Accorecnacc.objects.filter(singleroom=sr):
+					for pl in pt.enteredplayer_set.all():
+						dic = {"type":"s_room","room_no":pt.singleroom.name,"name":pl.regplayer.name.name,"mobile":pl.regplayer.mobile_no}
+						dat.append(dic)
 		data.append({"hostel_name":ac.name,"list":dat})
 	return HttpResponse(json.dumps({"data":data}), content_type='application/json')
+
+
+
+
 
 
 # Bhawan Occupency
@@ -749,8 +788,8 @@ def edit_occupency(request):
 			print(data)
 			yo = int(data['data']['strength'])
 			ac = Accomodation.objects.get(pk=data['data']['pk'])
-			diff = yo - ac.strength
-			ac.strength = yo
+			#diff = yo - ac.strength
+			#ac.strength = yo
 
 			diff = int(data['data']['strength']) - ac.strength
 			ac.strength = data['data']['strength']
@@ -834,17 +873,28 @@ def fine_page(request):
 			ac.fine += float(data['data']['amt'])
 			ac.save()
 			cnt = 0
+			#for ar in ac.accorecnacc_set.all():
+			#	for pl in Enteredplayer.objects.filter(all_done=False):
+			#		if pl.accorecnacc == ar:
+			#			cnt+=1
+
+			#for ar in ac.accorecnacc_set.all():
+			#	for pl in Enteredplayer.objects.filter(all_done=False):
+			#		if pl.accorecnacc == ar:
+			#			rp = Regplayer.objects.get(pk=pl.regplayer.pk)
+			#			rp.fine += (float(data['data']['amt'])/cnt)
+			#			rp.save()
+			
 			for ar in ac.accorecnacc_set.all():
-				for pl in Enteredplayer.objects.filter(all_done=False):
-					if pl.accorecnacc == ar:
-						cnt+=1
+				for pl in ar.enteredplayer_set.filter(all_done=False):
+					cnt+=1
+
 
 			for ar in ac.accorecnacc_set.all():
-				for pl in Enteredplayer.objects.filter(all_done=False):
-					if pl.accorecnacc == ar:
-						rp = Regplayer.objects.get(pk=pl.regplayer.pk)
-						rp.fine += (float(data['data']['amt'])/cnt)
-						rp.save()
+				for pl in ar.enteredplayer_set.filter(all_done=False):
+					rp = Regplayer.objects.get(pk=pl.regplayer.pk)
+					rp.fine += (float(data['data']['amt'])/cnt)
+					rp.save()
 
 			return HttpResponse(json.dumps({"success":"1"}), content_type='application/json')	
 		else:
@@ -1112,7 +1162,7 @@ def add_acco(request):
 			acn.common_room = ac
 			acn.save()
 	elif(int(data['data']['type']) == 1):
-		if(ac.tt_room):
+		if(acn.tt_room):
 			success = 0
 		else:
 			ac = Accomodation()
@@ -1126,8 +1176,8 @@ def add_acco(request):
 	elif(int(data['data']['type']) == 2):
 		if(acn.s_room):
 			ac = acn.s_room
-			ac.strength += data['data']['sr_vacancy']
-			ac.vacancy += data['data']['sr_vacancy']
+			ac.strength += int(data['data']['sr_vacancy'])
+			ac.vacancy += int(data['data']['sr_vacancy'])
 			ac.save()
 		else:
 			ac = Accomodation()

@@ -66,7 +66,7 @@ class Regplayer(models.Model):
 	gender = models.CharField(max_length=10, null=True, blank=True)
 	college = models.CharField(max_length=10000000, null=True, blank=True)
 	city = models.CharField(max_length=1000000, null=True, blank=True)
-	mobile_no = models.IntegerField(null=True, blank=True)
+	mobile_no = models.BigIntegerField(null=True, blank=True)
 	email_id = models.EmailField(max_length=70, null=True, blank=True)
 	sport = models.CharField(max_length=10000000, null=True, blank=True)
 	entered = models.BooleanField(default=False)
@@ -156,10 +156,12 @@ class Money(models.Model):
 	twohundred = models.IntegerField(null=True, default=0)
 	hundred = models.IntegerField(null=True, default=0)
 	fifty = models.IntegerField(null=True, default=0)
+	twenty = models.IntegerField(null=True, default=0)
+	ten = models.IntegerField(null=True, default=0)
 
 	@property
 	def total(self):
-		return int(self.twothousand*2000+self.fivehundred*500+self.twohundred*200+self.hundred*100+self.fifty*50)
+		return int(self.twothousand*2000+self.fivehundred*500+self.twohundred*200+self.hundred*100+self.fifty*50+self.twenty*20+self.ten*10)
 
 
 class Acco_name(models.Model):

@@ -1,0 +1,190 @@
+from __future__ import unicode_literals
+from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from main.models import Group,Regplayer,Enteredplayer
+from django.contrib.auth import logout
+from django.contrib.auth.models import User
+import json
+from django.contrib.auth import get_user_model
+import string
+import random
+from django.core import serializers
+import pusher
+from django.conf import settings
+from django.core.cache.backends.base import DEFAULT_TIMEOUT
+from django.shortcuts import render
+from django.views.decorators.cache import cache_page
+from django.shortcuts import render
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth.decorators import login_required, user_passes_test
+ 
+
+CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
+
+
+pusher_client = pusher.Pusher(
+  app_id='499153',
+  key='9b825df805e0b694cccc',
+  secret='f2bbd60c69e36c90a572',
+  cluster='ap2',
+  ssl=True
+)
+
+
+def is_firewallz_admin(user):
+	if user:
+		if user.admin_level == 2:
+			return True
+	return False
+
+
+
+
+def group_code_generator(size=5, chars=string.ascii_uppercase + string.digits):
+	str = ''.join(random.choice(chars) for _ in range(size))
+	for grp in Group.objects.all():
+		if grp.group_code == str:
+			str = group_code_generator()
+	return str
+
+
+@cache_page(CACHE_TTL)
+@login_required(login_url = '/regsoft/')
+@user_passes_test(is_firewallz_admin, login_url='/regsoft/')
+def main(request):
+	return render(request,'firewallz/index.html')
+
+
+@login_required(login_url = '/regsoft/')
+@user_passes_test(is_firewallz_admin, login_url='/regsoft/')
+def details(request):
+	data = serializers.serialize("json", Regplayer.objects.filter(entered=False))
+	return HttpResponse(data, content_type='application/json')
+
+#def confirm_group(request,player_list):
+#	grp = Group()
+#	grp.group_code = group_code_generator()
+#	grp.save()
+#	for i in range(1,len(player_list.split("a"))):
+#		player_id = int(player_list.split("a")[i])
+#		Player = Regplayer.objects.get(pk=player_id)
+#		Player.entered = True
+#		Player.save()
+#		pl = Enteredplayer()
+#		pl.regplayer = Player
+#		pl.group = grp
+#		pl.save()
+#	data = {"groupcode":grp.group_code}
+#	return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+@login_required(login_url = '/regsoft/')
+@user_passes_test(is_firewallz_admin, login_url='/regsoft/')
+def confirm_group(request):
+	grp = Group()
+	grp.group_code = group_code_generator()
+	grp.save()
+	data = json.loads( request.body.decode('utf-8') )
+	print(data)
+	for dt in data['data']:	
+		Player = Regplayer.objects.get(pk=dt['pk'])
+		Player.entered = True
+		Player.name.grp_leader = dt['groupleader']
+		Player.save()
+		pl = Enteredplayer()
+		pl.regplayer = Player
+		pl.group = grp
+		pl.save()
+		if dt['groupleader'] == 1:
+			grp.group_leader = int(dt['pk'])
+			grp.save()
+	data = {"groupcode":grp.group_code}
+
+	data_controls=[]
+	for gr in Group.objects.all():
+		b=[]
+		pl = Enteredplayer.objects.filter(group=gr).filter(controls_passed=False)
+		a=[]
+		for p in pl:
+			a.append(Regplayer.objects.get(pk=p.regplayer_id))
+			p.controls_displayed = True
+			p.save()
+		for t in a:
+			s=[]
+			s.append(t.city)
+			s.append(t.name.name)
+			s.append(t.email_id)
+			s.append(t.gender)
+			s.append(t.unbilled_amt)
+			s.append(t.college)
+			s.append(t.mobile_no)
+			s.append(t.entered)
+			s.append(t.sport)
+			s.append(t.pk)
+			b.append(s)
+		if b:
+			data_controls.append({"participants":b,"groupid":gr.group_code})
+
+	pusher_client.trigger('my-channel2', 'my-event2', data_controls)
+
+	return HttpResponse(json.dumps(data), content_type='application/json')
+	
+
+
+@login_required(login_url = '/regsoft/')
+@user_passes_test(is_firewallz_admin, login_url='/regsoft/')
+def add_participant(request):
+	data = 	json.loads( request.body.decode('utf-8') )
+	pl = Regplayer()
+	pl.name = data['data'][0]['name']
+	pl.gender = data['data'][0]['gender']
+	pl.college = data['data'][0]['college']
+	pl.city = data['data'][0]['city']
+	pl.mobile_no = str(data['data'][0]['mobile'])
+	pl.email_id = data['data'][0]['email']
+	pl.sport = data['data'][0]['sport']
+	pl.save()
+	dat = {"pk":pl.pk}
+	return HttpResponse(json.dumps(dat), content_type='application/json')
+
+
+@cache_page(CACHE_TTL)
+@login_required(login_url = '/regsoft/')
+@user_passes_test(is_firewallz_admin, login_url='/regsoft/')
+def unconfirm_grp(request):
+	return render(request,'firewallz/firewallz_unconfirm/index.html')
+
+
+def unconfirm_details(request):
+	data = []
+	for gr in Group.objects.all():
+		if Regplayer.objects.get(pk=gr.group_leader):
+			player = Regplayer.objects.get(pk=gr.group_leader)
+			data.append({"name": player.name.name, "college":player.college, "groupid":gr.group_code})
+	return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+def show_details_unconfirm(request):
+	data = 	json.loads( request.body.decode('utf-8') )
+	print(data)
+	dat = []
+	gr = Group.objects.get(group_code=data['data']['group_id'])
+	for pl in Enteredplayer.objects.filter(group=gr).filter(controls_passed=False):
+		dat.append({"name":pl.regplayer.name.name,"college":pl.regplayer.college, "id":pl.regplayer.pk})
+	return HttpResponse(json.dumps(dat), content_type='application/json')
+
+
+def unconfirm_player(request):
+	data = json.loads( request.body.decode('utf-8') )
+	dat = []
+	pl = Regplayer.objects.get(pk=data['data']['participant_id'])
+	pl.entered = 0
+	pl.save()
+	en = Enteredplayer.objects.get(regplayer=pl)
+	en.group = None
+	en.regplayer = None
+	en.save()
+	dat = {"success":1}
+	return HttpResponse(json.dumps(dat), content_type='application/json')

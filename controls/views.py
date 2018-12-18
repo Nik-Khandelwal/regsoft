@@ -102,7 +102,7 @@ def main(request):
 		return HttpResponseRedirect('/regsoft/')
 	mon = Money()
 	mon.save()
-	return render(request,'controls/index.html')
+	return render(request,'controls/index1.html')
 
 
 @login_required(login_url='/regsoft/')
@@ -155,6 +155,7 @@ def create_bill(request):
 	else:
 		return HttpResponseRedirect('/regsoft/')
 	bil = Billcontrols()
+	bil.bill_no=Billcontrols.objects.all().last().pk +1
 	bil.save()
 	dat = {"success":1}
 	return HttpResponse(json.dumps(dat), content_type='application/json')
@@ -194,7 +195,8 @@ def generate_bill(request):
 		# 	pl.save()
 		bil = Billcontrols.objects.filter(unbilled_amt=0).first()
 		bil.unbilled_amt = data['data']['net_amt']
-		bil.amt_received = int(data['data']['deno_2000'])*2000 + int(data['data']['deno_500'])*500 + int(data['data']['deno_200'])*200 + int(data['data']['deno_100'])*100 + int(data['data']['deno_50'])*50
+		#bil.amt_received = int(data['data']['deno_2000'])*2000 + int(data['data']['deno_500'])*500 + int(data['data']['deno_200'])*200 + int(data['data']['deno_100'])*100 + int(data['data']['deno_50'])*50
+		bil.amt_received = int(data['data']['deno_2000'])*2000 + int(data['data']['deno_500'])*500 + int(data['data']['deno_200'])*200 + int(data['data']['deno_100'])*100 + int(data['data']['deno_50'])*50 + int(data['data']['deno_20'])*20 + int(data['data']['deno_10'])*10
 		bil.save()
 		money = Money.objects.get(pk=1)
 		print(data)
@@ -203,6 +205,8 @@ def generate_bill(request):
 		money.twohundred += int(data['data']['deno_200'])
 		money.hundred += int(data['data']['deno_100'])
 		money.fifty += int(data['data']['deno_50'])
+		money.twenty += int(data['data']['deno_20'])
+		money.ten += int(data['data']['deno_10'])
 		money.save()
 
 		dat = {"success":1, "bills_pk":bil.pk}
@@ -260,12 +264,16 @@ def arpit(request):
 		money.twohundred -= int(data['data']['deno_200'])
 		money.hundred -= int(data['data']['deno_100'])
 		money.fifty -= int(data['data']['deno_50'])
+		money.twenty -= int(data['data']['deno_20'])
+		money.ten -= int(data['data']['deno_10'])
 	if data['data']['type'] == "update":
 		money.twothousand = int(data['data']['deno_2000'])
 		money.fivehundred = int(data['data']['deno_500'])
 		money.twohundred = int(data['data']['deno_200'])
 		money.hundred = int(data['data']['deno_100'])
 		money.fifty = int(data['data']['deno_50'])
+		money.twenty = int(data['data']['deno_20'])
+		money.ten = int(data['data']['deno_10'])
 	money.save()
 	dat = {"success":1}
 	data_denoms = [1]
@@ -371,7 +379,7 @@ def unconfirm_details(request):
 	data=[]
 	for gr in Group.objects.all():
 		b=[]
-		pl = Enteredplayer.objects.filter(group=gr).filter(controls_passed=True).filter(recnacc_passed=False)
+		pl = Enteredplayer.objects.filter(group=gr).filter(controls_passed=True)
 		a=[]
 		for p in pl:
 			a.append(Regplayer.objects.get(pk=p.regplayer_id))
@@ -661,7 +669,7 @@ def bill_pdf(request,bill_pk):
 		return HttpResponseRedirect('/regsoft/')
 	print("compres lite")
 	data = []
-	billl = Billcontrols.objects.get(pk=int(bill_pk))
+	billl = Billcontrols.objects.get(bill_no=int(bill_pk))
 	for obj in billl.enteredplayer_set.all():
 		rp = Regplayer.objects.get(pk = obj.regplayer.pk)
 		rp.unbilled_amt = 0
@@ -684,6 +692,8 @@ def denomination_display(request):
 		return HttpResponseRedirect('/regsoft/')
 	money = Money.objects.get(pk=1)
 	data = []
+	data.append(money.ten)
+	data.append(money.twenty)
 	data.append(money.fifty)
 	data.append(money.hundred)
 	data.append(money.twohundred)

@@ -68,6 +68,20 @@ function poppulate_left(ourData) {
     $(this).toggleClass("active");
   });
 }
+function add_to_left(l_index) {
+  // values to update???
+  var tmp_left = document.getElementById("left-indiv-temp"); //template
+  //var l_index= elem.parentElement; 
+  // append as first (second) child of grouplist
+  l_index.insertBefore(tmp_left.content.cloneNode(true), l_index.firstElementChild.nextElementSibling);
+  //l_index.appendChild(tmp_left.content.cloneNode(true)); 
+  var update = l_index.firstElementChild.nextElementSibling; //element to be updated
+  update.getElementsByClassName("name")[0].innerHTML = indiv_name;
+  update.getElementsByClassName("coll-name")[0].innerHTML = indiv_college;
+  update.getElementsByClassName("group-id")[0].innerHTML = indiv_group;
+  update.getElementsByClassName("gender")[0].innerHTML = indiv_gender;
+  update.getElementsByClassName("indiv-id")[0].innerHTML = indiv_id;
+}
 function fetchPassedStats() {
   document.getElementById('fire_conf').innerHTML = 'Loading';
   document.getElementById('cont_conf').innerHTML = 'Loading';

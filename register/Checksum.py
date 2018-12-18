@@ -6,7 +6,7 @@ import crypto
 # import sys
 # sys.modules['Crypto'] = crypto
 
-# from Crypto.Cipher import AES
+from Crypto.Cipher import AES
 
 
 IV = "@@@@&&&&####$$$$"
@@ -101,7 +101,7 @@ def __encode__(to_encode, iv, key):
     to_encode = __pad__(to_encode)
     # Encrypt
     c = AES.new(key.encode("utf8"), AES.MODE_CBC, iv.encode("utf8"))
-    to_encode = c.encrypt(to_encode)
+    to_encode = c.encrypt(to_encode.encode("utf8"))
 
 
     # obj = AES.new('This is a key123'.encode("utf8"), AES.MODE_CBC, 'This is an IV456'.encode("utf8"))

@@ -50,4 +50,6 @@ urlpatterns = [
 
     url(r'^view_id_card_show_details/$',views.view_id_card_show_details,name='view_id_card_show_details'),
 
+    url(r'^grp_stats/$',views.grp_stats,name='grp_stats'),
+
 ]

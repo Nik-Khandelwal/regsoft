@@ -980,7 +980,8 @@ def getpay(request):
 				'MID':MERCHANT_ID,
 				'ORDER_ID':order_id,
 				'TXN_AMOUNT': bill_amount,
-				'CUST_ID':'sfc.bitspilani@gmail.com',
+				'CUST_ID':'sfc.bitspilani@gmail.com'+order_id,
+				#'INDUSTRY_TYPE_ID':'PrivateEducation',
 				'INDUSTRY_TYPE_ID':'Retail',
 				'WEBSITE': settings.PAYTM_WEBSITE,
 				'CHANNEL_ID':'WEB',
@@ -1054,7 +1055,7 @@ def response(request):
 			mail_subject = 'Your payment details | BOSM 2018'
 			email = EmailMessage(mail_subject, message, to=["bosmpayments@gmail.com"]+[request.user.email]+premail+regmail+p2rmail)
 			email.content_subtype = "html"
-			email.send()
+			#email.send()
 			return HttpResponseRedirect('/register/payments/')
 		else:
 			return HttpResponse("Verification Failed")

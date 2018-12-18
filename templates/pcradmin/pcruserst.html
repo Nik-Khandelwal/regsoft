@@ -1,0 +1,79 @@
+  <!DOCTYPE html>
+  <html>
+    <head>
+    {% load staticfiles %}
+      <!--Import Google Icon Font-->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!--Import materialize.css-->
+      <link type="text/css" rel="stylesheet" href="{% static 'pcradmin/css/materialize.min.css' %}"  media="screen,projection"/>
+
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      <link type="text/css" rel="stylesheet" href="{% static 'pcradmin/css/pcruserst.css' %}"/>
+      <script type="text/javascript" src="{% static 'pcradmin/js/pcruserst.js' %}"></script>
+    </head>
+    <body>
+      <!--Import jQuery before materialize.js-->
+      <script type="text/javascript" src="{% static 'pcradmin/js/jquery.js' %}"></script>
+      <script type="text/javascript" src="{% static 'pcradmin/js/materialize.min.js' %}"></script>
+      <!--Template Div-->
+      <div class="card-panel grey lighten-2 template row" style="padding-top: 3vh;">
+        <!-- Inactive Groups -->
+        <table class="centered grey lighten-2 table col l6 m6 s12">
+          <thead class="grey lighten-2">
+            <tr>
+                <th style="flex-basis: 25%;">(Inactive) Group Leaders</th>
+                <th style="flex-basis: 30%;">College</th>
+                <th style="flex-basis: 30%;">Phone Number</th>
+                <th style="flex-basis: 15%;">Select</th>
+            </tr>
+          </thead>
+
+          <tbody class="grey lighten-2">
+          {% for dt in playerlist.deactivated %}
+            <tr>
+              <td style="display: none;">{{dt.3}}</td>
+              <td style="flex-basis: 25%;">{{dt.0}}</td>
+              <td style="flex-basis: 30%;">{{dt.1}}</td>
+              <td style="flex-basis: 30%;">{{dt.2}}</td>
+              <td style="flex-basis: 15%;" onclick="sel(this.childNodes[0]);"><i class="material-icons sel-act">check_box_outline_blank</i></td>
+            </tr>
+            {% endfor %}
+            
+          </tbody>
+         </table>
+         <a class="waves-effect waves-light btn grey lighten-3 activate1 tooltipped col s8 offset-s2 black-text" data-position="bottom" data-delay="30" data-tooltip="Activate selected Groups" onclick="activate();">Activate</a>
+         <table class="centered grey lighten-2 table col l6 m6 s12">
+          <thead class="grey lighten-2">
+            <tr>
+                <th style="flex-basis: 25%;">(Active) Group Leaders</th>
+                <th style="flex-basis: 30%;">College</th>
+                <th style="flex-basis: 30%;">Phone Number</th>
+                <th style="flex-basis: 15%;">Select</th>
+            </tr>
+          </thead>
+
+          <tbody class="grey lighten-2">
+          {% for dt in playerlist.activated %}
+            <tr>
+              <td style="display: none;">{{dt.3}}</td>
+              <td style="flex-basis: 25%;">{{dt.0}}</td>
+              <td style="flex-basis: 30%;">{{dt.1}}</td>
+              <td style="flex-basis: 30%;">{{dt.2}}</td>
+              <td style="flex-basis: 15%;" onclick="sel(this.childNodes[0]);"><i class="material-icons sel-deact">check_box_outline_blank</i></td>
+            </tr>
+            {% endfor %}
+            
+          </tbody>
+         </table>
+         <a class="waves-effect waves-light btn grey lighten-3 deactivate1 tooltipped col s8 offset-s2 black-text" data-position="bottom" data-delay="30" data-tooltip="Deactivate selected Groups" onclick="deactivate();">Deactivate</a>
+         <a class="waves-effect waves-light btn grey lighten-3 activate tooltipped col s2 offset-s2 black-text" data-position="bottom" data-delay="30" data-tooltip="Activate selected Groups" onclick="activate();">Activate</a>
+         <a class="waves-effect waves-light btn grey lighten-3 deactivate tooltipped col s2 offset-s4 black-text" data-position="bottom" data-delay="30" data-tooltip="Deactivate selected Groups" onclick="deactivate();">Deactivate</a>
+      </div>
+      <footer class="page-footer black">
+        <div class="footer-copyright">
+          CODING CLUB | BOSM'18
+        </div>
+      </footer>
+    </body>
+  </html>

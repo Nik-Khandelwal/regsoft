@@ -2173,6 +2173,22 @@ position: absolute;
 	}
 }
 @media (max-width: 767px){
+	#row1{
+		margin-top: -8vw !important;
+		margin-bottom: 18vw !important;
+	}
+	.spons_title{
+		position: relative !important;
+		top: 56% !important;
+	}
+	.logo{
+		position: relative !important;
+		top: 75% !important;
+	}
+	#merchandise{
+		left: 65% !important;
+		top: 56% !important;
+	}
 	.fp-controlArrow.fp-next,.fp-controlArrow.fp-prev {
 		top: 60vh;
 	}
@@ -3014,6 +3030,7 @@ position: absolute;
          font-weight: 400;
          height: auto;
          font-family: 'cd';
+         color: white
        }
 		   .row{
 				   display: flex;
@@ -3036,7 +3053,8 @@ position: absolute;
 			   margin-bottom: 2vw;
 		   }
 		   #row1{
-			   margin-top: 2vw
+			   margin-top: 2vw;
+			   transform: scale(1.5);
 		   }
 		   .sponstitle:nth-child(1){
 			   margin-top: 2vw

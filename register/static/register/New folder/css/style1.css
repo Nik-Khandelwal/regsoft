@@ -1,0 +1,54 @@
+@media only screen and (min-width:768px){
+    .white-text{
+    font-size: 800%;
+}
+    
+}
+@media only screen and (max-width:768px){
+    
+})
+.btn-large{
+    width: 100%;
+    height: 100%;   
+}
+
+i:hover{
+    cursor: pointer;
+}
+.card{
+    padding: 2vh;
+}
+.login{
+    height:100vh;
+    width: 0;
+    
+    overflow-x:hidden;
+    transition: 0.8s;
+     position: fixed;
+    z-index: 5;
+    top: 0;
+    left: 0;
+}
+.signup{
+    height:100vh;
+    width: 0;
+    
+    overflow-x:hidden;
+    transition: 0.8s;
+     position: fixed;
+    z-index: 5;
+    top: 0;
+    right: 0;
+}
+#closelogin{
+    position: fixed;
+    display: none;
+}
+#closesignup{
+    position: fixed;
+    display: none;
+}
+@font-face {
+  font-family: 'Cinzel';  
+  src: url(../fonts/Cinzel-Regular.ttf) format('truetype');
+}

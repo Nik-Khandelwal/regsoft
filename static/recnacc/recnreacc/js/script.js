@@ -44,9 +44,9 @@ function loaded() {
   $(".group").each(function (index) {
   });
   retrieve_left();
-  fetchBhawanStats();
-  fetchStats();
-  fetchAvailabilityStats();
+  setTimeout(function(){fetchBhawanStats()},2000);
+  setTimeout(function(){fetchStats()},6000);
+  setTimeout(function(){fetchAvailabilityStats()},4000);
   
   $(window).resize(function() {
     // This will execute whenever the window is resized
@@ -217,6 +217,7 @@ function add_to_left(l_index) {
 }
 var net_gender;
 var id_arr;
+var gender_arr;
 var participants_arr;
 var send_obj;
 var accoLength = 0;
@@ -348,23 +349,23 @@ function showRequestStatus(success) {
     Materialize.toast('Operation Successfull!', 4000, "toast-post_success");
     retrieve_left();
     // fetchBhawanStats();
-    fetchStats();
-    fetchAvailabilityStats();
+    setTimeout(function(){fetchStats()},6000);
+    setTimeout(function(){fetchAvailabilityStats()},4000);
   }
   //failure||nothing||return failure
   else if (success == 0) {
     Materialize.toast('Operation Failed!', 4000, "toast-post_failed");
     retrieve_left();
     // fetchBhawanStats();
-    fetchStats();
-    fetchAvailabilityStats();
+    setTimeout(function(){fetchStats()},6000);
+    setTimeout(function(){fetchAvailabilityStats()},4000);
   }
   else {
     Materialize.toast('Could not connect to server!', 4000, "toast-post_unusual");
     retrieve_left();
     // fetchBhawanStats();
-    fetchStats();
-    fetchAvailabilityStats();
+    setTimeout(function(){fetchStats()},6000);
+    setTimeout(function(){fetchAvailabilityStats()},4000);
   }
 }
 
@@ -541,7 +542,67 @@ function updateSelectBhawans(data, participants) {
   $('select').material_select();
 }
 
-function selectBhawan(index) {
+function selectBhawan(index,option) {
+  
+  // Write Code to send selected bhawan to backend.
+  var acco_available = parseInt(option.previousElementSibling.previousElementSibling.innerHTML);
+  var gender_pref = option.previousElementSibling.innerHTML;
+  if (acco_available < id_arr.length) {
+    Materialize.toast('Insufficient Space in this Hostel!', 4000);
+  } else {
+    var can_occupy = true;
+    for (var i = 0; i < id_arr.length; i++) {
+      if (gender_arr[i] != gender_pref)
+        can_occupy = false;
+    }
+
+    if(!can_occupy) {
+      Materialize.toast('Required Gender Preference of Room not satisfied!', 3000);
+    } else {
+      Materialize.toast('Sending data to server!', 4000, "toast-post");
+      //Post to backend
+      
+      var csrf_token = getCookie('csrftoken');
+      var ourRequest = new XMLHttpRequest();
+      var url = "/recnacc/accomodate/";
+      ourRequest.open("POST", url, true);
+      ourRequest.setRequestHeader("Content-type", "application/json");
+      ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+      // POST
+      send_obj = {
+        "data": {
+          "id_arr": id_arr,
+          "bhawan_select": index
+        },
+        "csrftoken": {
+          "csrfmiddlewaretoken": csrf_token
+        }
+      };
+      
+      var send_json = JSON.stringify(send_obj);
+      // Obtain 
+      ourRequest.onreadystatechange = function () {
+        if (ourRequest.readyState === 4 && ourRequest.status === 200) {
+          var recieve_json = JSON.parse(ourRequest.responseText);
+          var status = recieve_json.success;
+          showRequestStatus(status);
+          // either 1 or 0
+          //json object received
+        }
+        else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
+          showRequestStatus(2);
+        }
+      }
+      ourRequest.send(send_json);
+      bhawan_close();
+      //return 1 if successfull
+      // return 0; //return 0 if unsuccesfull i.e. backend sent failure [could connect || but not match net unbilled_gender]
+      // return 2, //return anything else [connection error || could not fetch data]
+    }
+  }
+}
+
+/*function selectBhawan(index) {
   
   // Write Code to send selected bhawan to backend.
   var acco_available = document.getElementsByClassName('acco-avail')[index-1].innerHTML;
@@ -590,7 +651,77 @@ function selectBhawan(index) {
     // return 0; //return 0 if unsuccesfull i.e. backend sent failure [could connect || but not match net unbilled_gender]
     // return 2, //return anything else [connection error || could not fetch data]
   }
-}
+}*/
+
+/*function selectBhawanRooms(index) {
+  // Selected Individual Rooms for Participants. Send Data to Backend
+  var rooms_arr = [];
+  for (var i = 0; i < id_arr.length; i++) {
+    rooms_arr[i] = $('#Participant_'+index+'_'+i+'').val();
+  }
+  var filled_all = true;
+  for (var i = 0; i < id_arr.length; i++) {
+    if (rooms_arr[i] == '') {
+      filled_all = false;
+      break;
+    }
+  }
+  if (filled_all) {
+    var gender_pref=document.getElementsByClassName('male-female-'+index+'')[0].innerHTML;
+    var can_occupy = true;
+    for (var i = 0; i < id_arr.length; i++) {
+      if (gender_arr[i] != gender_pref)
+        can_occupy = false;
+    }
+    if (!can_occupy) {
+      Materialize.toast('Gender Requirements not meant!', 3000);
+    } else {
+      createSingleGroup(id_arr.length);
+      // Send Data to Backend
+      Materialize.toast('Sending data to server!', 4000, "toast-post");
+      bhawan_close();
+      setTimeout(function(){
+        //Post to backend
+        var csrf_token = getCookie('csrftoken');
+        var ourRequest = new XMLHttpRequest();
+        var url = "/recnacc/accomodate_singleroom/";
+        ourRequest.open("POST", url, true);
+        ourRequest.setRequestHeader("Content-type", "application/json");
+        ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+        // POST
+        send_obj = {
+          "data": {
+            "id_arr": id_arr,
+            "bhawan_select": rooms_arr
+          },
+          "csrftoken": {
+            "csrfmiddlewaretoken": csrf_token
+          }
+        };
+        var send_json = JSON.stringify(send_obj);
+        // Obtain 
+        ourRequest.onreadystatechange = function () {
+          if (ourRequest.readyState === 4 && ourRequest.status === 200) {
+            var recieve_json = JSON.parse(ourRequest.responseText);
+            var status = recieve_json.success;
+            showRequestStatus(status);
+            // either 1 or 0
+            //json object received
+          }
+          else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
+            showRequestStatus(2);
+          }
+        }
+        ourRequest.send(send_json);
+        //return 1 if successfull
+        // return 0; //return 0 if unsuccesfull i.e. backend sent failure [could connect || but not match net unbilled_gender]
+        // return 2, //return anything else [connection error || could not fetch data]
+      }, 2000);
+    }
+  } else {
+    Materialize.toast('Please Allocate rooms to all Participants Selected!', 4000);
+  }
+}*/
 
 function selectBhawanRooms(index) {
   // Selected Individual Rooms for Participants. Send Data to Backend

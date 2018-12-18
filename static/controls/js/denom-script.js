@@ -15,12 +15,14 @@ function loaded() {
 }
 function updateDenoms() {
   var formData = serializeArray(document.getElementById('denoms-form'));
-  var deno_50 = formData[0].value;
-  var deno_100 = formData[1].value;
-  var deno_200 = formData[2].value;
-  var deno_500 = formData[3].value;
-  var deno_2000 = formData[4].value;
-  sendUpdateDenoms(deno_50, deno_100, deno_200, deno_500, deno_2000);
+  var deno_10 = formData[0].value;
+  var deno_20 = formData[1].value;
+  var deno_50 = formData[2].value;
+  var deno_100 = formData[3].value;
+  var deno_200 = formData[4].value;
+  var deno_500 = formData[5].value;
+  var deno_2000 = formData[6].value;
+  sendUpdateDenoms(deno_10, deno_20, deno_50, deno_100, deno_200, deno_500, deno_2000);
 }
 function fetchDenoms() {
   Materialize.toast('Updating Denominations!', 3000, "toast-post");
@@ -34,7 +36,7 @@ function fetchDenoms() {
     if (ourRequest.readyState === 4 && ourRequest.status === 200) {
       var recieve_json = JSON.parse(ourRequest.responseText);
       var denoms_array = recieve_json;
-      document.getElementById('denoms-form').innerHTML = '<div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-50" id="denom-50" value="'+denoms_array[0]+'"><label for="denom-50">50\'s</label></div></div><div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-100" id="denom-100" value="'+denoms_array[1]+'"><label for="denom-100">100\'s</label></div></div><div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-200" id="denom-200" value="'+denoms_array[2]+'"><label for="denom-200">200\'s</label></div></div><div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-500" id="denom-500" value="'+denoms_array[3]+'"><label for="denom-500">500\'s</label></div></div><div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-2000" id="denom-2000" value="'+denoms_array[4]+'"><label for="denom-2000">2000\'s</label></div></div>';
+      document.getElementById('denoms-form').innerHTML = '<div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-10" id="denom-10" value="'+denoms_array[0]+'"><label for="denom-10">10\'s</label></div></div><div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-20" id="denom-20" value="'+denoms_array[1]+'"><label for="denom-20">20\'s</label></div></div><div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-50" id="denom-50" value="'+denoms_array[2]+'"><label for="denom-50">50\'s</label></div></div><div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-100" id="denom-100" value="'+denoms_array[3]+'"><label for="denom-100">100\'s</label></div></div><div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-200" id="denom-200" value="'+denoms_array[4]+'"><label for="denom-200">200\'s</label></div></div><div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-500" id="denom-500" value="'+denoms_array[5]+'"><label for="denom-500">500\'s</label></div></div><div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-2000" id="denom-2000" value="'+denoms_array[6]+'"><label for="denom-2000">2000\'s</label></div></div>';
       Materialize.updateTextFields();
     }
     else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
@@ -67,7 +69,7 @@ function fetchPassedStats() {
   }
   ourRequest.send('');
 }
-function sendUpdateDenoms(denom50, denom100, denom200, denom500, denom2000) {
+function sendUpdateDenoms(denom10, denom20, denom50, denom100, denom200, denom500, denom2000) {
   Materialize.toast('Updating!', 2000);
   var csrf_token = getCookie('csrftoken');
   send_obj={
@@ -77,7 +79,9 @@ function sendUpdateDenoms(denom50, denom100, denom200, denom500, denom2000) {
       "deno_500": denom500,
       "deno_200": denom200,
       "deno_100": denom100,
-      "deno_50": denom50
+      "deno_50": denom50,
+      "deno_20": denom20,
+      "deno_10": denom10
     }
   };
   var string_obj = JSON.stringify(send_obj);
@@ -110,7 +114,7 @@ function fetchUpdateDenoms() {
     if (ourRequest.readyState === 4 && ourRequest.status === 200) {
       var recieve_json = JSON.parse(ourRequest.responseText);
       var denoms_array = recieve_json;
-      document.getElementById('denoms-form').innerHTML = '<div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-50" id="denom-50" value="'+denoms_array[0]+'"><label for="denom-50">50\'s</label></div></div><div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-100" id="denom-100" value="'+denoms_array[1]+'"><label for="denom-100">100\'s</label></div></div><div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-200" id="denom-200" value="'+denoms_array[2]+'"><label for="denom-200">200\'s</label></div></div><div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-500" id="denom-500" value="'+denoms_array[3]+'"><label for="denom-500">500\'s</label></div></div><div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-2000" id="denom-2000" value="'+denoms_array[4]+'"><label for="denom-2000">2000\'s</label></div></div>';
+      document.getElementById('denoms-form').innerHTML = '<div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-10" id="denom-10" value="'+denoms_array[0]+'"><label for="denom-10">10\'s</label></div></div><div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-20" id="denom-20" value="'+denoms_array[1]+'"><label for="denom-20">20\'s</label></div></div><div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-50" id="denom-50" value="'+denoms_array[2]+'"><label for="denom-50">50\'s</label></div></div><div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-100" id="denom-100" value="'+denoms_array[3]+'"><label for="denom-100">100\'s</label></div></div><div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-200" id="denom-200" value="'+denoms_array[4]+'"><label for="denom-200">200\'s</label></div></div><div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-500" id="denom-500" value="'+denoms_array[5]+'"><label for="denom-500">500\'s</label></div></div><div class="row"><div class="input-field col s12"><i class="material-icons prefix">attach_money</i><input type="number" name="denom-2000" id="denom-2000" value="'+denoms_array[6]+'"><label for="denom-2000">2000\'s</label></div></div>';
       Materialize.updateTextFields();
     }
     else if (ourRequest.readyState === 4 && ourRequest.status != 200) {

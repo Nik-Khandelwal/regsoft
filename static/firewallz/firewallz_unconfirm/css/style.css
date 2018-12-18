@@ -155,7 +155,7 @@ body, html {
 .collapsible-body>i {
   text-align: center;
 }
-.pk-col {
+.pk-col, .group-code-col {
   border-right: 1px solid red;
 }
 .group-id-col, .unconfirm-id-col {

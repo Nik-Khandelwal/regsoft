@@ -9,7 +9,7 @@ urlpatterns = [
 	url(r'^$', dispreglogin),
 	url(r'^regloginuser/$', regloginuser, name='login_con'),
 	url(r'^regsoft_logout/$', regsoft_logout, name='regsoft_logout'),
-
+	url(r'^saare_clg/$', team_list),
 
 ]
 

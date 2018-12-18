@@ -118,9 +118,9 @@ def details(request):
 		return HttpResponseRedirect('/regsoft/')
 	if request.method=='POST':
 		dat=[]
-		# for rp in Regplayer.objects.filter(entered=False):
-		# 	rp.sport = rp.sport[:-1]
-		# 	rp.save()
+#		for rp in Regplayer.objects.filter(entered=False):
+#			rp.sport = rp.sport[:-1]
+#			rp.save()
 
 		for rp in Regplayer.objects.filter(entered=False):
 			# rp.unbilled_amt = 1100-int(rp.name.pcramt)
@@ -652,3 +652,61 @@ def view_id_card_show_details(request):
 		for pl in Enteredplayer.objects.filter(group=gr):
 			dat.append({"name":pl.regplayer.name.name,"college":pl.regplayer.college, "id":pl.regplayer.pk})
 		return HttpResponse(json.dumps(dat), content_type='application/json')
+
+
+def grp_stats(request):
+	if request.user.is_authenticated():
+		if is_firewallz_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+	response['Content-Disposition'] = 'attachment; filename=Firewallz_stats.xlsx'
+	wb = openpyxl.Workbook()
+	ws = wb.get_active_sheet()
+	ws.title = "Firewallz Passed Stats"
+
+	row_num = 0
+
+	columns = [
+		(u"Grp no", 15),
+		(u"College Name", 40),
+		(u"Group_code", 20),
+		(u"No. of boys",15),
+		(u"No. of girls", 15),
+		(u"Total", 15),
+	]
+
+	for col_num in range(len(columns)):
+		c = ws.cell(row=row_num + 1, column=col_num + 1)
+		c.value = columns[col_num][0]
+		#c.style.font.bold = True
+		# set column width
+		ws.column_dimensions[get_column_letter(col_num+1)].width = columns[col_num][1]
+
+	for gr in Group.objects.all():
+		eset = gr.enteredplayer_set.first()
+		if eset:
+			clg = gr.enteredplayer_set.first().regplayer.college,
+			row_num += 1
+			row = [
+				gr.pk,
+				str(clg),
+				gr.group_code,
+				#Regplayer.objects.filter(college = clg).filter(entered=True).filter(gender="male").count(),
+				#Regplayer.objects.filter(college = clg).filter(entered=True).filter(gender="female").count(),
+			#	Regplayer.objects.filter(college = gr.enteredplayer_set.first().regplayer.college).filter(entered=True).filter(enteredplayer__group=gr).filter(gender="male").count(),
+			#	Regplayer.objects.filter(college = gr.enteredplayer_set.first().regplayer.college).filter(entered=True).filter(enteredplayer__group=gr).filter(gender="female").count(),
+				gr.enteredplayer_set.filter(regplayer__gender = "male").count(),
+				gr.enteredplayer_set.filter(regplayer__gender = "female").count(),
+				gr.enteredplayer_set.all().count()
+			]
+			for col_num in range(len(row)):
+				c = ws.cell(row=row_num + 1, column=col_num + 1)
+				c.value = row[col_num]
+
+	wb.save(response)
+	return response

@@ -186,7 +186,7 @@ function add_to_left(l_index){
 	update.getElementsByClassName("coll-name")[0].innerHTML=indiv_college;
 	update.getElementsByClassName("group-id")[0].innerHTML=indiv_group;
 	update.getElementsByClassName("amt")[0].innerHTML=indiv_amt;
-	update.getElementsByClassName("sport-list").innerHTML=indiv_sport;
+	update.getElementsByClassName("sport-list")[0].innerHTML=indiv_sport;
 	update.getElementsByClassName("indiv-id")[0].innerHTML=indiv_id;
 }
 var net_amt; 

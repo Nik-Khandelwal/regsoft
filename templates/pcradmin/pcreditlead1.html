@@ -1,0 +1,61 @@
+  <!DOCTYPE html>
+  <html>
+    <head>
+    {% load staticfiles %}
+      <!--Import Google Icon Font-->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!--Import materialize.css-->
+      <link type="text/css" rel="stylesheet" href="{% static 'pcradmin/css/materialize.min.css' %}"  media="screen,projection"/>
+
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      <link type="text/css" rel="stylesheet" href="{% static 'pcradmin/css/pcreditlead.css' %}"/>
+      <script type="text/javascript" src="{% static 'pcradmin/js/pcreditlead.js' %}"></script>
+    </head>
+    <body>
+      <!--Import jQuery before materialize.js-->
+      <script type="text/javascript" src="{% static 'pcradmin/js/jquery.js' %}"></script>
+      <script type="text/javascript" src="{% static 'pcradmin/js/materialize.min.js' %}"></script>
+     <!--Edit Div-->
+      <div class="card-panel edit grey lighten-2" style="padding-top: 3vh;">
+        <table class="centered grey lighten-2 table">
+          <thead class="grey lighten-2">
+            <tr>
+                <th style="flex-basis: 30%;">Participant</th>
+                <th style="flex-basis: 30%;">Event</th>
+                <th style="flex-basis: 30%;">Team Captain</th>
+                <th style="flex-basis: 10%;">Edit</th>
+            </tr>
+          </thead>
+
+          <tbody class="grey lighten-2">
+          {% for dt in data %}
+            <tr>
+              <td style="display: none;">{{dt.2}}</td>
+              <td style="flex-basis: 30%;">{{dt.0}}</td>
+              <td style="flex-basis: 30%;">{% for s in dt.1%}{{s}},{% endfor %}</td>
+              <td style="flex-basis: 30%;">Avilash Gautam</td>
+              <td style="flex-basis: 10%;" onclick="open_modal();"><i class="material-icons">edit</i></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+           </table>
+          </div>
+          <div class="modal-footer grey lighten-2 foot">
+            <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="edit();">Change</btn>
+            <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="back();">Back</btn>
+          </div>
+        </div>
+          <div class="modal-footer grey lighten-2 foot">
+            <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="edit();">Change</btn>
+            <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="back();">Back</btn>
+          </div>
+        </div>
+      <!--Footer -->
+      <footer class="page-footer black">
+        <div class="footer-copyright">
+          CODING CLUB | BOSM'18
+        </div>
+      </footer>
+    </body>
+  </html>

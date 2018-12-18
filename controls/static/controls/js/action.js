@@ -148,6 +148,7 @@ function l_to_r(elem){
 	indiv_college=next.getElementsByClassName("coll-name")[0].innerHTML;
 	indiv_amt=next.getElementsByClassName("amt")[0].innerHTML;
 	indiv_group=next.getElementsByClassName("group-id")[0].innerHTML;
+	indiv_sport=next.getElementsByClassName("sport-list")[0].innerHTML;
 	indiv_id=next.getElementsByClassName("indiv-id")[0].innerHTML;
 	// console.log(indiv_name+indiv_amt+indiv_college);
 	var tot_amt = parseInt(document.getElementById('tot_amount_text').getElementsByTagName('input')[0].getAttribute('value'));
@@ -167,6 +168,7 @@ function l_to_r(elem){
 	up.getElementsByClassName("right-indiv-amt")[0].innerHTML='<input type="text" value="'+indiv_amt+'" class="center" onkeyup="updateTotal(this)" id="amt-'+indiv_id+'">';
   	Materialize.updateTextFields();
 	up.getElementsByClassName("right-indiv-group")[0].innerHTML=indiv_group;
+	up.getElementsByClassName("right-indiv-sport")[0].innerHTML=indiv_sport;
 	up.getElementsByClassName("right-indiv-id")[0].innerHTML=indiv_id;
 // set to unchecked at left for group header
 	elem.parentElement.firstElementChild.firstElementChild.innerHTML="check_box_outline_blank";
@@ -189,6 +191,7 @@ function r_to_l(elem){
 	indiv_college=elem.getElementsByClassName("right-indiv-college")[0].innerHTML;
 	indiv_group=elem.getElementsByClassName("right-indiv-group")[0].innerHTML;
 	indiv_amt=parseInt(elem.getElementsByClassName("right-indiv-amt")[0].getElementsByTagName('input')[0].getAttribute('value'));
+	indiv_sport=elem.getElementsByClassName("right-indiv-sport")[0].innerHTML;
 	indiv_id=elem.getElementsByClassName("right-indiv-id")[0].innerHTML;
 	// console.log(indiv_name+indiv_college+indiv_group+indiv_amt);
 	// Search group for element in left table/expandable
@@ -222,6 +225,7 @@ function add_to_left(l_index){
 	update.getElementsByClassName("coll-name")[0].innerHTML=indiv_college;
 	update.getElementsByClassName("group-id")[0].innerHTML=indiv_group;
 	update.getElementsByClassName("amt")[0].innerHTML=indiv_amt;
+	update.getElementsByClassName("sport-list")[0].innerHTML=indiv_sport;
 	update.getElementsByClassName("indiv-id")[0].innerHTML=indiv_id;
 }
 var net_amt; 
@@ -244,6 +248,8 @@ function gen_bill(){
 			"deno_200": 0,
 			"deno_100": 0,
 			"deno_50": 0,
+			"deno_20": 0,
+			"deno_10": 0,
 			"id_arr": id_arr,
 			"amt_arr": part_amt_arr
 		},
@@ -278,6 +284,8 @@ function gen_bill(){
 				"deno_200": 0,
 				"deno_100": 0,
 				"deno_50": 0,
+				"deno_20": 0,
+				"deno_10": 0,
 				"id_arr": id_arr,
 				"amt_arr": part_amt_arr
 			},
@@ -291,7 +299,7 @@ function gen_bill(){
 		document.getElementById('return_bill_form').style.display='none';
 		document.getElementById('bill_head').style.display='block';
 		document.getElementById('unbilled_text').style.display='block';
-		document.getElementById('bill_form').innerHTML = '<div class="row"> <div class="col s6 center deno_field">2000\'s</div><div class="col s6 center input-field"> <input type="text" name="2000s" id="deno_2000" value="0" required="required"> <label for="deno_2000" class="lab"></label> </div><div class="col s6 center deno_field">500\'s</div><div class="col s6 center input-field"> <input type="text" name="500s" id="deno_500" value="0" required="required"> <label for="deno_500" class="lab"></label> </div><div class="col s6 center deno_field">200\'s</div><div class="col s6 center input-field"> <input type="text" name="200s" id="deno_200" value="0" required="required"> <label for="deno_200" class="lab"></label> </div><div class="col s6 center deno_field">100\'s</div><div class="col s6 center input-field"> <input type="text" name="100s" id="deno_100" value="0" required="required"> <label for="deno_100" class="lab"></label> </div><div class="col s6 center deno_field">50\'s</div><div class="col s6 center input-field"> <input type="text" name="50s" id="deno_50" value="0" required="required"> <label for="deno_50" class="lab"></label> </div></div>';
+		document.getElementById('bill_form').innerHTML = '<div class="row"> <div class="col s6 center deno_field">2000\'s</div><div class="col s6 center input-field"> <input type="text" name="2000s" id="deno_2000" value="0" required="required"> <label for="deno_2000" class="lab"></label> </div><div class="col s6 center deno_field">500\'s</div><div class="col s6 center input-field"> <input type="text" name="500s" id="deno_500" value="0" required="required"> <label for="deno_500" class="lab"></label> </div><div class="col s6 center deno_field">200\'s</div><div class="col s6 center input-field"> <input type="text" name="200s" id="deno_200" value="0" required="required"> <label for="deno_200" class="lab"></label> </div><div class="col s6 center deno_field">100\'s</div><div class="col s6 center input-field"> <input type="text" name="100s" id="deno_100" value="0" required="required"> <label for="deno_100" class="lab"></label> </div><div class="col s6 center deno_field">50\'s</div><div class="col s6 center input-field"> <input type="text" name="50s" id="deno_50" value="0" required="required"> <label for="deno_50" class="lab"></label> </div><div class="col s6 center deno_field">20\'s</div><div class="col s6 center input-field"> <input type="text" name="20s" id="deno_20" value="0" required="required"> <label for="deno_20" class="lab"></label> </div><div class="col s6 center deno_field">10\'s</div><div class="col s6 center input-field"> <input type="text" name="10s" id="deno_10" value="0" required="required"> <label for="deno_10" class="lab"></label> </div></div>';
 		document.getElementById('dd_bill_form').innerHTML = '<div class="row"> <div class="col s6 center deno_field">Amount Paid</div><div class="col s6 center input-field"> <input type="text" name="Amount" id="amount_paid" value="0" required="required"> <label for="amount_paid" class="lab"></label> </div><div class="col s6 center deno_field">DD Number</div><div class="col s6 center input-field"> <input type="text" name="ddnum" id="dd_num" required="required"> <label for="ded_num" class="lab"></label> </div></div>';
 		createGroup();
 	}
@@ -310,7 +318,9 @@ function confirm_bill(){
 		var deno_200 = formData[2].value;
 		var deno_100 = formData[3].value;
 		var deno_50 = formData[4].value;
-		paid_amt = (deno_2000*2000) + (deno_500*500) + (deno_200*200) + (deno_100*100) + (deno_50*50);
+		var deno_20 = formData[5].value;
+		var deno_10 = formData[6].value;
+		paid_amt = (deno_2000*2000) + (deno_500*500) + (deno_200*200) + (deno_100*100) + (deno_50*50) + (deno_20*20) + (deno_10*10);
 		// console.log(paid_amt);
 		if(paid_amt>=net_amt){
 			//disable buttons
@@ -329,6 +339,8 @@ function confirm_bill(){
 					"deno_200": deno_200,
 					"deno_100": deno_100,
 					"deno_50": deno_50,
+					"deno_20": deno_20,
+					"deno_10": deno_10,
 					"id_arr": id_arr,
 					"amt_arr": part_amt_arr
 				}
@@ -511,6 +523,7 @@ function poppulate_left(ourData){
 			indiv_group=ourData[ind].groupid;
 			indiv_amt=ourData[ind].participants[j][4];
 			indiv_id=ourData[ind].participants[j][9];
+			indiv_sport=ourData[ind].participants[j][8];
 			// console.log(indiv_id);
 			add_to_left(document.getElementsByClassName("list-ind")[0]); // insert participant to group 0 || first li of ul
 		}
@@ -531,7 +544,7 @@ function show_denominations(){
 	document.getElementById('return_bill_form').style.display='block';
 	document.getElementById('bill_head').style.display='none';
 	document.getElementById('unbilled_text').style.display='none';
-	document.getElementById('return_bill_form').innerHTML = '<div class="row"> <div class="col s6 center deno_field">2000\'s</div><div class="col s6 center input-field"> <input type="text" name="ret_2000s" id="ret_deno_2000" value="0"> <label for="ret_deno_2000" class="lab"></label> </div><div class="col s6 center deno_field">500\'s</div><div class="col s6 center input-field"> <input type="text" name="ret_500s" id="ret_deno_500" value="0"> <label for="ret_deno_500" class="lab"></label> </div><div class="col s6 center deno_field">200\'s</div><div class="col s6 center input-field"> <input type="text" name="ret_200s" id="ret_deno_200" value="0"> <label for="ret_deno_200" class="lab"></label> </div><div class="col s6 center deno_field">100\'s</div><div class="col s6 center input-field"> <input type="text" name="ret_100s" id="ret_deno_100" value="0"> <label for="ret_deno_100" class="lab"></label> </div><div class="col s6 center deno_field">50\'s</div><div class="col s6 center input-field"> <input type="text" name="ret_50s" id="ret_deno_50" value="0"> <label for="ret_deno_50" class="lab"></label> </div></div>';
+	document.getElementById('return_bill_form').innerHTML = '<div class="row"> <div class="col s6 center deno_field">2000\'s</div><div class="col s6 center input-field"> <input type="text" name="ret_2000s" id="ret_deno_2000" value="0"> <label for="ret_deno_2000" class="lab"></label> </div><div class="col s6 center deno_field">500\'s</div><div class="col s6 center input-field"> <input type="text" name="ret_500s" id="ret_deno_500" value="0"> <label for="ret_deno_500" class="lab"></label> </div><div class="col s6 center deno_field">200\'s</div><div class="col s6 center input-field"> <input type="text" name="ret_200s" id="ret_deno_200" value="0"> <label for="ret_deno_200" class="lab"></label> </div><div class="col s6 center deno_field">100\'s</div><div class="col s6 center input-field"> <input type="text" name="ret_100s" id="ret_deno_100" value="0"> <label for="ret_deno_100" class="lab"></label> </div><div class="col s6 center deno_field">50\'s</div><div class="col s6 center input-field"> <input type="text" name="ret_50s" id="ret_deno_50" value="0"> <label for="ret_deno_50" class="lab"></label> </div><div class="col s6 center deno_field">20\'s</div><div class="col s6 center input-field"> <input type="text" name="ret_20s" id="ret_deno_20" value="0"> <label for="ret_deno_20" class="lab"></label> </div><div class="col s6 center deno_field">10\'s</div><div class="col s6 center input-field"> <input type="text" name="ret_10s" id="ret_deno_10" value="0"> <label for="ret_deno_10" class="lab"></label> </div></div>';
 	remove_right_all();  // empty right table
 	remove_left_all(); // empty left table
 	retrieve_left();
@@ -553,7 +566,9 @@ function confirm_done(){
 	var deno200 = formData[2].value;
 	var deno100 = formData[3].value;
 	var deno50 = formData[4].value;
-	sendRetDenom(deno2000, deno500, deno200, deno100, deno50);
+	var deno20 = formData[5].value;
+	var deno10 = formData[6].value;
+	sendRetDenom(deno2000, deno500, deno200, deno100, deno50, deno20, deno10);
 	//retrieve_left();
 }
 
@@ -651,7 +666,7 @@ function serializeArray(form) {
   }
   return s;
 }
-function sendRetDenom(deno_2000, deno_500, deno_200, deno_100, deno_50) {
+function sendRetDenom(deno_2000, deno_500, deno_200, deno_100, deno_50, deno_20, deno_10) {
 	var csrf_token = getCookie('csrftoken');
 	send_obj={
 		"data": {
@@ -660,7 +675,9 @@ function sendRetDenom(deno_2000, deno_500, deno_200, deno_100, deno_50) {
 			"deno_500": deno_500,
 			"deno_200": deno_200,
 			"deno_100": deno_100,
-			"deno_50": deno_50
+			"deno_50": deno_50,
+			"deno_20": deno_20,
+			"deno_10": deno_10
 		}
 	};
 	var string_obj = JSON.stringify(send_obj);

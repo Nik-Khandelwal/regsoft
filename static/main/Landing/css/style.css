@@ -1362,8 +1362,17 @@ body {
     display: table-cell;
     vertical-align: middle;
 }
-.pore {
+.pore1 {
 	top: -5vh !important;
+	
+	width: calc(32vw - 2vh);
+	height: 16vh;
+	left: calc(3.5vw);
+	
+	text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+
 }
 .sport_details{
   position: absolute;
@@ -2164,6 +2173,22 @@ position: absolute;
 	}
 }
 @media (max-width: 767px){
+	#row1{
+		margin-top: -8vw !important;
+		margin-bottom: 18vw !important;
+	}
+	.spons_title{
+		position: relative !important;
+		top: 56% !important;
+	}
+	.logo{
+		position: relative !important;
+		top: 75% !important;
+	}
+	#merchandise{
+		left: 65% !important;
+		top: 56% !important;
+	}
 	.fp-controlArrow.fp-next,.fp-controlArrow.fp-prev {
 		top: 60vh;
 	}
@@ -2288,8 +2313,7 @@ position: absolute;
 	width: calc(30vw - 4.5vh);
 	height: 65.5vh;
 }
-	.por,.pore
-}
+	.por,.pore,.pore1
 {
 	height: 18vh;
 	width: calc(55vw - 2vh);
@@ -2326,6 +2350,10 @@ position: absolute;
 */
 
 @media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+.event-detail{
+	    width: calc(27.5vw - 4.5vh);
+    height: 60.5vh;
+}
 
   .maincontainer
 {
@@ -2380,7 +2408,7 @@ position: absolute;
 	width: calc(30vw - 4.5vh);
 	height: 65.5vh;
 }
-	.por,.pore
+	.por,.pore,.pore1
 {
 	height: 18vh;
 	width: calc(45vw - 2vh);
@@ -2425,6 +2453,10 @@ position: absolute;
 	width: 70vw;
 	left: 15vw;
 	top: 22.5vh;
+}
+.event-detail{
+	    width: calc(27.5vw - 4.5vh);
+    height: 60.5vh;
 }
 .event-cont{
 	position: absolute;
@@ -2472,7 +2504,7 @@ position: absolute;
 	width: calc(30vw - 4.5vh);
 	height: 65.5vh;
 }
-	.por,.pore
+	.por,.pore,.pore1
 {
 	height: 16vh;
 	width: calc(45vw - 2vh);
@@ -2514,6 +2546,10 @@ position: absolute;
 	width: 55vw;
 	left: 22.5vw;
 	top: 20vh;
+}
+.event-detail{
+	    width: calc(27.5vw - 4.5vh);
+    height: 60.5vh;
 }
 .event-cont{
 	position: absolute;
@@ -2561,7 +2597,7 @@ position: absolute;
 	width: calc(30vw - 4.5vh);
 	height: 65.5vh;
 }
-	.por,.pore
+	.por,.pore,.pore1
 {
 	height: 18vh;
 	width: calc(52vw - 2vh);
@@ -2994,6 +3030,7 @@ position: absolute;
          font-weight: 400;
          height: auto;
          font-family: 'cd';
+         color: white
        }
 		   .row{
 				   display: flex;
@@ -3016,7 +3053,8 @@ position: absolute;
 			   margin-bottom: 2vw;
 		   }
 		   #row1{
-			   margin-top: 2vw
+			   margin-top: 2vw;
+			   transform: scale(1.5);
 		   }
 		   .sponstitle:nth-child(1){
 			   margin-top: 2vw

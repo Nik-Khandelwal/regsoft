@@ -28,9 +28,10 @@ urlpatterns = [
     url(r'^register/', include('register.urls')),
     url(r'^pcradmin/',include('pcradmin.urls')),
     url(r'^regsoft/',include('main.urls')),
-   # url(r'^__debug__/', include(debug_toolbar.urls)),
+ #   url(r'^__debug__/', include(debug_toolbar.urls)),
     url(r'^adminpanels/',views.adminpanels,name='adminpanels'),
     url(r'^$', views.main),
+#    url(r'^loaderio-95d5988255f245b1c030872bd19be2ec/', views.tet),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -11,7 +11,7 @@ Follow these instructions to get a copy of the project up and running on your lo
 
 - Python3
 - pip & virtualenv
-- Django 2.1+
+- Django 1.11+
 - Redis-Server
 
 ### Installing
@@ -33,7 +33,7 @@ Follow these instructions to get a copy of the project up and running on your lo
   cd regsoft
   ```
 
-4. Create a virtual environment with Python 3 and install the dependencies (commands slightly vary in Windows).
+4. Create a virtual environment with Python3 and install the dependencies (commands slightly vary in Windows).
 
   ```
   $ virtualenv venv

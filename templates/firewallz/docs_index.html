@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Verified Docs</title>
+    {% load staticfiles %}
+    <link href="{% static 'firewallz/css/font.css' %}" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="{% static 'firewallz/css/materialize.min.css' %}"  media="screen,projection"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link type="text/css" rel="stylesheet" href="{% static 'firewallz/css/id-style.css' %}"/>
+	<link type="text/css" rel="stylesheet" href="{% static 'firewallz/css/docs-style.css' %}"/>
+    <script type="text/javascript" src="{% static 'firewallz/js/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'firewallz/js/materialize.min.js' %}"></script>
+    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
+    <script type="text/javascript" src="{% static 'firewallz/js/docs-script.js' %}"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<!--full template copied from id_index.html, only unconfirmed groups portion removed and ui changed-->
+    <div class="container blue lighten-3 center" id="head-unconfirm-wrapper">
+        Verified Documents
+    </div>
+<div class="main-content" id="verify-docs-groupleader-div">
+    <div class="card-panel mails grey lighten-2" style="padding-top: 3vh;transform:translateY(2vh);background-color:#cde4f7 !important">
+      <table class="centered table" style="background-color:#cde4f7 !important">
+        <thead style="background-color:#cde4f7 !important">
+          <tr>
+              <th style="flex-basis: 30%;">Name</th>
+              <th style="flex-basis: 35%;">College</th>
+              <th style="flex-basis: 35%;">Email Address</th>
+              <th style="display: none;">ID No.</th>
+              <th style="display: none;">College ID</th>
+          </tr>
+        </thead>
+        <tbody style="background-color:#cde4f7 !important" id="verify-docs-groupleader-body">
+          <tr class="verify-docs-groupleader-row" onclick="openVerifyDocsGroupleader(this)">
+            <td style="flex-basis: 30%;">Arpit Anshuman</td>
+            <td style="flex-basis: 35%;">BITS Pilani</td>
+            <td style="flex-basis: 35%;">f2016250@pilani.bits-pilani.ac.in</td>
+            <td style="display: none;" class="verify-docs-groupleader-id">ID</td>
+            <td style="display: none;" class="verify-docs-groupleader-college-id">College_ID</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+	<div class="modal modal-fixed-footer grey lighten-3 custom-modals">
+    <div class="modal-content row">
+      <div class="col s6" style="width:100%">
+        <h5 style="text-align: center;">View Confirmed Documents</h5>
+        <table class="centered table modal-table grey lighten-2">
+          <thead class="grey lighten-2">
+            <tr>
+              <th style="display: none;">ID No</th>
+              <th style="flex-basis: 40%;">Name</th>
+              <th style="flex-basis: 50%">Sport</th>
+              <th style="flex-basis: 10%;">View</th>
+			  <th style="flex-basis: 10%;">View</th>
+            </tr>
+          </thead>
+          <tbody class="grey lighten-2" id="confirmed-parts-view-docs-list-body">
+            <tr class="confirmed-parts-status-selection">
+              <td style="display: none;">ID No</td>
+              <td style="flex-basis: 40%;">Name</td>
+              <td style="flex-basis: 50%">Sport</td>
+              <td style="flex-basis: 10%;"><a href="view_docs/1/" target="_blank"><i class="material-icons black-text">file_download</i></a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="modal-footer grey lighten-2 center">
+      <btn class="modal-action waves-effect waves-blue btn-flat grey lighten-3" onclick="back(0);">Back</btn>
+    </div>
+  </div>
+	
+    <ul id="slide-out" class="side-nav">
+        <li>
+            <div class="user-view">
+                <div class="background" style="background-color: #3794e6"></div>
+                <a><span class="white-text name">FIREWALLZ PANEL</span></a>          
+            </div>
+        </li>
+        <li><a class="waves-effect" href="/firewallz/">Confirm groups</a></li>
+        <li><a class="waves-effect" href="/firewallz/unconfirm_grp/">Unconfirm groups</a></li>
+        <li><a class="waves-effect" onclick="stats()">Stats</a></li>
+        <li><a class="waves-effect" href="/firewallz/view_id_card/">ID Cards</a></li>
+		<li><a class="waves-effect">View Docs</a></li>
+        <li><div class="divider"></div></li>
+        <li><a class="waves-effect bottom" href="/regsoft/regsoft_logout/">Logout</a></li>
+    </ul>
+    <ul id="slide-out-1" class="side-nav">
+        <li>
+            <div class="user-view">
+                <div class="background" style="background-color: #3794e6"></div>
+                <a><span class="white-text name">Present Stats</span></a>
+            </div>
+        </li>
+        <li><a class="waves-effect">Firewallz-Confirmed:</a></li>
+        <li><a id="fire_conf">1111</a></li>
+        <li><div class="divider"></div></li>
+        <li><a class="waves-effect" onclick="stats()">Controls Passed</a></li>
+        <li><a id="cont_conf">1111</a></li>
+        <li><div class="divider"></div></li>
+        <li><a class="waves-effect">RecNAcc Confirmed</a></li>
+        <li><a id="rec_conf">1111</a></li>
+    </ul>
+    <div class="ham"><a href="#" data-activates="slide-out" class="button-collapse coll-0"><i class="material-icons medium white-text">menu</i></a></div>
+    <div class="ham1"><a href="#" data-activates="slide-out-1" class="button-collapse coll-1" onclick="fetchPassedStats();"><i class="material-icons medium white-text">insert_chart</i></a></div>
+    <div id="stat" class="stats teal center-align" style="z-index:30 !important">
+        <a class="close white-text" id="close" onclick="close_stats()"><i class="material-icons medium">close</i></a>   
+        <a class="btn csv-btn" id="csv" href="/firewallz/stats_csv/" target="_blank">Download CSV</a>
+        <a class="btn csv-btn" id="pdf" href="/firewallz/stats_excel/" target="_blank">Download Excel</a>
+        <a class="btn csv-btn" id="excel" href="/firewallz/stats_html/" target="_blank">Download PDF</a>
+        <div class="container" id="stat_data">
+        <ul class="collapsible popout center-align" data-collapsible="accordion" id="stats_ul">
+            <li>
+                <div class="collapsible-header"><i class="material-icons">account_balance</i>College_1</div>
+                <div class="collapsible-body center white">
+                    <div class="collection ">
+                        <a class="collection-item">Alvin<span id="phn_no" class="right">9929823984</span></a>
+                        <a class="collection-item">Alvin<span id="phn_no" class="right">9929823984</span></a>
+                        <a class="collection-item">Alvin<span id="phn_no" class="right">9929823984</span></a>
+                        <a class="collection-item">Alvin<span id="phn_no" class="right">9929823984</span></a>
+                    </div>
+                </div>
+            </li>
+          </ul>
+        </div>
+    </div>
+    <footer class="page-footer blue darken-2">
+        <div class="container">
+            <div class="row">
+                <div class="col s12 center">
+                    <span>Coding Club, BOSM 2018</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

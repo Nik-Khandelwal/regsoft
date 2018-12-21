@@ -56,7 +56,7 @@ from main.models import Group,Regplayer,Enteredplayer,Sport,Firewallz_user
 
 from django.contrib.auth import get_user_model
 User=get_user_model()
- 
+
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
@@ -118,9 +118,9 @@ def details(request):
 		return HttpResponseRedirect('/regsoft/')
 	if request.method=='POST':
 		dat=[]
-#		for rp in Regplayer.objects.filter(entered=False):
-#			rp.sport = rp.sport[:-1]
-#			rp.save()
+		# for rp in Regplayer.objects.filter(entered=False):
+		# 	rp.sport = rp.sport[:-1]
+		# 	rp.save()
 
 		for rp in Regplayer.objects.filter(entered=False):
 			# rp.unbilled_amt = 1100-int(rp.name.pcramt)
@@ -163,7 +163,7 @@ def confirm_group(request):
 	if request.method=='POST':
 		data = json.loads( request.body.decode('utf-8') )
 		print(data)
-		for dt in data['data']:	
+		for dt in data['data']:
 			print(dt['pk'])
 			Player = Regplayer.objects.get(pk=dt['pk'])
 			print(Player.name.name)
@@ -258,7 +258,7 @@ def add_participant(request):
 		pl.email_id = data['data'][0]['email']
 		pl.entered = False
 		pl.sport=''
-		for i in data['data'][0]['sport']: 
+		for i in data['data'][0]['sport']:
 			up.sportid=replaceindex(up.sportid,int(i),'2')
 			sp=Sport.objects.get(idno=int(i))
 			up.sport.add(sp)
@@ -274,13 +274,13 @@ def add_participant(request):
 			pl.unbilled_amt = 0
 			pl.uid = "18BP"+str(100000+pl.pk)[-4:]
 			pl.save()
-		
+
 		to_email = up.email
 		message = render_to_string('register/msg2.html', {
-										'user':up.name, 
+										'user':up.name,
 										'username':up.username,
 										'password':passworduser,
-										
+
 										})
 		mail_subject = 'Your account details.'
 		email = EmailMessage(mail_subject, message, to=[to_email])
@@ -410,7 +410,7 @@ def sportlist(request):
 		data = []
 		for sp in Sport.objects.all():
 			data.append({"pk":sp.pk,"sport":sp.sport})
-		return HttpResponse(json.dumps(data), content_type='application/json')	
+		return HttpResponse(json.dumps(data), content_type='application/json')
 
 
 @login_required(login_url='/regsoft/')
@@ -559,7 +559,7 @@ def stats_csv(request):
 			return HttpResponseRedirect('/regsoft/')
 	else:
 		return HttpResponseRedirect('/regsoft/')
-	
+
 	response = HttpResponse(content_type='text/csv')
 	#decide the file name
 	response['Content-Disposition'] = 'attachment; filename="Firewallz_stats.csv"'
@@ -618,6 +618,18 @@ def view_id_card(request):
 		return HttpResponseRedirect('/regsoft/')
 	return render(request,'firewallz/id_index.html')
 
+#to open the html page(docs_index.html) for viewing the documents
+def view_docs(request):
+	if request.user.is_authenticated():
+		if is_firewallz_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	return render(request,'firewallz/docs_index.html')
+
 def view_id_card_details(request):
 	if request.user.is_authenticated():
 		if is_firewallz_admin(request.user):
@@ -653,8 +665,10 @@ def view_id_card_show_details(request):
 			dat.append({"name":pl.regplayer.name.name,"college":pl.regplayer.college, "id":pl.regplayer.pk})
 		return HttpResponse(json.dumps(dat), content_type='application/json')
 
-
-def grp_stats(request):
+#function definition copied from pcr views.py file(is_pcradmin changed to is_firewallz_admin)
+@login_required(login_url='/regsoft/')
+@user_passes_test(is_firewallz_admin, login_url='/regsoft/')
+def render_pcrmail(request):
 	if request.user.is_authenticated():
 		if is_firewallz_admin(request.user):
 			pass
@@ -663,50 +677,167 @@ def grp_stats(request):
 			return HttpResponseRedirect('/regsoft/')
 	else:
 		return HttpResponseRedirect('/regsoft/')
-	response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-	response['Content-Disposition'] = 'attachment; filename=Firewallz_stats.xlsx'
-	wb = openpyxl.Workbook()
-	ws = wb.get_active_sheet()
-	ws.title = "Firewallz Passed Stats"
+	if request.method=='POST':
+		playerlist = User.objects.filter(grp_leader=1,is_active=True,deleted=0).order_by(Lower('name'))
+		#playerlist=User.objects.all()
+		data=[]
+		for dt in playerlist:
+			s=[]
+			s.append(dt.name)
+			s.append(dt.team.college)
+			s.append(dt.team.city)
+			s.append(dt.team.state)
+			s.append(dt.email)
+			s.append(dt.pk)
+			s.append(dt.team.pk)
+			if dt.team.activate==1:
+				for i in range(40):
+					if dt.team.confirmedsp1[i]>='1':
+						data.append(s)
+						break
+		return JsonResponse({'groupleaders':data})
 
-	row_num = 0
+#function definition copied from pcr views.py file(is_pcradmin changed to is_firewallz_admin)
+#DOCUMENT VERIFICATION
+#for grpleader use render_pcrmail
+@login_required(login_url='/regsoft/')
+@user_passes_test(is_firewallz_admin, login_url='/regsoft/')
+def docurl(request):
+	if request.user.is_authenticated():
+		if is_firewallz_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	if request.method=='POST':
+		data=json.loads(request.body.decode('utf-8'))
+		tm=Team.objects.filter(pk=data['clg_id'])
+		uplist=User.objects.filter(team=tm, deleted=0).order_by(Lower('name'))
+		splist=Sport.objects.all().order_by(Lower('sport'))
+		d2=[]
+		d3=[]
+		for u in uplist:
+			s=[]
+			d=[]
+			if u.confirm1==1:
+				s.append(u.pk)
+				s.append(u.name)
+				for sp in splist:
+					if u.sportid[sp.idno]>='2':
+						d.append(sp.sport)
+				s.append(d)
+				s.append("")
+				s.append(0)
+				s.append("")
+				s.append(0)
+				d2.append(s)
+			if u.confirm1==2:
+				s.append(u.pk)
+				s.append(u.name)
+				for sp in splist:
+					if u.sportid[sp.idno]>='2':
+						d.append(sp.sport)
+				s.append(d)
+				if bool(u.docs):
+					s.append(u.docs.url)
+					s.append(1)
+				else:
+					s.append("")
+					s.append(0)
+				if bool(u.docs2):
+					s.append(u.docs2.url)
+					s.append(1)
+				else:
+					s.append("")
+					s.append(0)
+				d2.append(s)
+			if u.confirm1>=3:
+				s.append(u.pk)
+				s.append(u.name)
+				for sp in splist:
+					if u.sportid[sp.idno]>='2':
+						d.append(sp.sport)
+				s.append(d)
+				if bool(u.docs):
+					s.append(u.docs.url)
+					#s.append(1)
+				else:
+					s.append("")
+					#s.append(0)
+				if bool(u.docs2):
+					s.append(u.docs2.url)
+					#s.append(1)
+				else:
+					s.append("")
+					#s.append(0)
+				d3.append(s)
+		return JsonResponse({'unconfirmed':d2,'confirmed':d3})
 
-	columns = [
-		(u"Grp no", 15),
-		(u"College Name", 40),
-		(u"Group_code", 20),
-		(u"No. of boys",15),
-		(u"No. of girls", 15),
-		(u"Total", 15),
-	]
-
-	for col_num in range(len(columns)):
-		c = ws.cell(row=row_num + 1, column=col_num + 1)
-		c.value = columns[col_num][0]
-		#c.style.font.bold = True
-		# set column width
-		ws.column_dimensions[get_column_letter(col_num+1)].width = columns[col_num][1]
-
-	for gr in Group.objects.all():
-		eset = gr.enteredplayer_set.first()
-		if eset:
-			clg = gr.enteredplayer_set.first().regplayer.college,
-			row_num += 1
-			row = [
-				gr.pk,
-				str(clg),
-				gr.group_code,
-				#Regplayer.objects.filter(college = clg).filter(entered=True).filter(gender="male").count(),
-				#Regplayer.objects.filter(college = clg).filter(entered=True).filter(gender="female").count(),
-			#	Regplayer.objects.filter(college = gr.enteredplayer_set.first().regplayer.college).filter(entered=True).filter(enteredplayer__group=gr).filter(gender="male").count(),
-			#	Regplayer.objects.filter(college = gr.enteredplayer_set.first().regplayer.college).filter(entered=True).filter(enteredplayer__group=gr).filter(gender="female").count(),
-				gr.enteredplayer_set.filter(regplayer__gender = "male").count(),
-				gr.enteredplayer_set.filter(regplayer__gender = "female").count(),
-				gr.enteredplayer_set.all().count()
-			]
-			for col_num in range(len(row)):
-				c = ws.cell(row=row_num + 1, column=col_num + 1)
-				c.value = row[col_num]
-
-	wb.save(response)
-	return response
+#function definition copied from pcr views.py file(is_pcradmin changed to is_firewallz_admin)
+@login_required(login_url='/regsoft/')
+@user_passes_test(is_firewallz_admin, login_url='/regsoft/')
+def docapprove(request):
+	if request.user.is_authenticated():
+		if is_firewallz_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	if request.method=='POST':
+		data=json.loads(request.body.decode('utf-8'))
+		success=1
+		tm=User.objects.get(pk=data['id_arr'][0]).team
+		glmail=User.objects.get(team=tm,grp_leader=1,deleted=0).email
+		nmlist=[]
+		maillist=[]
+		for ppk in data['id_arr']:
+			u=User.objects.get(pk=ppk)
+			u.confirm1=3
+			u.save()
+			nmlist.append(u.name)
+			maillist.append(u.email)
+			rp = Regplayer()
+			rp.name = User.objects.get(pk=u.pk)
+			rp.gender = u.gender
+			rp.college = u.team.college
+			rp.city = u.team.city
+			rp.mobile_no = u.phone
+			rp.email_id = u.email
+			rp.sport=''
+			for s in Sport.objects.all():
+				if u.sportid[s.idno]=='2':
+					rp.sport=rp.sport+s.sport+','
+			rp.sport = rp.sport[:-1]
+			rp.save()
+			rp.uid = "18CB"+str(100000+rp.pk)[-4:]
+			rp.save()
+			
+		message = render_to_string('pcradmin/msg7.html', {
+														'college':tm.college, 
+														
+														})
+		mail_subject = 'Documents Verified for BOSM \'18'
+		email = EmailMessage(mail_subject, message, to=maillist)
+		email.content_subtype = "html"
+		# try:
+		# 	#pass
+		# 	email.send()
+		# except:
+		# 	pass
+		message = render_to_string('pcradmin/msg8.html', {
+														'nmlist':nmlist,
+														'college':tm.college, 
+														
+														})
+		mail_subject = 'Documents Verified for BOSM \'18'
+		email = EmailMessage(mail_subject, message, to=[glmail])
+		email.content_subtype = "html"
+		# try:
+		# 	email.send()
+		# except:
+		# 	pass
+		return JsonResponse({'success':1})

@@ -46,10 +46,14 @@ urlpatterns = [
 
     url(r'^view_id_card/$',views.view_id_card,name='view_id_card'),
 
+	#	this url opens a new html file to show the documents of approoved participants(verified docs link in side nav of firewallz page)
+	url(r'^view_docs/$',views.view_docs,name='view_docs'),
     url(r'^view_id_card_details/$',views.view_id_card_details,name='view_id_card_details'),
 
     url(r'^view_id_card_show_details/$',views.view_id_card_show_details,name='view_id_card_show_details'),
 
-    url(r'^grp_stats/$',views.grp_stats,name='grp_stats'),
-
+	#Last three lines are to view documents of the verified participants	
+	url(r'^view_docs/documents/$',views.render_pcrmail,name='render_pcrmail'),
+	url(r'^view_docs/documents/team/$',views.docurl,name='docurl'),
+    url(r'^view_docs/documents/approve/$',views.docapprove,name='docapprove'),
 ]

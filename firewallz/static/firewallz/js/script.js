@@ -3,6 +3,7 @@ $(document).ready(function() {
   $('.modal').modal({
     dismissible: false
   });
+	//initializes 2 side navs on left and right(stats one and links one)
   $('.coll-1').sideNav({
       menuWidth: 200, // Default is 300
       edge: 'right', // Choose the horizontal origin
@@ -22,10 +23,10 @@ $(document).ready(function() {
 function fetchParticipants() {
   Materialize.toast('Updating Participants List!', 4000, "toast-fetch");
   var csrf_token = getCookie('csrftoken');
-  reset_sort_icons();
-  reset_sort_col_color();
+  reset_sort_icons();//the sort icons change when clicked acording to desired order of sorting so reseting them initially to default behaviour
+  reset_sort_col_color();//the sorted column has a different color
   var ourRequest = new XMLHttpRequest();
-  var url = "/firewallz/details/";
+  var url = "/firewallz/details/"; //contains list of participants approved by PCR and to be approved by/are approved by Firewallz
   ourRequest.open("POST", url, true);
   ourRequest.setRequestHeader("Content-type", "application/json");
   ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
@@ -43,7 +44,7 @@ function fetchParticipants() {
   }
   ourRequest.send(); // sending request
 }
-function updateLeftTable(data) {
+function updateLeftTable(data) {//takes data from backend for participants confirmed by pcr and updates table in panel
   var lefttmp = document.getElementById('left-temp');
   for (var i = 0; i < data.length; i++) {
     document.getElementById("left-body").appendChild(lefttmp.content.cloneNode(true));
@@ -55,6 +56,7 @@ function updateLeftTable(data) {
   }
 }
 function toggleSelection(elem) {
+//if a participant is selected/unselected in left table then this fn changes icon of checkbox	
   if(document.getElementsByClassName('selectedLeftRow').length==0) {
     if (elem.innerHTML == "check_box") {
       elem.innerHTML = "check_box_outline_blank";
@@ -64,6 +66,7 @@ function toggleSelection(elem) {
       elem.parentElement.parentElement.setAttribute('class', 'left-table-rows selectedLeftRow');
     }
   } else {
+//this is to ensure that participants from different colleges are not added to form a group
     var clgName = document.getElementsByClassName('selectedLeftRow')[0].getElementsByTagName('td')[2].innerHTML;
     if (elem.parentElement.parentElement.getElementsByTagName('td')[2].innerHTML!=clgName) {
       Materialize.toast('Participants from different colleges being added!', 3000);
@@ -79,6 +82,7 @@ function toggleSelection(elem) {
   }
 }
 function toggleRightSelection(elem) {
+	//same as toggleSelection()
   if (elem.innerHTML == "check_box") {
     elem.innerHTML = "check_box_outline_blank";
     elem.parentElement.parentElement.setAttribute('class', 'right-table-rows');
@@ -88,9 +92,10 @@ function toggleRightSelection(elem) {
   }
 }
 function addSelected() {
-  var details = [];
+//add the selected participants to form a group to right table
+  var details = [];//stores participants in object format
   selectedLeftRows = document.getElementsByClassName('selectedLeftRow');
-  if (selectedLeftRows.length > 0) {
+  if (selectedLeftRows.length > 0) {//some participants are selected
     for (var i = 0; i < selectedLeftRows.length; i++) {
       var data = {
         "fields": {
@@ -105,13 +110,14 @@ function addSelected() {
     }
     addToRight(details);
     for (var i = selectedLeftRows.length - 1; i >= 0; i--) {
+		//remove the selecte participants from left table
       selectedLeftRows[i].parentNode.removeChild(selectedLeftRows[i]);
     }
   } else {
     Materialize.toast("Please Select Some Participants", 3000);
   }
 }
-function addToRight(details) {
+function addToRight(details) {//takes details of selected participants to be formed a group of and add them to right table for making a group leader
   var numRight = document.getElementsByClassName('right-table-rows').length;
   var righttmp = document.getElementById('right-temp');
   for (var i = 0; i < details.length; i++) {
@@ -125,6 +131,7 @@ function addToRight(details) {
   }
 }
 function removeRight(elem) {
+	//remove a participant from right template
   var details = [];
   var data = {
     "fields": {
@@ -141,6 +148,7 @@ function removeRight(elem) {
   document.getElementById('no_of_part_text').innerHTML = parseInt(document.getElementById('no_of_part_text').innerHTML)-1;
 }
 function addToLeft(details) {
+	//push the details of participant removed from right table to left one
   var numLeft = document.getElementsByClassName('left-table-rows').length;
   var lefttmp = document.getElementById('left-temp');
   for (var i = 0; i < details.length; i++) {
@@ -153,6 +161,7 @@ function addToLeft(details) {
   }
 }
 function openConfirm() {
+//confirms the making of a group by ensuring existence and uniqueness of a group leader
   var numLeaders = document.getElementsByClassName('selectedRightRow').length;
   if (numLeaders == 1) {
     var numRight = document.getElementsByClassName('right-table-rows').length;
@@ -162,13 +171,15 @@ function openConfirm() {
     document.getElementById('group_confirm_btn3').style.display = 'none';
     $('#confirm_dialog').modal('open');
   } else if (numLeaders < 1) {
+	  //no gp leader selected
     Materialize.toast('Please Select a Group Leader!', 3000);
   } else {
+	  //more than 1 gp leader selected
     Materialize.toast('There can be only one Group Leader!', 3000);
   }
 }
 function confirmGroup() {
-  // Send Data to Backend
+  // Send Data to Backend of the group
   closeConfirm();
   var myObj = {
     "data": [],
@@ -210,8 +221,8 @@ function confirmGroup() {
   ourRequest.onreadystatechange = function() {
     if (ourRequest.readyState === 4 && ourRequest.status === 200) {
       json = JSON.parse(ourRequest.responseText);
-      var groupCode = json.groupcode;
-      var grouppk = json.pk;
+      var groupCode = json.groupcode;//randomly generated 5 digit alphanumeric gp code of gp
+      var grouppk = json.pk;//gp number of the gp
       showGroupCode(grouppk, groupCode);
       resetTables();
       fetchParticipants();
@@ -260,6 +271,7 @@ function resetAddForm() {
   $("input#indi_captain_phone_field").characterCounter();
 }
 function fetchSportList() {
+//	fetches list of available sports in backend
   Materialize.toast('Updating Sport List!', 3000);
   csrf_token = getCookie('csrftoken');
   var ourRequest = new XMLHttpRequest();
@@ -322,6 +334,7 @@ function addParticipantSubmit() {
   var sportSelected = false;
   var participant_sport = [];
   var i=4;
+//loop keeps track of all the sport selected by participant inside participant_sport[] by pushing the number of that sport
   while (formData[i] != undefined && formData[i].name=='participant_sport_select') {
     if (formData[i].name=='participant_sport_select' && i>4) {
       sportSelected=true;
@@ -370,7 +383,7 @@ function addParticipantSubmit() {
         // Obtain PK of the Participant just registered
         for (var i = 0; i < participant_sport.length; i++) {
           for (var j = 0; j < sportsList.length; j++) {
-            if (participant_sport[i] == sportsList[j].pk) {
+            if (participant_sport[i] == sportsList[j].pk) {//if sport in participant sports list matches with available sport , add it to sportsNames and add a "," :P
               sportsNames+=sportsList[j].sport;
               if (i!=(participant_sport.length-1)) {
                 sportsNames+=', ';
@@ -391,6 +404,7 @@ function addParticipantSubmit() {
         // details.push(data);
         //addToRight(details);
 
+//add details of the participant just added in the beginning of table at left since it's group isn't made yet
         var lefttmp = document.getElementById('left-temp');
         document.getElementById("left-body").insertBefore(lefttmp.content.cloneNode(true), document.getElementById("left-body").childNodes[0]);
         document.getElementsByClassName('left-table-name')[0].innerHTML = participant_name;
@@ -441,6 +455,7 @@ function serializeArray(form) {
 }
 function validatePhoneNumber(phone_num)  
 {  
+	//ensures 10 digits are entered
   var phoneno = /^\d{10}$/;  
   if(phone_num.match(phoneno)) {  
     return true;  
@@ -450,6 +465,7 @@ function validatePhoneNumber(phone_num)
 }
 function validateEmail(mail)   
 {
+//google about this regex for email matching :)
   if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {  
     return true;  
   }
@@ -459,6 +475,7 @@ function closeAddParticipant() {
   $('#add_participant_modal').modal('close');
 }
 function sort(col) {
+//sorts a columnby calling sortData as per order in which sorting is desired(asc/desc)	
   if (document.getElementsByClassName('sort-icon')[col].getAttribute('class') == 'sort-icon sort-asc') {
     // Sort in Descending Order
     sortData(1, col);
@@ -488,9 +505,10 @@ function sort(col) {
 function sortData(sortType, group) {
   var group_name = ["left-table-name", "left-table-college", "left-table-sport", "left-table-gender"];
   var table = document.getElementsByClassName('left-one')[0];
-  Arr = [];
+  Arr = [];//stores array of 3 things(field acc to vch sorting is desired,the complete row of table,choice whether row is to be shown or hidden)
   //Starts with 2.. avoiding 0 and 1 for table headers 
-  for (var i = 1, ln = table.rows.length; i < ln; i++) {
+  for (var i = 1, ln = table.rows.length; i < ln; i++) 
+  {
     var row = table.rows[i];
     var firstCell = row.getElementsByClassName(group_name[group])[0].innerHTML;
     if (row.style.display == "none") {
@@ -539,6 +557,7 @@ function reset_sort_icons() {
   }
 }
 function chng_sort_col_color(col) {
+	//the column which is sorted has different color.this fn is for that only
   tr = document.getElementsByClassName('left-one')[0].getElementsByTagName("tr");
   for (i = 1; i < tr.length; i++) {
     if (i % 2) {
@@ -569,7 +588,7 @@ function reset_sort_col_color() {
     }
   }
 }
-//Multiple Column Search
+//Multiple Column Search - (called every time a key is pressed in search fields)
 function search() {
   var table, tr, i, td_name, td_college, td_sports;
   filter_name = document.getElementById("name-search").value.toUpperCase();
@@ -578,6 +597,7 @@ function search() {
   table = document.getElementsByClassName('left-one')[0];
   tr = table.getElementsByTagName("tr");
   for (i = 1; i < tr.length; i++) {
+	//this loop used to display only those rows whose details match with what is typed in search fields
     td_name = tr[i].getElementsByTagName("td")[1];
     td_college = tr[i].getElementsByTagName("td")[2];
     td_sports = tr[i].getElementsByTagName("td")[3];
@@ -599,6 +619,7 @@ function stats(){
   document.getElementById("pdf").style.display="inline-block";
 }
 function close_stats(){ 
+	//called when view stats is clicked in left side nav
   document.getElementById("stat").style.height="0vh";
   document.getElementById("close").style.display="none";
   document.getElementById("stat_data").style.display="none";
@@ -637,6 +658,7 @@ function fetchStats() {
   ourRequest.send();
 }
 function fetchPassedStats() {
+	//called when button at top right for stats is clicked, shows number of participants passed by controls,firewallz,recnacc respectively.
   document.getElementById('fire_conf').innerHTML = 'Loading';
   document.getElementById('cont_conf').innerHTML = 'Loading';
   document.getElementById('rec_conf').innerHTML = 'Loading';

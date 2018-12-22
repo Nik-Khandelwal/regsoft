@@ -56,7 +56,7 @@ from main.models import Group,Regplayer,Enteredplayer,Sport,Firewallz_user
 
 from django.contrib.auth import get_user_model
 User=get_user_model()
-
+ 
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
@@ -118,9 +118,9 @@ def details(request):
 		return HttpResponseRedirect('/regsoft/')
 	if request.method=='POST':
 		dat=[]
-		# for rp in Regplayer.objects.filter(entered=False):
-		# 	rp.sport = rp.sport[:-1]
-		# 	rp.save()
+#		for rp in Regplayer.objects.filter(entered=False):
+#			rp.sport = rp.sport[:-1]
+#			rp.save()
 
 		for rp in Regplayer.objects.filter(entered=False):
 			# rp.unbilled_amt = 1100-int(rp.name.pcramt)
@@ -163,7 +163,7 @@ def confirm_group(request):
 	if request.method=='POST':
 		data = json.loads( request.body.decode('utf-8') )
 		print(data)
-		for dt in data['data']:
+		for dt in data['data']:	
 			print(dt['pk'])
 			Player = Regplayer.objects.get(pk=dt['pk'])
 			print(Player.name.name)
@@ -258,7 +258,7 @@ def add_participant(request):
 		pl.email_id = data['data'][0]['email']
 		pl.entered = False
 		pl.sport=''
-		for i in data['data'][0]['sport']:
+		for i in data['data'][0]['sport']: 
 			up.sportid=replaceindex(up.sportid,int(i),'2')
 			sp=Sport.objects.get(idno=int(i))
 			up.sport.add(sp)
@@ -274,13 +274,13 @@ def add_participant(request):
 			pl.unbilled_amt = 0
 			pl.uid = "18BP"+str(100000+pl.pk)[-4:]
 			pl.save()
-
+		
 		to_email = up.email
 		message = render_to_string('register/msg2.html', {
-										'user':up.name,
+										'user':up.name, 
 										'username':up.username,
 										'password':passworduser,
-
+										
 										})
 		mail_subject = 'Your account details.'
 		email = EmailMessage(mail_subject, message, to=[to_email])
@@ -410,7 +410,7 @@ def sportlist(request):
 		data = []
 		for sp in Sport.objects.all():
 			data.append({"pk":sp.pk,"sport":sp.sport})
-		return HttpResponse(json.dumps(data), content_type='application/json')
+		return HttpResponse(json.dumps(data), content_type='application/json')	
 
 
 @login_required(login_url='/regsoft/')
@@ -559,7 +559,7 @@ def stats_csv(request):
 			return HttpResponseRedirect('/regsoft/')
 	else:
 		return HttpResponseRedirect('/regsoft/')
-
+	
 	response = HttpResponse(content_type='text/csv')
 	#decide the file name
 	response['Content-Disposition'] = 'attachment; filename="Firewallz_stats.csv"'
@@ -618,18 +618,6 @@ def view_id_card(request):
 		return HttpResponseRedirect('/regsoft/')
 	return render(request,'firewallz/id_index.html')
 
-#to open the html page(docs_index.html) for viewing the documents
-def view_docs(request):
-	if request.user.is_authenticated():
-		if is_firewallz_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/regsoft/')
-	else:
-		return HttpResponseRedirect('/regsoft/')
-	return render(request,'firewallz/docs_index.html')
-
 def view_id_card_details(request):
 	if request.user.is_authenticated():
 		if is_firewallz_admin(request.user):
@@ -665,6 +653,63 @@ def view_id_card_show_details(request):
 			dat.append({"name":pl.regplayer.name.name,"college":pl.regplayer.college, "id":pl.regplayer.pk})
 		return HttpResponse(json.dumps(dat), content_type='application/json')
 
+
+def grp_stats(request):
+	if request.user.is_authenticated():
+		if is_firewallz_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+	response['Content-Disposition'] = 'attachment; filename=Firewallz_stats.xlsx'
+	wb = openpyxl.Workbook()
+	ws = wb.get_active_sheet()
+	ws.title = "Firewallz Passed Stats"
+
+	row_num = 0
+
+	columns = [
+		(u"Grp no", 15),
+		(u"College Name", 40),
+		(u"Group_code", 20),
+		(u"No. of boys",15),
+		(u"No. of girls", 15),
+		(u"Total", 15),
+	]
+
+	for col_num in range(len(columns)):
+		c = ws.cell(row=row_num + 1, column=col_num + 1)
+		c.value = columns[col_num][0]
+		#c.style.font.bold = True
+		# set column width
+		ws.column_dimensions[get_column_letter(col_num+1)].width = columns[col_num][1]
+
+	for gr in Group.objects.all():
+		eset = gr.enteredplayer_set.first()
+		if eset:
+			clg = gr.enteredplayer_set.first().regplayer.college,
+			row_num += 1
+			row = [
+				gr.pk,
+				str(clg),
+				gr.group_code,
+				#Regplayer.objects.filter(college = clg).filter(entered=True).filter(gender="male").count(),
+				#Regplayer.objects.filter(college = clg).filter(entered=True).filter(gender="female").count(),
+			#	Regplayer.objects.filter(college = gr.enteredplayer_set.first().regplayer.college).filter(entered=True).filter(enteredplayer__group=gr).filter(gender="male").count(),
+			#	Regplayer.objects.filter(college = gr.enteredplayer_set.first().regplayer.college).filter(entered=True).filter(enteredplayer__group=gr).filter(gender="female").count(),
+				gr.enteredplayer_set.filter(regplayer__gender = "male").count(),
+				gr.enteredplayer_set.filter(regplayer__gender = "female").count(),
+				gr.enteredplayer_set.all().count()
+			]
+			for col_num in range(len(row)):
+				c = ws.cell(row=row_num + 1, column=col_num + 1)
+				c.value = row[col_num]
+
+	wb.save(response)
+	return response
 #function definition copied from pcr views.py file(is_pcradmin changed to is_firewallz_admin)
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_firewallz_admin, login_url='/regsoft/')
@@ -697,9 +742,9 @@ def render_pcrmail(request):
 						break
 		return JsonResponse({'groupleaders':data})
 
-#function definition copied from pcr views.py file(is_pcradmin changed to is_firewallz_admin)
-#DOCUMENT VERIFICATION
-#for grpleader use render_pcrmail
+	#function definition copied from pcr views.py file(is_pcradmin changed to is_firewallz_admin)
+	#DOCUMENT VERIFICATION
+	#for grpleader use render_pcrmail
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_firewallz_admin, login_url='/regsoft/')
 def docurl(request):
@@ -775,7 +820,7 @@ def docurl(request):
 				d3.append(s)
 		return JsonResponse({'unconfirmed':d2,'confirmed':d3})
 
-#function definition copied from pcr views.py file(is_pcradmin changed to is_firewallz_admin)
+	#function definition copied from pcr views.py file(is_pcradmin changed to is_firewallz_admin)
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_firewallz_admin, login_url='/regsoft/')
 def docapprove(request):
@@ -815,10 +860,10 @@ def docapprove(request):
 			rp.save()
 			rp.uid = "18CB"+str(100000+rp.pk)[-4:]
 			rp.save()
-			
+
 		message = render_to_string('pcradmin/msg7.html', {
 														'college':tm.college, 
-														
+
 														})
 		mail_subject = 'Documents Verified for BOSM \'18'
 		email = EmailMessage(mail_subject, message, to=maillist)
@@ -831,7 +876,7 @@ def docapprove(request):
 		message = render_to_string('pcradmin/msg8.html', {
 														'nmlist':nmlist,
 														'college':tm.college, 
-														
+
 														})
 		mail_subject = 'Documents Verified for BOSM \'18'
 		email = EmailMessage(mail_subject, message, to=[glmail])
@@ -841,3 +886,71 @@ def docapprove(request):
 		# except:
 		# 	pass
 		return JsonResponse({'success':1})
+		
+#to open the html page(docs_index.html) for viewing the documents
+def view_docs(request):
+	if request.user.is_authenticated():
+		if is_firewallz_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	return render(request,'firewallz/docs_index.html')
+def grp_stats(request):
+	if request.user.is_authenticated():
+		if is_firewallz_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+	response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+	response['Content-Disposition'] = 'attachment; filename=Firewallz_stats.xlsx'
+	wb = openpyxl.Workbook()
+	ws = wb.get_active_sheet()
+	ws.title = "Firewallz Passed Stats"
+
+	row_num = 0
+
+	columns = [
+		(u"Grp no", 15),
+		(u"College Name", 40),
+		(u"Group_code", 20),
+		(u"No. of boys",15),
+		(u"No. of girls", 15),
+		(u"Total", 15),
+	]
+
+	for col_num in range(len(columns)):
+		c = ws.cell(row=row_num + 1, column=col_num + 1)
+		c.value = columns[col_num][0]
+		#c.style.font.bold = True
+		# set column width
+		ws.column_dimensions[get_column_letter(col_num+1)].width = columns[col_num][1]
+
+	for gr in Group.objects.all():
+		eset = gr.enteredplayer_set.first()
+		if eset:
+			clg = gr.enteredplayer_set.first().regplayer.college,
+			row_num += 1
+			row = [
+				gr.pk,
+				str(clg),
+				gr.group_code,
+				#Regplayer.objects.filter(college = clg).filter(entered=True).filter(gender="male").count(),
+				#Regplayer.objects.filter(college = clg).filter(entered=True).filter(gender="female").count(),
+			#	Regplayer.objects.filter(college = gr.enteredplayer_set.first().regplayer.college).filter(entered=True).filter(enteredplayer__group=gr).filter(gender="male").count(),
+			#	Regplayer.objects.filter(college = gr.enteredplayer_set.first().regplayer.college).filter(entered=True).filter(enteredplayer__group=gr).filter(gender="female").count(),
+				gr.enteredplayer_set.filter(regplayer__gender = "male").count(),
+				gr.enteredplayer_set.filter(regplayer__gender = "female").count(),
+				gr.enteredplayer_set.all().count()
+			]
+			for col_num in range(len(row)):
+				c = ws.cell(row=row_num + 1, column=col_num + 1)
+				c.value = row[col_num]
+
+	wb.save(response)
+	return response

@@ -105,23 +105,23 @@
   </div> -->
   <div class="container blue lighten-5" id="deallocated-wrapper">
     <!-- LEFT TABLE/EXPANDABLE -->
-    <ul class="collapsible" data-collapsible="expandable" id="table-ul">
+    <ul class="collapsible left-one" data-collapsible="expandable" id="table-ul">
     </ul>
     <!-- LEFT GROUP TEMPLATE -->
     <template id="left-group-temp">
       <li class="list-ind">
         <div class="collapsible-header blue lighten-3 group">
-          <i class="material-icons tooltipped" data-position="right" data-delay="50" data-tooltip="Select/Deselect all participants of this group" onclick="over_header(this);">check_box_outline_blank</i>
-          <span class="group-id-group">GROUP CODE</span>
-          <i class="material-icons tooltipped" data-position="right" data-delay="50" data-tooltip="Add selected participants of this group" onclick="add_this_group(this.parentElement,1);">add</i>
+          <i class="material-icons tooltipped" style="display:none;" data-position="right" data-delay="50" data-tooltip="Select/Deselect all participants of this group" onclick="over_header(this);">check_box_outline_blank</i>
+          <span class="group-id-group" style="flex-basis:100%;">GROUP CODE</span>
+          <i class="material-icons tooltipped" style="display:none;" data-position="right" data-delay="50" data-tooltip="Add selected participants of this group" onclick="add_this_group(this.parentElement,1);">add</i>
         </div>
       </li>
       <!-- LEFT INDIVIDUAL TEMPLATE-->
       <template id="left-indiv-temp">
         <div class="collapsible-body blue lighten-5">
-          <i style="flex-basis: 10%;" class="material-icons indiv-icon-check tooltipped" data-position="right" data-delay="50" data-tooltip="Select/Deselect this participant" onclick="click_indiv(this);">check_box_outline_blank</i>
+          <i style="flex-basis: 10%;" style="display:none;" class="material-icons indiv-icon-check tooltipped" data-position="right" data-delay="50" data-tooltip="Select/Deselect this participant" onclick="click_indiv(this);">check_box_outline_blank</i>
           <span class="name center" style="flex-basis: 35%;">Name Name</span>
-          <span class="coll-name center" style="flex-basis: 30%;">Indian Institute Of Technology, Delhi</span>
+          <span class="coll-name center" style="flex-basis: 40%;">Indian Institute Of Technology, Delhi</span>
           <span class="group-id" style="display: none">PQR123</span>
           <span class="gender center" style="flex-basis: 15%;">Male</span>
           <span class="indiv-id" style="display: none">123</span>

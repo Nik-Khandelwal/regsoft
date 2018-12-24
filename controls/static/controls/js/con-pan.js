@@ -94,11 +94,14 @@ function sendEdit() {
   var formData = serializeArray(document.getElementById('edit-part-form'));
   var sport_id = [];
   var temp=6;
-  while(formData[temp].name=="sport_select") {
-    if (temp!=6) {
+  console.log(formData);
+  //this loop selects all sports selected by the user and append their ids in sport_id
+  for(let i = temp; i<formData.length - 1; i++,temp++)
+  {
+    if(formData[i].name == 'sport_select')
+    {
       sport_id.push(parseInt(formData[temp].value));
     }
-    temp++;
   }
   var notesss = formData[temp].value;
   var sendObj = {
@@ -120,12 +123,14 @@ function sendEdit() {
   csrf_token = getCookie('csrftoken');
   var ourRequest = new XMLHttpRequest();
   var url = "/controls/con_pan_edit/";
+  console.log(stringObj);
   ourRequest.open("POST", url, true);
   ourRequest.setRequestHeader("Content-type", "application/json");
   ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
   ourRequest.onreadystatechange = function() {
     if (ourRequest.readyState === 4 && ourRequest.status === 200) {
       var jsonResponse = JSON.parse(ourRequest.responseText);
+      fetchParticipants();
       Materialize.toast('Success!', 3000);
     } else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
       Materialize.toast('There was some error connecting to the server!', 3000);

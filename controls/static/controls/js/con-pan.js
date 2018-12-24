@@ -130,6 +130,7 @@ function sendEdit() {
   ourRequest.onreadystatechange = function() {
     if (ourRequest.readyState === 4 && ourRequest.status === 200) {
       var jsonResponse = JSON.parse(ourRequest.responseText);
+      //if the participant details are changed , fetch the new participant list
       fetchParticipants();
       Materialize.toast('Success!', 3000);
     } else if (ourRequest.readyState === 4 && ourRequest.status != 200) {

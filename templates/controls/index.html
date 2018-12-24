@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link type="text/css" rel="stylesheet" href="{% static 'controls/css/style.css' %}"/>
     <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
-    <script type="text/javascript" src="{% static 'controls/js/action1.js' %}"></script>
+    <script type="text/javascript" src="{% static 'controls/js/action.js' %}"></script>
   </head>
   <body onload="loaded();">
     <script type="text/javascript" src="{% static 'controls/js/jquery.js' %}"></script>
@@ -119,7 +119,7 @@
 
         <tbody class="blue lighten-5" id="right-body">
         </tbody>
-      </table>   
+      </table>
       <!-- RIGHT INDIVIDUAL TABLE || RESIDES IN TBODY-->
       <template id="right-indiv-temp">
             <tr class="right-indiv">
@@ -131,7 +131,7 @@
               <td style="display: none;" class="right-indiv-id">$0.87</td>
               <td style="flex-basis: 20%;" class="right-indiv-undo" onclick="undo_this(this.parentElement);"><i class="material-icons tooltipped" data-position="left" data-delay="50" data-tooltip="Undo selection of this participant">undo</i></td>
             </tr>
-      </template> 
+      </template>
     <!-- RIGHT TABLE WAS HERE -->
     <!-- PAYMENT MODAL HERE-->
       <div id="modalpay" class="modal pay blue lighten-5 modal-fixed-footer">
@@ -196,7 +196,7 @@
           <br/><br/>
           <h4 id="denom_head">Success</h4>
             <p id="denom_para">
-              <span>Amount to Return : Rs.</span><span id="return_amt">N/A</span><br>             
+              <span>Amount to Return : Rs.</span><span id="return_amt">N/A</span><br>
               <form onSubmit="return false;" id="return_bill_form">
                 <div class="row">
                   <div class="col s6 center deno_field">2000's</div>
@@ -236,7 +236,7 @@
       </div>
     <!-- PAYMENT MODAL WAS HERE -->
     <div id="stat" class="stats teal center-align">
-      <a class="close white-text" id="close" onclick="close_stats()"><i class="material-icons medium">close</i></a>       
+      <a class="close white-text" id="close" onclick="close_stats()"><i class="material-icons medium">close</i></a>
       <a class="btn csv-btn" id="csv" href="/controls/stats_csv/" target="_blank">Download CSV</a>
       <a class="btn csv-btn" id="pdf" href="/controls/stats_excel/" target="_blank">Download Excel</a>
       <a class="btn csv-btn" id="excel" href="/controls/stats_html/" target="_blank">Download PDF</a>
@@ -252,7 +252,7 @@
                 <a class="collection-item">Alvin<span id="phn_no" class="right">9929823984</span></a>
               </div>
             </div>
-          </li>          
+          </li>
         </ul>
       </div>
     </div>
@@ -269,7 +269,7 @@
       <div class="container">
         <div class="row">
           <div class="col s12 center">
-            <span>Coding Club, BOSM 2018</span>
+            <span>Coding Club, BOSM 2019</span>
           </div>
         </div>
       </div>

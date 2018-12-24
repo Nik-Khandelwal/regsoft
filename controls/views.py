@@ -68,8 +68,8 @@ from datetime import datetime
 
 from django.contrib.auth import get_user_model
 User=get_user_model()
- 
- 
+
+
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
@@ -102,7 +102,7 @@ def main(request):
 		return HttpResponseRedirect('/regsoft/')
 	mon = Money()
 	mon.save()
-	return render(request,'controls/index1.html')
+	return render(request,'controls/index.html')
 
 
 @login_required(login_url='/regsoft/')
@@ -155,7 +155,6 @@ def create_bill(request):
 	else:
 		return HttpResponseRedirect('/regsoft/')
 	bil = Billcontrols()
-	bil.bill_no=Billcontrols.objects.all().last().pk +1
 	bil.save()
 	dat = {"success":1}
 	return HttpResponse(json.dumps(dat), content_type='application/json')
@@ -195,8 +194,7 @@ def generate_bill(request):
 		# 	pl.save()
 		bil = Billcontrols.objects.filter(unbilled_amt=0).first()
 		bil.unbilled_amt = data['data']['net_amt']
-		#bil.amt_received = int(data['data']['deno_2000'])*2000 + int(data['data']['deno_500'])*500 + int(data['data']['deno_200'])*200 + int(data['data']['deno_100'])*100 + int(data['data']['deno_50'])*50
-		bil.amt_received = int(data['data']['deno_2000'])*2000 + int(data['data']['deno_500'])*500 + int(data['data']['deno_200'])*200 + int(data['data']['deno_100'])*100 + int(data['data']['deno_50'])*50 + int(data['data']['deno_20'])*20 + int(data['data']['deno_10'])*10
+		bil.amt_received = int(data['data']['deno_2000'])*2000 + int(data['data']['deno_500'])*500 + int(data['data']['deno_200'])*200 + int(data['data']['deno_100'])*100 + int(data['data']['deno_50'])*50
 		bil.save()
 		money = Money.objects.get(pk=1)
 		print(data)
@@ -205,8 +203,6 @@ def generate_bill(request):
 		money.twohundred += int(data['data']['deno_200'])
 		money.hundred += int(data['data']['deno_100'])
 		money.fifty += int(data['data']['deno_50'])
-		money.twenty += int(data['data']['deno_20'])
-		money.ten += int(data['data']['deno_10'])
 		money.save()
 
 		dat = {"success":1, "bills_pk":bil.pk}
@@ -236,7 +232,7 @@ def generate_bill_pusher(request):
 			b.append({"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
 		if b:
 			data_recnacc.append({"participants":b,"groupid":gr.group_code})
-			
+
 	print("generate bill pusher start")
 	pusher_client.trigger('my-channel', 'my-event', data_recnacc)
 	print("pusher")
@@ -264,22 +260,18 @@ def arpit(request):
 		money.twohundred -= int(data['data']['deno_200'])
 		money.hundred -= int(data['data']['deno_100'])
 		money.fifty -= int(data['data']['deno_50'])
-		money.twenty -= int(data['data']['deno_20'])
-		money.ten -= int(data['data']['deno_10'])
 	if data['data']['type'] == "update":
 		money.twothousand = int(data['data']['deno_2000'])
 		money.fivehundred = int(data['data']['deno_500'])
 		money.twohundred = int(data['data']['deno_200'])
 		money.hundred = int(data['data']['deno_100'])
 		money.fifty = int(data['data']['deno_50'])
-		money.twenty = int(data['data']['deno_20'])
-		money.ten = int(data['data']['deno_10'])
 	money.save()
 	dat = {"success":1}
 	data_denoms = [1]
 	pusher_client.trigger('controls_denoms_channel', 'controls_denoms_event', data_denoms)
 	return HttpResponse(json.dumps(dat), content_type='application/json')
-	
+
 
 
 @login_required(login_url='/regsoft/')
@@ -379,7 +371,7 @@ def unconfirm_details(request):
 	data=[]
 	for gr in Group.objects.all():
 		b=[]
-		pl = Enteredplayer.objects.filter(group=gr).filter(controls_passed=True)
+		pl = Enteredplayer.objects.filter(group=gr).filter(controls_passed=True).filter(recnacc_passed=False)
 		a=[]
 		for p in pl:
 			a.append(Regplayer.objects.get(pk=p.regplayer_id))
@@ -420,7 +412,7 @@ def view_stats(request):
 		dat = []
 		das = []
 		for us in User.objects.filter(team=t,deleted=0):
-			try:	
+			try:
 				rp = Regplayer.objects.get(name=us)
 				pl = Enteredplayer.objects.get(regplayer=rp)
 				if pl.controls_passed is True:
@@ -527,7 +519,7 @@ def passed_stats(request):
 	rec_conf = Enteredplayer.objects.filter(recnacc_passed=True).count()
 	data = {"fire_conf":fire_conf,"cont_conf":cont_conf,"rec_conf":rec_conf}
 	return HttpResponse(json.dumps(data), content_type='application/json')
-	
+
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_controls_admin, login_url='/regsoft/')
 def stats_excel(request):
@@ -592,7 +584,7 @@ def stats_csv(request):
 			return HttpResponseRedirect('/regsoft/')
 	else:
 		return HttpResponseRedirect('/regsoft/')
-	
+
 	response = HttpResponse(content_type='text/csv')
 	#decide the file name
 	response['Content-Disposition'] = 'attachment; filename="Controls_stats.csv"'
@@ -639,7 +631,7 @@ def stats_csv(request):
 #        response = HttpResponse(pdf, content_type='application/pdf')
 #        response['Content-Disposition'] = 'attachment; filename="controls_stats.pdf"'
 #        return response
- 
+
  #   return response
 
 def stats_html(request):
@@ -669,7 +661,7 @@ def bill_pdf(request,bill_pk):
 		return HttpResponseRedirect('/regsoft/')
 	print("compres lite")
 	data = []
-	billl = Billcontrols.objects.get(bill_no=int(bill_pk))
+	billl = Billcontrols.objects.get(pk=int(bill_pk))
 	for obj in billl.enteredplayer_set.all():
 		rp = Regplayer.objects.get(pk = obj.regplayer.pk)
 		rp.unbilled_amt = 0
@@ -692,8 +684,6 @@ def denomination_display(request):
 		return HttpResponseRedirect('/regsoft/')
 	money = Money.objects.get(pk=1)
 	data = []
-	data.append(money.ten)
-	data.append(money.twenty)
 	data.append(money.fifty)
 	data.append(money.hundred)
 	data.append(money.twohundred)
@@ -786,7 +776,7 @@ def con_pan_edit(request):
 	for idno in data['data']['sport_id']:
 		sp=Sport.objects.get(pk=int(idno))
 		us.sport.add(sp)
-		us.sportid=replaceindex(up.sportid,int(idno),'2')
+		us.sportid=replaceindex(us.sportid,int(idno),'2')
 	us.save()
 	t.mobile_no = data['data']['phone']
 	t.address = data['data']['city']
@@ -811,7 +801,7 @@ def sportlist(request):
 			return HttpResponseRedirect('/regsoft/')
 	else:
 		return HttpResponseRedirect('/regsoft/')
-	sp=Sport.objects.all().order_by(Lower('sport'))	
+	sp=Sport.objects.all().order_by(Lower('sport'))
 	d=[]
 	for st in sp:
 			s=[]
@@ -820,6 +810,8 @@ def sportlist(request):
 			d.append(s)
 	return JsonResponse({'data':d})
 
+def replaceindex(text,index=0,replacement=''):
+	return '%s%s%s'%(text[:index],replacement,text[index+1:])
 
 def bill_details(request):
 	if request.user.is_authenticated():

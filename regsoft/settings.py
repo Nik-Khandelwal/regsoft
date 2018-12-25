@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'rest_framework',
    # 'lockdown',
    # 'corsheaders',
-   'import_export',
+    'import_export',
 ]
 
 MIDDLEWARE = [
@@ -192,7 +192,7 @@ IMPORT_EXPORT_USE_TRANSACTIONS = True
 # LOCKDOWN_PASSWORDS = ('shush&shoo',)
 
 # LOCKDOWN_URL_EXCEPTIONS = (
-#     r'^/$',   
+#     r'^/$',
 # )
 
 PAYTM_MERCHANT_KEY = "bKMfNxPPf_QdZppa"

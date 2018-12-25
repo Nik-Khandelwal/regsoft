@@ -6,10 +6,10 @@ from django.contrib.auth import logout
 from django.contrib.auth.models import User
 import json
 from django.contrib.auth import get_user_model
-import string
-import random
+import string #
+import random #
 from django.core import serializers
-import pusher
+import pusher #
 from django.conf import settings
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.shortcuts import render
@@ -43,7 +43,7 @@ from django.contrib.auth.decorators import login_required
 from django.dispatch import receiver
 from django.db.models.functions import Lower
 from random import choice
-from string import ascii_uppercase
+from string import ascii_uppercase #
 
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
@@ -52,11 +52,11 @@ from django.template.loader import render_to_string
 from register.tokens import account_activation_token
 from django.core.mail import EmailMessage
 from django.core import serializers
-from main.models import Group,Regplayer,Enteredplayer,Sport,Firewallz_user
+from main.models import Group,Regplayer,Enteredplayer,Sport,Firewallz_user #
 
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model #
 User=get_user_model()
- 
+
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
@@ -71,23 +71,27 @@ pusher_client = pusher.Pusher(
 
 
 def replaceindex(text,index=0,replacement=''):
+    '''Takes a string, replaces string[index] by replacement.'''
     return '%s%s%s'%(text[:index],replacement,text[index+1:])
 
-
 def is_firewallz_admin(user):
-	if user:
-		if Firewallz_user.objects.get(pk=1).user == user:
-			return True
-	return False
-
-
+    '''Authenticates firewallz admin.'''
+    if user:
+        if Firewallz_user.objects.get(pk=1).user == user:
+            return True
+        else:
+            return False
 
 def group_code_generator(size=5, chars=string.ascii_uppercase + string.digits):
-	str = ''.join(random.choice(chars) for _ in range(size))
-	for grp in Group.objects.all():
-		if grp.group_code == str:
-			str = group_code_generator()
-	return str
+    '''Generates a random alphanumeric 5 digit code for each instance of Group.
+    Ensures if it is not already assigned to a group as well.
+    string.ascii_uppercase: the string 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    string.digits: the string '0123456789'. '''
+    str = ''.join(random.choice(chars) for _ in range(size))
+    for grp in Group.objects.all():
+        if grp.group_code == str:
+            str = group_code_generator()
+    return str
 
 
 @cache_page(CACHE_TTL)
@@ -163,7 +167,7 @@ def confirm_group(request):
 	if request.method=='POST':
 		data = json.loads( request.body.decode('utf-8') )
 		print(data)
-		for dt in data['data']:	
+		for dt in data['data']:
 			print(dt['pk'])
 			Player = Regplayer.objects.get(pk=dt['pk'])
 			print(Player.name.name)
@@ -258,7 +262,7 @@ def add_participant(request):
 		pl.email_id = data['data'][0]['email']
 		pl.entered = False
 		pl.sport=''
-		for i in data['data'][0]['sport']: 
+		for i in data['data'][0]['sport']:
 			up.sportid=replaceindex(up.sportid,int(i),'2')
 			sp=Sport.objects.get(idno=int(i))
 			up.sport.add(sp)
@@ -274,13 +278,13 @@ def add_participant(request):
 			pl.unbilled_amt = 0
 			pl.uid = "18BP"+str(100000+pl.pk)[-4:]
 			pl.save()
-		
+
 		to_email = up.email
 		message = render_to_string('register/msg2.html', {
-										'user':up.name, 
+										'user':up.name,
 										'username':up.username,
 										'password':passworduser,
-										
+
 										})
 		mail_subject = 'Your account details.'
 		email = EmailMessage(mail_subject, message, to=[to_email])
@@ -410,7 +414,7 @@ def sportlist(request):
 		data = []
 		for sp in Sport.objects.all():
 			data.append({"pk":sp.pk,"sport":sp.sport})
-		return HttpResponse(json.dumps(data), content_type='application/json')	
+		return HttpResponse(json.dumps(data), content_type='application/json')
 
 
 @login_required(login_url='/regsoft/')
@@ -559,7 +563,7 @@ def stats_csv(request):
 			return HttpResponseRedirect('/regsoft/')
 	else:
 		return HttpResponseRedirect('/regsoft/')
-	
+
 	response = HttpResponse(content_type='text/csv')
 	#decide the file name
 	response['Content-Disposition'] = 'attachment; filename="Firewallz_stats.csv"'

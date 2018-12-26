@@ -1,3 +1,6 @@
+*/*.pyc
 *.pyc
 media/
-Checksum.py
+register/Checksum.py
+migrations/
+db.sqlite3

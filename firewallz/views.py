@@ -362,12 +362,36 @@ def unconfirm_player(request):
 		datss = []
 		b = {"name":pl.name.name,"gender":pl.gender,"college":pl.college,"city":pl.city,"mobile_no":pl.mobile_no,"email_id":pl.email_id,"sport":pl.sport,"entered":pl.entered,"unbilled_amt":pl.unbilled_amt}
 		datss.append({"pk":pl.pk,"fields":b})
-		print("unconfirm_player pusher")
+# 		print("unconfirm_player pusher")
 		print(datss)
-		pusher_client.trigger('firewallz_unconfirm_channel', 'firewallz_unconfirm_event', datss)
+# 		pusher_client.trigger('firewallz_unconfirm_channel', 'firewallz_unconfirm_event', datss)
 		dat = {"success":1}
 		return HttpResponse(json.dumps(dat), content_type='application/json')
 
+def unconfirm_player_pusher(request):
+    print('unconfirm_player_pusher called')
+    if request.user.is_authenticated():
+        if is_firewallz_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+    if request.method=='POST':
+        data = json.loads( request.body.decode('utf-8') )
+        print(data)
+        dat = []
+        pl = Regplayer.objects.get(pk=data['data'])
+        datss = []
+        b = {"name":pl.name.name,"gender":pl.gender,"college":pl.college,"city":pl.city,"mobile_no":pl.mobile_no,"email_id":pl.email_id,"sport":pl.sport,"entered":pl.entered,"unbilled_amt":pl.unbilled_amt}
+        datss.append({"pk":pl.pk,"fields":b})
+        print("unconfirm_player pusher")
+        print(datss)
+        pusher_client.trigger('firewallz_unconfirm_channel', 'firewallz_unconfirm_event', datss)
+        dat = {"success":1}
+        return HttpResponse(json.dumps(dat), content_type='application/json')	
+	
 def unconfirm_player_grp(request):
 	if request.user.is_authenticated():
 		if is_firewallz_admin(request.user):
@@ -381,21 +405,47 @@ def unconfirm_player_grp(request):
 		data = json.loads( request.body.decode('utf-8') )
 		print(data)
 		datss = []
+		pk_arr = []
 		gr = Group.objects.get(pk=data['data']['group_id'])
 		for pl in gr.enteredplayer_set.filter(controls_passed=False):
 			rp = Regplayer.objects.get(pk=pl.regplayer.pk)
 			rp.entered = False
 			rp.save()
 			pl.delete()
+			pk_arr.append(rp.pk)
 			b = {"name":rp.name.name,"gender":rp.gender,"college":rp.college,"city":rp.city,"mobile_no":rp.mobile_no,"email_id":rp.email_id,"sport":rp.sport,"entered":rp.entered,"unbilled_amt":rp.unbilled_amt}
 			datss.append({"pk":rp.pk,"fields":b})
-		print("unconfirm_player_grp pusher")
+# 		print("unconfirm_player_grp pusher")
 		print(datss)
-		pusher_client.trigger('firewallz_unconfirm_channel', 'firewallz_unconfirm_event', datss)
-		dat = {"success":1}
-		return HttpResponse(json.dumps(dat), content_type='application/json')
+# 		pusher_client.trigger('firewallz_unconfirm_channel', 'firewallz_unconfirm_event', datss)
+# 		dat = {"success":1}
+		pk_arr_json = {"pk":pk_arr}
+        	return HttpResponse(json.dumps(pk_arr_json), content_type='application/json')
 
-
+def unconfirm_player_grp_pusher(request):
+    if request.user.is_authenticated():
+        if is_firewallz_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+    if request.method=='POST':
+        data = json.loads( request.body.decode('utf-8') )
+        print(data)
+        datss = []
+        pk  = data['data']
+        print(pk)
+        for pk_val in pk:
+            rp = Regplayer.objects.get(pk=pk_val)
+            b = {"name":rp.name.name,"gender":rp.gender,"college":rp.college,"city":rp.city,"mobile_no":rp.mobile_no,"email_id":rp.email_id,"sport":rp.sport,"entered":rp.entered,"unbilled_amt":rp.unbilled_amt}
+            datss.append({"pk":rp.pk,"fields":b})
+        print("unconfirm_player_grp pusher")
+        print(datss)
+        pusher_client.trigger('firewallz_unconfirm_channel', 'firewallz_unconfirm_event', datss)
+        dat = {"success":1}
+        return HttpResponse(json.dumps(dat), content_type='application/json')
 
 def sportlist(request):
 	if request.user.is_authenticated():

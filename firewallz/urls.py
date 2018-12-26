@@ -16,6 +16,8 @@ urlpatterns = [
 
     url(r'^unconfirm_grp/$',views.unconfirm_grp,name='unconfirm_grp'),
 
+    url(r'^unconfirm_player_grp_pusher/$',views.unconfirm_player_grp_pusher,name='unconfirm_player_grp_pusher'),    
+    
     url(r'^add_participant/$',views.add_participant,name='add_participant'),
 
     url(r'^unconfirm_details/$',views.unconfirm_details,name='unconfirm_details'),
@@ -23,6 +25,8 @@ urlpatterns = [
     url(r'^show_details_unconfirm/$',views.show_details_unconfirm,name='show_details_unconfirm'),
 
     url(r'^unconfirm_player/$',views.unconfirm_player,name='unconfirm_player'),
+    
+    url(r'^unconfirm_player_pusher/$',views.unconfirm_player_pusher,name='unconfirm_player_pusher'),    
 
     url(r'^unconfirm_player_grp/$',views.unconfirm_player_grp,name='unconfirm_player_grp'),
 

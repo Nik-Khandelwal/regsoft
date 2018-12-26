@@ -1,221 +1,223 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Firewallz</title>
-    {% load staticfiles %}
-    <link rel="stylesheet" type="text/css" href="{% static 'firewallz/css/font.css' %}">
-    <link type="text/css" rel="stylesheet" href="{% static 'firewallz/css/materialize.min.css' %}"  media="screen,projection"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link type="text/css" rel="stylesheet" href="{% static 'firewallz/css/style.css' %}"/>
-    <script type="text/javascript" src="{% static 'firewallz/js/jquery.js' %}"></script>
-    <script type="text/javascript" src="{% static 'firewallz/js/materialize.min.js' %}"></script>
-    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
-    <script type="text/javascript" src="{% static 'firewallz/js/script.js' %}"></script>
-  </head>
-  <body>
-    <ul id="slide-out" class="side-nav">
-      <li>
-      <div class="user-view">
-        <div class="background" style="background-color: #3794e6"></div>
-        <a><span class="white-text name">FIREWALLZ PANEL</span></a>
-      </div></li>
-      <li><a class="waves-effect">Confirm groups</a></li>
-      <li><a class="waves-effect" href="/firewallz/unconfirm_grp/">Unconfirm groups</a></li>
-      <li><a class="waves-effect" onclick="stats()">Stats</a></li>
-      <li><a class="waves-effect" href="/firewallz/view_id_card/">ID Cards</a></li>
-      <li><div class="divider"></div></li>
-      <li><a class="waves-effect bottom" href="/regsoft/regsoft_logout/">Logout</a></li>
-    </ul>
-    <ul id="slide-out-1" class="side-nav">
-      <li>
-        <div class="user-view">
-          <div class="background" style="background-color: #3794e6"></div>
-          <a><span class="white-text name">Present Stats</span></a>
-        </div>
-      </li>
-      <li><a class="waves-effect">Firewallz-Confirmed:</a></li>
-      <li><a id="fire_conf">1111</a></li>
-      <li><div class="divider"></div></li>
-      <li><a class="waves-effect" onclick="stats()">Controls Passed</a></li>
-      <li><a id="cont_conf">1111</a></li>
-      <li><div class="divider"></div></li>
-      <li><a class="waves-effect">RecNAcc Confirmed</a></li>
-      <li><a id="rec_conf">1111</a></li>
-    </ul>
-    <div class="ham"><a href="#" data-activates="slide-out" class="button-collapse coll-0"><i class="material-icons medium blue-text">menu</i></a></div>
-    <div class="ham1"><a href="#" data-activates="slide-out-1" class="button-collapse coll-1" onclick="fetchPassedStats();"><i class="material-icons medium blue-text">insert_chart</i></a></div>
-    <a class="btn-floating btn btn-large waves-effect waves-light no_of_part tooltipped" data-position="left" data-delay="50" data-tooltip="No. of selected participants" id="no_of_part_text">0</a> 
-    <a class="btn waves-effect waves-light firewallz_part tooltipped red darken-4" data-position="bottom" data-delay="50" data-tooltip="Firewallz Passed" id="firewallz_part_text"><i class="material-icons left">confirmation_number</i><span id="firewallz_passed_stats_text">0</span></a>
-    <a class="btn waves-effect waves-light controls_part tooltipped green darken-4" data-position="bottom" data-delay="50" data-tooltip="Controls Passed" id="controls_part_text"><i class="material-icons left">monetization_on</i><span id="controls_passed_stats_text">0</span></a>
-    <a class="btn waves-effect waves-light recnacc_part tooltipped brown darken-4" data-position="bottom" data-delay="50" data-tooltip="RecnAcc Passed" id="recnacc_part_text"><i class="material-icons left">hotel</i><span id="recnacc_passed_stats_text">0</span></a>
-    <a class="btn-floating btn-large waves-effect waves-light z-depth-3 modal-trigger cont" href="#contacts"><i class="material-icons">contacts</i></a>
-    <a class="btn-floating btn-large waves-effect waves-light add_all-btn tooltipped z-depth-3" data-position="right" data-delay="50" data-tooltip="Add all selected participants" onclick="addSelected();"><i class="material-icons">add</i></a>
-    <a class="waves-effect waves-light btn add_participant-btn tooltipped z-depth-5" data-position="top" data-delay="50" data-tooltip="Add a New Participant" onclick="addParticipant()"><span>Add Participant</span></a>
-        <!-- DESELECT ALL BUTTON -->
-    <a class="waves-effect waves-light btn confirm_group-btn tooltipped z-depth-5" data-position="top" data-delay="50" data-tooltip="Confirm Group" onclick="openConfirm()"><span>Confirm Group</span></a>
-    <div id="wrap_searches">
-      <div class="row">
-        <div class="input-field col m4 s4">
-          <input type="text" name="search" id="name-search" required="required" onkeyup="search()">
-          <label for="name-search">Search By Name</label>
-        </div>
-        <div class="input-field col m4 s4">
-          <input type="text" name="search" id="college-search" required="required" onkeyup="search()">
-          <label for="college-search">Search By College</label>
-        </div>
-        <div class="input-field col m4 s4">
-          <input type="text" name="search" id="sports-search" required="required" onkeyup="search()">
-          <label for="sports-search">Search By Sport</label>
-        </div>
-      </div>
-    </div>
-    <table class="left-one highlight bordered centered">
-      <thead class="blue lighten-3">
-        <tr>
-          <th style="flex-basis: 8%;">&nbsp</th>
-          <th style="flex-basis: 23%;">Name &nbsp;
-            <img src="{% static 'firewallz/icons/sort.svg' %}" class="sort-icon" onclick="sort(0)"></th>
-          <th style="flex-basis: 23%;">College &nbsp;
-            <img src="{% static 'firewallz/icons/sort.svg' %}" class="sort-icon" onclick="sort(1)"></th>
-          <th style="flex-basis: 23%;">Sport &nbsp;
-            <img src="{% static 'firewallz/icons/sort.svg' %}" class="sort-icon" onclick="sort(2)"></th>
-          <th style="flex-basis: 23%;">Gender &nbsp;
-            <img src="{% static 'firewallz/icons/sort.svg' %}" class="sort-icon" onclick="sort(3)"></th>
-          <td style="display: none;">ID_No</td>
-        </tr>
-      </thead>
-      <tbody class="blue lighten-5" id="left-body">
-      </tbody>
-    </table>
-    <!-- <ul class="collapsible left-one" data-collapsible="expandable" id="left-table-ul">
-    </ul> -->
-    <!-- LEFT INDIVIDUAL TEMPLATE-->
-    <template id="left-temp">
-      <tr class="left-table-rows">
-        <td style="flex-basis: 8%;" class="left-table-checkbox"><i style="flex-basis: 8%;" class="material-icons indiv-icon-check tooltipped change_cursor" data-position="right" data-delay="50" data-tooltip="Select/Deselect this participant" onclick="toggleSelection(this);">check_box_outline_blank</i></td>
-        <td style="flex-basis: 23%;" class="left-table-name">Name</td>
-        <td style="flex-basis: 23%;" class="left-table-college">College Name</td>
-        <td style="flex-basis: 23%;" class="left-table-sport">Sport</td>
-        <td style="flex-basis: 23%;" class="left-table-gender">Gender</td>
-        <td style="display: none;" class="left-table-id">ID_No</td>
-      </tr>
-    </template>
-    <table class="right-one highlight bordered centered">
-      <thead class="blue lighten-3">
-        <tr>
-          <th style="flex-basis: 22%;">Name</th>
-          <th style="flex-basis: 22%;">College</th>
-          <th style="flex-basis: 22%;">Sport</th>
-          <th style="flex-basis: 16%;">Gender</th>
-          <td style="display: none;">ID_No</td>
-          <th style="flex-basis: 18%;">&nbsp</th>
-        </tr>
-      </thead>
-      <tbody class="blue lighten-5" id="right-body">
-      </tbody>
-    </table>
-    <template id="right-temp">
-      <tr class="right-table-rows">
-        <td style="flex-basis: 22%;" class="right-table-name">Name</td>
-        <td style="flex-basis: 22%;" class="right-table-college">College Name</td>
-        <td style="flex-basis: 22%;" class="right-table-sport">Sport</td>
-        <td style="flex-basis: 16%;" class="right-table-gender">Gender</td>
-        <td style="display: none;" class="right-table-id">ID_No</td>
-        <td style="flex-basis: 6%;" class="left-table-checkbox"><i style="flex-basis: 8%;" class="material-icons indiv-icon-check tooltipped change_cursor" data-position="right" data-delay="50" data-tooltip="Select/Deselect this participant" onclick="toggleRightSelection(this);">check_box_outline_blank</i></td>
-        <td style="flex-basis: 12%;" class="right-table-undo change_cursor" onclick="removeRight(this.parentElement);"><i class="material-icons tooltipped" data-position="left" data-delay="50" data-tooltip="Undo selection of this participant">undo</i></td>
-      </tr>
-    </template>
-    <div class="modal" id="confirm_dialog">
-      <div class="modal-content center">
-        <p id="confirm_text">Do you want to confirm grouping of 5 people?</p><br>
-        <a class="waves-effect waves-light btn z-depth-5" onclick="confirmGroup()" id="group_confirm_btn1"><span>Yes</span></a>
-        <a class="waves-effect waves-light btn z-depth-5" onclick="closeConfirm()" id="group_confirm_btn2"><span>Cancel</span></a>
-        <a class="waves-effect waves-light btn z-depth-5" onclick="closeConfirm()" style="display: none;" id="group_confirm_btn3"><span>Done</span></a>
-      </div>
-    </div>
-    <div class="modal modal-fixed-footer" id="add_participant_modal">
-      <div class="modal-content row">
-        <form class="col s12" id="add_participant_form">
-          <div class="row">
-            <div class="input-field col s12"> <i class="material-icons prefix">person</i> <input type="text" name="Indi_Captain_Name" id="indi_captain_name_field" class="validate" required="required"> <label for="indi_captain_name_field" data-error="Enter Name of Participant">Name of Participant</label> </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s12">
-              <i class="material-icons prefix">business</i> 
-              <select id="college_field" name="College">
-                <option value="" disabled="disabled" selected="selected"></option>
-              </select>
-              <label for="college_field" data-error="Select College Name">College</label>
-            </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s12"> <i class="material-icons prefix">email</i> <input type="email" name="Indi_Captain_Email" id="indi_captain_email_field" class="validate" required="required"> <label for="indi_captain_email_field" data-error="Enter a Valid Email">E-Mail of Participant</label> </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s12"> <i class="material-icons prefix">local_phone</i> <input type="text" name="Indi_Captain_Phone" id="indi_captain_phone_field" class="validate" required="required" maxlength="10" data-length="10"> <label for="indi_captain_phone_field" data-error="Enter Phone Number">Participant Phone Number</label> </div>
-          </div>
-          <div class="row">
-            <div class="input-field col s12">
-              <i class="material-icons prefix">directions_run</i> 
-              <select id="participant_sport_select" multiple="multiple">
-                <option value="" disabled="disabled" selected="selected"></option>
-              </select>
-              <label for="indi_sport_field" data-error="Enter Sport of Participant">Sport</label> 
-            </div>
-          </div>
-          <div class="row">
-            <div class="col s4 center"> Gender </div>
-            <div class="col s4 center"> <input type="radio" name="indi_gender" id="indi_male" value="male"> <label for="indi_male">Male</label> </div>
-            <div class="col s4 center"> <input type="radio" name="indi_gender" id="indi_female" value="female"> <label for="indi_female">Female</label> </div>
-          </div>
-          <div class="row" id="submit-indi-btn">
-            <div class="col s12 center"> <a class="waves-effect waves-light btn btn-large" onclick="addParticipantSubmit()"><i class="material-icons right">send</i>Submit</a> </div>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <a class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
-      </div>
-    </div>
-    <div id="contacts" class="modal modal-fixed-footer">
-      <div class="modal-content">
-        <h4>Emergency Contacts</h4>
-        <p>Mehul : +91 8427878749</p>
-        <p>Ankush : +91 9928068889</p>
-      </div>
-      <div class="modal-footer">
-        <a class="modal-action modal-close waves-effect waves-green btn-flat ">Close</a>
-      </div>
-    </div>
-    <div id="stat" class="stats teal center-align">
-      <a class="close white-text" id="close" onclick="close_stats()"><i class="material-icons medium">close</i></a>
-      <a class="btn csv-btn" id="csv" href="/firewallz/stats_csv/" target="_blank">Download CSV</a>
-      <a class="btn csv-btn" id="pdf" href="/firewallz/stats_excel/" target="_blank">Download Excel</a>
-      <a class="btn csv-btn" id="excel" href="/firewallz/stats_html/" target="_blank">Download PDF</a>
-      <div class="container" id="stat_data">
-        <ul class="collapsible popout center-align" data-collapsible="accordion" id="stats_ul">
-          <li>
-            <div class="collapsible-header"><i class="material-icons">account_balance</i>College_1</div>
-            <div class="collapsible-body center white">
-              <div class="collection ">
-                <a class="collection-item">Alvin<span id="phn_no" class="right">9929823984</span></a>
-                <a class="collection-item">Alvin<span id="phn_no" class="right">9929823984</span></a>
-                <a class="collection-item">Alvin<span id="phn_no" class="right">9929823984</span></a>
-                <a class="collection-item">Alvin<span id="phn_no" class="right">9929823984</span></a>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <footer class="page-footer blue darken-2">
-      <div class="container">
-        <div class="row">
-          <div class="col s12 center">
-            <span>Coding Club, BOSM 2018</span>
-          </div>
-        </div>
-      </div>
-    </footer>
-  </body>
-</html>
+	<!DOCTYPE html>
+	<html>
+	  <head>
+		<title>Firewallz</title>
+		{% load staticfiles %}
+		<link rel="stylesheet" type="text/css" href="{% static 'firewallz/css/font.css' %}">
+		<link type="text/css" rel="stylesheet" href="{% static 'firewallz/css/materialize.min.css' %}"  media="screen,projection"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<link type="text/css" rel="stylesheet" href="{% static 'firewallz/css/style.css' %}"/>
+		<script type="text/javascript" src="{% static 'firewallz/js/jquery.js' %}"></script>
+		<script type="text/javascript" src="{% static 'firewallz/js/materialize.min.js' %}"></script>
+		<script src="https://js.pusher.com/4.1/pusher.min.js"></script>
+		<script type="text/javascript" src="{% static 'firewallz/js/script.js' %}"></script>
+	  </head>
+	  <body>
+		<ul id="slide-out" class="side-nav">
+		  <li>
+		  <div class="user-view">
+			<div class="background" style="background-color: #3794e6"></div>
+			<a><span class="white-text name">FIREWALLZ PANEL</span></a>
+		  </div></li>
+		  <li><a class="waves-effect">Confirm groups</a></li>
+		  <li><a class="waves-effect" href="/firewallz/unconfirm_grp/">Unconfirm groups</a></li>
+		  <li><a class="waves-effect" onclick="stats()">Stats</a></li>
+		  <li><a class="waves-effect" href="/firewallz/view_id_card/">ID Cards</a></li>
+			<!--added this link to view docs in sidenav-->
+		  <li><a class="waves-effect" href="/firewallz/view_docs/">View Docs</a></li>
+		  <li><div class="divider"></div></li>
+		  <li><a class="waves-effect bottom" href="/regsoft/regsoft_logout/">Logout</a></li>
+		</ul>
+		<ul id="slide-out-1" class="side-nav">
+		  <li>
+			<div class="user-view">
+			  <div class="background" style="background-color: #3794e6"></div>
+			  <a><span class="white-text name">Present Stats</span></a>
+			</div>
+		  </li>
+		  <li><a class="waves-effect">Firewallz-Confirmed:</a></li>
+		  <li><a id="fire_conf">1111</a></li>
+		  <li><div class="divider"></div></li>
+		  <li><a class="waves-effect" onclick="stats()">Controls Passed</a></li>
+		  <li><a id="cont_conf">1111</a></li>
+		  <li><div class="divider"></div></li>
+		  <li><a class="waves-effect">RecNAcc Confirmed</a></li>
+		  <li><a id="rec_conf">1111</a></li>
+		</ul>
+		<div class="ham"><a href="#" data-activates="slide-out" class="button-collapse coll-0"><i class="material-icons medium blue-text">menu</i></a></div>
+		<div class="ham1"><a href="#" data-activates="slide-out-1" class="button-collapse coll-1" onclick="fetchPassedStats();"><i class="material-icons medium blue-text">insert_chart</i></a></div>
+		<a class="btn-floating btn btn-large waves-effect waves-light no_of_part tooltipped" data-position="left" data-delay="50" data-tooltip="No. of selected participants" id="no_of_part_text">0</a>
+		<a class="btn waves-effect waves-light firewallz_part tooltipped red darken-4" data-position="bottom" data-delay="50" data-tooltip="Firewallz Passed" id="firewallz_part_text"><i class="material-icons left">confirmation_number</i><span id="firewallz_passed_stats_text">0</span></a>
+		<a class="btn waves-effect waves-light controls_part tooltipped green darken-4" data-position="bottom" data-delay="50" data-tooltip="Controls Passed" id="controls_part_text"><i class="material-icons left">monetization_on</i><span id="controls_passed_stats_text">0</span></a>
+		<a class="btn waves-effect waves-light recnacc_part tooltipped brown darken-4" data-position="bottom" data-delay="50" data-tooltip="RecnAcc Passed" id="recnacc_part_text"><i class="material-icons left">hotel</i><span id="recnacc_passed_stats_text">0</span></a>
+		<a class="btn-floating btn-large waves-effect waves-light z-depth-3 modal-trigger cont" href="#contacts"><i class="material-icons">contacts</i></a>
+		<a class="btn-floating btn-large waves-effect waves-light add_all-btn tooltipped z-depth-3" data-position="right" data-delay="50" data-tooltip="Add all selected participants" onclick="addSelected();"><i class="material-icons">add</i></a>
+		<a class="waves-effect waves-light btn add_participant-btn tooltipped z-depth-5" data-position="top" data-delay="50" data-tooltip="Add a New Participant" onclick="addParticipant()"><span>Add Participant</span></a>
+			<!-- DESELECT ALL BUTTON -->
+		<a class="waves-effect waves-light btn confirm_group-btn tooltipped z-depth-5" data-position="top" data-delay="50" data-tooltip="Confirm Group" onclick="openConfirm()"><span>Confirm Group</span></a>
+		<div id="wrap_searches">
+		  <div class="row">
+			<div class="input-field col m4 s4">
+			  <input type="text" name="search" id="name-search" required="required" onkeyup="search()">
+			  <label for="name-search">Search By Name</label>
+			</div>
+			<div class="input-field col m4 s4">
+			  <input type="text" name="search" id="college-search" required="required" onkeyup="search()">
+			  <label for="college-search">Search By College</label>
+			</div>
+			<div class="input-field col m4 s4">
+			  <input type="text" name="search" id="sports-search" required="required" onkeyup="search()">
+			  <label for="sports-search">Search By Sport</label>
+			</div>
+		  </div>
+		</div>
+		<table class="left-one highlight bordered centered">
+		  <thead class="blue lighten-3">
+			<tr>
+			  <th style="flex-basis: 8%;">&nbsp</th>
+			  <th style="flex-basis: 23%;">Name &nbsp;
+				<img src="{% static 'firewallz/icons/sort.svg' %}" class="sort-icon" onclick="sort(0)"></th>
+			  <th style="flex-basis: 23%;">College &nbsp;
+				<img src="{% static 'firewallz/icons/sort.svg' %}" class="sort-icon" onclick="sort(1)"></th>
+			  <th style="flex-basis: 23%;">Sport &nbsp;
+				<img src="{% static 'firewallz/icons/sort.svg' %}" class="sort-icon" onclick="sort(2)"></th>
+			  <th style="flex-basis: 23%;">Gender &nbsp;
+				<img src="{% static 'firewallz/icons/sort.svg' %}" class="sort-icon" onclick="sort(3)"></th>
+			  <td style="display: none;">ID_No</td>
+			</tr>
+		  </thead>
+		  <tbody class="blue lighten-5" id="left-body">
+		  </tbody>
+		</table>
+		<!-- <ul class="collapsible left-one" data-collapsible="expandable" id="left-table-ul">
+		</ul> -->
+		<!-- LEFT INDIVIDUAL TEMPLATE-->
+		<template id="left-temp">
+		  <tr class="left-table-rows">
+			<td style="flex-basis: 8%;" class="left-table-checkbox"><i style="flex-basis: 8%;" class="material-icons indiv-icon-check tooltipped change_cursor" data-position="right" data-delay="50" data-tooltip="Select/Deselect this participant" onclick="toggleSelection(this);">check_box_outline_blank</i></td>
+			<td style="flex-basis: 23%;" class="left-table-name">Name</td>
+			<td style="flex-basis: 23%;" class="left-table-college">College Name</td>
+			<td style="flex-basis: 23%;" class="left-table-sport">Sport</td>
+			<td style="flex-basis: 23%;" class="left-table-gender">Gender</td>
+			<td style="display: none;" class="left-table-id">ID_No</td>
+		  </tr>
+		</template>
+		<table class="right-one highlight bordered centered">
+		  <thead class="blue lighten-3">
+			<tr>
+			  <th style="flex-basis: 22%;">Name</th>
+			  <th style="flex-basis: 22%;">College</th>
+			  <th style="flex-basis: 22%;">Sport</th>
+			  <th style="flex-basis: 16%;">Gender</th>
+			  <td style="display: none;">ID_No</td>
+			  <th style="flex-basis: 18%;">&nbsp</th>
+			</tr>
+		  </thead>
+		  <tbody class="blue lighten-5" id="right-body">
+		  </tbody>
+		</table>
+		<template id="right-temp">
+		  <tr class="right-table-rows">
+			<td style="flex-basis: 22%;" class="right-table-name">Name</td>
+			<td style="flex-basis: 22%;" class="right-table-college">College Name</td>
+			<td style="flex-basis: 22%;" class="right-table-sport">Sport</td>
+			<td style="flex-basis: 16%;" class="right-table-gender">Gender</td>
+			<td style="display: none;" class="right-table-id">ID_No</td>
+			<td style="flex-basis: 6%;" class="left-table-checkbox"><i style="flex-basis: 8%;" class="material-icons indiv-icon-check tooltipped change_cursor" data-position="right" data-delay="50" data-tooltip="Select/Deselect this participant" onclick="toggleRightSelection(this);">check_box_outline_blank</i></td>
+			<td style="flex-basis: 12%;" class="right-table-undo change_cursor" onclick="removeRight(this.parentElement);"><i class="material-icons tooltipped" data-position="left" data-delay="50" data-tooltip="Undo selection of this participant">undo</i></td>
+		  </tr>
+		</template>
+		<div class="modal" id="confirm_dialog">
+		  <div class="modal-content center">
+			<p id="confirm_text">Do you want to confirm grouping of 5 people?</p><br>
+			<a class="waves-effect waves-light btn z-depth-5" onclick="confirmGroup()" id="group_confirm_btn1"><span>Yes</span></a>
+			<a class="waves-effect waves-light btn z-depth-5" onclick="closeConfirm()" id="group_confirm_btn2"><span>Cancel</span></a>
+			<a class="waves-effect waves-light btn z-depth-5" onclick="closeConfirm()" style="display: none;" id="group_confirm_btn3"><span>Done</span></a>
+		  </div>
+		</div>
+		<div class="modal modal-fixed-footer" id="add_participant_modal">
+		  <div class="modal-content row">
+			<form class="col s12" id="add_participant_form">
+			  <div class="row">
+				<div class="input-field col s12"> <i class="material-icons prefix">person</i> <input type="text" name="Indi_Captain_Name" id="indi_captain_name_field" class="validate" required="required"> <label for="indi_captain_name_field" data-error="Enter Name of Participant">Name of Participant</label> </div>
+			  </div>
+			  <div class="row">
+				<div class="input-field col s12">
+				  <i class="material-icons prefix">business</i>
+				  <select id="college_field" name="College">
+					<option value="" disabled="disabled" selected="selected"></option>
+				  </select>
+				  <label for="college_field" data-error="Select College Name">College</label>
+				</div>
+			  </div>
+			  <div class="row">
+				<div class="input-field col s12"> <i class="material-icons prefix">email</i> <input type="email" name="Indi_Captain_Email" id="indi_captain_email_field" class="validate" required="required"> <label for="indi_captain_email_field" data-error="Enter a Valid Email">E-Mail of Participant</label> </div>
+			  </div>
+			  <div class="row">
+				<div class="input-field col s12"> <i class="material-icons prefix">local_phone</i> <input type="text" name="Indi_Captain_Phone" id="indi_captain_phone_field" class="validate" required="required" maxlength="10" data-length="10"> <label for="indi_captain_phone_field" data-error="Enter Phone Number">Participant Phone Number</label> </div>
+			  </div>
+			  <div class="row">
+				<div class="input-field col s12">
+				  <i class="material-icons prefix">directions_run</i>
+				  <select id="participant_sport_select" multiple="multiple">
+					<option value="" disabled="disabled" selected="selected"></option>
+				  </select>
+				  <label for="indi_sport_field" data-error="Enter Sport of Participant">Sport</label>
+				</div>
+			  </div>
+			  <div class="row">
+				<div class="col s4 center"> Gender </div>
+				<div class="col s4 center"> <input type="radio" name="indi_gender" id="indi_male" value="male"> <label for="indi_male">Male</label> </div>
+				<div class="col s4 center"> <input type="radio" name="indi_gender" id="indi_female" value="female"> <label for="indi_female">Female</label> </div>
+			  </div>
+			  <div class="row" id="submit-indi-btn">
+				<div class="col s12 center"> <a class="waves-effect waves-light btn btn-large" onclick="addParticipantSubmit()"><i class="material-icons right">send</i>Submit</a> </div>
+			  </div>
+			</form>
+		  </div>
+		  <div class="modal-footer">
+			<a class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+		  </div>
+		</div>
+		<div id="contacts" class="modal modal-fixed-footer">
+		  <div class="modal-content">
+			<h4>Emergency Contacts</h4>
+			<p>Mehul : +91 8427878749</p>
+			<p>Ankush : +91 9928068889</p>
+		  </div>
+		  <div class="modal-footer">
+			<a class="modal-action modal-close waves-effect waves-green btn-flat ">Close</a>
+		  </div>
+		</div>
+		<div id="stat" class="stats teal center-align">
+		  <a class="close white-text" id="close" onclick="close_stats()"><i class="material-icons medium">close</i></a>
+		  <a class="btn csv-btn" id="csv" href="/firewallz/stats_csv/" target="_blank">Download CSV</a>
+		  <a class="btn csv-btn" id="pdf" href="/firewallz/stats_excel/" target="_blank">Download Excel</a>
+		  <a class="btn csv-btn" id="excel" href="/firewallz/stats_html/" target="_blank">Download PDF</a>
+		  <div class="container" id="stat_data">
+			<ul class="collapsible popout center-align" data-collapsible="accordion" id="stats_ul">
+			  <li>
+				<div class="collapsible-header"><i class="material-icons">account_balance</i>College_1</div>
+				<div class="collapsible-body center white">
+				  <div class="collection ">
+					<a class="collection-item">Alvin<span id="phn_no" class="right">9929823984</span></a>
+					<a class="collection-item">Alvin<span id="phn_no" class="right">9929823984</span></a>
+					<a class="collection-item">Alvin<span id="phn_no" class="right">9929823984</span></a>
+					<a class="collection-item">Alvin<span id="phn_no" class="right">9929823984</span></a>
+				  </div>
+				</div>
+			  </li>
+			</ul>
+		  </div>
+		</div>
+		<footer class="page-footer blue darken-2">
+		  <div class="container">
+			<div class="row">
+			  <div class="col s12 center">
+				<span>Coding Club, BOSM 2019</span>
+			  </div>
+			</div>
+		  </div>
+		</footer>
+	  </body>
+	</html>

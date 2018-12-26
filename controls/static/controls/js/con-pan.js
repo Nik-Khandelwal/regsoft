@@ -94,11 +94,13 @@ function sendEdit() {
   var formData = serializeArray(document.getElementById('edit-part-form'));
   var sport_id = [];
   var temp=6;
-  while(formData[temp].name=="sport_select") {
-    if (temp!=6) {
+  //this loop selects all sports selected by the user and append their ids in sport_id
+  for(let i = temp; i<formData.length - 1; i++,temp++)
+  {
+    if(formData[i].name == 'sport_select')
+    {
       sport_id.push(parseInt(formData[temp].value));
     }
-    temp++;
   }
   var notesss = formData[temp].value;
   var sendObj = {
@@ -126,6 +128,8 @@ function sendEdit() {
   ourRequest.onreadystatechange = function() {
     if (ourRequest.readyState === 4 && ourRequest.status === 200) {
       var jsonResponse = JSON.parse(ourRequest.responseText);
+       //if the participant details are changed , fetch the new participant list
+      fetchParticipants();
       Materialize.toast('Success!', 3000);
     } else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
       Materialize.toast('There was some error connecting to the server!', 3000);

@@ -68,8 +68,8 @@ from datetime import datetime
 
 from django.contrib.auth import get_user_model
 User=get_user_model()
- 
- 
+
+
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
@@ -82,550 +82,550 @@ pusher_client = pusher.Pusher(
 )
 
 def is_controls_admin(user):
-	if user:
-		if Controls_user.objects.get(pk=1).user == user:
-			return True
-	return False
+    if user:
+        if Controls_user.objects.get(pk=1).user == user:
+            return True
+    return False
 
 
 @cache_page(CACHE_TTL)
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_controls_admin, login_url='/regsoft/')
 def main(request):
-	if request.user.is_authenticated():
-		if is_controls_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/regsoft/')
-	else:
-		return HttpResponseRedirect('/regsoft/')
-	mon = Money()
-	mon.save()
-	return render(request,'controls/index1.html')
+    if request.user.is_authenticated():
+        if is_controls_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+    mon = Money()
+    mon.save()
+    return render(request,'controls/index1.html')
 
 
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_controls_admin, login_url='/regsoft/')
 def details(request):
-	if request.user.is_authenticated():
-		if is_controls_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/regsoft/')
-	else:
-		return HttpResponseRedirect('/regsoft/')
-	data=[]
-	for gr in Group.objects.all():
-		b=[]
-		pl = Enteredplayer.objects.filter(group=gr).filter(controls_passed=False)
-		a=[]
-		for p in pl:
-			a.append(Regplayer.objects.get(pk=p.regplayer_id))
-			p.controls_displayed = True
-			p.save()
-		for t in a:
-			s=[]
-			s.append(t.city)
-			s.append(t.name.name)
-			s.append(t.email_id)
-			s.append(t.gender)
-			s.append(t.unbilled_amt)
-			s.append(t.college)
-			s.append(t.mobile_no)
-			s.append(t.entered)
-			s.append(t.sport)
-			s.append(t.pk)
-			b.append(s)
-		if b:
-			data.append({"participants":b,"groupid":gr.group_code})
-	return HttpResponse(json.dumps(data), content_type='application/json')
+    if request.user.is_authenticated():
+        if is_controls_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+    data=[]
+    for gr in Group.objects.all():
+        b=[]
+        pl = Enteredplayer.objects.filter(group=gr).filter(controls_passed=False)
+        a=[]
+        for p in pl:
+            a.append(Regplayer.objects.get(pk=p.regplayer_id))
+            p.controls_displayed = True
+            p.save()
+        for t in a:
+            s=[]
+            s.append(t.city)
+            s.append(t.name.name)
+            s.append(t.email_id)
+            s.append(t.gender)
+            s.append(t.unbilled_amt)
+            s.append(t.college)
+            s.append(t.mobile_no)
+            s.append(t.entered)
+            s.append(t.sport)
+            s.append(t.pk)
+            b.append(s)
+        if b:
+            data.append({"participants":b,"groupid":gr.group_code})
+    return HttpResponse(json.dumps(data), content_type='application/json')
 
 
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_controls_admin, login_url='/regsoft/')
 def create_bill(request):
-	if request.user.is_authenticated():
-		if is_controls_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/regsoft/')
-	else:
-		return HttpResponseRedirect('/regsoft/')
-	bil = Billcontrols()
-	bil.bill_no=Billcontrols.objects.all().last().pk +1
-	bil.save()
-	dat = {"success":1}
-	return HttpResponse(json.dumps(dat), content_type='application/json')
+    if request.user.is_authenticated():
+        if is_controls_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+    bil = Billcontrols()
+    bil.bill_no=Billcontrols.objects.all().last().pk +1
+    bil.save()
+    dat = {"success":1}
+    return HttpResponse(json.dumps(dat), content_type='application/json')
 
 
 
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_controls_admin, login_url='/regsoft/')
 def generate_bill(request):
-	if request.user.is_authenticated():
-		if is_controls_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/regsoft/')
-	else:
-		return HttpResponseRedirect('/regsoft/')
-	if request.method=='POST':
-		data = json.loads( request.body.decode('utf-8') )
-		sums = 0
-		print(data['data']['id_arr'])
+    if request.user.is_authenticated():
+        if is_controls_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+    if request.method=='POST':
+        data = json.loads( request.body.decode('utf-8') )
+        sums = 0
+        print(data['data']['id_arr'])
 
-		for i,j in zip(data['data']['id_arr'], data['data']['amt_arr']):
-			rp = Regplayer.objects.get(pk=int(i))
-			rp.unbilled_amt = j
-			rp.save()
-			pl = Enteredplayer.objects.get(regplayer = rp)
-			pl.controls_passed = True
-			pl.billcontrols = Billcontrols.objects.filter(unbilled_amt=0).first()
-			pl.save()
-		# for i in data['data']['id_arr']:
-		# 	rp = Regplayer.objects.get(pk=int(i))
-		# 	pl.unbilled_amt = data['data']['amt_arr'][]
-		# 	pl = Enteredplayer.objects.get(regplayer = rp)
-		# 	pl.controls_passed = True
-		# 	pl.billcontrols = Billcontrols.objects.filter(unbilled_amt=0).first()
-		# 	pl.save()
-		bil = Billcontrols.objects.filter(unbilled_amt=0).first()
-		bil.unbilled_amt = data['data']['net_amt']
-		#bil.amt_received = int(data['data']['deno_2000'])*2000 + int(data['data']['deno_500'])*500 + int(data['data']['deno_200'])*200 + int(data['data']['deno_100'])*100 + int(data['data']['deno_50'])*50
-		bil.amt_received = int(data['data']['deno_2000'])*2000 + int(data['data']['deno_500'])*500 + int(data['data']['deno_200'])*200 + int(data['data']['deno_100'])*100 + int(data['data']['deno_50'])*50 + int(data['data']['deno_20'])*20 + int(data['data']['deno_10'])*10
-		bil.save()
-		money = Money.objects.get(pk=1)
-		print(data)
-		money.twothousand += int(data['data']['deno_2000'])
-		money.fivehundred += int(data['data']['deno_500'])
-		money.twohundred += int(data['data']['deno_200'])
-		money.hundred += int(data['data']['deno_100'])
-		money.fifty += int(data['data']['deno_50'])
-		money.twenty += int(data['data']['deno_20'])
-		money.ten += int(data['data']['deno_10'])
-		money.save()
+        for i,j in zip(data['data']['id_arr'], data['data']['amt_arr']):
+            rp = Regplayer.objects.get(pk=int(i))
+            rp.unbilled_amt = j
+            rp.save()
+            pl = Enteredplayer.objects.get(regplayer = rp)
+            pl.controls_passed = True
+            pl.billcontrols = Billcontrols.objects.filter(unbilled_amt=0).first()
+            pl.save()
+        # for i in data['data']['id_arr']:
+        #     rp = Regplayer.objects.get(pk=int(i))
+        #     pl.unbilled_amt = data['data']['amt_arr'][]
+        #     pl = Enteredplayer.objects.get(regplayer = rp)
+        #     pl.controls_passed = True
+        #     pl.billcontrols = Billcontrols.objects.filter(unbilled_amt=0).first()
+        #     pl.save()
+        bil = Billcontrols.objects.filter(unbilled_amt=0).first()
+        bil.unbilled_amt = data['data']['net_amt']
+        #bil.amt_received = int(data['data']['deno_2000'])*2000 + int(data['data']['deno_500'])*500 + int(data['data']['deno_200'])*200 + int(data['data']['deno_100'])*100 + int(data['data']['deno_50'])*50
+        bil.amt_received = int(data['data']['deno_2000'])*2000 + int(data['data']['deno_500'])*500 + int(data['data']['deno_200'])*200 + int(data['data']['deno_100'])*100 + int(data['data']['deno_50'])*50 + int(data['data']['deno_20'])*20 + int(data['data']['deno_10'])*10
+        bil.save()
+        money = Money.objects.get(pk=1)
+        print(data)
+        money.twothousand += int(data['data']['deno_2000'])
+        money.fivehundred += int(data['data']['deno_500'])
+        money.twohundred += int(data['data']['deno_200'])
+        money.hundred += int(data['data']['deno_100'])
+        money.fifty += int(data['data']['deno_50'])
+        money.twenty += int(data['data']['deno_20'])
+        money.ten += int(data['data']['deno_10'])
+        money.save()
 
-		dat = {"success":1, "bills_pk":bil.pk}
-		print(pl.controls_passed)
-		return HttpResponse(json.dumps(dat), content_type='application/json')
+        dat = {"success":1, "bills_pk":bil.pk}
+        print(pl.controls_passed)
+        return HttpResponse(json.dumps(dat), content_type='application/json')
 
 
 def generate_bill_pusher(request):
-	if request.user.is_authenticated():
-		if is_controls_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/regsoft/')
-	else:
-		return HttpResponseRedirect('/regsoft/')
-	data_recnacc=[]
-	for gr in Group.objects.all():
-		b=[]
-		pl = Enteredplayer.objects.filter(controls_passed=True).filter(group=gr).filter(recnacc_displayed=False)
-		a=[]
-		for p in pl:
-			a.append(Regplayer.objects.get(pk=p.regplayer_id))
-			p.recnacc_displayed = True
-			p.save()
-		for t in a:
-			b.append({"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
-		if b:
-			data_recnacc.append({"participants":b,"groupid":gr.group_code})
-			
-	print("generate bill pusher start")
-	pusher_client.trigger('my-channel', 'my-event', data_recnacc)
-	print("pusher")
-	return HttpResponse(json.dumps({"success":1}), content_type='application/json')
+    if request.user.is_authenticated():
+        if is_controls_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+    data_recnacc=[]
+    for gr in Group.objects.all():
+        b=[]
+        pl = Enteredplayer.objects.filter(controls_passed=True).filter(group=gr).filter(recnacc_displayed=False)
+        a=[]
+        for p in pl:
+            a.append(Regplayer.objects.get(pk=p.regplayer_id))
+            p.recnacc_displayed = True
+            p.save()
+        for t in a:
+            b.append({"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
+        if b:
+            data_recnacc.append({"participants":b,"groupid":gr.group_code})
+
+    print("generate bill pusher start")
+    pusher_client.trigger('my-channel', 'my-event', data_recnacc)
+    print("pusher")
+    return HttpResponse(json.dumps({"success":1}), content_type='application/json')
 
 
 
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_controls_admin, login_url='/regsoft/')
 def arpit(request):
-	if request.user.is_authenticated():
-		if is_controls_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/regsoft/')
-	else:
-		return HttpResponseRedirect('/regsoft/')
-	data = json.loads( request.body.decode('utf-8') )
-	money = Money.objects.get(pk=1)
-	print(data)
-	if data['data']['type'] == "subtract":
-		money.twothousand -= int(data['data']['deno_2000'])
-		money.fivehundred -= int(data['data']['deno_500'])
-		money.twohundred -= int(data['data']['deno_200'])
-		money.hundred -= int(data['data']['deno_100'])
-		money.fifty -= int(data['data']['deno_50'])
-		money.twenty -= int(data['data']['deno_20'])
-		money.ten -= int(data['data']['deno_10'])
-	if data['data']['type'] == "update":
-		money.twothousand = int(data['data']['deno_2000'])
-		money.fivehundred = int(data['data']['deno_500'])
-		money.twohundred = int(data['data']['deno_200'])
-		money.hundred = int(data['data']['deno_100'])
-		money.fifty = int(data['data']['deno_50'])
-		money.twenty = int(data['data']['deno_20'])
-		money.ten = int(data['data']['deno_10'])
-	money.save()
-	dat = {"success":1}
-	data_denoms = [1]
-	pusher_client.trigger('controls_denoms_channel', 'controls_denoms_event', data_denoms)
-	return HttpResponse(json.dumps(dat), content_type='application/json')
-	
+    if request.user.is_authenticated():
+        if is_controls_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+    data = json.loads( request.body.decode('utf-8') )
+    money = Money.objects.get(pk=1)
+    print(data)
+    if data['data']['type'] == "subtract":
+        money.twothousand -= int(data['data']['deno_2000'])
+        money.fivehundred -= int(data['data']['deno_500'])
+        money.twohundred -= int(data['data']['deno_200'])
+        money.hundred -= int(data['data']['deno_100'])
+        money.fifty -= int(data['data']['deno_50'])
+        money.twenty -= int(data['data']['deno_20'])
+        money.ten -= int(data['data']['deno_10'])
+    if data['data']['type'] == "update":
+        money.twothousand = int(data['data']['deno_2000'])
+        money.fivehundred = int(data['data']['deno_500'])
+        money.twohundred = int(data['data']['deno_200'])
+        money.hundred = int(data['data']['deno_100'])
+        money.fifty = int(data['data']['deno_50'])
+        money.twenty = int(data['data']['deno_20'])
+        money.ten = int(data['data']['deno_10'])
+    money.save()
+    dat = {"success":1}
+    data_denoms = [1]
+    pusher_client.trigger('controls_denoms_channel', 'controls_denoms_event', data_denoms)
+    return HttpResponse(json.dumps(dat), content_type='application/json')
+
 
 
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_controls_admin, login_url='/regsoft/')
 def check_updates(request):
-	if request.user.is_authenticated():
-		if is_controls_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/regsoft/')
-	else:
-		return HttpResponseRedirect('/regsoft/')
-	data=[]
-	for gr in Group.objects.all():
-		b=[]
-		pl = Enteredplayer.objects.filter(group=gr).filter(controls_passed=False).filter(controls_displayed=False)
-		a=[]
-		for p in pl:
-			a.append(Regplayer.objects.get(pk=p.regplayer_id))
-			p.controls_displayed = True
-			p.save()
-		for t in a:
-			s=[]
-			s.append(t.city)
-			s.append(t.name.name)
-			s.append(t.email_id)
-			s.append(t.gender)
-			s.append(t.unbilled_amt)
-			s.append(t.college)
-			s.append(t.mobile_no)
-			s.append(t.entered)
-			s.append(t.sport)
-			s.append(t.pk)
-			b.append(s)
-		if b:
-			data.append({"participants":b,"groupid":gr.group_code})
-	return HttpResponse(json.dumps(data), content_type='application/json')
+    if request.user.is_authenticated():
+        if is_controls_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+    data=[]
+    for gr in Group.objects.all():
+        b=[]
+        pl = Enteredplayer.objects.filter(group=gr).filter(controls_passed=False).filter(controls_displayed=False)
+        a=[]
+        for p in pl:
+            a.append(Regplayer.objects.get(pk=p.regplayer_id))
+            p.controls_displayed = True
+            p.save()
+        for t in a:
+            s=[]
+            s.append(t.city)
+            s.append(t.name.name)
+            s.append(t.email_id)
+            s.append(t.gender)
+            s.append(t.unbilled_amt)
+            s.append(t.college)
+            s.append(t.mobile_no)
+            s.append(t.entered)
+            s.append(t.sport)
+            s.append(t.pk)
+            b.append(s)
+        if b:
+            data.append({"participants":b,"groupid":gr.group_code})
+    return HttpResponse(json.dumps(data), content_type='application/json')
 
 
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_controls_admin, login_url='/regsoft/')
 def piyali(request):
-	if request.user.is_authenticated():
-		if is_controls_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/regsoft/')
-	else:
-		return HttpResponseRedirect('/regsoft/')
-	if request.method=='POST':
-		data = json.loads( request.body.decode('utf-8') )
-		print(data['data']['id_arr'])
-		for i in data['data']['id_arr']:
-			rp = Regplayer.objects.get(pk=int(i))
-			pl = Enteredplayer.objects.get(regplayer = rp)
-			pl.controls_passed = True
-			pl.billcontrols = Billcontrols.objects.filter(unbilled_amt=0).first()
-			pl.save()
-		bil = Billcontrols.objects.filter(unbilled_amt=0).first()
-		bil.unbilled_amt = data['data']['paid_amt']
-		bil.amt_received = data['data']['paid_amt']
-		bil.dd_no = data['data']['dd_num']
-		bil.save()
-		dat = {"success":1, "bills_pk":bil.pk}
-		print(pl.controls_passed)
-		return HttpResponse(json.dumps(dat), content_type='application/json')
+    if request.user.is_authenticated():
+        if is_controls_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+    if request.method=='POST':
+        data = json.loads( request.body.decode('utf-8') )
+        print(data['data']['id_arr'])
+        for i in data['data']['id_arr']:
+            rp = Regplayer.objects.get(pk=int(i))
+            pl = Enteredplayer.objects.get(regplayer = rp)
+            pl.controls_passed = True
+            pl.billcontrols = Billcontrols.objects.filter(unbilled_amt=0).first()
+            pl.save()
+        bil = Billcontrols.objects.filter(unbilled_amt=0).first()
+        bil.unbilled_amt = data['data']['paid_amt']
+        bil.amt_received = data['data']['paid_amt']
+        bil.dd_no = data['data']['dd_num']
+        bil.save()
+        dat = {"success":1, "bills_pk":bil.pk}
+        print(pl.controls_passed)
+        return HttpResponse(json.dumps(dat), content_type='application/json')
 
 
 @cache_page(CACHE_TTL)
 @login_required(login_url = '/regsoft/')
 @user_passes_test(is_controls_admin, login_url='/regsoft/')
 def unconfirm_grp(request):
-	if request.user.is_authenticated():
-		if is_controls_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/regsoft/')
-	else:
-		return HttpResponseRedirect('/regsoft/')
-	return render(request,'controls/controls-dereg/index.html')
+    if request.user.is_authenticated():
+        if is_controls_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+    return render(request,'controls/controls-dereg/index.html')
 
 
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_controls_admin, login_url='/regsoft/')
 def unconfirm_details(request):
-	if request.user.is_authenticated():
-		if is_controls_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/regsoft/')
-	else:
-		return HttpResponseRedirect('/regsoft/')
-	data=[]
-	for gr in Group.objects.all():
-		b=[]
-		pl = Enteredplayer.objects.filter(group=gr).filter(controls_passed=True)
-		a=[]
-		for p in pl:
-			a.append(Regplayer.objects.get(pk=p.regplayer_id))
-			p.controls_displayed = True
-			p.save()
-		for t in a:
-			s=[]
-			s.append(t.city)
-			s.append(t.name.name)
-			s.append(t.email_id)
-			s.append(t.gender)
-			s.append(t.unbilled_amt)
-			s.append(t.college)
-			s.append(t.mobile_no)
-			s.append(t.entered)
-			s.append(t.sport)
-			s.append(t.pk)
-			b.append(s)
-		if b:
-			data.append({"participants":b,"groupid":gr.group_code})
-	return HttpResponse(json.dumps(data), content_type='application/json')
+    if request.user.is_authenticated():
+        if is_controls_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+    data=[]
+    for gr in Group.objects.all():
+        b=[]
+        pl = Enteredplayer.objects.filter(group=gr).filter(controls_passed=True)
+        a=[]
+        for p in pl:
+            a.append(Regplayer.objects.get(pk=p.regplayer_id))
+            p.controls_displayed = True
+            p.save()
+        for t in a:
+            s=[]
+            s.append(t.city)
+            s.append(t.name.name)
+            s.append(t.email_id)
+            s.append(t.gender)
+            s.append(t.unbilled_amt)
+            s.append(t.college)
+            s.append(t.mobile_no)
+            s.append(t.entered)
+            s.append(t.sport)
+            s.append(t.pk)
+            b.append(s)
+        if b:
+            data.append({"participants":b,"groupid":gr.group_code})
+    return HttpResponse(json.dumps(data), content_type='application/json')
 
 
 #var data = [["BITS Pilani",[["Arpit", 9829775537],["Nikhil", 921379131],["Sri", 2349719891],["Satya", 9958295537]]],["BITS Hyderabad",[["Arpit", 9829775537],["Nikhil", 921379131],["Sri", 2349719891],["Satya", 9958295537],["Piyali", 4567890435]]],["IIT Delhi",[["Part1", 47656575537],["Part2", 7647676],["Part3", 2345678435678]]]];
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_controls_admin, login_url='/regsoft/')
 def view_stats(request):
-	if request.user.is_authenticated():
-		if is_controls_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/regsoft/')
-	else:
-		return HttpResponseRedirect('/regsoft/')
-	data = []
-	for t in Team.objects.all():
-		dat = []
-		das = []
-		for us in User.objects.filter(team=t,deleted=0):
-			try:	
-				rp = Regplayer.objects.get(name=us)
-				pl = Enteredplayer.objects.get(regplayer=rp)
-				if pl.controls_passed is True:
-					d = []
-					d.append(rp.name.name)
-					d.append(rp.mobile_no)
-					das.append(d)
-			except:
-				pass
-		if das:
-			dat.append(t.college)
-			dat.append(das)
-		if dat:
-			data.append(dat)
-	print(data)
-	return HttpResponse(json.dumps(data), content_type='application/json')
+    if request.user.is_authenticated():
+        if is_controls_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+    data = []
+    for t in Team.objects.all():
+        dat = []
+        das = []
+        for us in User.objects.filter(team=t,deleted=0):
+            try:
+                rp = Regplayer.objects.get(name=us)
+                pl = Enteredplayer.objects.get(regplayer=rp)
+                if pl.controls_passed is True:
+                    d = []
+                    d.append(rp.name.name)
+                    d.append(rp.mobile_no)
+                    das.append(d)
+            except:
+                pass
+        if das:
+            dat.append(t.college)
+            dat.append(das)
+        if dat:
+            data.append(dat)
+    print(data)
+    return HttpResponse(json.dumps(data), content_type='application/json')
 
 
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_controls_admin, login_url='/regsoft/')
 def unconfirm_player(request):
-	if request.user.is_authenticated():
-		if is_controls_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/regsoft/')
-	else:
-		return HttpResponseRedirect('/regsoft/')
-	if request.method=='POST':
-		data = json.loads( request.body.decode('utf-8') )
-		print(data)
-		fne = 0
-		for i in data['data']['id_arr']:
-			rp = Regplayer.objects.get(pk=int(i))
-			rp.unbilled_amt = 1100-int(rp.name.pcramt)
-			rp.save()
-			pl = Enteredplayer.objects.get(regplayer = rp)
-			pl.controls_passed = False
-			pl.billcontrols = None
-			pl.save()
-			fne += rp.unbilled_amt
-		dat = {"unbilled_amt":fne}
-	return HttpResponse(json.dumps(dat), content_type='application/json')
+    if request.user.is_authenticated():
+        if is_controls_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+    if request.method=='POST':
+        data = json.loads( request.body.decode('utf-8') )
+        print(data)
+        fne = 0
+        for i in data['data']['id_arr']:
+            rp = Regplayer.objects.get(pk=int(i))
+            rp.unbilled_amt = 1100-int(rp.name.pcramt)
+            rp.save()
+            pl = Enteredplayer.objects.get(regplayer = rp)
+            pl.controls_passed = False
+            pl.billcontrols = None
+            pl.save()
+            fne += rp.unbilled_amt
+        dat = {"unbilled_amt":fne}
+    return HttpResponse(json.dumps(dat), content_type='application/json')
 
 
 def unconfirm_player_pusher(request):
-	if request.user.is_authenticated():
-		if is_controls_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/regsoft/')
-	else:
-		return HttpResponseRedirect('/regsoft/')
-	if request.method=='POST':
-		dats = json.loads( request.body.decode('utf-8') )
-		data=[]
-		for gr in Group.objects.all():
-			b=[]
-			a=[]
-			print(dats)
-			for i in dats['data']:
-				rp = Regplayer.objects.get(pk=int(i))
-				pl = Enteredplayer.objects.get(regplayer = rp)
-				if pl.group == gr:
-					a.append(rp)
-					pl.controls_displayed = True
-					pl.save()
-			for t in a:
-				s=[]
-				s.append(t.city)
-				s.append(t.name.name)
-				s.append(t.email_id)
-				s.append(t.gender)
-				s.append(t.unbilled_amt)
-				s.append(t.college)
-				s.append(t.mobile_no)
-				s.append(t.entered)
-				s.append(t.sport)
-				s.append(t.pk)
-				b.append(s)
-			if b:
-				data.append({"participants":b,"groupid":gr.group_code})
-		print("unconfirm pusher started")
-		pusher_client.trigger('controls_unconfirm_channel', 'controls_unconfirm_event', data)
-		print("pusher ends")
-	return HttpResponse(json.dumps({"success":1}), content_type='application/json')
+    if request.user.is_authenticated():
+        if is_controls_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+    if request.method=='POST':
+        dats = json.loads( request.body.decode('utf-8') )
+        data=[]
+        for gr in Group.objects.all():
+            b=[]
+            a=[]
+            print(dats)
+            for i in dats['data']:
+                rp = Regplayer.objects.get(pk=int(i))
+                pl = Enteredplayer.objects.get(regplayer = rp)
+                if pl.group == gr:
+                    a.append(rp)
+                    pl.controls_displayed = True
+                    pl.save()
+            for t in a:
+                s=[]
+                s.append(t.city)
+                s.append(t.name.name)
+                s.append(t.email_id)
+                s.append(t.gender)
+                s.append(t.unbilled_amt)
+                s.append(t.college)
+                s.append(t.mobile_no)
+                s.append(t.entered)
+                s.append(t.sport)
+                s.append(t.pk)
+                b.append(s)
+            if b:
+                data.append({"participants":b,"groupid":gr.group_code})
+        print("unconfirm pusher started")
+        pusher_client.trigger('controls_unconfirm_channel', 'controls_unconfirm_event', data)
+        print("pusher ends")
+    return HttpResponse(json.dumps({"success":1}), content_type='application/json')
 
 
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_controls_admin, login_url='/regsoft/')
 def passed_stats(request):
-	if request.user.is_authenticated():
-		if is_controls_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/regsoft/')
-	else:
-		return HttpResponseRedirect('/regsoft/')
-	fire_conf = Enteredplayer.objects.all().count()
-	cont_conf = Enteredplayer.objects.filter(controls_passed=True).count()
-	rec_conf = Enteredplayer.objects.filter(recnacc_passed=True).count()
-	data = {"fire_conf":fire_conf,"cont_conf":cont_conf,"rec_conf":rec_conf}
-	return HttpResponse(json.dumps(data), content_type='application/json')
-	
+    if request.user.is_authenticated():
+        if is_controls_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+    fire_conf = Enteredplayer.objects.all().count()
+    cont_conf = Enteredplayer.objects.filter(controls_passed=True).count()
+    rec_conf = Enteredplayer.objects.filter(recnacc_passed=True).count()
+    data = {"fire_conf":fire_conf,"cont_conf":cont_conf,"rec_conf":rec_conf}
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_controls_admin, login_url='/regsoft/')
 def stats_excel(request):
-	if request.user.is_authenticated():
-		if is_controls_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/regsoft/')
-	else:
-		return HttpResponseRedirect('/regsoft/')
-	response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-	response['Content-Disposition'] = 'attachment; filename=Controls_stats.xlsx'
-	wb = openpyxl.Workbook()
-	ws = wb.get_active_sheet()
-	ws.title = "Controls Passed Stats"
+    if request.user.is_authenticated():
+        if is_controls_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=Controls_stats.xlsx'
+    wb = openpyxl.Workbook()
+    ws = wb.get_active_sheet()
+    ws.title = "Controls Passed Stats"
 
-	row_num = 0
+    row_num = 0
 
-	columns = [
-		(u"ID", 15),
-		(u"Name", 40),
-		(u"College",50),
-		(u"Phone", 20),
-		(u"Email", 50),
-		(u"Sport", 20),
-	]
+    columns = [
+        (u"ID", 15),
+        (u"Name", 40),
+        (u"College",50),
+        (u"Phone", 20),
+        (u"Email", 50),
+        (u"Sport", 20),
+    ]
 
-	for col_num in range(len(columns)):
-		c = ws.cell(row=row_num + 1, column=col_num + 1)
-		c.value = columns[col_num][0]
-		#c.style.font.bold = True
-		# set column width
-		ws.column_dimensions[get_column_letter(col_num+1)].width = columns[col_num][1]
+    for col_num in range(len(columns)):
+        c = ws.cell(row=row_num + 1, column=col_num + 1)
+        c.value = columns[col_num][0]
+        #c.style.font.bold = True
+        # set column width
+        ws.column_dimensions[get_column_letter(col_num+1)].width = columns[col_num][1]
 
-	for obj in Enteredplayer.objects.filter(controls_passed=True):
-		row_num += 1
-		row = [
-			obj.regplayer.pk,
-			obj.regplayer.name.name,
-			obj.regplayer.college,
-			obj.regplayer.mobile_no,
-			obj.regplayer.email_id,
-			obj.regplayer.sport,
-		]
+    for obj in Enteredplayer.objects.filter(controls_passed=True):
+        row_num += 1
+        row = [
+            obj.regplayer.pk,
+            obj.regplayer.name.name,
+            obj.regplayer.college,
+            obj.regplayer.mobile_no,
+            obj.regplayer.email_id,
+            obj.regplayer.sport,
+        ]
 
-		for col_num in range(len(row)):
-				c = ws.cell(row=row_num + 1, column=col_num + 1)
-				c.value = row[col_num]
+        for col_num in range(len(row)):
+                c = ws.cell(row=row_num + 1, column=col_num + 1)
+                c.value = row[col_num]
 
-	wb.save(response)
-	return response
+    wb.save(response)
+    return response
 
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_controls_admin, login_url='/regsoft/')
 def stats_csv(request):
-	if request.user.is_authenticated():
-		if is_controls_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/regsoft/')
-	else:
-		return HttpResponseRedirect('/regsoft/')
-	
-	response = HttpResponse(content_type='text/csv')
-	#decide the file name
-	response['Content-Disposition'] = 'attachment; filename="Controls_stats.csv"'
+    if request.user.is_authenticated():
+        if is_controls_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
 
-	writer = csv.writer(response, csv.excel)
-	response.write(u'\ufeff'.encode('utf8'))
+    response = HttpResponse(content_type='text/csv')
+    #decide the file name
+    response['Content-Disposition'] = 'attachment; filename="Controls_stats.csv"'
 
-	writer.writerow([
-		smart_str(u"ID"),
-		smart_str(u"Name"),
-		smart_str(u"College"),
-		smart_str(u"Phone"),
-		smart_str(u"Email"),
-		smart_str(u"Sport"),
-	])
+    writer = csv.writer(response, csv.excel)
+    response.write(u'\ufeff'.encode('utf8'))
 
-	for obj in Enteredplayer.objects.filter(controls_passed=True):
-		writer.writerow([
-			smart_str(obj.regplayer.pk),
-			smart_str(obj.regplayer.name.name),
-			smart_str(obj.regplayer.college),
-			smart_str(obj.regplayer.mobile_no),
-			smart_str(obj.regplayer.email_id),
-			smart_str(obj.regplayer.sport),
-		])
-	return response
+    writer.writerow([
+        smart_str(u"ID"),
+        smart_str(u"Name"),
+        smart_str(u"College"),
+        smart_str(u"Phone"),
+        smart_str(u"Email"),
+        smart_str(u"Sport"),
+    ])
+
+    for obj in Enteredplayer.objects.filter(controls_passed=True):
+        writer.writerow([
+            smart_str(obj.regplayer.pk),
+            smart_str(obj.regplayer.name.name),
+            smart_str(obj.regplayer.college),
+            smart_str(obj.regplayer.mobile_no),
+            smart_str(obj.regplayer.email_id),
+            smart_str(obj.regplayer.sport),
+        ])
+    return response
 
 
 #def render_to_pdf(request):
-#	data = []
-#	for obj in Enteredplayer.objects.filter(controls_passed=True):
-#		data.append({"pk":obj.regplayer.pk,"name":obj.regplayer.name.name,"college":obj.regplayer.college,"mobile_no":obj.regplayer.mobile_no,"email_id":obj.regplayer.email_id,"sport":obj.regplayer.sport})
-#	return render(request,'controls/controls_stats.html',{"mylist":data})
+#    data = []
+#    for obj in Enteredplayer.objects.filter(controls_passed=True):
+#        data.append({"pk":obj.regplayer.pk,"name":obj.regplayer.name.name,"college":obj.regplayer.college,"mobile_no":obj.regplayer.mobile_no,"email_id":obj.regplayer.email_id,"sport":obj.regplayer.sport})
+#    return render(request,'controls/controls_stats.html',{"mylist":data})
 
 #def html_to_pdf_view(request):
  #   paragraphs = ['first paragraph', 'second paragraph', 'third paragraph']
@@ -639,213 +639,216 @@ def stats_csv(request):
 #        response = HttpResponse(pdf, content_type='application/pdf')
 #        response['Content-Disposition'] = 'attachment; filename="controls_stats.pdf"'
 #        return response
- 
+
  #   return response
 
 def stats_html(request):
-	if request.user.is_authenticated():
-		if is_controls_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/regsoft/')
-	else:
-		return HttpResponseRedirect('/regsoft/')
-	data = []
-	for obj in Enteredplayer.objects.filter(controls_passed=True):
-		data.append({"pk":obj.regplayer.pk,"name":obj.regplayer.name.name,"college":obj.regplayer.college,"mobile_no":obj.regplayer.mobile_no,"email_id":obj.regplayer.email_id,"sport":obj.regplayer.sport})
-	context = {"mylist":data}
-	return render(request,'controls/controls_stats.html',context)
+    if request.user.is_authenticated():
+        if is_controls_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+    data = []
+    for obj in Enteredplayer.objects.filter(controls_passed=True):
+        data.append({"pk":obj.regplayer.pk,"name":obj.regplayer.name.name,"college":obj.regplayer.college,"mobile_no":obj.regplayer.mobile_no,"email_id":obj.regplayer.email_id,"sport":obj.regplayer.sport})
+    context = {"mylist":data}
+    return render(request,'controls/controls_stats.html',context)
 
 
 def bill_pdf(request,bill_pk):
-	if request.user.is_authenticated():
-		if is_controls_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/regsoft/')
-	else:
-		return HttpResponseRedirect('/regsoft/')
-	print("compres lite")
-	data = []
-	billl = Billcontrols.objects.get(bill_no=int(bill_pk))
-	for obj in billl.enteredplayer_set.all():
-		rp = Regplayer.objects.get(pk = obj.regplayer.pk)
-		rp.unbilled_amt = 0
-		rp.save()
-		if obj.regplayer.name.grp_leader == 1:
-			data.append({"lis":{"name":obj.regplayer.name.name,"mobile":obj.regplayer.name.phone,"college":obj.regplayer.college}})
-		data.append({"pk":obj.regplayer.pk,"name":obj.regplayer.name.name,"unbilled_amt":obj.regplayer.unbilled_amt})
-	context = {"grand_total":billl.unbilled_amt,"amt_paid":billl.amt_received,"amt_returned":(billl.amt_received-billl.unbilled_amt),"mylist":data,"time":str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))}
-	return render(request,'controls/bill_pdf.html',context)
+    if request.user.is_authenticated():
+        if is_controls_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+    print("compres lite")
+    data = []
+    billl = Billcontrols.objects.get(bill_no=int(bill_pk))
+    for obj in billl.enteredplayer_set.all():
+        rp = Regplayer.objects.get(pk = obj.regplayer.pk)
+        rp.unbilled_amt = 0
+        rp.save()
+        if obj.regplayer.name.grp_leader == 1:
+            data.append({"lis":{"name":obj.regplayer.name.name,"mobile":obj.regplayer.name.phone,"college":obj.regplayer.college}})
+        data.append({"pk":obj.regplayer.pk,"name":obj.regplayer.name.name,"unbilled_amt":obj.regplayer.unbilled_amt})
+    context = {"grand_total":billl.unbilled_amt,"amt_paid":billl.amt_received,"amt_returned":(billl.amt_received-billl.unbilled_amt),"mylist":data,"time":str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))}
+    return render(request,'controls/bill_pdf.html',context)
 
 
 def denomination_display(request):
-	if request.user.is_authenticated():
-		if is_controls_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/regsoft/')
-	else:
-		return HttpResponseRedirect('/regsoft/')
-	money = Money.objects.get(pk=1)
-	data = []
-	data.append(money.ten)
-	data.append(money.twenty)
-	data.append(money.fifty)
-	data.append(money.hundred)
-	data.append(money.twohundred)
-	data.append(money.fivehundred)
-	data.append(money.twothousand)
-	return HttpResponse(json.dumps(data), content_type='application/json')
+    if request.user.is_authenticated():
+        if is_controls_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+    money = Money.objects.get(pk=1)
+    data = []
+    data.append(money.ten)
+    data.append(money.twenty)
+    data.append(money.fifty)
+    data.append(money.hundred)
+    data.append(money.twohundred)
+    data.append(money.fivehundred)
+    data.append(money.twothousand)
+    return HttpResponse(json.dumps(data), content_type='application/json')
 
 
 @cache_page(CACHE_TTL)
 def denominations(request):
-	if request.user.is_authenticated():
-		if is_controls_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/regsoft/')
-	else:
-		return HttpResponseRedirect('/regsoft/')
-	return render(request, 'controls/denominations.html')
+    if request.user.is_authenticated():
+        if is_controls_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+    return render(request, 'controls/denominations.html')
 
 
 
 #Controls panel
 @cache_page(CACHE_TTL)
 def con_pan(request):
-	if request.user.is_authenticated():
-		if is_controls_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/regsoft/')
-	else:
-		return HttpResponseRedirect('/regsoft/')
-	return render(request, 'controls/con_pan.html')
+    if request.user.is_authenticated():
+        if is_controls_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+    return render(request, 'controls/con_pan.html')
 
 def con_pan_details(request):
-	if request.user.is_authenticated():
-		if is_controls_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/regsoft/')
-	else:
-		return HttpResponseRedirect('/regsoft/')
-	data=[]
-	for gr in Group.objects.all():
-		pl = Enteredplayer.objects.filter(group=gr)
-		a=[]
-		for p in pl:
-			a.append(Regplayer.objects.get(pk=p.regplayer_id))
-		for t in a:
-			s=[]
-			s.append(t.pk)
-			s.append(t.name.name)
-			s.append(t.mobile_no)
-			s.append(t.sport)
-			if s:
-				data.append(s)
-	return HttpResponse(json.dumps(data), content_type='application/json')
+    if request.user.is_authenticated():
+        if is_controls_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+    data=[]
+    for gr in Group.objects.all():
+        pl = Enteredplayer.objects.filter(group=gr)
+        a=[]
+        for p in pl:
+            a.append(Regplayer.objects.get(pk=p.regplayer_id))
+        for t in a:
+            s=[]
+            s.append(t.pk)
+            s.append(t.name.name)
+            s.append(t.mobile_no)
+            s.append(t.sport)
+            if s:
+                data.append(s)
+    return HttpResponse(json.dumps(data), content_type='application/json')
 
 
 def con_pan_spec_details(request):
-	if request.user.is_authenticated():
-		if is_controls_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/regsoft/')
-	else:
-		return HttpResponseRedirect('/regsoft/')
-	data = json.loads( request.body.decode('utf-8') )
-	t = Regplayer.objects.get(pk=data['data']['pk'])
-	data = {"pk":t.pk,"name":t.name.name,"sport":t.sport,"phone":t.mobile_no,"email":t.email_id,"blood_grp":t.blood_grp,"college":t.college,"city":t.address,"notes":t.notes}
-	return HttpResponse(json.dumps(data), content_type='application/json')
+    if request.user.is_authenticated():
+        if is_controls_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+    data = json.loads( request.body.decode('utf-8') )
+    t = Regplayer.objects.get(pk=data['data']['pk'])
+    data = {"pk":t.pk,"name":t.name.name,"sport":t.sport,"phone":t.mobile_no,"email":t.email_id,"blood_grp":t.blood_grp,"college":t.college,"city":t.address,"notes":t.notes}
+    return HttpResponse(json.dumps(data), content_type='application/json')
 
 
 def con_pan_edit(request):
-	if request.user.is_authenticated():
-		if is_controls_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/regsoft/')
-	else:
-		return HttpResponseRedirect('/regsoft/')
-	data = json.loads( request.body.decode('utf-8') )
-	t = Regplayer.objects.get(pk=data['data']['pk'])
-	us = User.objects.get(pk=t.name.pk)
-	us.name = data['data']['name']
-	for idno in data['data']['sport_id']:
-		sp=Sport.objects.get(pk=int(idno))
-		us.sport.add(sp)
-		us.sportid=replaceindex(up.sportid,int(idno),'2')
-	us.save()
-	t.mobile_no = data['data']['phone']
-	t.address = data['data']['city']
-	t.email_id = data['data']['email']
-	t.blood_grp = data['data']['blood_grp']
-	t.notes = data['data']['notes']
-	t.sport=''
-	for s in Sport.objects.all():
-		if us.sportid[s.idno]=='2':
-			t.sport=t.sport+s.sport+','
-	t.sport = t.sport[:-1]
-	t.save()
-	return HttpResponse(json.dumps({"success":1}), content_type='application/json')
+    if request.user.is_authenticated():
+        if is_controls_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+    data = json.loads( request.body.decode('utf-8') )
+    t = Regplayer.objects.get(pk=data['data']['pk'])
+    us = User.objects.get(pk=t.name.pk)
+    us.name = data['data']['name']
+    for idno in data['data']['sport_id']:
+        sp=Sport.objects.get(pk=int(idno))
+        us.sport.add(sp)
+        us.sportid=replaceindex(us.sportid,int(idno),'2')
+    us.save()
+    t.mobile_no = data['data']['phone']
+    t.address = data['data']['city']
+    t.email_id = data['data']['email']
+    t.blood_grp = data['data']['blood_grp']
+    t.notes = data['data']['notes']
+    t.sport=''
+    for s in Sport.objects.all():
+        if us.sportid[s.idno]=='2':
+            t.sport=t.sport+s.sport+','
+    t.sport = t.sport[:-1]
+    t.save()
+    return HttpResponse(json.dumps({"success":1}), content_type='application/json')
 
 
 def sportlist(request):
-	if request.user.is_authenticated():
-		if is_controls_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/regsoft/')
-	else:
-		return HttpResponseRedirect('/regsoft/')
-	sp=Sport.objects.all().order_by(Lower('sport'))	
-	d=[]
-	for st in sp:
-			s=[]
-			s.append(st.idno)
-			s.append(st.sport)
-			d.append(s)
-	return JsonResponse({'data':d})
+    if request.user.is_authenticated():
+        if is_controls_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+    sp=Sport.objects.all().order_by(Lower('sport'))
+    d=[]
+    for st in sp:
+            s=[]
+            s.append(st.idno)
+            s.append(st.sport)
+            d.append(s)
+    return JsonResponse({'data':d})
 
 
 def bill_details(request):
-	if request.user.is_authenticated():
-		if is_controls_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/regsoft/')
-	else:
-		return HttpResponseRedirect('/regsoft/')
-	dat = []
-	for b in Billcontrols.objects.all():
-		t = b.enteredplayer_set.all()
-		if t:
-			dat.append({"bill_pk":b.pk,"college":t[0].regplayer.college,"group_id":t[0].group.group_code})
-	return HttpResponse(json.dumps(dat), content_type='application/json')
+    if request.user.is_authenticated():
+        if is_controls_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+    dat = []
+    for b in Billcontrols.objects.all():
+        t = b.enteredplayer_set.all()
+        if t:
+            dat.append({"bill_pk":b.pk,"college":t[0].regplayer.college,"group_id":t[0].group.group_code})
+    return HttpResponse(json.dumps(dat), content_type='application/json')
 
 
 @cache_page(CACHE_TTL)
 def bill_details_html(request):
-	if request.user.is_authenticated():
-		if is_controls_admin(request.user):
-			pass
-		else:
-			logout(request)
-			return HttpResponseRedirect('/regsoft/')
-	else:
-		return HttpResponseRedirect('/regsoft/')
-	return render(request, 'controls/bill_controls.html')
+    if request.user.is_authenticated():
+        if is_controls_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+    return render(request, 'controls/bill_controls.html')
+
+def replaceindex(text,index=0,replacement=''):
+    return '%s%s%s'%(text[:index],replacement,text[index+1:])

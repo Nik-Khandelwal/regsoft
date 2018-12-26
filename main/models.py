@@ -129,7 +129,8 @@ class Accorecnacc(models.Model):
 
 
 class Enteredplayer(models.Model):
-	regplayer = models.OneToOneField(Regplayer, null=True)
+	#on older versions, on_delete defaulted to models.CASCADE. Gives errors in later django versions
+	regplayer = models.OneToOneField(Regplayer, null=True, on_delete=models.CASCADE)
 	group = models.ForeignKey(Group, on_delete=models.CASCADE)
 	controls_passed = models.BooleanField(default = False)
 	recnacc_passed = models.BooleanField(default = False)
@@ -166,9 +167,9 @@ class Money(models.Model):
 
 class Acco_name(models.Model):
 	name = models.CharField(max_length=1000)
-	common_room = models.OneToOneField(Accomodation, null=True, blank=True, related_name="common_room")
-	tt_room = models.OneToOneField(Accomodation, null=True, blank=True, related_name="tt_room")
-	s_room = models.OneToOneField(Accomodation, null=True, blank=True, related_name="s_room")
+	common_room = models.OneToOneField(Accomodation, null=True, blank=True, related_name="common_room", on_delete=models.CASCADE)
+	tt_room = models.OneToOneField(Accomodation, null=True, blank=True, related_name="tt_room", on_delete=models.CASCADE)
+	s_room = models.OneToOneField(Accomodation, null=True, blank=True, related_name="s_room", on_delete=models.CASCADE)
 
 	def __str__(self):
 		return str(self.name)

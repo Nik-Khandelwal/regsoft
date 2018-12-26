@@ -1,90 +1,24 @@
 from __future__ import unicode_literals
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from main.models import Note, Group,Regplayer,Enteredplayer,Billcontrols,Accorecnacc,Accomodation,Controlsystem,Singleroom,Acco_name
-from django.contrib.auth import logout
+
+from main.models import Note, Group,Regplayer,Enteredplayer,    \
+	Accorecnacc,Accomodation,Controlsystem,Singleroom,Acco_name, \
+	Recnacc_user
+
 from django.contrib.auth.models import User
-import json
 from django.contrib.auth import get_user_model
-import string
-import random
-from django.core import serializers
 import pusher
 from django.conf import settings
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
-from django.shortcuts import render
 from django.views.decorators.cache import cache_page
-from django.shortcuts import render
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from main.models import Group,Regplayer,Enteredplayer,Sport,Team
-from django.contrib.auth import logout
-from django.contrib.auth.models import User
-import json
-from django.contrib.auth import get_user_model
-import string
-import random
-from django.core import serializers
-import pusher
-from django.conf import settings
-from django.core.cache.backends.base import DEFAULT_TIMEOUT
-from django.shortcuts import render
-from django.views.decorators.cache import cache_page
-from django.shortcuts import render
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.core.files.storage import FileSystemStorage
-from django.http import HttpResponse
-from django.template.loader import render_to_string
-from io import StringIO
-from xhtml2pdf import pisa
-from django.template.loader import get_template
-from django.template import Context
-from django.http import HttpResponse
-from cgi import escape
-#from weasyprint import HTML
-from random import choice
-from string import ascii_uppercase
-import re
 import openpyxl
 from openpyxl.utils import get_column_letter
 import csv
-from django.utils.encoding import smart_str
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, Http404,HttpResponseRedirect, JsonResponse
-from main.models import CustomUser, Team
-from django.contrib.auth import authenticate, login, logout
-from django.contrib import auth
-from django.views.generic import View, ListView, FormView
-from django.views import generic
-from register.forms import LoginForm, TeamForm, PlayerForm
-from django.db import IntegrityError
-from django.contrib.auth.models import User
-import json
-from django.core import serializers, mail
-from django.contrib.auth.decorators import login_required
-from django.dispatch import receiver
-
-from random import choice
-from string import ascii_uppercase
-
-from django.contrib.sites.shortcuts import get_current_site
-from django.utils.encoding import force_bytes, force_text
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.template.loader import render_to_string
-from register.tokens import account_activation_token
-from django.core.mail import EmailMessage
-from django.core import serializers
-from main.models import Group,Regplayer,Enteredplayer,Sport,Money,Billcontrols,Recnacc_user
+from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import logout
-
-from django.contrib.auth import get_user_model
+import json
+from django.utils.encoding import smart_str
 User=get_user_model()
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
@@ -108,7 +42,7 @@ def is_recnacc_admin(user):
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
 def main(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			print("main")
 			cr = Controlsystem()
@@ -124,7 +58,7 @@ def main(request):
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
 def participant_details(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			print("participant_details")
 			data=[]
@@ -155,7 +89,7 @@ def participant_details(request):
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
 def acco_details(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			print("acco_details")
 			data={}
@@ -183,7 +117,7 @@ def acco_details(request):
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
 def srivatsa(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			print("srivatsa")
 			bill = Accorecnacc()
@@ -201,7 +135,7 @@ def srivatsa(request):
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
 def satyavrat(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			print("satyavrat")
 			if request.method=='POST':
@@ -223,7 +157,7 @@ def satyavrat(request):
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
 def accomodate(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			print("accomodate")
 			if request.method=='POST':
@@ -256,7 +190,7 @@ def accomodate(request):
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
 def accomodate_singleroom(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			print("accomodate_singleroom")
 			if request.method=='POST':
@@ -292,7 +226,7 @@ def accomodate_singleroom(request):
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
 def check_updates(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			print("check_updates")
 			data=[]
@@ -320,7 +254,7 @@ def check_updates(request):
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
 def unconfirm_acco(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			print("unconfirm_acco")
 			return render(request,'recnacc/Recn_De_Acc/index.html')
@@ -334,7 +268,7 @@ def unconfirm_acco(request):
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
 def unconfirm_acco_details(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			print("unconfirm_acco_details")
 			data=[]
@@ -368,7 +302,7 @@ def unconfirm_acco_details(request):
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
 def deaccomodate(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			print("deaccomodate")
 			if request.method=='POST':
@@ -409,7 +343,7 @@ def deaccomodate(request):
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
 def redeaccomodate(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			pass
 		else:
@@ -442,7 +376,7 @@ def redeaccomodate(request):
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
 def fine_amount(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			print("fine_amount")
 			if request.method=='POST':
@@ -486,7 +420,7 @@ def fine_amount(request):
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
 def reconfirm_acco(request):
 	print("reconfirm_acco1")
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			print("reconfirm_acco")
 			return render(request,'recnacc/Recn_Re_Acc/index.html')
@@ -500,7 +434,7 @@ def reconfirm_acco(request):
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
 def reconfirm_acco_details(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			print("reconfirm_acco_details")
 			data=[]
@@ -533,7 +467,7 @@ def reconfirm_acco_details(request):
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
 def reaccomodate(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			print("reaccomodate")
 			if request.method=='POST':
@@ -564,7 +498,7 @@ def reaccomodate(request):
 
 
 def reaccomodate_pusher(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			print("participant_details")
 			dat=[]
@@ -598,7 +532,7 @@ def reaccomodate_pusher(request):
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
 def passed_stats(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			print("passed_stats")
 			fire_conf = Enteredplayer.objects.all().count()
@@ -617,7 +551,7 @@ def passed_stats(request):
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
 def availability_stats(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			print("availability_stats")
 			data = []
@@ -704,7 +638,7 @@ def availability_stats(request):
 
 
 def view_stats(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			pass
 		else:
@@ -741,7 +675,7 @@ def view_stats(request):
 
 @cache_page(CACHE_TTL)
 def acco_strength(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			pass
 		else:
@@ -753,7 +687,7 @@ def acco_strength(request):
 
 
 def disp_occupency(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			dats = []
 			for ac in Acco_name.objects.all():
@@ -782,7 +716,7 @@ def disp_occupency(request):
 
 
 def edit_occupency(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			data = json.loads( request.body.decode('utf-8') )
 			print(data)
@@ -807,7 +741,7 @@ def edit_occupency(request):
 
 @cache_page(CACHE_TTL)
 def deallocated(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			pass
 		else:
@@ -819,7 +753,7 @@ def deallocated(request):
 
 		
 def deallocated_page(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			pass
 		else:
@@ -855,7 +789,7 @@ def deallocated_page(request):
 
 @cache_page(CACHE_TTL)
 def fines(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			pass
 		else:
@@ -866,7 +800,7 @@ def fines(request):
 	return render(request,'recnacc/fines.html')
 
 def fine_page(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			data = json.loads( request.body.decode('utf-8') )
 			ac = Accomodation.objects.get(pk=int(data['data']['pk']))
@@ -905,7 +839,7 @@ def fine_page(request):
 
 @cache_page(CACHE_TTL)
 def notes(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			pass
 		else:
@@ -916,7 +850,7 @@ def notes(request):
 	return render(request,'recnacc/notes.html')
 
 def view_notes(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			data = []
 			for n in Note.objects.all():
@@ -929,7 +863,7 @@ def view_notes(request):
 		return HttpResponseRedirect('/regsoft/')
 
 def add_note(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			data = json.loads( request.body.decode('utf-8') )
 			n = Note()
@@ -944,7 +878,7 @@ def add_note(request):
 
 
 def stats_excel(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			pass
 		else:
@@ -1024,7 +958,7 @@ def stats_excel(request):
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
 def stats_csv(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			pass
 		else:
@@ -1091,7 +1025,7 @@ def stats_csv(request):
 
 
 def stats_html(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			pass
 		else:
@@ -1107,7 +1041,7 @@ def stats_html(request):
 
 
 def delete_note(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			pass
 		else:
@@ -1122,7 +1056,7 @@ def delete_note(request):
 
 
 def add_bhawan(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			pass
 		else:
@@ -1138,7 +1072,7 @@ def add_bhawan(request):
 
 
 def add_acco(request):
-	if request.user.is_authenticated():
+	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
 			pass
 		else:

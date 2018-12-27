@@ -420,7 +420,7 @@ def unconfirm_player_grp(request):
 # 		pusher_client.trigger('firewallz_unconfirm_channel', 'firewallz_unconfirm_event', datss)
 # 		dat = {"success":1}
 		pk_arr_json = {"pk":pk_arr}
-        	return HttpResponse(json.dumps(pk_arr_json), content_type='application/json')
+		return HttpResponse(json.dumps(pk_arr_json), content_type='application/json')
 
 def unconfirm_player_grp_pusher(request):
     if request.user.is_authenticated():

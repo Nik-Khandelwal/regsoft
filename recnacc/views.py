@@ -19,6 +19,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import logout
 import json
 from django.utils.encoding import smart_str
+
+
 User=get_user_model()
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
@@ -36,7 +38,6 @@ def is_recnacc_admin(user):
 		if Recnacc_user.objects.get(pk=1).user == user:
 			return True
 	return False
-
 
 @cache_page(CACHE_TTL)
 @login_required(login_url='/regsoft/')
@@ -588,83 +589,38 @@ def availability_stats(request):
 #var jsonResponse = {"data": [["Ram", [["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]],["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]],["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]]]],["Ram", [["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]],["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]],["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]]]],["Ram", [["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]],["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]],["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]]]],["Ram", [["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]],["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]],["Common Room", ["Arpit Anshuman", 1, "Nikhil Khandelwal", 2, "Srivatsa", 3]]]]]};
 
 
-# def view_stats(request):
-# 	print("view_stats")
-# 	data = []
-# 	for ac in Acco_name.objects.all():
-# 		das = []
-# 		das.append(ac.name)
-# 		dat = []
-# 		dt = []
-# 		for pl in Enteredplayer.objects.all():
-# 			try:
-# 				pt = pl.accorecnacc
-# 				if pt.accomodation == ac.common_room:
-# 					dt.append(pl.regplayer.name.name)
-# 					dt.append(pl.regplayer.pk)
-# 					dat.append(dt)
-# 					print(dat)
-# 			except:
-# 				pass		
-# 		das.append(dat)
-# 		data.append
-
-# 		return HttpResponse(json.dumps({"data":data}), content_type='application/json')
 
 
-#def view_stats(request):
-#	print("view_stats")
-#	data = []
-#	for ac in Acco_name.objects.all():
-#		dat = []
-#		for pl in Enteredplayer.objects.all():
-#			dic = {}
-#			try:
-#				pt = pl.accorecnacc
-#				if pt.accomodation == ac.common_room:
-#					dic = {"type":"common_room","name":pl.regplayer.name.name,"mobile":pl.regplayer.mobile_no}
-#				elif pt.accomodation == ac.tt_room:
-#					dic = {"type":"tt_room","name":pl.regplayer.name.name,"mobile":pl.regplayer.mobile_no}
-#				elif pt.accomodation == ac.s_room:
-#					dic = {"type":"s_room","room_no":pt.singleroom.name,"name":pl.regplayer.name.name,"mobile":pl.regplayer.mobile_no}
-#				else:
-#					pass
-#				dat.append(dic)
-#			except:
-#				pass	
-#		data.append({"hostel_name":ac.name,"list":dat})
-#	return HttpResponse(json.dumps({"data":data}), content_type='application/json')
-
-
-
+@cache_page('CACHE_TTL')
 def view_stats(request):
 	if request.user.is_authenticated:
-		if is_recnacc_admin(request.user):
-			pass
-		else:
+		if not is_recnacc_admin(request.user):		
 			logout(request)
 			return HttpResponseRedirect('/regsoft/')
+		else:
+			
+	
+			data = []
+			for ac in Acco_name.objects.all():
+				dat = []
+				for pt in Accorecnacc.objects.filter(accomodation=ac.common_room):
+					for pl in pt.enteredplayer_set.all():
+						dic = {"type":"common_room","name":pl.regplayer.name.name,"mobile":pl.regplayer.mobile_no}
+						dat.append(dic)
+				for pt in Accorecnacc.objects.filter(accomodation=ac.tt_room):
+					for pl in pt.enteredplayer_set.all():
+						dic = {"type":"tt_room","name":pl.regplayer.name.name,"mobile":pl.regplayer.mobile_no}
+						dat.append(dic)
+				if(ac.s_room):
+					for sr in ac.s_room.singleroom.all():
+						for pt in Accorecnacc.objects.filter(singleroom=sr):
+							for pl in pt.enteredplayer_set.all():
+								dic = {"type":"s_room","room_no":pt.singleroom.name,"name":pl.regplayer.name.name,"mobile":pl.regplayer.mobile_no}
+								dat.append(dic)
+				data.append({"hostel_name":ac.name,"list":dat})
+			return HttpResponse(json.dumps({"data":data}), content_type='application/json')
 	else:
 		return HttpResponseRedirect('/regsoft/')
-	data = []
-	for ac in Acco_name.objects.all():
-		dat = []
-		for pt in Accorecnacc.objects.filter(accomodation=ac.common_room):
-			for pl in pt.enteredplayer_set.all():
-				dic = {"type":"common_room","name":pl.regplayer.name.name,"mobile":pl.regplayer.mobile_no}
-				dat.append(dic)
-		for pt in Accorecnacc.objects.filter(accomodation=ac.tt_room):
-			for pl in pt.enteredplayer_set.all():
-				dic = {"type":"tt_room","name":pl.regplayer.name.name,"mobile":pl.regplayer.mobile_no}
-				dat.append(dic)
-		if(ac.s_room):
-			for sr in ac.s_room.singleroom.all():
-				for pt in Accorecnacc.objects.filter(singleroom=sr):
-					for pl in pt.enteredplayer_set.all():
-						dic = {"type":"s_room","room_no":pt.singleroom.name,"name":pl.regplayer.name.name,"mobile":pl.regplayer.mobile_no}
-						dat.append(dic)
-		data.append({"hostel_name":ac.name,"list":dat})
-	return HttpResponse(json.dumps({"data":data}), content_type='application/json')
 
 
 

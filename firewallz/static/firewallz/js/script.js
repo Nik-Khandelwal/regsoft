@@ -56,8 +56,27 @@ function updateLeftTable(data) {//takes data from backend for participants confi
   }
 }
 function toggleSelection(elem) {
-//if a participant is selected/unselected in left table then this fn changes icon of checkbox	
+  let clgFoundOnRight = false;  //default false
+//if a participant is selected/unselected in left table then this fn changes icon of checkbox
   if(document.getElementsByClassName('selectedLeftRow').length==0) {
+    var slctdRowclgName = elem.parentElement.parentElement.children[2].innerHTML;
+    var rightRowClgName;
+    console.log('selected row\'s college is ',slctdRowclgName);
+    var numRight = document.getElementsByClassName('right-table-rows').length;
+    for (var i = 0; i < numRight; i++) {
+      rightRowClgName = document.getElementsByClassName('right-table-college')[i].innerHTML;
+      console.log('right '+i+' row\'s college is ',rightRowClgName);
+      if(rightRowClgName == slctdRowclgName){
+        clgFoundOnRight = true;
+        break;
+      }
+    }
+    if(numRight!=0){//if there's no clg on ri8 add the selected clg
+    if(clgFoundOnRight == false){
+      Materialize.toast('Participants from different colleges being added!', 3000);
+      // clgFoundOnRight = false;
+    }
+    else{//here check if the selected clg on ri8 is present at ri8,if not pop an error
     if (elem.innerHTML == "check_box") {
       elem.innerHTML = "check_box_outline_blank";
       elem.parentElement.parentElement.setAttribute('class', 'left-table-rows');
@@ -65,6 +84,17 @@ function toggleSelection(elem) {
       elem.innerHTML = "check_box";
       elem.parentElement.parentElement.setAttribute('class', 'left-table-rows selectedLeftRow');
     }
+   }
+  }
+  else {
+    if (elem.innerHTML == "check_box") {
+      elem.innerHTML = "check_box_outline_blank";
+      elem.parentElement.parentElement.setAttribute('class', 'left-table-rows');
+    } else {
+      elem.innerHTML = "check_box";
+      elem.parentElement.parentElement.setAttribute('class', 'left-table-rows selectedLeftRow');
+    }
+  }
   } else {
 //this is to ensure that participants from different colleges are not added to form a group
     var clgName = document.getElementsByClassName('selectedLeftRow')[0].getElementsByTagName('td')[2].innerHTML;
@@ -79,8 +109,7 @@ function toggleSelection(elem) {
         elem.parentElement.parentElement.setAttribute('class', 'left-table-rows selectedLeftRow');
       }
     }
-  }
-}
+  }}
 function toggleRightSelection(elem) {
 	//same as toggleSelection()
   if (elem.innerHTML == "check_box") {

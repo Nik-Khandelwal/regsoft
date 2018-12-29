@@ -786,7 +786,7 @@ def con_pan_edit(request):
 	for idno in data['data']['sport_id']:
 		sp=Sport.objects.get(pk=int(idno))
 		us.sport.add(sp)
-		us.sportid=replaceindex(up.sportid,int(idno),'2')
+		us.sportid=replaceindex(us.sportid,int(idno),'2')
 	us.save()
 	t.mobile_no = data['data']['phone']
 	t.address = data['data']['city']
@@ -849,3 +849,6 @@ def bill_details_html(request):
 	else:
 		return HttpResponseRedirect('/regsoft/')
 	return render(request, 'controls/bill_controls.html')
+
+def replaceindex(text,index=0,replacement=''):
+    return '%s%s%s'%(text[:index],replacement,text[index+1:])

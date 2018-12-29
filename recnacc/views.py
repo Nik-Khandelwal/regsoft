@@ -175,7 +175,6 @@ def accomodate(request):
 					pl.accorecnacc = Accorecnacc.objects.filter(accomodation=None).first()
 					pl.recnacc_passed = True
 					pl.save()
-					dat = {"success":1}
 				ac = Accomodation.objects.get(pk=data['data']['bhawan_select'])
 				ac.vacancy -= len(data['data']['id_arr'])
 				ac.save()
@@ -184,7 +183,6 @@ def accomodate(request):
 				bill.save()
 				#data_update = [4]
 				#pusher_client.trigger('recnacc_channel', 'recnacc_event', data_update)
-				return HttpResponse(json.dumps(dat), content_type='application/json')
 		else:
 			logout(request)
 			return HttpResponseRedirect('/regsoft/')
@@ -199,6 +197,7 @@ def accomodate_pusher(request):
 			if request.method=='POST':
 				data_update = [4]
 				pusher_client.trigger('recnacc_channel', 'recnacc_event', data_update)
+				return HttpResponse(json.dumps({"success":1}), content_type='application/json')
 		else:
 			logout(request)
 			return HttpResponseRedirect('/regsoft/')
@@ -231,10 +230,8 @@ def accomodate_singleroom(request):
 					pl.accorecnacc = bill
 					pl.recnacc_passed = True
 					pl.save()
-				dat = {"success":1}
 				data_update = [5]
 				#pusher_client.trigger('recnacc_channel', 'recnacc_event', data_update)
-				return HttpResponse(json.dumps(dat), content_type='application/json')
 		else:
 			logout(request)
 			return HttpResponseRedirect('/regsoft/')
@@ -248,6 +245,7 @@ def accomodate_singleroom_pusher(request):
 			if request.method=='POST':
 				data_update = [5]
 				pusher_client.trigger('recnacc_channel', 'recnacc_event', data_update)
+				return HttpResponse(json.dumps({"success":1}), content_type='application/json')
 		else:
 			logout(request)
 			return HttpResponseRedirect('/regsoft/')
@@ -365,7 +363,7 @@ def deaccomodate(request):
 
 				dat = {"total":fne,"list":dats}
 				data_update = [7]
-				#pusher_client.trigger('recndeacc_channel', 'recndeacc_event', data_update)
+				#pusher_client.trigger('recnacc_channel', 'recnacc_event', data_update)
 				return HttpResponse(json.dumps(dat), content_type='application/json')
 		else:
 			logout(request)
@@ -378,11 +376,9 @@ def deaccomodate_pusher(request):
 	if request.user.is_authenticated():
 		if is_recnacc_admin(request.user):
 			print("deaccomodate_pusher")
-			if request.method=='POST':
-				data = json.loads( request.body.decode('utf-8') )
-				print(data)
-				data_update = [7]
-				pusher_client.trigger('recndeacc_channel', 'recndeacc_event', data_update)
+			data_update = [7]
+			pusher_client.trigger('recnacc_channel', 'recnacc_event', data_update)
+			return HttpResponse(json.dumps({"success":1}), content_type='application/json')
 		else:
 			logout(request)
 			return HttpResponseRedirect('/regsoft/')
@@ -418,7 +414,7 @@ def redeaccomodate(request):
 		pass
 	#data_update = [4]
 	#pusher_client.trigger('recnacc_channel', 'recnacc_event', data_update)
-	return HttpResponse(json.dumps({"success":1}), content_type='application/json')
+
 
 
 def redeaccomodate_pusher(request):
@@ -432,7 +428,7 @@ def redeaccomodate_pusher(request):
 		return HttpResponseRedirect('/regsoft/')
 	data_update = [4]
 	pusher_client.trigger('recnacc_channel', 'recnacc_event', data_update)
-
+	return HttpResponse(json.dumps({"success":1}), content_type='application/json')
 
 
 
@@ -552,7 +548,6 @@ def reaccomodate(request):
 					pl.accorecnacc = None
 					pl.recnacc_passed = False
 					pl.save()
-				return HttpResponse(json.dumps({"success":1}), content_type='application/json')
 		else:
 			logout(request)
 			return HttpResponseRedirect('/regsoft/')
@@ -583,8 +578,8 @@ def reaccomodate_pusher(request):
 				if b:
 					dat.append({"participants":b,"groupid":gr.group_code})
 			#print(data)
-			pusher_client.trigger('recnreacc_channel', 'recnreacc_event', dat)
-
+				pusher_client.trigger('recnacc_channel', 'recnacc_event', dat)
+				return HttpResponse(json.dumps({"success":1}), content_type='application/json')
 		else:
 			logout(request)
 			return HttpResponseRedirect('/regsoft/')
@@ -608,7 +603,7 @@ def passed_stats(request):
 			return HttpResponseRedirect('/regsoft/')
 	else:
 		return HttpResponseRedirect('/regsoft/')
- 
+
 
 #var jsonResponse = {"data": [["Ram", ["Common Room", 90, "Single Rooms", 40, "TT Room", 80]],["Budh", ["Common Room", 120, "Single Rooms", 50]],["Meera", ["Common Room", 190, "Single Rooms", 100]],["MAL-A", ["Common Room", 90, "Single Rooms", 20, "TT Room", 10]],["Ram", ["Common Room", 90, "Single Rooms", 40, "TT Room", 80]]]};
 @login_required(login_url='/regsoft/')
@@ -656,12 +651,12 @@ def availability_stats(request):
 @cache_page('CACHE_TTL')
 def view_stats(request):
 	if request.user.is_authenticated:
-		if not is_recnacc_admin(request.user):		
+		if not is_recnacc_admin(request.user):
 			logout(request)
 			return HttpResponseRedirect('/regsoft/')
 		else:
-			
-	
+
+
 			data = []
 			for ac in Acco_name.objects.all():
 				dat = []
@@ -725,7 +720,7 @@ def disp_occupency(request):
 					dat.append({"pk":0,"strength":0,"fine":0})
 				dat.append(ac.pk)
 				dats.append(dat)
-			return HttpResponse(json.dumps({"data":dats}), content_type='application/json')	
+			return HttpResponse(json.dumps({"data":dats}), content_type='application/json')
 		else:
 			logout(request)
 			return HttpResponseRedirect('/regsoft/')
@@ -748,8 +743,7 @@ def edit_occupency(request):
 			ac.vacancy += diff
 			ac.save()
 			data_update = [9]
-			#pusher_client.trigger('recnacc_occupancy_channel', 'recnacc_occupancy_event', data_update)
-			return HttpResponse(json.dumps({"success":"1"}), content_type='application/json')
+			#pusher_client.trigger('recnacc_channel', 'recnacc_event', data_update)
 		else:
 			logout(request)
 			return HttpResponseRedirect('/regsoft/')
@@ -763,7 +757,8 @@ def edit_occupency_pusher(request):
 			data = json.loads( request.body.decode('utf-8') )
 			print(data)
 			data_update = [9]
-			pusher_client.trigger('recnacc_occupancy_channel', 'recnacc_occupancy_event', data_update)
+			pusher_client.trigger('recnacc_channel', 'recnacc_event', data_update)
+			return HttpResponse(json.dumps({"success":"1"}), content_type='application/json')
 		else:
 			logout(request)
 			return HttpResponseRedirect('/regsoft/')
@@ -796,7 +791,7 @@ def deallocated_page(request):
 	# data = []
 	# for pl in Enteredplayer.objects.filter(all_done=True):
 	# 	data.append({"name":pl.regplayer.name.name,"college":pl.regplayer.college})
-	# return HttpResponse(json.dumps({"data":data}), content_type='application/json')	
+	# return HttpResponse(json.dumps({"data":data}), content_type='application/json')
 	data=[]
 	for gr in Group.objects.all():
 		b=[]
@@ -817,7 +812,7 @@ def deallocated_page(request):
 		if b:
 			data.append({"participants":b,"groupid":gr.group_code})
 	return HttpResponse(json.dumps(data), content_type='application/json')
-		
+
 
 @cache_page(CACHE_TTL)
 def fines(request):
@@ -850,7 +845,7 @@ def fine_page(request):
 			#			rp = Regplayer.objects.get(pk=pl.regplayer.pk)
 			#			rp.fine += (float(data['data']['amt'])/cnt)
 			#			rp.save()
-			
+
 			for ar in ac.accorecnacc_set.all():
 				for pl in ar.enteredplayer_set.filter(all_done=False):
 					cnt+=1
@@ -862,7 +857,7 @@ def fine_page(request):
 					rp.fine += (float(data['data']['amt'])/cnt)
 					rp.save()
 
-			return HttpResponse(json.dumps({"success":"1"}), content_type='application/json')	
+			return HttpResponse(json.dumps({"success":"1"}), content_type='application/json')
 		else:
 			logout(request)
 			return HttpResponseRedirect('/regsoft/')
@@ -887,7 +882,7 @@ def view_notes(request):
 			data = []
 			for n in Note.objects.all():
 				data.append({"pk":n.pk,"time":n.time.strftime('%d-%m-%Y %H:%M:%S UTC'),"text":n.text})
-			return HttpResponse(json.dumps({"data":data}), content_type='application/json')	
+			return HttpResponse(json.dumps({"data":data}), content_type='application/json')
 		else:
 			logout(request)
 			return HttpResponseRedirect('/regsoft/')
@@ -901,7 +896,7 @@ def add_note(request):
 			n = Note()
 			n.text = data['data']['text']
 			n.save()
-			return HttpResponse(json.dumps({"success":"1"}), content_type='application/json')	
+			return HttpResponse(json.dumps({"success":"1"}), content_type='application/json')
 		else:
 			logout(request)
 			return HttpResponseRedirect('/regsoft/')
@@ -998,7 +993,7 @@ def stats_csv(request):
 			return HttpResponseRedirect('/regsoft/')
 	else:
 		return HttpResponseRedirect('/regsoft/')
-	
+
 	response = HttpResponse(content_type='text/csv')
 	#decide the file name
 	response['Content-Disposition'] = 'attachment; filename="Recnacc_stats.csv"'
@@ -1084,7 +1079,7 @@ def delete_note(request):
 	data = json.loads( request.body.decode('utf-8') )
 	n = Note.objects.get(pk=data['data']['pk'])
 	n.delete()
-	return HttpResponse(json.dumps({"success":"1"}), content_type='application/json')	
+	return HttpResponse(json.dumps({"success":"1"}), content_type='application/json')
 
 
 def add_bhawan(request):

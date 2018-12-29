@@ -2,7 +2,7 @@ import base64
 import string
 import random
 import hashlib
-import crypto
+import Crypto
 # import sys
 # sys.modules['Crypto'] = crypto
 

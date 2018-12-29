@@ -25,7 +25,6 @@ Pillow==5.2.0
 pusher==2.0.1
 pyasn1==0.4.4
 pycparser==2.18
-pycrypto==2.6.1
 pyOpenSSL==18.0.0
 PyPDF2==1.26.0
 pytz==2018.5

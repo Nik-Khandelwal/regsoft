@@ -137,7 +137,7 @@
 
 #wrap_searches {
   position: fixed;
-  width: 45vw;
+  width: 90vw;
   left: 5vw;
   top: 0vh;
 }
@@ -154,8 +154,8 @@
 .recnacc_part{position: fixed; top: 2vh; left: 86vw;}
 .ham1{position: absolute;right: 0;bottom: 11vh;}
 .stats{position: fixed;z-index: 1;width: 100vw;top: 0;left: 0;transition: 0.5s;}
-#close{;z-index: 5;display: none;cursor: pointer;}
-#stat_data{;z-index: 5;display: none;height:80vh;overflow-y: auto;}
+#close{z-index: 5;display: none;cursor: pointer;}
+#stat_data{z-index: 5;display: none;height:80vh;overflow-y: auto;}
 #csv{width:20vw;display: none;z-index: 5;position: fixed; bottom: 0;left: 0;background-color: white;color:teal;}
 #excel{width:20vw;display: none;z-index: 5;position: fixed; bottom: 0;left: 40vw;background-color: white;color:teal;}
 #pdf{width:20vw;display: none;z-index: 5;position: fixed; bottom: 0;left: 80vw;background-color: white;color:teal;}

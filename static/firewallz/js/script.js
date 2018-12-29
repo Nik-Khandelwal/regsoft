@@ -33,6 +33,7 @@ function fetchParticipants() {
     if (ourRequest.status >= 200 && ourRequest.status < 400) {
       ourData = JSON.parse(ourRequest.responseText);
       clearRight();
+      console.log(ourData);
       updateLeftTable(ourData);
     }
     else

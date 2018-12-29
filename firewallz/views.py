@@ -392,6 +392,8 @@ def unconfirm_player_pusher(request):
         dat = {"success":1}
         return HttpResponse(json.dumps(dat), content_type='application/json')
 
+        return HttpResponse(json.dumps(dat), content_type='application/json')	
+	
 def unconfirm_player_grp(request):
 	if request.user.is_authenticated():
 		if is_firewallz_admin(request.user):
@@ -913,6 +915,7 @@ def docapprove(request):
 
 		message = render_to_string('pcradmin/msg7.html', {
 														'college':tm.college,
+														'college':tm.college, 
 
 														})
 		mail_subject = 'Documents Verified for BOSM \'18'
@@ -926,6 +929,7 @@ def docapprove(request):
 		message = render_to_string('pcradmin/msg8.html', {
 														'nmlist':nmlist,
 														'college':tm.college,
+														'college':tm.college, 
 
 														})
 		mail_subject = 'Documents Verified for BOSM \'18'
@@ -937,6 +941,7 @@ def docapprove(request):
 		# 	pass
 		return JsonResponse({'success':1})
 
+		
 #to open the html page(docs_index.html) for viewing the documents
 def view_docs(request):
 	if request.user.is_authenticated():

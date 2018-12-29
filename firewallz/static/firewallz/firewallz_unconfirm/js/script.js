@@ -85,6 +85,7 @@ function uncnfrm(del_data) {
   ourRequest.onreadystatechange = function () {
     if (ourRequest.readyState === 4 && ourRequest.status === 200) {
       Materialize.toast('Successfully Unconfirmed!', 4000);
+      sendPusherUpdate(JSON.stringify(send_obj));
       getGroups();
     }
     else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
@@ -94,6 +95,39 @@ function uncnfrm(del_data) {
   }
   ourRequest.send(send_json);
   close_details();
+}
+
+function sendPusherUpdate(stringObj) {
+  var myObj = JSON.parse(stringObj);
+  var pk;
+  var data = myObj["data"];
+  pk = data['participant_id'];
+  var pk_type = typeof(pk);
+  var send_obj = {"data": pk};
+  var string_obj = JSON.stringify(send_obj);
+  var csrf_token = getCookie('csrftoken');
+  var ourRequest = new XMLHttpRequest();
+  if(pk_type == 'object'){
+      ourRequest.open("POST", "/firewallz/unconfirm_player_grp_pusher/", true);
+  }
+  else {
+    ourRequest.open("POST", "/firewallz/unconfirm_player_pusher/", true);
+  }
+
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onload = function() {
+    if (ourRequest.status >= 200 && ourRequest.status < 400) {
+      var ourData = JSON.parse(ourRequest.responseText);
+      console.log('pusher service activated successfully');
+    } else {
+      // Nothing
+    }
+  }
+  ourRequest.onerror = function() {
+    // Nothing
+  }
+  ourRequest.send(string_obj);
 }
 function getCookie(name) {
   var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
@@ -321,6 +355,14 @@ function delete_group(option) {
   ourRequest.onreadystatechange = function () {
     if (ourRequest.readyState === 4 && ourRequest.status === 200) {
       Materialize.toast('Successfully Unconfirmed!', 4000);
+      var pk_arr = JSON.parse(ourRequest.responseText)["pk"];
+      send_obj = {
+        "data": {
+          "participant_id": pk_arr
+        }
+      };
+      console.log(send_obj["data"]);
+      sendPusherUpdate(JSON.stringify(send_obj));      
       getGroups();
     }
     else if (ourRequest.readyState === 4 && ourRequest.status != 200) {

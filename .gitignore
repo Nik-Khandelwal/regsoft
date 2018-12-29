@@ -1,5 +1,7 @@
+*/*.pyc
 *.pyc
-db.sqlite3
+media/
+register/Checksum.py
 migrations/
 .gitignore
 register/Checksum.py
@@ -7,3 +9,4 @@ requirements.txt
 bugsNDoubts.txt
 VENV2
 static
+db.sqlite3

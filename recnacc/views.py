@@ -58,6 +58,7 @@ def main(request):
 
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
+# displays participant details
 def participant_details(request):
 	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
@@ -89,6 +90,7 @@ def participant_details(request):
 
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
+# displays accomodate details - bhawans and rooms available
 def acco_details(request):
 	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
@@ -117,6 +119,7 @@ def acco_details(request):
 
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
+# generates bill after checkout for entire group
 def srivatsa(request):
 	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
@@ -135,6 +138,7 @@ def srivatsa(request):
 
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
+# generates bill after checkout for a single person of the group
 def satyavrat(request):
 	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
@@ -157,8 +161,9 @@ def satyavrat(request):
 
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
+# checks for availabilty and allots a room to a player
 def accomodate(request):
-	if request.user.is_authenticated:
+	if request.user.is_authenticated():
 		if is_recnacc_admin(request.user):
 			print("accomodate")
 			if request.method=='POST':
@@ -177,8 +182,8 @@ def accomodate(request):
 				bill = Accorecnacc.objects.filter(accomodation=None).first()
 				bill.accomodation = ac
 				bill.save()
-				data_update = [4]
-				pusher_client.trigger('recnacc_channel', 'recnacc_event', data_update)
+				#data_update = [4]
+				#pusher_client.trigger('recnacc_channel', 'recnacc_event', data_update)
 				return HttpResponse(json.dumps(dat), content_type='application/json')
 		else:
 			logout(request)
@@ -187,11 +192,25 @@ def accomodate(request):
 		return HttpResponseRedirect('/regsoft/')
 
 
+def accomodate_pusher(request):
+	if request.user.is_authenticated():
+		if is_recnacc_admin(request.user):
+			print("accomodate_pusher")
+			if request.method=='POST':
+				data_update = [4]
+				pusher_client.trigger('recnacc_channel', 'recnacc_event', data_update)
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+
 
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
+# allotment for a single room
 def accomodate_singleroom(request):
-	if request.user.is_authenticated:
+	if request.user.is_authenticated():
 		if is_recnacc_admin(request.user):
 			print("accomodate_singleroom")
 			if request.method=='POST':
@@ -214,8 +233,21 @@ def accomodate_singleroom(request):
 					pl.save()
 				dat = {"success":1}
 				data_update = [5]
-				pusher_client.trigger('recnacc_channel', 'recnacc_event', data_update)
+				#pusher_client.trigger('recnacc_channel', 'recnacc_event', data_update)
 				return HttpResponse(json.dumps(dat), content_type='application/json')
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+
+def accomodate_singleroom_pusher(request):
+	if request.user.is_authenticated():
+		if is_recnacc_admin(request.user):
+			print("accomodate_singleroom_pusher")
+			if request.method=='POST':
+				data_update = [5]
+				pusher_client.trigger('recnacc_channel', 'recnacc_event', data_update)
 		else:
 			logout(request)
 			return HttpResponseRedirect('/regsoft/')
@@ -302,8 +334,9 @@ def unconfirm_acco_details(request):
 
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
+# deallocates the room a player is assigned to
 def deaccomodate(request):
-	if request.user.is_authenticated:
+	if request.user.is_authenticated():
 		if is_recnacc_admin(request.user):
 			print("deaccomodate")
 			if request.method=='POST':
@@ -332,8 +365,24 @@ def deaccomodate(request):
 
 				dat = {"total":fne,"list":dats}
 				data_update = [7]
-				pusher_client.trigger('recndeacc_channel', 'recndeacc_event', data_update)
+				#pusher_client.trigger('recndeacc_channel', 'recndeacc_event', data_update)
 				return HttpResponse(json.dumps(dat), content_type='application/json')
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+
+
+def deaccomodate_pusher(request):
+	if request.user.is_authenticated():
+		if is_recnacc_admin(request.user):
+			print("deaccomodate_pusher")
+			if request.method=='POST':
+				data = json.loads( request.body.decode('utf-8') )
+				print(data)
+				data_update = [7]
+				pusher_client.trigger('recndeacc_channel', 'recndeacc_event', data_update)
 		else:
 			logout(request)
 			return HttpResponseRedirect('/regsoft/')
@@ -344,7 +393,7 @@ def deaccomodate(request):
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
 def redeaccomodate(request):
-	if request.user.is_authenticated:
+	if request.user.is_authenticated():
 		if is_recnacc_admin(request.user):
 			pass
 		else:
@@ -367,9 +416,22 @@ def redeaccomodate(request):
 		ac.save()
 	else:
 		pass
+	#data_update = [4]
+	#pusher_client.trigger('recnacc_channel', 'recnacc_event', data_update)
+	return HttpResponse(json.dumps({"success":1}), content_type='application/json')
+
+
+def redeaccomodate_pusher(request):
+	if request.user.is_authenticated():
+		if is_recnacc_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
 	data_update = [4]
 	pusher_client.trigger('recnacc_channel', 'recnacc_event', data_update)
-	return HttpResponse(json.dumps({"success":1}), content_type='application/json')
 
 
 
@@ -670,9 +732,8 @@ def disp_occupency(request):
 	else:
 		return HttpResponseRedirect('/regsoft/')
 
-
 def edit_occupency(request):
-	if request.user.is_authenticated:
+	if request.user.is_authenticated():
 		if is_recnacc_admin(request.user):
 			data = json.loads( request.body.decode('utf-8') )
 			print(data)
@@ -687,8 +748,22 @@ def edit_occupency(request):
 			ac.vacancy += diff
 			ac.save()
 			data_update = [9]
+			#pusher_client.trigger('recnacc_occupancy_channel', 'recnacc_occupancy_event', data_update)
+			return HttpResponse(json.dumps({"success":"1"}), content_type='application/json')
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+
+
+def edit_occupency_pusher(request):
+	if request.user.is_authenticated():
+		if is_recnacc_admin(request.user):
+			data = json.loads( request.body.decode('utf-8') )
+			print(data)
+			data_update = [9]
 			pusher_client.trigger('recnacc_occupancy_channel', 'recnacc_occupancy_event', data_update)
-			return HttpResponse(json.dumps({"success":"1"}), content_type='application/json')	
 		else:
 			logout(request)
 			return HttpResponseRedirect('/regsoft/')
@@ -696,6 +771,7 @@ def edit_occupency(request):
 		return HttpResponseRedirect('/regsoft/')
 
 @cache_page(CACHE_TTL)
+# deallocating a player adds them back to the checkout page
 def deallocated(request):
 	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
@@ -707,7 +783,7 @@ def deallocated(request):
 		return HttpResponseRedirect('/regsoft/')
 	return render(request, 'recnacc/deallocated.html')
 
-		
+# list of players who are deallocated after checkout
 def deallocated_page(request):
 	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):
@@ -979,7 +1055,7 @@ def stats_csv(request):
 				pass
 	return response
 
-
+# generates a html file having stats regarding occupancy of rooms
 def stats_html(request):
 	if request.user.is_authenticated:
 		if is_recnacc_admin(request.user):

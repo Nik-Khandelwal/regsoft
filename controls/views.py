@@ -784,7 +784,7 @@ def con_pan_edit(request):
 	us = User.objects.get(pk=t.name.pk)
 	us.name = data['data']['name']
 	us.sport.clear()
-        us.sportid="0000000000000000000000000000000000000000"
+		us.sportid="0000000000000000000000000000000000000000"
 	for idno in data['data']['sport_id']:
 		sp=Sport.objects.get(pk=int(idno))
 		us.sport.add(sp)

@@ -137,10 +137,18 @@
 
 #wrap_searches {
   position: fixed;
+  width: 45vw;
+  left: 5vw;
+  top: 0vh;
+}
+
+#wrap_searches2 {
+  position: fixed;
   width: 90vw;
   left: 5vw;
   top: 0vh;
 }
+
 .modal {
   width: 85%;
 }

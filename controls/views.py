@@ -68,8 +68,8 @@ from datetime import datetime
 
 from django.contrib.auth import get_user_model
 User=get_user_model()
- 
- 
+
+
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
@@ -236,7 +236,7 @@ def generate_bill_pusher(request):
 			b.append({"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
 		if b:
 			data_recnacc.append({"participants":b,"groupid":gr.group_code})
-			
+
 	print("generate bill pusher start")
 	pusher_client.trigger('my-channel', 'my-event', data_recnacc)
 	print("pusher")
@@ -279,7 +279,7 @@ def arpit(request):
 	data_denoms = [1]
 	pusher_client.trigger('controls_denoms_channel', 'controls_denoms_event', data_denoms)
 	return HttpResponse(json.dumps(dat), content_type='application/json')
-	
+
 
 
 @login_required(login_url='/regsoft/')
@@ -420,7 +420,7 @@ def view_stats(request):
 		dat = []
 		das = []
 		for us in User.objects.filter(team=t,deleted=0):
-			try:	
+			try:
 				rp = Regplayer.objects.get(name=us)
 				pl = Enteredplayer.objects.get(regplayer=rp)
 				if pl.controls_passed is True:
@@ -527,7 +527,7 @@ def passed_stats(request):
 	rec_conf = Enteredplayer.objects.filter(recnacc_passed=True).count()
 	data = {"fire_conf":fire_conf,"cont_conf":cont_conf,"rec_conf":rec_conf}
 	return HttpResponse(json.dumps(data), content_type='application/json')
-	
+
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_controls_admin, login_url='/regsoft/')
 def stats_excel(request):
@@ -592,7 +592,7 @@ def stats_csv(request):
 			return HttpResponseRedirect('/regsoft/')
 	else:
 		return HttpResponseRedirect('/regsoft/')
-	
+
 	response = HttpResponse(content_type='text/csv')
 	#decide the file name
 	response['Content-Disposition'] = 'attachment; filename="Controls_stats.csv"'
@@ -639,7 +639,7 @@ def stats_csv(request):
 #        response = HttpResponse(pdf, content_type='application/pdf')
 #        response['Content-Disposition'] = 'attachment; filename="controls_stats.pdf"'
 #        return response
- 
+
  #   return response
 
 def stats_html(request):
@@ -784,7 +784,7 @@ def con_pan_edit(request):
 	us = User.objects.get(pk=t.name.pk)
 	us.name = data['data']['name']
 	us.sport.clear()
-        us.sportid="0000000000000000000000000000000000000000"
+	us.sportid="0000000000000000000000000000000000000000"
 	for idno in data['data']['sport_id']:
 		sp=Sport.objects.get(pk=int(idno))
 		us.sport.add(sp)
@@ -813,7 +813,7 @@ def sportlist(request):
 			return HttpResponseRedirect('/regsoft/')
 	else:
 		return HttpResponseRedirect('/regsoft/')
-	sp=Sport.objects.all().order_by(Lower('sport'))	
+	sp=Sport.objects.all().order_by(Lower('sport'))
 	d=[]
 	for st in sp:
 			s=[]
@@ -853,4 +853,4 @@ def bill_details_html(request):
 	return render(request, 'controls/bill_controls.html')
 
 def replaceindex(text,index=0,replacement=''):
-    return '%s%s%s'%(text[:index],replacement,text[index+1:])
+	return '%s%s%s'%(text[:index],replacement,text[index+1:])

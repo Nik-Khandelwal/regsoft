@@ -66,4 +66,10 @@ Follow these instructions to get a copy of the project up and running on your lo
   python manage.py runserver
   ```
 
+9. Modify all email addresses to avoid sending out emails during testing
+
+  ```
+  python manage.py shell < modify_emails.py
+  ```
+  
 ##### Note: If you get a server error at ```127.0.0.1:8000``` but are having no issues when starting the server then check if the Redis server is working or not.

@@ -94,6 +94,7 @@
     <li><a onclick="addCollege()" class="waves-effect waves-light"><i class="material-icons">business</i>Add College</a></li>
     <li><a onclick="fetchStats()" class="waves-effect waves-light"><i class="material-icons">assessment</i>View Stats</a></li>
     <li><a onclick="fetchExcel()" class="waves-effect waves-light"><i class="material-icons">assignment</i>View Excel</a></li>
+    <li><a onclick="fetchPaymentDetails()" class="waves-effect waves-light"><i class="material-icons">payment</i>Payment Details</a></li>
   </ul>
   <div id="main-content-loading">
     <div class="loader">Loading...</div>
@@ -589,6 +590,28 @@
             <td style="flex-basis: 35%;">f2016250@pilani.bits-pilani.ac.in</td>
             <td style="display: none;" class="final-confirmation-mail-groupleader-id">ID</td>
             <td style="display: none;" class="final-confirmation-mail-college-groupleader-id">College_ID</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="main-content" id="payment-details-div">
+    <div class="card-panel mails grey lighten-2" style="padding-top: 3vh;">
+      <table class="centered grey lighten-2 table">
+        <thead class="grey lighten-2">
+          <tr>
+              <th style="flex-basis: 25%;">Name</th>
+              <th style="flex-basis: 25%;">TXN ID</th>
+              <th style="flex-basis: 25%;">TXN Amount</th>
+              <th style="flex-basis: 25%;">TXN Status</th>
+          </tr>
+        </thead>
+        <tbody class="grey lighten-2" id="payment-details-body">
+          <tr class="verify-docs-groupleader-row" onclick="">
+            <th style="flex-basis: 25%;">Arpit</th>
+            <th style="flex-basis: 25%;">TXN ID</th>
+            <th style="flex-basis: 25%;">TXN Amount</th>
+            <th style="flex-basis: 25%;">TXN Status</th>
           </tr>
         </tbody>
       </table>

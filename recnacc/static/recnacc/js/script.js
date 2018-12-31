@@ -528,6 +528,7 @@ function selectBhawan(index,option) {
           showRequestStatus(status);
           // either 1 or 0
           //json object received
+          callPusher("/recnacc/accomodate_pusher/");
         }
         else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
           showRequestStatus(2);
@@ -596,6 +597,7 @@ function selectBhawanRooms(index) {
             showRequestStatus(status);
             // either 1 or 0
             //json object received
+            callPusher("/recnacc/accomodate_singleroom_pusher/");
           }
           else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
             showRequestStatus(2);
@@ -944,23 +946,21 @@ channel2.bind('my-event2', function(data) {
   fetchPassedStats();
 });
 // RecnReAcc Channel to RecnAcc Channel
-var recnreacc_channel = pusher.subscribe('recnacc_channel');
-recnreacc_channel.bind('recnreacc_event', function(data) {
+var recnacc_channel = pusher.subscribe('recnacc_channel');
+recnacc_channel.bind('recnreacc_event', function(data) {
   poppulate_left(data);
   pusher_fetchBhawanStats();
   pusher_fetchAvailabilityStats();
   fetchPassedStats();
 });
 // RecnAcc Occupancy Channel
-var recnacc_occupancy_channel = pusher.subscribe('recnacc_channel');
-recnacc_occupancy_channel.bind('recnacc_occupancy_event', function(data) {
+recnacc_channel.bind('recnacc_occupancy_event', function(data) {
   pusher_fetchBhawanStats();
   pusher_fetchAvailabilityStats();
 });
 
 //RecnAcc Notes Channel
-var recnacc_notes_channel = pusher.subscribe('recnacc_channel');
-recnacc_notes_channel.bind('recnacc_notes_event', function(data) {
+recnacc_channel.bind('recnacc_notes_event', function(data) {
   fetchNotes();
 });
 
@@ -977,13 +977,11 @@ firewallz_unconfirm_channel.bind('firewallz_unconfirm_event', function(data) {
   fetchPassedStats();
 });
 // RecnAcc Channel to RecnReAcc Channel
-var recnacc_channel = pusher.subscribe('recnacc_channel');
 recnacc_channel.bind('recnacc_event', function(data) {
   fetchPassedStats();
 });
 // RecnDeAcc Channel to RecnDeallocated Channel
-var recndeacc_channel = pusher.subscribe('recnacc_channel');
-recndeacc_channel.bind('recndeacc_event', function(data) {
+recnacc_channel.bind('recndeacc_event', function(data) {
   fetchPassedStats();
 });
 
@@ -1071,4 +1069,24 @@ function undoAll() {
   for (var i = document.getElementsByClassName('right-indiv').length-1; i >= 0; i--) {
     undo_this(document.getElementsByClassName('right-indiv')[i]);
   }
+}
+
+function callPusher(url) {
+  var csrf_token = getCookie('csrftoken');
+  var ourRequest = new XMLHttpRequest();
+  ourRequest.open("POST", url, true);
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onload = function() {
+    if (ourRequest.status >= 200 && ourRequest.status < 400) {
+      var ourData = JSON.parse(ourRequest.responseText);
+      // Do Nothing Else
+    } else {
+      // Nothing 
+    }
+  }
+  ourRequest.onerror = function() {
+    // Nothing
+  }
+  ourRequest.send('');
 }

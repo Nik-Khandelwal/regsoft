@@ -56,7 +56,7 @@ from main.models import Group,Regplayer,Enteredplayer,Sport,Firewallz_user
 
 from django.contrib.auth import get_user_model
 User=get_user_model()
- 
+
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
@@ -163,7 +163,7 @@ def confirm_group(request):
 	if request.method=='POST':
 		data = json.loads( request.body.decode('utf-8') )
 		print(data)
-		for dt in data['data']:	
+		for dt in data['data']:
 			print(dt['pk'])
 			Player = Regplayer.objects.get(pk=dt['pk'])
 			print(Player.name.name)
@@ -258,7 +258,7 @@ def add_participant(request):
 		pl.email_id = data['data'][0]['email']
 		pl.entered = False
 		pl.sport=''
-		for i in data['data'][0]['sport']: 
+		for i in data['data'][0]['sport']:
 			up.sportid=replaceindex(up.sportid,int(i),'2')
 			sp=Sport.objects.get(idno=int(i))
 			up.sport.add(sp)
@@ -274,13 +274,13 @@ def add_participant(request):
 			pl.unbilled_amt = 0
 			pl.uid = "18BP"+str(100000+pl.pk)[-4:]
 			pl.save()
-		
+
 		to_email = up.email
 		message = render_to_string('register/msg2.html', {
-										'user':up.name, 
+										'user':up.name,
 										'username':up.username,
 										'password':passworduser,
-										
+
 										})
 		mail_subject = 'Your account details.'
 		email = EmailMessage(mail_subject, message, to=[to_email])
@@ -390,8 +390,8 @@ def unconfirm_player_pusher(request):
         print(datss)
         pusher_client.trigger('firewallz_unconfirm_channel', 'firewallz_unconfirm_event', datss)
         dat = {"success":1}
-        return HttpResponse(json.dumps(dat), content_type='application/json')	
-	
+        return HttpResponse(json.dumps(dat), content_type='application/json')
+
 def unconfirm_player_grp(request):
 	if request.user.is_authenticated():
 		if is_firewallz_admin(request.user):
@@ -460,7 +460,7 @@ def sportlist(request):
 		data = []
 		for sp in Sport.objects.all():
 			data.append({"pk":sp.pk,"sport":sp.sport})
-		return HttpResponse(json.dumps(data), content_type='application/json')	
+		return HttpResponse(json.dumps(data), content_type='application/json')
 
 
 @login_required(login_url='/regsoft/')
@@ -609,7 +609,7 @@ def stats_csv(request):
 			return HttpResponseRedirect('/regsoft/')
 	else:
 		return HttpResponseRedirect('/regsoft/')
-	
+
 	response = HttpResponse(content_type='text/csv')
 	#decide the file name
 	response['Content-Disposition'] = 'attachment; filename="Firewallz_stats.csv"'
@@ -912,7 +912,7 @@ def docapprove(request):
 			rp.save()
 
 		message = render_to_string('pcradmin/msg7.html', {
-														'college':tm.college, 
+														'college':tm.college,
 
 														})
 		mail_subject = 'Documents Verified for BOSM \'18'
@@ -925,7 +925,7 @@ def docapprove(request):
 		# 	pass
 		message = render_to_string('pcradmin/msg8.html', {
 														'nmlist':nmlist,
-														'college':tm.college, 
+														'college':tm.college,
 
 														})
 		mail_subject = 'Documents Verified for BOSM \'18'
@@ -936,7 +936,7 @@ def docapprove(request):
 		# except:
 		# 	pass
 		return JsonResponse({'success':1})
-		
+
 #to open the html page(docs_index.html) for viewing the documents
 def view_docs(request):
 	if request.user.is_authenticated():
@@ -1004,3 +1004,82 @@ def grp_stats(request):
 
 	wb.save(response)
 	return response
+
+
+
+
+def firewallz_swap_add(request):
+	if request.user.is_authenticated():
+		if is_firewallz_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+
+	if request.method=='POST':
+		data = json.loads( request.body.decode('utf-8') )
+		#print(data)
+		#print(data[0]['fields']['name'])
+		rg=Regplayer.objects.get(pk=data[0]['pk'])
+		print(rg.name.name)
+		rg.entered = True
+		rg.unbilled_amt = 1100-int(rg.name.pcramt)
+		rg.save()
+		pl = Enteredplayer()
+		pl.regplayer = rg
+		gid=data[1]['groupid']
+		gr = Group.objects.get(group_code=gid)
+		pl.group = gr
+		pl.save()
+		ad=Enteredplayer.objects.get(regplayer=rg)
+		print(ad)
+
+		for pl in Enteredplayer.objects.filter(group=gr).filter():
+			if(pl.regplayer.name.name != data[0]['fields']['name']):
+				if pl.controls_passed==True:
+					ad.controls_passed=True
+					ad.save()
+
+				if pl.recnacc_passed==True:
+					ad.recnacc_passed=True
+					ad.save()
+
+		return HttpResponse(json.dumps({"success":1}), content_type='application/json')
+
+
+def firewallz_swap_swap(request):
+	if request.user.is_authenticated():
+		if is_firewallz_admin(request.user):
+			pass
+		else:
+			logout(request)
+			return HttpResponseRedirect('/regsoft/')
+	else:
+		return HttpResponseRedirect('/regsoft/')
+
+	if request.method=='POST':
+		data = json.loads( request.body.decode('utf-8') )
+		print(data)
+		swap_out=data[1]['data']['name']
+		swap_in=data[2]['fields']['name']
+		print(swap_out,',',swap_in)
+		rg_out=Regplayer.objects.get(pk=data[1]['data']['participant_id'])
+		rg_in=Regplayer.objects.get(pk=data[2]['pk'])
+		print(rg_out,rg_in)
+		ad=Enteredplayer.objects.get(regplayer=rg_out)
+		rg_in.entered=True
+		rg_in.save()
+		ad.regplayer=rg_in
+		ad.save()
+		rg_out.entered=False
+		rg_out.save()
+
+
+
+		return HttpResponse(json.dumps({"success":1}), content_type='application/json')
+
+
+def firewall_swap(request):
+    return render(request,'firewallz/firewall_swap.html')

@@ -1878,3 +1878,40 @@ Materialize.toast('Sending Mail!',3000);
   };
   ourRequest.send(string_obj);
 }
+function fetchPaymentDetails()
+{
+  showLoader();
+  closeAllModals();
+  Materialize.toast('Updating List!', 3000);
+  document.getElementById('payment-details-body').innerHTML = '';
+  var data = {  //random data , not needed to be sent in exactly this format, isn't used
+    "pk": 123
+  }
+  var sendData = JSON.stringify(data);
+  csrf_token = getCookie('csrftoken');
+  var ourRequest = new XMLHttpRequest();
+  var url = "paymentdetails/";
+  ourRequest.open("POST", url, true);
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onreadystatechange = function() {
+    if (ourRequest.readyState === 4 && ourRequest.status === 200) {
+      Materialize.toast('Updated List!', 3000);
+      var jsonResponse = JSON.parse(ourRequest.responseText);
+      var data = jsonResponse.data;
+      for (var i = 0; i < data.length; i++) {
+        document.getElementById('payment-details-body').innerHTML += '<tr class="payment-details-row"> <td style="flex-basis: 25%;">'+data[i][3]+'</td><td style="flex-basis: 25%;">'+data[i][1]+'</td><td style="flex-basis: 25%;">'+data[i][2]+'</td><td style="flex-basis: 25%;">'+data[i][4]+'</td></tr>';
+      }
+      closeAllModals();
+      showDiv(12);
+      hideLoader();
+    // if (ourRequest.readyState === 4 && ourRequest.status === 200) {
+      // var jsonResponse = JSON.parse(ourRequest.responseText);
+      // Materialize.toast('Payment details Successfully fetched!', 3000);
+      console.log(jsonResponse.data);
+    } else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
+      Materialize.toast('There was some error fetching details!', 3000);
+    }
+  };
+  ourRequest.send(sendData);
+}

@@ -127,7 +127,7 @@ def confirm_group(request):
 		if b:
 			data_controls.append({"participants":b,"groupid":gr.group_code})
 
-	pusher_client.trigger('my-channel2', 'my-event2', data_controls)
+	pusher_client.trigger('firewallz_channel', 'my-event2', data_controls)
 
 	return HttpResponse(json.dumps(data), content_type='application/json')
 	

@@ -131,7 +131,7 @@ var pusher = new Pusher('9b825df805e0b694cccc', {
   encrypted: true
 });
 // Below Channel for Data from Firewallz Socket
-var controls_denoms_channel = pusher.subscribe('controls_denoms_channel');
+var controls_denoms_channel = pusher.subscribe('Controls--Channel');
 controls_denoms_channel.bind('controls_denoms_event', function(data) {
   // Same Data Format as details view.
   fetchUpdateDenoms();

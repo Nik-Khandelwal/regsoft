@@ -1,0 +1,64 @@
+/*Main Content Styling*/
+.main-content {
+  width: 100vw;
+  height: calc(100vh - 56px);
+  position: fixed;
+  top: 56px;
+  z-index: 5;
+}
+.verify-docs-groupleader-row:hover{
+  background-color: white;
+  cursor: pointer;
+}
+.modal {
+    top: 10vh;
+    width: 90vw;
+    max-height: 80vh !important;
+    height: 80vh !important;
+    z-index: 200;
+}
+.table {
+    border: 0;
+    border-collapse: collapse;
+}
+.table tbody {
+    display: block;
+}
+@media only screen and (min-width: 601px)
+{
+	.table thead tr 
+	{
+    overflow: auto;
+	}
+	.table thead th 
+	{
+    height: 8vh;
+	}
+	.table tbody 
+	{
+    overflow: auto;
+    max-height: 60vh;
+    height: 60vh;
+	}
+	.main-content 
+	{
+    height: calc(100vh - 64px);
+    top: 64px;
+  	}
+}
+.table thead tr {
+    color: black;
+}
+.table tr {
+    display: flex;
+}
+.table thead th {
+    flex: 1;
+    display: block;
+}
+.table>tbody>tr>td {
+    padding: 2vmin 0;
+}
+.table td {
+    flex: 1;
+}

@@ -178,7 +178,7 @@ def accomodate(request):
 				bill.accomodation = ac
 				bill.save()
 				data_update = [4]
-				pusher_client.trigger('recnacc_channel', 'recnacc_event', data_update)
+				pusher_client.trigger('recnacc_channel', 'recnacc_event', data_update)  #recnacc_channel
 				return HttpResponse(json.dumps(dat), content_type='application/json')
 		else:
 			logout(request)
@@ -332,7 +332,7 @@ def deaccomodate(request):
 
 				dat = {"total":fne,"list":dats}
 				data_update = [7]
-				pusher_client.trigger('recndeacc_channel', 'recndeacc_event', data_update)
+				pusher_client.trigger('recnacc_channel', 'recndeacc_event', data_update)   #recnacc_channel
 				return HttpResponse(json.dumps(dat), content_type='application/json')
 		else:
 			logout(request)
@@ -521,7 +521,7 @@ def reaccomodate_pusher(request):
 				if b:
 					dat.append({"participants":b,"groupid":gr.group_code})
 			#print(data)
-			pusher_client.trigger('recnreacc_channel', 'recnreacc_event', dat)
+			pusher_client.trigger('recnacc_channel', 'recnreacc_event', dat)  #recnacc_channel
 
 		else:
 			logout(request)
@@ -687,7 +687,7 @@ def edit_occupency(request):
 			ac.vacancy += diff
 			ac.save()
 			data_update = [9]
-			pusher_client.trigger('recnacc_occupancy_channel', 'recnacc_occupancy_event', data_update)
+			pusher_client.trigger('recnacc_channel', 'recnacc_occupancy_event', data_update)  #recnacc_channel
 			return HttpResponse(json.dumps({"success":"1"}), content_type='application/json')	
 		else:
 			logout(request)

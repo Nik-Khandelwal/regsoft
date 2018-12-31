@@ -286,18 +286,18 @@ var pusher = new Pusher('9b825df805e0b694cccc', {
   encrypted: true
 });
 // Below Channel for Data from Firewallz Socket
-var channel = pusher.subscribe('my-channel2');
+var channel = pusher.subscribe('firewallz_channel');
 channel.bind('my-event2', function(data) {
   // Same Data Format as details view.
   pusherGetGroups();
 });
 // Below Channel for Controls Confirm
-var channel = pusher.subscribe('my-channel');
+var channel = pusher.subscribe('Controls--Channel');
 channel.bind('my-event', function(data) {
   pusherGetGroups();
 });
 // Below Channel for Data from Controls Unconfirm Socket
-var controls_unconfirm_channel = pusher.subscribe('controls_unconfirm_channel');
+var controls_unconfirm_channel = pusher.subscribe('Controls--Channel');
 controls_unconfirm_channel.bind('controls_unconfirm_event', function(data) {
   // Same Data Format as details view.
   pusherGetGroups();

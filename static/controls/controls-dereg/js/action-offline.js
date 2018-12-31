@@ -537,7 +537,7 @@ var pusher = new Pusher('9b825df805e0b694cccc', {
   cluster: 'ap2',
   encrypted: true
 });
-var channel = pusher.subscribe('my-channel');
+var channel = pusher.subscribe('Controls--Channel');
 channel.bind('my-event', function(data) {
   console.log(data);
   updatePassedStats(data);

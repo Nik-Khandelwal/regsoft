@@ -381,7 +381,7 @@ def deaccomodate_pusher(request):
         if is_recnacc_admin(request.user):
             print("deaccomodate_pusher")
             data_update = [7]
-            pusher_client.trigger('recnacc_channel', 'recnacc_event', data_update)
+            pusher_client.trigger('recnacc_channel', 'recndeacc_event', data_update)
             return HttpResponse(json.dumps({"success":1}), content_type='application/json')
         else:
             logout(request)
@@ -583,7 +583,7 @@ def reaccomodate_pusher(request):
                 if b:
                     dat.append({"participants":b,"groupid":gr.group_code})
             #print(data)
-            pusher_client.trigger('recnacc_channel', 'recnacc_event', dat)
+            pusher_client.trigger('recnacc_channel', 'recnreacc_event', dat)
             return HttpResponse(json.dumps({"success":1}), content_type='application/json')
         else:
             logout(request)
@@ -763,7 +763,7 @@ def edit_occupency_pusher(request):
             data = json.loads( request.body.decode('utf-8') )
             print(data)
             data_update = [9]
-            pusher_client.trigger('recnacc_channel', 'recnacc_event', data_update)
+            pusher_client.trigger('recnacc_channel', 'recnacc_occupancy_event', data_update)
             return HttpResponse(json.dumps({"success":"1"}), content_type='application/json')
         else:
             logout(request)

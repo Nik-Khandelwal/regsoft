@@ -2317,7 +2317,8 @@ def paydetails(request):
 		s.append(u.name)
 		d.append(s)
 		s.append(i.STATUS)
-	return render(request,'pcradmin/paydetails.html',{'data':d})
+# 	return render(request,'pcradmin/paydetails.html',{'data':d})
+	return JsonResponse({'data':d})
 
 def teammail(request):
 	if request.user.is_authenticated():

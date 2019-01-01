@@ -460,6 +460,7 @@ function activateUser(idno) {
     if (ourRequest.readyState === 4 && ourRequest.status === 200) {
       var jsonResponse = JSON.parse(ourRequest.responseText);
       Materialize.toast('User Successfully Switched!', 3000);
+      sendPusherUpdate('activateOrDeactivateGroup');
       fetchSwitchStatus();
     } else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
       Materialize.toast('There was some error connecting to the server!', 3000);
@@ -485,6 +486,7 @@ function deactivateUser(idno) {
     if (ourRequest.readyState === 4 && ourRequest.status === 200) {
       var jsonResponse = JSON.parse(ourRequest.responseText);
       Materialize.toast('User Successfully Switched!', 3000);
+      sendPusherUpdate('activateOrDeactivateGroup');
       fetchSwitchStatus();
     } else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
       Materialize.toast('There was some error connecting to the server!', 3000);
@@ -1355,6 +1357,7 @@ function confirmTeams() {
     ourRequest.onreadystatechange = function() {
       if (ourRequest.readyState === 4 && ourRequest.status === 200) {
         Materialize.toast('Confirmed Teams!', 3000);
+        sendPusherUpdate('confirm/unconfirmTeams');
         closeAllModals();
       } else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
         Materialize.toast('There was some error connecting to the server!', 3000);
@@ -1391,6 +1394,7 @@ function unconfirmTeams() {
     ourRequest.onreadystatechange = function() {
       if (ourRequest.readyState === 4 && ourRequest.status === 200) {
         Materialize.toast('Unconfirmed Teams!', 3000);
+        sendPusherUpdate('confirm/unconfirmTeams');
         closeAllModals();
       } else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
         Materialize.toast('There was some error connecting to the server!', 3000);
@@ -1877,6 +1881,33 @@ Materialize.toast('Sending Mail!',3000);
     }
   };
   ourRequest.send(string_obj);
+}
+function sendPusherUpdate(pusherReason){
+  console.log('hello pusher update is being called');
+  var data = {
+    "pk": 123  //just a random data to be sent(not necessary in this format)
+  }
+  var sendData = JSON.stringify(data);
+  csrf_token = getCookie('csrftoken');
+  var ourRequest = new XMLHttpRequest();
+  var url ;
+  if(pusherReason=='activateOrDeactivateGroup')
+    url = "activate/activateDeactivateGrpPusher/";
+  else
+    url ="confirmUnconfirmTeamPusher/";
+  console.log('url is '+url);
+  ourRequest.open("POST", url, true);
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onreadystatechange = function() {
+    if (ourRequest.readyState === 4 && ourRequest.status === 200) {
+      var jsonResponse = JSON.parse(ourRequest.responseText);
+      Materialize.toast('Pusher is Successfully called!', 3000);
+    } else if (ourRequest.readyState === 4 && ourRequest.status != 200) {
+      Materialize.toast('There was some error calling Pusher!', 3000);
+    }
+  };
+  ourRequest.send(sendData);
 }
 function fetchPaymentDetails()
 {

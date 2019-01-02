@@ -404,8 +404,8 @@ def activateGrp(request):
 			email = EmailMessage(mail_subject, message, to=[up.email])
 			email.content_subtype = "html"
 			email.send()
-		stats_update_data = [7,3]
-		pusher_client.trigger('my-channel7', 'my-event7', stats_update_data)
+# 		stats_update_data = [7,3]
+# 		pusher_client.trigger('my-channel7', 'my-event7', stats_update_data)
 		return JsonResponse(resp)
 
 @login_required(login_url='/regsoft/')
@@ -448,9 +448,27 @@ def deactivateGrp(request):
 			resp={'success':0}
 		else:
 			resp={'success':1}
-		stats_update_data2 = [7,3]
-		pusher_client.trigger('my-channel7', 'my-event7', stats_update_data2)
+# 		stats_update_data2 = [7,3]
+# 		pusher_client.trigger('my-channel7', 'my-event7', stats_update_data2)
 		return JsonResponse(resp)
+
+@login_required(login_url='/regsoft/')
+@user_passes_test(is_pcradmin_admin, login_url='/regsoft/')
+def activateDeactivateGrpPusher(request):
+    if request.user.is_authenticated():
+        if is_pcradmin_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+    if request.method=='POST':
+        resp={'success':1}
+        print('finally inside activateDeactivateGrpPusher')
+        random_data = [7,3]
+        pusher_client.trigger('my-channel7', 'my-event7', random_data)
+        return JsonResponse(resp)
 
 @login_required(login_url='/regsoft/')
 @user_passes_test(is_pcradmin_admin, login_url='/regsoft/')
@@ -1349,8 +1367,8 @@ def confirmTeam(request):
 					pass
 		# connection.close()
 				
-		update_data3 = [9,2]
-		pusher_client.trigger('dashboard-update', 'dashboard-update-event', update_data3)
+# 		update_data3 = [9,2]
+# 		pusher_client.trigger('dashboard-update', 'dashboard-update-event', update_data3)
 		return JsonResponse({'success':success})
 
 @login_required(login_url='/regsoft/')
@@ -1390,11 +1408,27 @@ def unconfirmTeam(request):
 					tm.save()
 				except:
 					success=0
-		update_data3 = [9,2]
-		pusher_client.trigger('dashboard-update', 'dashboard-update-event', update_data3)
+# 		update_data3 = [9,2]
+# 		pusher_client.trigger('dashboard-update', 'dashboard-update-event', update_data3)
 		return JsonResponse({'success':success})
 
-
+@login_required(login_url='/regsoft/')
+@user_passes_test(is_pcradmin_admin, login_url='/regsoft/')
+def confirmUnconfirmTeamPusher(request):
+    print('inside def confirmUnconfirmTeamPusher')
+    if request.user.is_authenticated():
+        if is_pcradmin_admin(request.user):
+            pass
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+    if request.method=='POST':
+        success=1
+        update_data3 = [9,2]
+        pusher_client.trigger('dashboard-update', 'dashboard-update-event', update_data3)
+        return JsonResponse({'success':success})
 
 
 #EXCEL1

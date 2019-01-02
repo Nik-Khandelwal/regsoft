@@ -102,6 +102,7 @@ def main(request):
 		return HttpResponseRedirect('/regsoft/')
 	mon = Money()
 	mon.save()
+
 	return render(request,'controls/index1.html')
 
 
@@ -140,6 +141,7 @@ def details(request):
 			b.append(s)
 		if b:
 			data.append({"participants":b,"groupid":gr.group_code})
+	print('haalooooooo')
 	return HttpResponse(json.dumps(data), content_type='application/json')
 
 
@@ -158,6 +160,7 @@ def create_bill(request):
 	bil.bill_no=Billcontrols.objects.all().last().pk +1
 	bil.save()
 	dat = {"success":1}
+	print('halloooo')
 	return HttpResponse(json.dumps(dat), content_type='application/json')
 
 
@@ -186,16 +189,9 @@ def generate_bill(request):
 			pl.controls_passed = True
 			pl.billcontrols = Billcontrols.objects.filter(unbilled_amt=0).first()
 			pl.save()
-		# for i in data['data']['id_arr']:
-		# 	rp = Regplayer.objects.get(pk=int(i))
-		# 	pl.unbilled_amt = data['data']['amt_arr'][]
-		# 	pl = Enteredplayer.objects.get(regplayer = rp)
-		# 	pl.controls_passed = True
-		# 	pl.billcontrols = Billcontrols.objects.filter(unbilled_amt=0).first()
-		# 	pl.save()
+		
 		bil = Billcontrols.objects.filter(unbilled_amt=0).first()
 		bil.unbilled_amt = data['data']['net_amt']
-		#bil.amt_received = int(data['data']['deno_2000'])*2000 + int(data['data']['deno_500'])*500 + int(data['data']['deno_200'])*200 + int(data['data']['deno_100'])*100 + int(data['data']['deno_50'])*50
 		bil.amt_received = int(data['data']['deno_2000'])*2000 + int(data['data']['deno_500'])*500 + int(data['data']['deno_200'])*200 + int(data['data']['deno_100'])*100 + int(data['data']['deno_50'])*50 + int(data['data']['deno_20'])*20 + int(data['data']['deno_10'])*10
 		bil.save()
 		money = Money.objects.get(pk=1)
@@ -238,7 +234,7 @@ def generate_bill_pusher(request):
 			data_recnacc.append({"participants":b,"groupid":gr.group_code})
 
 	print("generate bill pusher start")
-	pusher_client.trigger('my-channel', 'my-event', data_recnacc)
+	pusher_client.trigger('Controls--Channel', 'my-event', data_recnacc)
 	print("pusher")
 	return HttpResponse(json.dumps({"success":1}), content_type='application/json')
 
@@ -277,7 +273,7 @@ def arpit(request):
 	money.save()
 	dat = {"success":1}
 	data_denoms = [1]
-	pusher_client.trigger('controls_denoms_channel', 'controls_denoms_event', data_denoms)
+	pusher_client.trigger('Controls--Channel', 'controls_denoms_event', data_denoms)
 	return HttpResponse(json.dumps(dat), content_type='application/json')
 
 
@@ -506,7 +502,7 @@ def unconfirm_player_pusher(request):
 			if b:
 				data.append({"participants":b,"groupid":gr.group_code})
 		print("unconfirm pusher started")
-		pusher_client.trigger('controls_unconfirm_channel', 'controls_unconfirm_event', data)
+		pusher_client.trigger('Controls--Channel', 'controls_unconfirm_event', data)
 		print("pusher ends")
 	return HttpResponse(json.dumps({"success":1}), content_type='application/json')
 

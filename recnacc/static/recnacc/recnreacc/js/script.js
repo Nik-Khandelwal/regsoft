@@ -1050,12 +1050,12 @@ recnacc_channel.bind('recnacc_event', function(data) {
   pusher_retrieve_left();
 });
 // RecnDeAcc Channel to RecnDeallocated Channel
-var recndeacc_channel = pusher.subscribe('recndeacc_channel');
+var recndeacc_channel = pusher.subscribe('recnacc_channel');
 recndeacc_channel.bind('recndeacc_event', function(data) {
   pusher_retrieve_left();
 });
 // RecnAcc Occupancy Channel
-var recnacc_occupancy_channel = pusher.subscribe('recnacc_occupancy_channel');
+var recnacc_occupancy_channel = pusher.subscribe('recnacc_channel');
 recnacc_occupancy_channel.bind('recnacc_occupancy_event', function(data) {
   pusher_fetchAvailabilityStats();
 });

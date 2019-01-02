@@ -833,7 +833,7 @@ var pusher = new Pusher('9b825df805e0b694cccc', {
 	encrypted: true
 });
 // Below Channel for Data from Firewallz Socket
-var channel2 = pusher.subscribe('my-channel2');
+var channel2 = pusher.subscribe('firewallz_channel');
 channel2.bind('my-event2', function(data) {
 	// Same Data Format as details view.
 	console.log(data);
@@ -841,7 +841,7 @@ channel2.bind('my-event2', function(data) {
 	fetchPassedStats();
 });
 // Below Channel for Data from Controls Unconfirm Socket
-var controls_unconfirm_channel = pusher.subscribe('controls_unconfirm_channel');
+var controls_unconfirm_channel = pusher.subscribe('Controls--Channel');
 controls_unconfirm_channel.bind('controls_unconfirm_event', function(data) {
 	// Same Data Format as details view.
 	console.log(data);
@@ -849,18 +849,18 @@ controls_unconfirm_channel.bind('controls_unconfirm_event', function(data) {
 	fetchPassedStats();
 });
 // Firewallz Unconfirm Channel
-var firewallz_unconfirm_channel = pusher.subscribe('firewallz_unconfirm_channel');
+var firewallz_unconfirm_channel = pusher.subscribe('firewallz_channel');
 firewallz_unconfirm_channel.bind('firewallz_unconfirm_event', function(data) {
   fetchPassedStats();
   // Data Format - Same as Firewallz Details View
 });
 // Controls to RecnAcc Channel
-var channel = pusher.subscribe('my-channel');
+var channel = pusher.subscribe('Controls--Channel');
 channel.bind('my-event', function(data) {
   fetchPassedStats();
 });
 // RecnReAcc Channel to RecnAcc Channel
-var recnreacc_channel = pusher.subscribe('recnreacc_channel');
+var recnreacc_channel = pusher.subscribe('recnacc_channel');
 recnreacc_channel.bind('recnreacc_event', function(data) {
   fetchPassedStats();
 });
@@ -870,7 +870,7 @@ recnacc_channel.bind('recnacc_event', function(data) {
   fetchPassedStats();
 });
 // RecnDeAcc Channel to RecnDeallocated Channel
-var recndeacc_channel = pusher.subscribe('recndeacc_channel');
+var recndeacc_channel = pusher.subscribe('recnacc_channel');
 recndeacc_channel.bind('recndeacc_event', function(data) {
   fetchPassedStats();
 });

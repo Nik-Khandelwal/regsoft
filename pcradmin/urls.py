@@ -40,7 +40,6 @@ urlpatterns = [
     url(r'^activate/$',viewGrpLeaders),
     url(r'^activate/activate/$',activateGrp),
     url(r'^activate/deactivate/$',deactivateGrp),
-    url(r'^activate/activateDeactivateGrpPusher/$',activateDeactivateGrpPusher),
 
     url(r'^excel/$',excelDisplay),
     url(r'^excel/leaderexcel/$',leaderExcel),
@@ -59,7 +58,6 @@ urlpatterns = [
     url(r'^confirm/team/',confirmTeamDisplay),
     url(r'^confirmteam/$',confirmTeam),
     url(r'^unconfirm/$',unconfirmTeam),
-    url(r'^confirmUnconfirmTeamPusher/$',confirmUnconfirmTeamPusher),
 
     url(r'^edit/$',editDisplay),
     url(r'^edit/team/$',editDetails),

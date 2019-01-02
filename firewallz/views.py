@@ -216,7 +216,7 @@ def confirm_group_pusher(request):
 		if b:
 			data_controls.append({"participants":b,"groupid":gr.group_code})
 	print("confirm_group_pusher started")
-	pusher_client.trigger('my-channel2', 'my-event2', data_controls)
+	pusher_client.trigger('firewallz_channel', 'my-event2', data_controls)  #firewallz_channel
 	return HttpResponse(json.dumps({"success":1}), content_type='application/json')
 
 
@@ -362,9 +362,9 @@ def unconfirm_player(request):
 		datss = []
 		b = {"name":pl.name.name,"gender":pl.gender,"college":pl.college,"city":pl.city,"mobile_no":pl.mobile_no,"email_id":pl.email_id,"sport":pl.sport,"entered":pl.entered,"unbilled_amt":pl.unbilled_amt}
 		datss.append({"pk":pl.pk,"fields":b})
-# 		print("unconfirm_player pusher")
+		
 		print(datss)
-# 		pusher_client.trigger('firewallz_unconfirm_channel', 'firewallz_unconfirm_event', datss)
+		
 		dat = {"success":1}
 		return HttpResponse(json.dumps(dat), content_type='application/json')
 
@@ -388,7 +388,7 @@ def unconfirm_player_pusher(request):
         datss.append({"pk":pl.pk,"fields":b})
         print("unconfirm_player pusher")
         print(datss)
-        pusher_client.trigger('firewallz_unconfirm_channel', 'firewallz_unconfirm_event', datss)
+        pusher_client.trigger('firewallz_channel', 'firewallz_unconfirm_event', datss)  #firewallz_channel
         dat = {"success":1}
         return HttpResponse(json.dumps(dat), content_type='application/json')
 
@@ -443,7 +443,7 @@ def unconfirm_player_grp_pusher(request):
             datss.append({"pk":rp.pk,"fields":b})
         print("unconfirm_player_grp pusher")
         print(datss)
-        pusher_client.trigger('firewallz_unconfirm_channel', 'firewallz_unconfirm_event', datss)
+        pusher_client.trigger('firewallz_channel', 'firewallz_unconfirm_event', datss)
         dat = {"success":1}
         return HttpResponse(json.dumps(dat), content_type='application/json')
 

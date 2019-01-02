@@ -163,6 +163,36 @@ def satyavrat(request):
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
 # checks for availabilty and allots a room to a player
 def accomodate(request):
+
+    if request.user.is_authenticated:
+        if is_recnacc_admin(request.user):
+            print("accomodate")
+            if request.method=='POST':
+                data = json.loads( request.body.decode('utf-8') )
+                for i in data['data']['id_arr']:
+                    #print(data['data']['id_arr'])
+                    rp = Regplayer.objects.get(pk=int(i))
+                    pl = Enteredplayer.objects.get(regplayer=rp)
+                    pl.accorecnacc = Accorecnacc.objects.filter(accomodation=None).first()
+                    pl.recnacc_passed = True
+                    pl.save()
+                    dat = {"success":1}
+                ac = Accomodation.objects.get(pk=data['data']['bhawan_select'])
+                ac.vacancy -= len(data['data']['id_arr'])
+                ac.save()
+                bill = Accorecnacc.objects.filter(accomodation=None).first()
+                bill.accomodation = ac
+                bill.save()
+                data_update = [4]
+                pusher_client.trigger('recnacc_channel', 'recnacc_event', data_update)  #recnacc_channel
+                return HttpResponse(json.dumps(dat), content_type='application/json')
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+
+
     if request.user.is_authenticated():
         if is_recnacc_admin(request.user):
             print("accomodate")
@@ -204,6 +234,7 @@ def accomodate_pusher(request):
             return HttpResponseRedirect('/regsoft/')
     else:
         return HttpResponseRedirect('/regsoft/')
+
 
 
 @login_required(login_url='/regsoft/')
@@ -322,7 +353,7 @@ def unconfirm_acco_details(request):
                     p.save()
                     #print(p)
                 # for t in a:
-                # 	b.append({"hostel":,"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
+                #   b.append({"hostel":,"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
                 if b:
                     data.append({"participants":b,"groupid":gr.group_code})
                 #print(data)
@@ -338,6 +369,44 @@ def unconfirm_acco_details(request):
 @user_passes_test(is_recnacc_admin, login_url='/regsoft/')
 # deallocates the room a player is assigned to
 def deaccomodate(request):
+
+    if request.user.is_authenticated:
+        if is_recnacc_admin(request.user):
+            print("deaccomodate")
+            if request.method=='POST':
+                data = json.loads( request.body.decode('utf-8') )
+                print(data)
+                fne = 0
+                dats = []
+                for i in data['data']['id_arr']:
+                    #print(data['data']['id_arr'])
+                    rp = Regplayer.objects.get(pk=int(i))
+                    pl = Enteredplayer.objects.get(regplayer=rp)
+                    pl.all_done = True
+                    pl.save()
+                    dats.append({"name":rp.name.name,"fine":rp.fine})
+                    fne += rp.fine
+                    if pl.accorecnacc.accomodation is not None:
+                        ac = Accomodation.objects.get(pk=pl.accorecnacc.accomodation.pk)
+                        ac.vacancy += 1
+                        ac.save()
+                    elif pl.accorecnacc.singleroom is not None:
+                        ac = Accomodation.objects.get(pk=pl.accorecnacc.singleroom.pk)
+                        ac.vacancy += 1
+                        ac.save()
+                    else:
+                        pass
+
+                dat = {"total":fne,"list":dats}
+                data_update = [7]
+                pusher_client.trigger('recnacc_channel', 'recndeacc_event', data_update)   #recnacc_channel
+                return HttpResponse(json.dumps(dat), content_type='application/json')
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+
     if request.user.is_authenticated():
         if is_recnacc_admin(request.user):
             print("deaccomodate")
@@ -388,6 +457,7 @@ def deaccomodate_pusher(request):
             return HttpResponseRedirect('/regsoft/')
     else:
         return HttpResponseRedirect('/regsoft/')
+
 
 
 @login_required(login_url='/regsoft/')
@@ -459,24 +529,24 @@ def fine_amount(request):
 
 
 #def deaccomodate(request):
-#	data = json.loads( request.body.decode('utf-8') )
-#	for i in data['data']['id_arr']:
-#		#print(data['data']['id_arr'])
-#		rp = Regplayer.objects.get(pk=int(i))
-#		pl = Enteredplayer.objects.get(regplayer=rp)
-#		ac = pl.accorecnacc
-#		if ac.accomodation is not None:
-#			ac.accomodation.vacancy += 1
-#			ac.save()
-#			pl.accorecnacc = None
-#			pl.save()
-#		if ac.singleroom is not None:
-#			ac.singleroom.vacancy += 1
-#			ac.save()
-#		pl.recnacc_passed = False
-#		pl.save()
-#		dat = {"success":1}
-#	return HttpResponse(json.dumps(dat), content_type='application/json')
+#   data = json.loads( request.body.decode('utf-8') )
+#   for i in data['data']['id_arr']:
+#       #print(data['data']['id_arr'])
+#       rp = Regplayer.objects.get(pk=int(i))
+#       pl = Enteredplayer.objects.get(regplayer=rp)
+#       ac = pl.accorecnacc
+#       if ac.accomodation is not None:
+#           ac.accomodation.vacancy += 1
+#           ac.save()
+#           pl.accorecnacc = None
+#           pl.save()
+#       if ac.singleroom is not None:
+#           ac.singleroom.vacancy += 1
+#           ac.save()
+#       pl.recnacc_passed = False
+#       pl.save()
+#       dat = {"success":1}
+#   return HttpResponse(json.dumps(dat), content_type='application/json')
 
 @cache_page(CACHE_TTL)
 @login_required(login_url='/regsoft/')
@@ -516,7 +586,7 @@ def reconfirm_acco_details(request):
                     p.save()
                     #print(p)
                 # for t in a:
-                # 	b.append({"hostel":,"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
+                #   b.append({"hostel":,"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
                 if b:
                     data.append({"participants":b,"groupid":gr.group_code})
             return HttpResponse(json.dumps(data), content_type='application/json')
@@ -561,6 +631,37 @@ def reaccomodate(request):
 
 
 def reaccomodate_pusher(request):
+
+    if request.user.is_authenticated:
+        if is_recnacc_admin(request.user):
+            print("participant_details")
+            dat=[]
+            for gr in Group.objects.all():
+                b=[]
+                a=[]
+                data = json.loads( request.body.decode('utf-8') )
+                for i in data['data']:
+                    #print(data['data']['id_arr'])
+                    rp = Regplayer.objects.get(pk=int(i))
+                    pl = Enteredplayer.objects.get(regplayer=rp)
+                    if pl.group == gr:
+                        a.append(rp)
+                        pl.recnacc_displayed = True
+                        pl.save()
+                    #print(p)
+                for t in a:
+                    b.append({"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
+                if b:
+                    dat.append({"participants":b,"groupid":gr.group_code})
+            #print(data)
+            pusher_client.trigger('recnacc_channel', 'recnreacc_event', dat)  #recnacc_channel
+
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+
     if request.user.is_authenticated:
         if is_recnacc_admin(request.user):
             print("participant_details")
@@ -590,6 +691,7 @@ def reaccomodate_pusher(request):
             return HttpResponseRedirect('/regsoft/')
     else:
         return HttpResponseRedirect('/regsoft/')
+
 
 
 @login_required(login_url='/regsoft/')
@@ -733,6 +835,30 @@ def disp_occupency(request):
         return HttpResponseRedirect('/regsoft/')
 
 def edit_occupency(request):
+
+    if request.user.is_authenticated:
+        if is_recnacc_admin(request.user):
+            data = json.loads( request.body.decode('utf-8') )
+            print(data)
+            yo = int(data['data']['strength'])
+            ac = Accomodation.objects.get(pk=data['data']['pk'])
+            #diff = yo - ac.strength
+            #ac.strength = yo
+
+            diff = int(data['data']['strength']) - ac.strength
+            ac.strength = data['data']['strength']
+
+            ac.vacancy += diff
+            ac.save()
+            data_update = [9]
+            pusher_client.trigger('recnacc_channel', 'recnacc_occupancy_event', data_update)  #recnacc_channel
+            return HttpResponse(json.dumps({"success":"1"}), content_type='application/json')   
+        else:
+            logout(request)
+            return HttpResponseRedirect('/regsoft/')
+    else:
+        return HttpResponseRedirect('/regsoft/')
+
     if request.user.is_authenticated():
         if is_recnacc_admin(request.user):
             data = json.loads( request.body.decode('utf-8') )
@@ -771,6 +897,7 @@ def edit_occupency_pusher(request):
     else:
         return HttpResponseRedirect('/regsoft/')
 
+
 @cache_page(CACHE_TTL)
 # deallocating a player adds them back to the checkout page
 def deallocated(request):
@@ -796,7 +923,7 @@ def deallocated_page(request):
         return HttpResponseRedirect('/regsoft/')
     # data = []
     # for pl in Enteredplayer.objects.filter(all_done=True):
-    # 	data.append({"name":pl.regplayer.name.name,"college":pl.regplayer.college})
+    #   data.append({"name":pl.regplayer.name.name,"college":pl.regplayer.college})
     # return HttpResponse(json.dumps({"data":data}), content_type='application/json')
     data=[]
     for gr in Group.objects.all():
@@ -814,7 +941,7 @@ def deallocated_page(request):
             p.save()
             #print(p)
         #for t in a:
-        # 	b.append({"hostel":,"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
+        #   b.append({"hostel":,"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
         if b:
             data.append({"participants":b,"groupid":gr.group_code})
     return HttpResponse(json.dumps(data), content_type='application/json')
@@ -841,16 +968,16 @@ def fine_page(request):
             ac.save()
             cnt = 0
             #for ar in ac.accorecnacc_set.all():
-            #	for pl in Enteredplayer.objects.filter(all_done=False):
-            #		if pl.accorecnacc == ar:
-            #			cnt+=1
+            #   for pl in Enteredplayer.objects.filter(all_done=False):
+            #       if pl.accorecnacc == ar:
+            #           cnt+=1
 
             #for ar in ac.accorecnacc_set.all():
-            #	for pl in Enteredplayer.objects.filter(all_done=False):
-            #		if pl.accorecnacc == ar:
-            #			rp = Regplayer.objects.get(pk=pl.regplayer.pk)
-            #			rp.fine += (float(data['data']['amt'])/cnt)
-            #			rp.save()
+            #   for pl in Enteredplayer.objects.filter(all_done=False):
+            #       if pl.accorecnacc == ar:
+            #           rp = Regplayer.objects.get(pk=pl.regplayer.pk)
+            #           rp.fine += (float(data['data']['amt'])/cnt)
+            #           rp.save()
 
             for ar in ac.accorecnacc_set.all():
                 for pl in ar.enteredplayer_set.filter(all_done=False):

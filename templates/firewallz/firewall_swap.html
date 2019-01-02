@@ -2,16 +2,16 @@
 <html>
   <head>
         <title>Firewallz</title>
-
-        <link rel="stylesheet" type="text/css" href="/static/firewallz/css/font.css">
-        <link type="text/css" rel="stylesheet" href="/static/firewallz/css/materialize.min.css"  media="screen,projection"/>
+        {% load staticfiles %}
+        <link rel="stylesheet" type="text/css" href="{% static 'firewallz/css/font.css' %}">
+        <link type="text/css" rel="stylesheet" href="{% static 'firewallz/css/materialize.min.css' %}"  media="screen,projection"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <link type="text/css" rel="stylesheet" href="/static/firewallz/css/style.css"/>
-        <link type="text/css" rel="stylesheet" href="/static/firewallz/firewallz_unconfirm/css/style.css"/>
-        <script type="text/javascript" src="/static/firewallz/js/jquery.js"></script>
-        <script type="text/javascript" src="/static/firewallz/js/materialize.min.js"></script>
+        <link type="text/css" rel="stylesheet" href="{% static 'firewallz/css/style.css' %}"/>
+        <link type="text/css" rel="stylesheet" href="{% static 'firewallz/firewallz_unconfirm/css/style.css' %}"/>
+        <script type="text/javascript" src="{% static 'firewallz/js/jquery.js' %}"></script>
+        <script type="text/javascript" src="{% static 'firewallz/js/materialize.min.js' %}"></script>
         <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
-        <script type="text/javascript" src="/static/firewallz/js/swap-script.js"></script>
+        <script type="text/javascript" src="{% static 'firewallz/js/swap-script.js' %}"></script>
   </head>
   <body>
         <ul id="slide-out" class="side-nav">
@@ -90,13 +90,13 @@
                 <tr>
                   <th style="flex-basis: 8%;display:none;">&nbsp</th>
                   <th style="flex-basis: 23%;">Name &nbsp;
-                        <img src="/static/firewallz/icons/sort.svg" class="sort-icon" onclick="sort(0)"></th>
+                        <img src="{% static 'firewallz/icons/sort.svg' %}" class="sort-icon" onclick="sort(0)"></th>
                   <th style="flex-basis: 23%;">College &nbsp;
-                        <img src="/static/firewallz/icons/sort.svg" class="sort-icon" onclick="sort(1)"></th>
+                        <img src="{% static 'firewallz/icons/sort.svg' %}" class="sort-icon" onclick="sort(1)"></th>
                   <th style="flex-basis: 23%;">Sport &nbsp;
-                        <img src="/static/firewallz/icons/sort.svg" class="sort-icon" onclick="sort(2)"></th>
+                        <img src="{% static 'firewallz/icons/sort.svg' %}" class="sort-icon" onclick="sort(2)"></th>
                   <th style="flex-basis: 23%;">Gender &nbsp;
-                        <img src="/static/firewallz/icons/sort.svg" class="sort-icon" onclick="sort(3)"></th>
+                        <img src="{% static 'firewallz/icons/sort.svg' %}" class="sort-icon" onclick="sort(3)"></th>
                   <td style="display: none;">ID_No</td>
                 </tr>
           </thead>
@@ -153,7 +153,7 @@
                 </div>
             </div>
             <div class="container" id="uncnfrm_grp">
-
+                
             </div>
         </div>
         <div class="modal" id="confirm_dialog">

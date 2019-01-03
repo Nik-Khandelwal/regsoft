@@ -564,8 +564,8 @@ var pusher = new Pusher('9b825df805e0b694cccc', {
 });
 
 // Controls to RecnAcc Channel
-var channel = pusher.subscribe('Controls--Channel');
-channel.bind('my-event', function(data) {
+var controls_channel = pusher.subscribe('Controls--Channel');
+controls_channel.bind('my-event', function(data) {
   pusher_retrieve_left();
 });
 // RecnAcc to RecnReAcc Channel
@@ -574,8 +574,7 @@ recnacc_channel.bind('recnacc_event', function(data) {
 	pusher_retrieve_left();
 });
 // RecnReAcc to RecnAcc Channel
-var recnreacc_channel = pusher.subscribe('recnacc_channel');
-recnreacc_channel.bind('recnreacc_event', function(data) {
+recnacc_channel.bind('recnreacc_event', function(data) {
 	pusher_retrieve_left();
 });
 

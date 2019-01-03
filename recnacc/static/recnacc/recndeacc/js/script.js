@@ -673,13 +673,11 @@ recnacc_channel.bind('recnacc_event', function(data) {
   pusher_retrieve_left();
 });
 // RecnReAcc Channel to RecnAcc Channel
-var recnreacc_channel = pusher.subscribe('recnacc_channel');
-recnreacc_channel.bind('recnreacc_event', function(data) {
+recnacc_channel.bind('recnreacc_event', function(data) {
   pusher_retrieve_left();
 });
 // RecnAcc Occupancy Channel
-var recnacc_occupancy_channel = pusher.subscribe('recnacc_channel');
-recnacc_occupancy_channel.bind('recnacc_occupancy_event', function(data) {
+recnacc_channel.bind('recnacc_occupancy_event', function(data) {
   pusher_fetchAvailabilityStats();
 });
 // Pusher Code Ends

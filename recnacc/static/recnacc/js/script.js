@@ -935,36 +935,30 @@ var pusher = new Pusher('9b825df805e0b694cccc', {
   encrypted: true
 });
 
-var channel = pusher.subscribe('Controls--Channel');
+var channel = pusher.subscribe('my-channel');
 channel.bind('my-event', function(data) {
   poppulate_left(data);
   fetchPassedStats();
 });
-var channel2 = pusher.subscribe('firewallz_channel');
+var channel2 = pusher.subscribe('my-channel2');
 channel2.bind('my-event2', function(data) {
   firewallzUpdates(data);
   fetchPassedStats();
 });
+channel2.bind('fwCnfrmEvent', function(data) {
+  console.log(data);
+  poppulate_left(data);
+});
 // RecnReAcc Channel to RecnAcc Channel
-<<<<<<< HEAD
-var recnreacc_channel = pusher.subscribe('recnacc_channel');
-recnreacc_channel.bind('recnreacc_event', function(data) {
-=======
 var recnacc_channel = pusher.subscribe('recnacc_channel');
 recnacc_channel.bind('recnreacc_event', function(data) {
->>>>>>> 44b5389c6285d66f937011c585041d7ecdb15323
   poppulate_left(data);
   pusher_fetchBhawanStats();
   pusher_fetchAvailabilityStats();
   fetchPassedStats();
 });
 // RecnAcc Occupancy Channel
-<<<<<<< HEAD
-var recnacc_occupancy_channel = pusher.subscribe('recnacc_channel');
-recnacc_occupancy_channel.bind('recnacc_occupancy_event', function(data) {
-=======
 recnacc_channel.bind('recnacc_occupancy_event', function(data) {
->>>>>>> 44b5389c6285d66f937011c585041d7ecdb15323
   pusher_fetchBhawanStats();
   pusher_fetchAvailabilityStats();
 });
@@ -982,7 +976,7 @@ controls_unconfirm_channel.bind('controls_unconfirm_event', function(data) {
   fetchPassedStats();
 });
 // Firewallz Unconfirm Channel
-var firewallz_unconfirm_channel = pusher.subscribe('firewallz_channel');
+var firewallz_unconfirm_channel = pusher.subscribe('firewallz_unconfirm_channel');
 firewallz_unconfirm_channel.bind('firewallz_unconfirm_event', function(data) {
   fetchPassedStats();
 });
@@ -991,12 +985,7 @@ recnacc_channel.bind('recnacc_event', function(data) {
   fetchPassedStats();
 });
 // RecnDeAcc Channel to RecnDeallocated Channel
-<<<<<<< HEAD
-var recndeacc_channel = pusher.subscribe('recnacc_channel');
-recndeacc_channel.bind('recndeacc_event', function(data) {
-=======
 recnacc_channel.bind('recndeacc_event', function(data) {
->>>>>>> 44b5389c6285d66f937011c585041d7ecdb15323
   fetchPassedStats();
 });
 

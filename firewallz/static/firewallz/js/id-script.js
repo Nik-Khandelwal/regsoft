@@ -260,7 +260,27 @@ function fetchPassedStats() {
   }
   ourRequest.send('');
 }
-
+Pusher.logToConsole = false;
+var pusher = new Pusher('9b825df805e0b694cccc', {
+  cluster: 'ap2',
+  encrypted: true
+});
+// Below Channel for Data from Firewallz Socket
+var firewallz_channel = pusher.subscribe('firewallz_channel');
+firewallz_channel.bind('my-event2', function(data) {
+  // Same Data Format as details view.
+  pusherGetGroups();
+});
+// Below Channel for Controls Confirm
+var controls_channel = pusher.subscribe('Controls--Channel');
+controls_channel.bind('my-event', function(data) {
+  pusherGetGroups();
+});
+// Below Channel for Data from Controls Unconfirm Socket
+controls_channel.bind('controls_unconfirm_event', function(data) {
+  // Same Data Format as details view.
+  pusherGetGroups();
+});
 function pusherGetGroups() {
   var csrf_token = getCookie('csrftoken');
   var ourRequest = new XMLHttpRequest();

@@ -945,6 +945,10 @@ channel2.bind('my-event2', function(data) {
   firewallzUpdates(data);
   fetchPassedStats();
 });
+channel2.bind('fwCnfrmEvent', function(data) {
+  console.log(data);
+  poppulate_left(data);
+});
 // RecnReAcc Channel to RecnAcc Channel
 var recnacc_channel = pusher.subscribe('recnacc_channel');
 recnacc_channel.bind('recnreacc_event', function(data) {

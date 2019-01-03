@@ -192,14 +192,21 @@ def confirm_group_pusher(request):
 	else:
 		return HttpResponseRedirect('/regsoft/')
 	data_controls=[]
+	data_recnacc=[]
 	for gr in Group.objects.all():
 		b=[]
 		pl = Enteredplayer.objects.filter(group=gr).filter(controls_passed=False).filter(controls_displayed=False)
+		p2 = Enteredplayer.objects.filter(group=gr).filter(recnacc_passed=False).filter(recnacc_displayed=False)
 		a=[]
+		recnaccP=[]
 		for p in pl:
 			a.append(Regplayer.objects.get(pk=p.regplayer_id))
 			p.controls_displayed = True
 			p.save()
+		for Player in p2:
+		    	recnaccP.append(Regplayer.objects.get(pk=Player.regplayer_id))
+		    	Player.recnacc_displayed = True
+		    	Player.save()
 		for t in a:
 			s=[]
 			s.append(t.city)
@@ -215,8 +222,13 @@ def confirm_group_pusher(request):
 			b.append(s)
 		if b:
 			data_controls.append({"participants":b,"groupid":gr.group_code})
+		for t in recnaccP:
+            		recnaccDataParticipants.append({"indiv_name":t.name.name, "indiv_college":t.college, "indiv_gender":t.gender, "indiv_id":t.pk})
+        	if recnaccDataParticipants:
+            		data_recnacc.append({"participants":recnaccDataParticipants,"groupid":gr.group_code})
 	print("confirm_group_pusher started")
 	pusher_client.trigger('firewallz_channel', 'my-event2', data_controls)  #firewallz_channel
+	pusher_client.trigger('firewallz_channel', 'fwCnfrmEvent', data_recnacc)  #firewallz_channel
 	return HttpResponse(json.dumps({"success":1}), content_type='application/json')
 
 
@@ -362,9 +374,9 @@ def unconfirm_player(request):
 		datss = []
 		b = {"name":pl.name.name,"gender":pl.gender,"college":pl.college,"city":pl.city,"mobile_no":pl.mobile_no,"email_id":pl.email_id,"sport":pl.sport,"entered":pl.entered,"unbilled_amt":pl.unbilled_amt}
 		datss.append({"pk":pl.pk,"fields":b})
-		
+# 		print("unconfirm_player pusher")
 		print(datss)
-		
+# 		pusher_client.trigger('firewallz_unconfirm_channel', 'firewallz_unconfirm_event', datss)
 		dat = {"success":1}
 		return HttpResponse(json.dumps(dat), content_type='application/json')
 

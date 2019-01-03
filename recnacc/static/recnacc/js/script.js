@@ -935,17 +935,17 @@ var pusher = new Pusher('9b825df805e0b694cccc', {
   encrypted: true
 });
 
-var channel = pusher.subscribe('my-channel');
+var controls_channel = pusher.subscribe('Controls--Channel');
 channel.bind('my-event', function(data) {
   poppulate_left(data);
   fetchPassedStats();
 });
-var channel2 = pusher.subscribe('my-channel2');
-channel2.bind('my-event2', function(data) {
+var firewallz_channel = pusher.subscribe('firewallz_channel');
+firewallz_channel.bind('my-event2', function(data) {
   firewallzUpdates(data);
   fetchPassedStats();
 });
-channel2.bind('fwCnfrmEvent', function(data) {
+firewallz_channel.bind('fwCnfrmEvent', function(data) {
   console.log(data);
   poppulate_left(data);
 });

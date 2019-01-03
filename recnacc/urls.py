@@ -13,9 +13,13 @@ urlpatterns = [
 
     url(r'^accomodate/$',views.accomodate,name='accomodate'),
 
+    url(r'^accomodate_pusher/$',views.accomodate_pusher,name='accomodate_pusher'),
+
     url(r'^unconfirm_acco_details/$',views.unconfirm_acco_details,name='unconfirm_acco_details'),
 
     url(r'^deaccomodate/$',views.deaccomodate,name='deaccomodate'),
+
+    url(r'^deaccomodate_pusher/$',views.deaccomodate_pusher,name='deaccomodate_pusher'),
 
     url(r'^unconfirm_acco/$',views.unconfirm_acco,name='unconfirm_acco'),
 
@@ -34,6 +38,8 @@ urlpatterns = [
     url(r'^satyavrat/$',views.satyavrat,name='satyavrat'),
 
     url(r'^accomodate_singleroom/$',views.accomodate_singleroom,name='accomodate_singleroom'),
+
+    url(r'^accomodate_singleroom_pusher/$',views.accomodate_singleroom_pusher,name='accomodate_singleroom_pusher'),
 
     url(r'^check_updates/$',views.check_updates,name='check_updates'),
 
@@ -72,6 +78,8 @@ urlpatterns = [
     url(r'^stats_html/$',views.stats_html,name='stats_html'),
 
     url(r'^redeaccomodate/$',views.redeaccomodate,name='redeaccomodate'),
+
+    url(r'^redeaccomodate_pusher/$',views.redeaccomodate_pusher,name='redeaccomodate_pusher'),
 
     url(r'^delete_note/$',views.delete_note,name='delete_note'),
 

@@ -1,6 +1,6 @@
 function modal_open(elem){
 	document.getElementById("email_to").value=elem.previousElementSibling.innerHTML;
-	document.getElementById("email_subject").value="BOSM 2018";
+	document.getElementById("email_subject").value="BOSM 2019";
 	document.getElementsByClassName("modal")[0].style.display="block";
 	document.getElementsByClassName("modal")[1].style.display="none";
 	Materialize.updateTextFields();

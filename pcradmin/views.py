@@ -304,7 +304,7 @@ def finalmail(request):
 													'nmlist':nm,
 													
 													})
-			mail_subject = 'BOSM 2018 | Confirmation Mail'
+			mail_subject = 'BOSM 2019 | Confirmation Mail'
 			email = EmailMessage(mail_subject, message, to=[ld.email])
 			email.attach_file('Rate Sheet.pdf')
 			email.content_subtype = "html"
@@ -324,7 +324,7 @@ def finalmail(request):
 															'nmlist':nm,
 															
 															})
-					mail_subject = 'BOSM 2018 | Confirmation Mail'
+					mail_subject = 'BOSM 2019 | Confirmation Mail'
 					email = EmailMessage(mail_subject, message, to=mailid)
 					email.attach_file('Rate Sheet.pdf')
 					email.content_subtype = "html"
@@ -339,7 +339,7 @@ def finalmail(request):
 														'nmlist':nm,
 														
 														})
-				mail_subject = 'BOSM 2018 | Confirmation Mail'
+				mail_subject = 'BOSM 2019 | Confirmation Mail'
 				email = EmailMessage(mail_subject, message, to=[cap.email])
 				email.attach_file('Rate Sheet.pdf')
 				email.content_subtype = "html"
@@ -400,7 +400,7 @@ def activateGrp(request):
 															'user':up.name,
 															
 															})
-			mail_subject = 'BOSM 2018 | Account activated'
+			mail_subject = 'BOSM 2019 | Account activated'
 			email = EmailMessage(mail_subject, message, to=[up.email])
 			email.content_subtype = "html"
 			email.send()
@@ -1319,7 +1319,7 @@ def confirmTeam(request):
 						# 							'nm':u.name,
 													
 						# 							})
-						# mail_subject = 'Action Request | Document Upload | BOSM 2018'
+						# mail_subject = 'Action Request | Document Upload | BOSM 2019'
 				
 						# email = EmailMessage(mail_subject, message, to=[u.email])
 						# email.content_subtype="html"
@@ -1345,7 +1345,7 @@ def confirmTeam(request):
 												'nmlist':nm,
 												
 												})
-				mail_subject = 'Action Request | Document Upload | BOSM 2018'
+				mail_subject = 'Action Request | Document Upload | BOSM 2019'
 		
 				email = EmailMessage(mail_subject, message, to=[ld.email])
 				email.content_subtype="html"
@@ -1356,7 +1356,7 @@ def confirmTeam(request):
 					pass
 
 				email_message = render_to_string('pcradmin/msg5.html', {})
-				email_subject = 'Action Request | Document Upload | BOSM 2018'
+				email_subject = 'Action Request | Document Upload | BOSM 2019'
 				
 				mail = EmailMessage(email_subject, email_message, to=emails)
 				mail.content_subtype="html"
@@ -1856,7 +1856,7 @@ def sendcred(request):
 														'password':passworduser,
 														
 														})
-				mail_subject = 'Your account details for BOSM \'18'
+				mail_subject = 'Your account details for BOSM \'19'
 				email = EmailMessage(mail_subject, message, to=[up.email])
 				email.content_subtype = "html"
 				try:
@@ -2059,7 +2059,7 @@ def docapprove(request):
 														'college':tm.college, 
 														
 														})
-		mail_subject = 'Documents Verified for BOSM \'18'
+		mail_subject = 'Documents Verified for BOSM \'19'
 		email = EmailMessage(mail_subject, message, to=maillist)
 		email.content_subtype = "html"
 		# try:
@@ -2072,7 +2072,7 @@ def docapprove(request):
 														'college':tm.college, 
 														
 														})
-		mail_subject = 'Documents Verified for BOSM \'18'
+		mail_subject = 'Documents Verified for BOSM \'19'
 		email = EmailMessage(mail_subject, message, to=[glmail])
 		email.content_subtype = "html"
 		# try:
@@ -2257,7 +2257,7 @@ def refresh(request):
 											'orderid':order_id,
 											
 											})
-			mail_subject = 'Your Payment Details | BOSM 2018'
+			mail_subject = 'Your Payment Details | BOSM 2019'
 			email = EmailMessage(mail_subject, message, to=["bosmpayments@gmail.com"]+[request.user.email]+premail+regmail+p2rmail)
 			email.content_subtype = "html"
 			email.send() 
@@ -2303,7 +2303,7 @@ def refresh(request):
 											'orderid':order_id,
 											
 											})
-			mail_subject = 'Your Payment Details | BOSM 2018'
+			mail_subject = 'Your Payment Details | BOSM 2019'
 			email = EmailMessage(mail_subject, message, to=["bosmpayments@gmail.com"]+[request.user.email]+premail+regmail+p2rmail)
 			email.content_subtype = "html"
 			email.send() 
@@ -2376,7 +2376,7 @@ def teammail(request):
 								'college':tm.college, 
 								'nmlist':nmlist, 
 								})
-		mail_subject = 'Final Confirmation for BOSM, 2018'
+		mail_subject = 'Final Confirmation for BOSM, 2019'
 		email = EmailMessage(mail_subject, message, to=[gl.email])
 		email.attach_file('Travel Rate List BOSM 2018.pdf')
 		email.attach_file('Checklist.pdf')

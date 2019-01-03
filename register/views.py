@@ -342,7 +342,7 @@ def register(request):
 											'uid': urlsafe_base64_encode(force_bytes(up.pk)),
 											'token': account_activation_token.make_token(up),
 											})
-		mail_subject = 'Registration for BOSM \'18'
+		mail_subject = 'Registration for BOSM \'19'
 		#mail.send_mail(mail_subject, message,'f2016226@pilani.bits-pilani.ac.in',[to_email])
 		email = EmailMessage(mail_subject, message, to=[to_email])
 		email.content_subtype = "html"
@@ -741,7 +741,7 @@ def addplayer(request):
 											'password':passworduser,
 											
 											})
-			mail_subject = 'Your account details for BOSM \'18'
+			mail_subject = 'Your account details for BOSM \'19'
 			email = EmailMessage(mail_subject, message, to=[to_email])
 			email.content_subtype = "html"
 			update_data = [7,3]
@@ -1052,7 +1052,7 @@ def response(request):
 											'orderid':order_id,
 											
 											})
-			mail_subject = 'Your payment details | BOSM 2018'
+			mail_subject = 'Your payment details | BOSM 2019'
 			email = EmailMessage(mail_subject, message, to=["bosmpayments@gmail.com"]+[request.user.email]+premail+regmail+p2rmail)
 			email.content_subtype = "html"
 			#email.send()

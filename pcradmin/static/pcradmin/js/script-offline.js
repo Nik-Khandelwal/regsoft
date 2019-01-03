@@ -200,7 +200,7 @@ function openMailCompose() {
   }
 }
 function resetMailCompose() {
-  document.getElementById('send-mail-compose-form').innerHTML = '<div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">create</i> <input type="text" name="email_subject" id="email_subject" class="validate" required="required" value="BOSM 2018"> <label for="email_subject" data-error="Enter Email Subject">Subject</label> </div></div><div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">create</i> <textarea id="email_body" name="email_body" class="materialize-textarea" class="validate" required="required"></textarea> <label for="email_body" data-error="Enter Email Body">Body</label> </div></div>';
+  document.getElementById('send-mail-compose-form').innerHTML = '<div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">create</i> <input type="text" name="email_subject" id="email_subject" class="validate" required="required" value="BOSM 2019"> <label for="email_subject" data-error="Enter Email Subject">Subject</label> </div></div><div class="row"> <div class="input-field col s12"> <i class="material-icons prefix">create</i> <textarea id="email_body" name="email_body" class="materialize-textarea" class="validate" required="required"></textarea> <label for="email_body" data-error="Enter Email Body">Body</label> </div></div>';
   Materialize.updateTextFields();
 }
 function composeMailGroupLeader(option) {

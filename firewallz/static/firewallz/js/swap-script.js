@@ -573,4 +573,3 @@ function participant_search() {
     }
   }
 }
-

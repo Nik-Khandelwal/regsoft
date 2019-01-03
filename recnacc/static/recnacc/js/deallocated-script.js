@@ -161,7 +161,7 @@ var pusher = new Pusher('9b825df805e0b694cccc', {
   encrypted: true
 });
 
-var recndeacc_channel = pusher.subscribe('recndeacc_channel');
+var recndeacc_channel = pusher.subscribe('recnacc_channel');
 recndeacc_channel.bind('recndeacc_event', function(data) {
   pusher_fetchParticipants();
 });

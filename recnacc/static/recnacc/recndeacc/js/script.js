@@ -792,7 +792,6 @@ function serializeArray(form) {
   return s;
 }
 const sendPusherUpdate = (url) => {
-  Materialize.toast('inside sendPusherUpdate',3e3);
   var csrf_token = getCookie('csrftoken');
   var ourRequest = new XMLHttpRequest();
   ourRequest.open("POST", "/recnacc/"+url+"/", true); // method and url
@@ -800,7 +799,7 @@ const sendPusherUpdate = (url) => {
   ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
   ourRequest.onload = function () {
     if (ourRequest.status >= 200 && ourRequest.status < 400) { // request sent and recieved
-      Materialize.toast('called deaccomodate pusher successfully',3e3);
+      console.log('pusher update worked here');
     }
     else
       Materialize.toast('Server Error!', 4000, "toast-fetch_error");

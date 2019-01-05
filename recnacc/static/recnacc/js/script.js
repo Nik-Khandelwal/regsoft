@@ -936,7 +936,7 @@ var pusher = new Pusher('9b825df805e0b694cccc', {
 });
 
 var controls_channel = pusher.subscribe('Controls--Channel');
-channel.bind('my-event', function(data) {
+controls_channel.bind('my-event', function(data) {
   poppulate_left(data);
   fetchPassedStats();
 });

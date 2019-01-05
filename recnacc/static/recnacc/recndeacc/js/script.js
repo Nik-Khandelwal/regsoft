@@ -802,10 +802,10 @@ const sendPusherUpdate = (url) => {
       console.log('pusher update worked here');
     }
     else
-      Materialize.toast('Server Error!', 4000, "toast-fetch_error");
+      console.log('pusher update was failed');
   } // server sent an error after connection
   ourRequest.onerror = function () { // error connecting to URL
-    Materialize.toast('Could not connect to server!', 4000, "toast-fetch_no_connect");
+    console.log('pusher update was failed');
   }
   ourRequest.send(); // sending request
 }

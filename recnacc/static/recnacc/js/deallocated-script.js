@@ -211,6 +211,7 @@ function addBack(option) {
     if (ourRequest.status >= 200 && ourRequest.status < 400) {
       var ourData = JSON.parse(ourRequest.responseText);
       fetchParticipants();
+      sendPusherUpdate();
       Materialize.toast('Done!', 3000);
     } else {
       Materialize.toast('Error while connecting!', 3000);
@@ -247,4 +248,22 @@ function search() {
       ul.getElementsByTagName('li')[j].style.display = 'list-item';
     }
   }
+}
+const sendPusherUpdate = () => {
+  var csrf_token = getCookie('csrftoken');
+  var ourRequest = new XMLHttpRequest();
+  ourRequest.open("POST", "/recnacc/redeaccomodate_pusher/", true);
+  ourRequest.setRequestHeader("Content-type", "application/json");
+  ourRequest.setRequestHeader("X-CSRFToken", csrf_token);
+  ourRequest.onload = function() {
+    if (ourRequest.status >= 200 && ourRequest.status < 400) {
+      console.log('sent pusher updATE successfully');
+    } else {
+      console.log('error in sending pusher update');
+    }
+  }
+  ourRequest.onerror = function() {
+    console.log('error in sending pusher update');
+  }
+  ourRequest.send();
 }

@@ -323,7 +323,7 @@ function sendRetDenom(deno_2000, deno_500, deno_200, deno_100, deno_50) {
       "deno_100": deno_100,
       "deno_50": deno_50,
       "deno_20": 0,
-      "deno_10": 0,	
+      "deno_10": 0	
     }
   };
   var string_obj = JSON.stringify(send_obj);

@@ -207,6 +207,8 @@ function gen_bill(amt){
 			"deno_200": 0,
 			"deno_100": 0,
 			"deno_50": 0,
+			"deno_20": 0,
+			"deno_10": 0,
 			"id_arr": id_arr
 		},
 		"csrftoken": {
@@ -232,6 +234,8 @@ function gen_bill(amt){
 				"deno_200": 0,
 				"deno_100": 0,
 				"deno_50": 0,
+				"deno_20": 0,
+				"deno_10": 0,
 				"id_arr": id_arr
 			},
 			"csrftoken": {
@@ -317,7 +321,9 @@ function sendRetDenom(deno_2000, deno_500, deno_200, deno_100, deno_50) {
       "deno_500": deno_500,
       "deno_200": deno_200,
       "deno_100": deno_100,
-      "deno_50": deno_50
+      "deno_50": deno_50,
+      "deno_20": 0,
+      "deno_10": 0,	
     }
   };
   var string_obj = JSON.stringify(send_obj);
@@ -363,6 +369,8 @@ function confirm_bill(){
           "deno_200": deno_200,
           "deno_100": deno_100,
           "deno_50": deno_50,
+	  "deno_20":0,
+	  "deno_10":0,
           "id_arr": id_arr
         }
       };

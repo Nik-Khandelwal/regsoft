@@ -195,6 +195,7 @@ def confirm_group_pusher(request):
 	data_recnacc=[]
 	for gr in Group.objects.all():
 		b=[]
+		recnaccDataParticipants=[]
 		pl = Enteredplayer.objects.filter(group=gr).filter(controls_passed=False).filter(controls_displayed=False)
 		p2 = Enteredplayer.objects.filter(group=gr).filter(recnacc_passed=False).filter(recnacc_displayed=False)
 		a=[]
